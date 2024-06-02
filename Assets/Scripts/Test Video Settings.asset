@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6434b40d43007a4aa2d6c7f2efb0f90, type: 3}
   m_Name: Test Video Settings
   m_EditorClassIdentifier: 
-  DurationSec: 10
-  CurrentTime: 0
-  CurrentTimeNormalized: 0
+  DurationSec: 5
+  CurrentTime: 1
+  CurrentTimeNormalized: 0.2
+  IsPlaying: 1
