@@ -6,13 +6,14 @@ namespace SimpleMotions {
 		private readonly VideoPlayer _videoPlayer;
 		private readonly VideoCanvas _videoCanvas;
 
-		internal VideoEditor() {
-			var componentDatabse = Services.Instance.GetService<IComponentDatabase>();
-			var videoDatabase = Services.Instance.GetService<IVideoDatabase>();
+		internal VideoEditor(IVideoTimeline videoTimeline, VideoPlayer videoPlayer, VideoCanvas videoCanvas) {
+			_videoTimeline = videoTimeline;
+			_videoPlayer = videoPlayer;
+			_videoCanvas = videoCanvas;
+		}
 
-			_videoTimeline = new VideoTimeline(videoDatabase);
-			_videoPlayer = new VideoPlayer(componentDatabse);
-			_videoCanvas = new VideoCanvas(componentDatabse);
+		internal IVideoTimeline GetVideoTimeline() {
+			return _videoTimeline;
 		}
 
 	}

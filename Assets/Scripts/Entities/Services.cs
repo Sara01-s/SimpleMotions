@@ -14,8 +14,6 @@ namespace SimpleMotions {
         private readonly Dictionary<Type, object> _services = new();
         private static Services _instance;
 
-        private Services() { }
-
         public void RegisterService<T>(T service) {
             var serviceType = typeof(T);
 
@@ -44,6 +42,10 @@ namespace SimpleMotions {
             }
             
             return (T) service;     // * This cast will never fail because T, is the same T as the RegisterService method
+        }
+
+        public void Clear() {
+            _services.Clear();
         }
 
     }

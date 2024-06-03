@@ -17,10 +17,12 @@ namespace SimpleMotions {
 		}
 
 		public void Pause() {
+			UnityEngine.Debug.Log("Pause");
 			_videoDatabase.IsPlaying = false;
 		}
 
 		public void Play() {
+			UnityEngine.Debug.Log("Play");
 			_videoDatabase.IsPlaying = true;
 		}
 
