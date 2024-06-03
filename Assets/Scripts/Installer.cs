@@ -6,16 +6,9 @@ namespace SimpleMotions {
 
         [SerializeField] private VideoTimelineView _videoTimelineView;
 
-        private void OnDisable() {
-            Services.Instance.Clear();
-        }
-
         private void Start() {
             var componentDatabase = new ComponentDatabase();
             var videoDatabase = new VideoDatabase();
-
-            //var componentDatabase = Services.Instance.GetService<IComponentDatabase>();
-			//var videoDatabase = Services.Instance.GetService<IVideoDatabase>();
 
             var videoTimeline = new VideoTimeline(videoDatabase);
             var videoPlayer = new VideoPlayer(componentDatabase);
@@ -26,6 +19,10 @@ namespace SimpleMotions {
             var videoTimelineViewModel = new VideoTimelineViewModel(videoEditor.GetVideoTimeline());
 
             _videoTimelineView.Configure(videoTimelineViewModel);
+        }
+
+		private void OnDisable() {
+            Services.Instance.Clear();
         }
 
     }
