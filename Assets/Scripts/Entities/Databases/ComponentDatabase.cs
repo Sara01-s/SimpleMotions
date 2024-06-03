@@ -10,6 +10,8 @@ namespace SimpleMotions {
 		private int _nextComponentBitmask = 1;
 
 		public ComponentDatabase() {
+			Services.Instance.RegisterService<IComponentDatabase>(service: this);
+
 			RegisterComponent<Position>();
 			RegisterComponent<Scale>();
 			RegisterComponent<Roll>();
@@ -80,7 +82,8 @@ namespace SimpleMotions {
 		}
 
 		public void Dispose() {
-			throw new NotImplementedException();
+			Services.Instance.UnRegisterService<IComponentDatabase>();
 		}
+		
 	}
 }

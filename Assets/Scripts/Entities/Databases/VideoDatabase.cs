@@ -5,8 +5,12 @@ namespace SimpleMotions {
 		public float Duration { get; set;  }
 		public bool IsPlaying { get; set; }
 
+		internal VideoDatabase() {
+			Services.Instance.RegisterService<IVideoDatabase>(service: this);
+		}
+
 		public void Dispose() {
-			throw new System.NotImplementedException();
+			Services.Instance.UnRegisterService<IVideoDatabase>();
 		}
 	}
 

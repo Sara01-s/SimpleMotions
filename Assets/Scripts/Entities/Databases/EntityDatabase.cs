@@ -9,6 +9,10 @@ namespace SimpleMotions {
 		private readonly HashSet<int> _aliveEntities = new();
 		private readonly Dictionary<int, Entity> _entities = new();
 
+		internal EntityDatabase() {
+			Services.Instance.RegisterService<IEntityDatabase>(service: this);
+		}
+
 		public Entity CreateEntity() {
 
 			int id;
@@ -62,9 +66,9 @@ namespace SimpleMotions {
 			return _entities[id];
 		}
 
-		public void Dispose()
-		{
-			throw new System.NotImplementedException();
+		public void Dispose() {
+			Services.Instance.UnRegisterService<IEntityDatabase>();
 		}
 	}
+
 }
