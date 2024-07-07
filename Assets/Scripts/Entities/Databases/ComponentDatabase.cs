@@ -30,21 +30,23 @@ namespace SimpleMotions {
 			}
 		}
 
-		public void AddComponent<T>(ref Entity entity, T component, IEntityDatabase entityManager) where T : Component {
+		public void AddComponent<T>(Entity entity) where T : Component, new() {
+			var componentType = typeof(T);
 
-			var type = typeof(T);
-
-			if (!_components.ContainsKey(type)) {
-				_components[type] = new Dictionary<int, Component>();
+			if (!_components.ContainsKey(componentType)) {
+				_components[componentType] = new Dictionary<int, Component>();
 			}
-
-			_components[type][entity.Id] = component;
-			entityManager.UpdateComponentMask(ref entity, _componentBitmasks[type]);
+			
+			var component = new T();
+			_components[componentType][entity.Id] = component;
+			entity.ComponentMask |= _componentBitmasks[componentType];
 		}
 
 		public void RemoveComponent<T>(Entity entity) where T : Component {
-			var type = typeof(T);
-			_components[type].Remove(entity.Id);
+			var componentType = typeof(T);
+			
+			entity.ComponentMask &= ~_componentBitmasks[componentType];
+			_components[componentType].Remove(entity.Id);
 		}
 
 		public T GetComponent<T>(Entity entity) where T : Component {
@@ -73,8 +75,9 @@ namespace SimpleMotions {
 			return new List<int>();
 		}
 
-		public Dictionary<int, Component> GetComponentsOfType(Type type) {
-			return _components.ContainsKey(type) ? _components[type] : new Dictionary<int, Component>();
+		public Dictionary<int, Component> GetComponentsOfType<T>() where T : Component {
+			var componentType = typeof(T);
+			return _components.ContainsKey(componentType) ? _components[componentType] : new Dictionary<int, Component>();
 		}
 
 		public int GetComponentBitmask<T>() where T : Component {

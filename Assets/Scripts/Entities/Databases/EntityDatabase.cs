@@ -52,16 +52,6 @@ namespace SimpleMotions {
 			return _aliveEntities;
 		}
 
-		public void UpdateComponentMask(ref Entity entity, int componentBitmask) {
-			entity.ComponentMask |= componentBitmask;
-			_entities[entity.Id] = entity;
-		}
-
-		public void RemoveComponentMask(ref Entity entity, int componentBitmask) {
-			entity.ComponentMask &= ~componentBitmask;
-			_entities[entity.Id] = entity;
-		}
-
 		public Entity GetEntity(int id) {
 			return _entities[id];
 		}
