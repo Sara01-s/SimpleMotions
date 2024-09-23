@@ -1,7 +1,7 @@
 
 namespace SimpleMotions {
 
-    // Obscure and documented class
+    // Obscure and undocumented class
     public sealed class Void { }
 
 }
