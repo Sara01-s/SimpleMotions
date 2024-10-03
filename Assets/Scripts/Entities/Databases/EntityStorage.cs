@@ -2,19 +2,18 @@ using System.Collections.Generic;
 
 namespace SimpleMotions {
 
-	internal sealed class EntityDatabase : IEntityDatabase {
+	internal sealed class EntityStorage : IEntityStorage {
 
 		private int _nextId = 0;
 		private readonly List<int> _availableIds = new();
 		private readonly HashSet<int> _aliveEntities = new();
 		private readonly Dictionary<int, Entity> _entities = new();
 
-		internal EntityDatabase() {
-			Services.Instance.RegisterService<IEntityDatabase>(service: this);
+		internal EntityStorage() {
+			Services.Instance.RegisterService<IEntityStorage>(service: this);
 		}
 
 		public Entity CreateEntity() {
-
 			int id;
 
 			if (_availableIds.Count > 0) {
@@ -36,7 +35,6 @@ namespace SimpleMotions {
 		}
 
 		public void DestroyEntity(Entity entity) {
-			
 			if (_aliveEntities.Contains(entity.Id)) {
 				_aliveEntities.Remove(entity.Id);
 				_availableIds.Add(entity.Id);
@@ -57,7 +55,7 @@ namespace SimpleMotions {
 		}
 
 		public void Dispose() {
-			Services.Instance.UnRegisterService<IEntityDatabase>();
+			Services.Instance.UnRegisterService<IEntityStorage>();
 		}
 	}
 

@@ -3,14 +3,14 @@ using System;
 
 namespace SimpleMotions {
 
-	internal sealed class ComponentDatabase : IComponentDatabase {
+	internal sealed class ComponentStorage : IComponentStorage {
 
 		private readonly Dictionary<Type, Dictionary<int, Component>> _components = new();
 		private readonly Dictionary<Type, int> _componentBitmasks = new();
 		private int _nextComponentBitmask = 1;
 
-		public ComponentDatabase() {
-			Services.Instance.RegisterService<IComponentDatabase>(service: this);
+		public ComponentStorage() {
+			Services.Instance.RegisterService<IComponentStorage>(service: this);
 
 			RegisterComponent<Position>();
 			RegisterComponent<Scale>();
@@ -85,7 +85,7 @@ namespace SimpleMotions {
 		}
 
 		public void Dispose() {
-			Services.Instance.UnRegisterService<IComponentDatabase>();
+			Services.Instance.UnRegisterService<IComponentStorage>();
 		}
 		
 	}

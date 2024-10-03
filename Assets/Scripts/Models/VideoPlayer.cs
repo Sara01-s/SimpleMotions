@@ -4,10 +4,10 @@ namespace SimpleMotions {
 
 	internal sealed class VideoPlayer {
 
-		private readonly IComponentDatabase _componentDatabase;
+		private readonly IComponentStorage _componentStorage;
 
-		internal VideoPlayer(IComponentDatabase componentDatabase) {
-			_componentDatabase = componentDatabase;
+		internal VideoPlayer(IComponentStorage componentStorage) {
+			_componentStorage = componentStorage;
 		}
 
 		internal async void PlayVideo(float currentTime) {

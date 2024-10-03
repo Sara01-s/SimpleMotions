@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SimpleMotions {
 
-	public interface IComponentDatabase : System.IDisposable {
+	public interface IComponentStorage : System.IDisposable {
 
 		void AddComponent<T>(Entity entity) where T : Component, new();
 		void RemoveComponent<T>(Entity entity) where T : Component;
