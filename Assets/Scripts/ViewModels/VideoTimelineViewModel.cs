@@ -1,7 +1,7 @@
 
 namespace SimpleMotions {
 
-    internal sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
+    public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
 
         public ReactiveCommand<Void> TogglePlay { get; set; } = new();
         public ReactiveValue<float> CurrentTime { get; set; } = new();

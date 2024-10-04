@@ -229,6 +229,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _videoTimelineView: {fileID: 1135518586}
   _videoCanvasView: {fileID: 1212651254}
+  _projectName: test_project
+  _projectDataFileName: project.json
+  _editorDataFileName: editor.json
 --- !u!4 &305790552
 Transform:
   m_ObjectHideFlags: 0
@@ -369,7 +372,20 @@ MonoBehaviour:
   _moveTo: {x: -6, y: 3}
   _scaleTo: {x: 1, y: 1}
   _rollTo: 0
-  _colorTo: {r: 0.5020583, g: 0.97735846, b: 0.45548588, a: 1}
+  _colorTo:
+    r: 0.5020583
+    g: 0.97735846
+    b: 0.45548588
+    a: 1
+  _initPos: {x: 0, y: 0}
+  _initScale: {x: 0, y: 0}
+  _initRoll: 0
+  _initColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 0
+  _renderer: {fileID: 0}
 --- !u!212 &794192898
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1763,7 +1779,20 @@ MonoBehaviour:
   _moveTo: {x: 6, y: 2.5}
   _scaleTo: {x: 2, y: 1}
   _rollTo: 45
-  _colorTo: {r: 0.2876254, g: 0.4779502, b: 0.7509433, a: 1}
+  _colorTo:
+    r: 0.2876254
+    g: 0.4779502
+    b: 0.7509433
+    a: 1
+  _initPos: {x: 0, y: 0}
+  _initScale: {x: 0, y: 0}
+  _initRoll: 0
+  _initColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 0
+  _renderer: {fileID: 0}
 --- !u!95 &1827400234
 Animator:
   serializedVersion: 5
@@ -1818,7 +1847,20 @@ MonoBehaviour:
   _moveTo: {x: 1.5, y: -0.5}
   _scaleTo: {x: 2, y: 2}
   _rollTo: 160
-  _colorTo: {r: 0.93962264, g: 0.92922115, b: 0.4095336, a: 1}
+  _colorTo:
+    r: 0.93962264
+    g: 0.92922115
+    b: 0.4095336
+    a: 1
+  _initPos: {x: 0, y: 0}
+  _initScale: {x: 0, y: 0}
+  _initRoll: 0
+  _initColor:
+    r: 0
+    g: 0
+    b: 0
+    a: 0
+  _renderer: {fileID: 0}
 --- !u!212 &1921335205
 SpriteRenderer:
   m_ObjectHideFlags: 0

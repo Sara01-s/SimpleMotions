@@ -1,11 +1,18 @@
 using UnityEngine;
+using System.IO;
 
 namespace SimpleMotions {
 
-    internal sealed class Installer : MonoBehaviour {
+    public sealed class Installer : MonoBehaviour {
 
+		[Header("UI")]
         [SerializeField] private VideoTimelineView _videoTimelineView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
+
+		[Header("Data")]
+		[SerializeField] private string _projectName;
+		[SerializeField] private string _projectDataFileName;
+		[SerializeField] private string _editorDataFileName;
 
 		private IEventService _eventService;
 
@@ -18,6 +25,12 @@ namespace SimpleMotions {
 		private VideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 
+		// APP DATA //
+		private ProjectDataHandler _projectDataHandler;
+		private EditorDataHandler _editorDataHandler;
+		private ProjectData _projectData;
+		private EditorData _editorData;
+
         private void Start() {
 			_eventService = new EventDispatcher();
 			
@@ -27,9 +40,31 @@ namespace SimpleMotions {
         }
 
 		private void BuildStorage() {
-            _componentStorage = new ComponentStorage();
-			_entityStorage = new EntityStorage();
-            _videoDatabase = new VideoDatabase();
+			ISerializer serializer = new JsonSerializer(prettyPrint: true); // Intercambiable por otros serializadores
+			var projectDataSerializer = new DataSerializer<ProjectData>(serializer);
+			var editorDataSerializer = new DataSerializer<EditorData>(serializer);
+
+			string projectDataFilepath = Path.Combine(Application.persistentDataPath, _projectDataFileName);
+			string editorDataFilepath = Path.Combine(Application.persistentDataPath, _editorDataFileName);
+
+			Debug.Log("original: " + projectDataFilepath);
+
+			_projectDataHandler = new ProjectDataHandler(projectDataSerializer, projectDataFilepath);
+			_editorDataHandler = new EditorDataHandler(editorDataSerializer, editorDataFilepath);
+
+			_projectData = _projectDataHandler.LoadData();
+			_editorData = _editorDataHandler.LoadData();
+
+			print(_projectData.ProjectName);
+			_projectData.ProjectName = _projectName;
+
+			var componentsData = _projectData.Timeline.Components;
+			var entitiesData = _projectData.Timeline.Entities;
+			var videoData = new VideoData();
+
+            _componentStorage = new ComponentStorage(componentsData);
+			_entityStorage = new EntityStorage(entitiesData);
+            //_videoDatabase = new VideoData();
 		}
 
 		private void BuildVideoEditor() {
@@ -48,7 +83,10 @@ namespace SimpleMotions {
 		}
 
 		private void OnDisable() {
-            Services.Instance.Clear();
+			_projectDataHandler.SaveData(_projectData);
+			_editorDataHandler.SaveData(_editorData);
+
+			Services.Instance.Clear();
         }
 
     }

@@ -4,7 +4,7 @@ using TMPro;
 
 namespace SimpleMotions {
     
-    internal sealed class VideoTimelineView : MonoBehaviour {
+    public sealed class VideoTimelineView : MonoBehaviour {
 
         [SerializeField] private Slider _time;
         [SerializeField] private Button _togglePlay;

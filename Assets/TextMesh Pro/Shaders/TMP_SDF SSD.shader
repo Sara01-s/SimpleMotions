@@ -154,7 +154,7 @@ SubShader {
             float4 textures         : TEXCOORD5;
         };
 
-        // Used by Unity internally to handle Texture Tiling and Offset.
+        // Used by Unity publicly to handle Texture Tiling and Offset.
         float4 _FaceTex_ST;
         float4 _OutlineTex_ST;
 

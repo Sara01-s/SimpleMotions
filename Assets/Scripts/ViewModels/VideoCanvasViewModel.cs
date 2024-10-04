@@ -1,6 +1,6 @@
 namespace SimpleMotions {
 
-    internal sealed class VideoCanvasViewModel : IVideoCanvasViewModel {
+    public sealed class VideoCanvasViewModel : IVideoCanvasViewModel {
 
         public ReactiveCommand<Entity> UpdateCanvas { get; set; } = new();
 

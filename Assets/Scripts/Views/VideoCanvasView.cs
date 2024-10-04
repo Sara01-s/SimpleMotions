@@ -5,7 +5,7 @@ using TMPro;
 
 namespace SimpleMotions {
     
-    internal sealed class VideoCanvasView : MonoBehaviour {
+    public sealed class VideoCanvasView : MonoBehaviour {
 
 		[SerializeField] private GameObject _entityPrefab;
 
