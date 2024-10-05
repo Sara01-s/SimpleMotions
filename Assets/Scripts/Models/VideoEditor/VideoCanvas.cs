@@ -1,17 +1,28 @@
 namespace SimpleMotions {
 
+	public struct EntityDisplayInfo {
+		public Entity Entity;
+		public Component[] Components;
+	}
+
 	public sealed class VideoCanvas {
 
-		private readonly IEntityStorage _entityStorage;
+		private readonly IComponentStorage _componentStorage;
 		private readonly IEventService _eventService;
 
-		public VideoCanvas(IEntityStorage entityStorage, IEventService eventService) {
-			_entityStorage = entityStorage;
+		public VideoCanvas(IComponentStorage componentStorage, IEventService eventService) {
+			_componentStorage = componentStorage;
 			_eventService = eventService;
 		}
 
 		public void UpdateCanvas(Entity entity) {
-			_eventService.Dispatch(entity);
+			var components = _componentStorage.GetAllComponents(entity);
+			var entityDisplayInfo = new EntityDisplayInfo {
+				Entity = entity,
+				Components = components
+			};
+
+			_eventService.Dispatch<EntityDisplayInfo>(entityDisplayInfo);
 		}
 
 	}

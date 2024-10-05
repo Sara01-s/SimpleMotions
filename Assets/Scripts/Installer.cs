@@ -68,7 +68,7 @@ namespace SimpleMotions {
 
 		private void BuildVideoEditor() {
 			_videoTimeline = new VideoTimeline(_videoDatabase);
-            _videoCanvas = new VideoCanvas(_entityStorage, _eventService);
+            _videoCanvas = new VideoCanvas(_componentStorage, _eventService);
 			_videoEntities = new VideoEntities(_componentStorage, _entityStorage, _videoCanvas);
 		}
 

@@ -5,18 +5,18 @@ namespace SimpleMotions {
 
 	public sealed class ComponentStorage : IComponentStorage {
 
+		// Example Usage: Dictionary<Position Type, Dictionary<entityID, Position instance>>
 		private readonly Dictionary<Type, Dictionary<int, Component>> _components = new();
 		private readonly Dictionary<Type, int> _componentBitmasks = new();
 		private int _nextComponentBitmask = 1;
+
 
 		public ComponentStorage(ComponentsData componentsData) {
 			_components = componentsData.Components;
 			_componentBitmasks = componentsData.ComponentBitmasks;
 			_nextComponentBitmask = componentsData.NextComponentBitmask;
 
-			RegisterComponent<Position>();
-			RegisterComponent<Scale>();
-			RegisterComponent<Roll>();
+			RegisterComponent<Transform>();
 			RegisterComponent<Shape>();
 			RegisterComponent<Text>();
 		}
@@ -38,7 +38,7 @@ namespace SimpleMotions {
 			}
 		}
 
-		public void AddComponent<T>(Entity entity) where T : Component, new() {
+		public T AddComponent<T>(Entity entity) where T : Component, new() {
 			var componentType = typeof(T);
 
 			if (!_components.ContainsKey(componentType)) {
@@ -48,6 +48,8 @@ namespace SimpleMotions {
 			var component = new T();
 			_components[componentType][entity.Id] = component;
 			entity.ComponentMask |= _componentBitmasks[componentType];
+
+			return component;
 		}
 
 		public void RemoveComponent<T>(Entity entity) where T : Component {
@@ -61,10 +63,23 @@ namespace SimpleMotions {
 			var type = typeof(T);
 			
 			if (_components.ContainsKey(type) && _components[type].ContainsKey(entity.Id)) {
+				// get instance of component "T" from entity "Id"
 				return (T)_components[type][entity.Id];
 			}
 
 			return null;
+		}
+
+		public Component[] GetAllComponents(Entity entity) {
+			var components = new List<Component>();
+
+			foreach (var componentType in _components.Keys) { 					// For all registered components
+				if (_components[componentType].ContainsKey(entity.Id)) {		// if entity "id" has that component
+					components.Add(_components[componentType][entity.Id]);		// add the unique component instance associated with entity "id"
+				}
+			}
+
+			return components.ToArray();
 		}
 
 		public bool HasComponent<T>(Entity entity) where T : Component {

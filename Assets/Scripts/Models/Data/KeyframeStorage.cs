@@ -24,6 +24,8 @@ namespace SimpleMotions {
 
 		public KeyframesData GetKeyframesData() {
 			return new KeyframesData {
+				AllKeyframes = _allKeyframes,
+
 				PositionKeyframes = _positionKeyframes,
 				ScaleKeyframes = _scaleKeyframes,
 				ShapeKeyframes = _shapeKeyframes,

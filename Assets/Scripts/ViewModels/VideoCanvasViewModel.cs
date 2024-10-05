@@ -2,14 +2,14 @@ namespace SimpleMotions {
 
     public sealed class VideoCanvasViewModel : IVideoCanvasViewModel {
 
-        public ReactiveCommand<Entity> UpdateCanvas { get; set; } = new();
+        public ReactiveCommand<EntityDisplayInfo> UpdateCanvas { get; set; } = new();
 
         public VideoCanvasViewModel(IEventService eventService) {
-			eventService.Subscribe<Entity>(OnCanvasUpdate);
+			eventService.Subscribe<EntityDisplayInfo>(OnCanvasUpdate);
         }
 
-		private void OnCanvasUpdate(Entity entity) {
-			UpdateCanvas.Execute(entity);
+		private void OnCanvasUpdate(EntityDisplayInfo entityDisplayInfo) {
+			UpdateCanvas.Execute(entityDisplayInfo);
 		}
 
 	}

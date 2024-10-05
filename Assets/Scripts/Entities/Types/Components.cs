@@ -7,26 +7,100 @@ namespace SimpleMotions {
 	{
 	}
 
-	public sealed class Position : Component {
-		public float X;
-		public float Y;
+	public sealed class Transform : Component {
+		public Position Position = new();
+		public Scale Scale = new();
+		public Roll Roll = new();
 	}
 
-	public sealed class Scale : Component {
-		public float Width;
-		public float Height;
+	public sealed class Position {
+		public static Position Zero = new(0.0f, 0.0f);
+		public static Position One = new(1.0f, 1.0f);
+		public float X = 0.0f;
+		public float Y = 0.0f;
+
+		public Position() {}
+
+		public Position(float x, float y) {
+			X = x;
+			Y = y;
+		}
+
+#if DEBUG
+		public override string ToString() {
+			return $"({X}, {Y})";
+		}
+#endif
 	}
 
-	public sealed class Roll : Component {
-		public float Angle;
+	public sealed class Scale {
+		public static Scale Zero = new(0.0f, 0.0f);
+		public static Scale One = new(1.0f, 1.0f);
+		public float Width = 1.0f;
+		public float Height = 1.0f;
+
+		public Scale() {}
+
+		public Scale(float width, float height) {
+			Width = width;
+			Height = height;
+		}
+
+#if DEBUG
+		public override string ToString() {
+			return $"({Width}, {Height})";
+		}
+#endif
+	}
+
+	public sealed class Roll {
+		public float Angle = 0.0f;
+
+		public Roll() {}
+
+		public Roll(float angle) {
+			Angle = angle;
+		}
+
+#if DEBUG
+		public override string ToString() {
+			return $"({Angle})";
+		}
+#endif
 	}
 
 	[Serializable]
 	public sealed class Color {
-		public float R;
-		public float G;
-		public float B;
-		public float A;
+		public static Color White = new(1.0f, 1.0f, 1.0f, 1.0f);
+		public static Color Black = new(0.0f, 0.0f, 0.0f, 1.0f);
+		public static Color Clear = new(0.0f, 0.0f, 0.0f, 0.0f);
+
+		public static Color Red = new(1.0f, 0.0f, 0.0f, 1.0f);
+		public static Color Green = new(0.0f, 1.0f, 0.0f, 1.0f);
+		public static Color Blue = new(0.0f, 0.0f, 1.0f, 1.0f);
+		public static Color Cyan = new(0.0f, 1.0f, 1.0f, 1.0f);
+		public static Color Magenta = new(1.0f, 0.0f, 1.0f, 1.0f);
+		public static Color Yellow = new(1.0f, 1.0f, 0.0f, 1.0f);
+
+		public float R = 1.0f;
+		public float G = 1.0f;
+		public float B = 1.0f;
+		public float A = 1.0f;
+
+		public Color() {}
+		
+		public Color(float r, float g, float b, float a) {
+			R = r;
+			G = g;
+			B = b;
+			A = a;
+		}
+
+#if DEBUG
+		public override string ToString() {
+			return $"({R}, {G}, {B}, {A})";
+		}
+#endif
 	}
 
 	public sealed class Shape : Component {
@@ -37,12 +111,28 @@ namespace SimpleMotions {
 			Rect,
 		}
 
-		public Primitive PrimitiveShape;
-		public Color color;
+		public Primitive PrimitiveShape = Primitive.Circle;
+		public Color Color = new();
+
+		public Shape() {}
+		
+#if DEBUG
+		public override string ToString() {
+			return $"({PrimitiveShape}, {Color})";
+		}
+#endif
 	}
 
 	public sealed class Text : Component {
-		public string Value;
+		public string Value = string.Empty;
+
+		public Text() {}
+
+#if DEBUG
+		public override string ToString() {
+			return $"({Value})";
+		}
+#endif
 	}
 
 }

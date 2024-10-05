@@ -15,9 +15,15 @@ namespace SimpleMotions {
 		public void CreateTestEntity() {
 			var newEntity = _entityStorage.CreateEntity();
 
-			_componentStorage.AddComponent<Position>(newEntity);
-			_componentStorage.AddComponent<Scale>(newEntity);
-			_componentStorage.AddComponent<Shape>(newEntity);
+			newEntity.Name = "prueba";
+			
+			var entityTransform = _componentStorage.AddComponent<Transform>(newEntity);
+			var shape = _componentStorage.AddComponent<Shape>(newEntity);
+
+			entityTransform.Position = new Position(3.0f, -1.0f);
+			
+			shape.Color = Color.Red;
+			shape.PrimitiveShape = Shape.Primitive.Circle;
 
 			_videoCanvas.UpdateCanvas(newEntity);
 		}
