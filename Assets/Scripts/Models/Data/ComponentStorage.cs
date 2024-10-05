@@ -5,8 +5,8 @@ namespace SimpleMotions {
 
 	public sealed class ComponentStorage : IComponentStorage {
 
-		private readonly SerializableDictionary<Type, SerializableDictionary<int, Component>> _components = new();
-		private readonly SerializableDictionary<Type, int> _componentBitmasks = new();
+		private readonly Dictionary<Type, Dictionary<int, Component>> _components = new();
+		private readonly Dictionary<Type, int> _componentBitmasks = new();
 		private int _nextComponentBitmask = 1;
 
 		public ComponentStorage(ComponentsData componentsData) {
@@ -18,7 +18,6 @@ namespace SimpleMotions {
 			RegisterComponent<Scale>();
 			RegisterComponent<Roll>();
 			RegisterComponent<Shape>();
-			RegisterComponent<KeyframeStorage>();
 			RegisterComponent<Text>();
 		}
 		
@@ -43,7 +42,7 @@ namespace SimpleMotions {
 			var componentType = typeof(T);
 
 			if (!_components.ContainsKey(componentType)) {
-				_components[componentType] = new SerializableDictionary<int, Component>();
+				_components[componentType] = new Dictionary<int, Component>();
 			}
 			
 			var component = new T();

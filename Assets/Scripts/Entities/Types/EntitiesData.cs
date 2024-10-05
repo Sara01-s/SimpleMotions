@@ -5,7 +5,7 @@ namespace SimpleMotions {
 	[System.Serializable]
 	public sealed class EntitiesData {
 		public List<int> AvailableIds = new();
-		public SerializableDictionary<int, Entity> Entities = new();
+		public Dictionary<int, Entity> Entities = new();
 		public int NextAvailableId = 0;
 		public HashSet<int> AliveEntities = new();
 	}

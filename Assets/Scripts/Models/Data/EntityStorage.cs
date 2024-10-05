@@ -7,7 +7,7 @@ namespace SimpleMotions {
 		private int _nextAvailableId = 0;
 		private readonly List<int> _availableIds = new();
 		private readonly HashSet<int> _aliveEntities = new();
-		private readonly SerializableDictionary<int, Entity> _entities = new();
+		private readonly Dictionary<int, Entity> _entities = new();
 
 		public EntityStorage(EntitiesData entitiesData) {
 			_nextAvailableId = entitiesData.NextAvailableId;

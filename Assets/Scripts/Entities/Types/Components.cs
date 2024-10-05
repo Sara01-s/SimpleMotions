@@ -22,16 +22,6 @@ namespace SimpleMotions {
 	}
 
 	[Serializable]
-	public sealed class Keyframe {
-		public float Time;
-		public float Value;
-	}
-
-	public sealed class KeyframeStorage : Component {
-		public System.Collections.Generic.List<(Keyframe, Keyframe)> KeyFramePairs;
-	}
-
-	[Serializable]
 	public sealed class Color {
 		public float R;
 		public float G;

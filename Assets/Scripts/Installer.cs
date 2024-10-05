@@ -21,7 +21,6 @@ namespace SimpleMotions {
 		private IVideoDatabase _videoDatabase;
 
 		private IVideoTimeline _videoTimeline;
-		private VideoPlayer _videoPlayer; // TODO - Hacer interfaz.
 		private VideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 
@@ -40,7 +39,7 @@ namespace SimpleMotions {
         }
 
 		private void BuildStorage() {
-			ISerializer serializer = new JsonSerializer(prettyPrint: true); // Intercambiable por otros serializadores
+			ISerializer serializer = new NewtonJsonSerializer(); // Intercambiable por otros serializadores
 			var projectDataSerializer = new DataSerializer<ProjectData>(serializer);
 			var editorDataSerializer = new DataSerializer<EditorData>(serializer);
 
@@ -69,7 +68,6 @@ namespace SimpleMotions {
 
 		private void BuildVideoEditor() {
 			_videoTimeline = new VideoTimeline(_videoDatabase);
-            _videoPlayer = new VideoPlayer(_componentStorage);
             _videoCanvas = new VideoCanvas(_entityStorage, _eventService);
 			_videoEntities = new VideoEntities(_componentStorage, _entityStorage, _videoCanvas);
 		}

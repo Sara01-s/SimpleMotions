@@ -1,9 +1,11 @@
+using System.Collections.Generic;
+
 namespace SimpleMotions {
 
 	[System.Serializable]
 	public sealed class ComponentsData {
-		public SerializableDictionary<System.Type, SerializableDictionary<int, Component>> Components = new();
-		public SerializableDictionary<System.Type, int> ComponentBitmasks = new();
+		public Dictionary<System.Type, Dictionary<int, Component>> Components = new();
+		public Dictionary<System.Type, int> ComponentBitmasks = new();
 		public int NextComponentBitmask = 1;
 	}
 }
