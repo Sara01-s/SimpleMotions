@@ -7,13 +7,22 @@ namespace SimpleMotions {
 		private int _nextAvailableId = 0;
 		private readonly List<int> _availableIds = new();
 		private readonly HashSet<int> _aliveEntities = new();
-		private readonly Dictionary<int, Entity> _entities = new();
+		private readonly SerializableDictionary<int, Entity> _entities = new();
 
 		public EntityStorage(EntitiesData entitiesData) {
 			_nextAvailableId = entitiesData.NextAvailableId;
 			_availableIds = entitiesData.AvailableIds;
 			_aliveEntities = entitiesData.AliveEntities;
 			_entities = entitiesData.Entities;
+		}
+
+		public EntitiesData GetEntitiesData() {
+			return new EntitiesData {
+				NextAvailableId = _nextAvailableId,
+				AvailableIds = _availableIds,
+				AliveEntities = _aliveEntities,
+				Entities = _entities
+			};
 		}
 
 		public Entity CreateEntity() {

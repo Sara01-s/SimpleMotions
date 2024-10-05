@@ -21,6 +21,14 @@ namespace SimpleMotions {
 			RegisterComponent<KeyframeStorage>();
 			RegisterComponent<Text>();
 		}
+		
+		public ComponentsData GetComponentsData() {
+			return new ComponentsData {
+				Components = _components,
+				ComponentBitmasks = _componentBitmasks,
+				NextComponentBitmask = _nextComponentBitmask
+			};
+		}
 
 		private void RegisterComponent<T>() where T : Component {
 			var type = typeof(T);

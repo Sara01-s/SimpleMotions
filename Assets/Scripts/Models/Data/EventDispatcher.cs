@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 namespace SimpleMotions {
 
-    public sealed class EventDispatcher : IEventService, IDisposable {
+    public sealed class EventDispatcher : IEventService {
 		
         private readonly Dictionary<Type, List<Delegate>> _events;
 
         public EventDispatcher() {
             _events = new Dictionary<Type, List<Delegate>>();
-
-			Services.Instance.RegisterService<IEventService>(service: this);
         }
 
         public void Subscribe<T>(Action<T> callback) {
@@ -40,10 +38,6 @@ namespace SimpleMotions {
                 }
             }
         }
-
-		public void Dispose() {
-			Services.Instance.UnRegisterService<IEventService>();
-		}
 
 	}
 }

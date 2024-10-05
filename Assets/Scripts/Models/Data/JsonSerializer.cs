@@ -14,6 +14,11 @@ namespace SimpleMotions {
 		}
 
 		public T Deserialize<T>(string filepath) {
+			if (!Directory.Exists(filepath)) {
+				Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+				return default;
+			}
+
 			string dataToLoad = string.Empty;
 
 			using (var stream = new FileStream(filepath, FileMode.Open)) {

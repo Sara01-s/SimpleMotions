@@ -9,6 +9,7 @@ namespace SimpleMotions {
 		bool IsAlive(Entity entity);
 		IEnumerable<int> GetAliveEntities();
 		Entity GetEntity(int entityId);
+		EntitiesData GetEntitiesData();
 
 	}
 }

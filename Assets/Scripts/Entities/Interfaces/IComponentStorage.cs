@@ -11,6 +11,7 @@ namespace SimpleMotions {
 		IEnumerable<int> GetEntitiesWithComponent<T>() where T : Component;
 		Dictionary<int, Component> GetComponentsOfType<T>() where T : Component;
 		int GetComponentBitmask<T>() where T : Component;
+		ComponentsData GetComponentsData();
 
 	}
 }

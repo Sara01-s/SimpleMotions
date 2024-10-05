@@ -25,7 +25,7 @@ namespace SimpleMotions {
 				var entityGameObject = new GameObject(entityName);
 
 				_activeEntities.Add(entity, entityGameObject);
-				Debug.Log("xd");
+				Debug.Log("Creada entidad: " + entity.Name);
 				
 				return;
 			}

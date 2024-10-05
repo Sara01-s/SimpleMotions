@@ -82,11 +82,16 @@ namespace SimpleMotions {
 			_videoCanvasView.Configure(videoCanvasViewModel);
 		}
 
-		private void OnDisable() {
+		private void Save() {
+			_projectData.Timeline.Entities = _entityStorage.GetEntitiesData();
+			_projectData.Timeline.Components = _componentStorage.GetComponentsData();
+
 			_projectDataHandler.SaveData(_projectData);
 			_editorDataHandler.SaveData(_editorData);
+		}
 
-			Services.Instance.Clear();
+		private void OnDisable() {
+			Save();
         }
 
     }
