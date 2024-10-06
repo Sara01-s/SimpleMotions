@@ -6,6 +6,12 @@ namespace SimpleMotions {
 		public float Time;
 		public T Value;
 
+		public Keyframe(int entityId, float time, T value) {
+			EntityId = entityId;
+			Time = time;
+			Value = value;
+		}
+
 		public int CompareTo(object obj) {
 			var keyframe = obj as Keyframe<T>;
 
@@ -17,7 +23,7 @@ namespace SimpleMotions {
 		}
 
 		public override string ToString() {
-			return $"Id: {EntityId}, time: {Time}, value: {Value}";
+			return $"Keyframe for entity with id: {EntityId}, at time: {Time} and value: {Value}";
 		}
 
 	}

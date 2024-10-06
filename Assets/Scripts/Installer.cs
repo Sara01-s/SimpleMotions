@@ -16,6 +16,7 @@ namespace SimpleMotions {
 
 		private IEventService _eventService;
 
+		private IKeyframeStorage _keyframeStorage;
 		private IComponentStorage _componentStorage;
 		private IEntityStorage _entityStorage;
 		private IVideoDatabase _videoDatabase;
@@ -59,8 +60,10 @@ namespace SimpleMotions {
 
 			var componentsData = _projectData.Timeline.Components;
 			var entitiesData = _projectData.Timeline.Entities;
+			var keyframeData = _projectData.Timeline.Keyframes;
 			var videoData = new VideoData();
 
+			_keyframeStorage = new KeyframeStorage(keyframeData);
             _componentStorage = new ComponentStorage(componentsData);
 			_entityStorage = new EntityStorage(entitiesData);
             //_videoDatabase = new VideoData();
@@ -69,7 +72,7 @@ namespace SimpleMotions {
 		private void BuildVideoEditor() {
 			_videoTimeline = new VideoTimeline(_videoDatabase);
             _videoCanvas = new VideoCanvas(_componentStorage, _eventService);
-			_videoEntities = new VideoEntities(_componentStorage, _entityStorage, _videoCanvas);
+			_videoEntities = new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
 		}
 
 		private void BuildGUI() {

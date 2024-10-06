@@ -38,6 +38,8 @@ namespace SimpleMotions {
 			string entityName = $"Entity {entity.Id}: \"{entity.Name}\"";
 			var entityGameObject = new GameObject(entityName);
 
+			entityGameObject.transform.SetParent(transform);
+
 			foreach (var component in components) {
 				if (component is SimpleMotions.Transform) {
 					var entityTransform = component as SimpleMotions.Transform;

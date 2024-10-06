@@ -12,6 +12,7 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class TimelineData {
+		public KeyframesData Keyframes = new();
 		public EntitiesData Entities = new();
 		public ComponentsData Components = new();
 	}

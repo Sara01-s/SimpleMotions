@@ -4,7 +4,7 @@ namespace SimpleMotions {
 
 	public sealed class KeyframesData {
 
-		public HashSet<SortedSet<Keyframe<System.Type>>> AllKeyframes;
+		public HashSet<SortedSet<Keyframe<System.Type>>> AllKeyframes = new();
 		
 		public SortedSet<Keyframe<Position>> PositionKeyframes = new();
 		public SortedSet<Keyframe<Scale>> ScaleKeyframes = new();

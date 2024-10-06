@@ -22,6 +22,12 @@ namespace SimpleMotions {
 			_textKeyframes = keyframesData.TextKeyframes;
 		}
 
+		public void AddKeyframe(Entity entity, float time, Position value) {
+			var keyframe = new Keyframe<Position>(entity.Id, time, value);
+
+			_positionKeyframes.Add(keyframe);
+		}
+
 		public KeyframesData GetKeyframesData() {
 			return new KeyframesData {
 				AllKeyframes = _allKeyframes,
