@@ -6,9 +6,9 @@ namespace SimpleMotions {
 		public int Frame;
 		public T Value;
 
-		public Keyframe(int entityId, float frame, T value) {
+		public Keyframe(int entityId, int frame, T value) {
 			EntityId = entityId;
-			Frame = frame
+			Frame = frame;
 			Value = value;
 		}
 
@@ -16,14 +16,14 @@ namespace SimpleMotions {
 			var keyframe = obj as Keyframe<T>;
 
 			if (keyframe is not null) {
-				return Time.CompareTo(keyframe.Time);
+				return Frame.CompareTo(keyframe.Frame);
 			}
 
 			return 1;
 		}
 
 		public override string ToString() {
-			return $"Keyframe for entity with id: {EntityId}, at time: {Time} and value: {Value}";
+			return $"Keyframe for entity with id: {EntityId}, at time: {Frame} and value: {Value}";
 		}
 
 	}
