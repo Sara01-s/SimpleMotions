@@ -4,33 +4,13 @@ namespace SimpleMotions {
 
         private readonly IVideoPlayer _videoPlayer;
 
-        private bool _shouldPlay;
-
         public VideoPlayback(IVideoPlayer videoPlayer) {
             _videoPlayer = videoPlayer;
         }
         
         public void TogglePlay() {
-            _shouldPlay = !_shouldPlay;
-
-            if (_shouldPlay) {
-                _videoPlayer.Play();
-            }
-            else {
-                _videoPlayer.Pause();
-            }
+            _videoPlayer.TogglePlay();
         }
-
         
-		public void Play() {
-			UnityEngine.Debug.Log("Play");
-			_videoPlayer.Play();
-		}
-
-		public void Pause() {
-			UnityEngine.Debug.Log("Pause");
-			_videoPlayer.Pause();
-		}
-
     }
 }
