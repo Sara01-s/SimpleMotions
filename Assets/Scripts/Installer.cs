@@ -25,6 +25,7 @@ namespace SimpleMotions {
 		private VideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 
+		private IVideoAnimator _videoAnimator;
 		private IVideoPlayer _videoPlayer;
 
 		// APP DATA //
@@ -77,7 +78,8 @@ namespace SimpleMotions {
 		private void BuildVideoEditor() {
 			var videoData = _projectData.Video;
 
-			_videoPlayer 	= new VideoPlayer(videoData);
+			_videoAnimator	= new VideoAnimator();
+			_videoPlayer 	= new VideoPlayer(videoData, _videoAnimator);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
 			_videoTimeline 	= new VideoTimeline(_videoPlayer);
             _videoCanvas 	= new VideoCanvas(_componentStorage, _eventService);
