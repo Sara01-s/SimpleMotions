@@ -6,6 +6,7 @@ namespace SimpleMotions {
 		void Play();
 		void Resume();
 		void Pause();
+		void Reset();
 		void SetCurrentTime(float seconds);
 
 	}

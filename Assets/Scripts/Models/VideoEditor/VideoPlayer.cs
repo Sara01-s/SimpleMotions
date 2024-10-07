@@ -23,6 +23,12 @@ namespace SimpleMotions {
 			_videoData.IsPlaying = false;
 		}
 
+		public void Reset() {
+			_videoData.IsPlaying = false;
+			_videoData.CurrentFrame = 0;
+			_videoData.CurrentTime = 0.0f;
+		}
+
 		public void SetCurrentTime(float seconds) {
 			_videoData.CurrentTime = seconds;
 		}
@@ -31,11 +37,28 @@ namespace SimpleMotions {
 			return _videoData;
 		}
 
+		private bool CursorIsAtTheEnd() {
+			return !_videoData.IsLooping && _videoData.CurrentFrame == _videoData.TotalFrames;
+		}
+
 		private async void IncreaseCurrentTime() {
+			if (CursorIsAtTheEnd()) {
+				_videoData.CurrentFrame = 0;
+			}
+
 			while (_videoData.IsPlaying) {
 				_videoData.CurrentFrame++;
+				
+				UnityEngine.Debug.Log($"({_videoData.CurrentFrame} / {_videoData.TotalFrames})");
 
-				UnityEngine.Debug.Log(_videoData.CurrentFrame);
+				if (_videoData.IsLooping) {
+					_videoData.CurrentFrame %= _videoData.TotalFrames;
+				}
+				else if (_videoData.CurrentFrame >= _videoData.TotalFrames) {
+					_videoData.CurrentFrame = _videoData.TotalFrames;
+					Pause();
+					break;
+				}
 
 				await Task.Yield();
 			}

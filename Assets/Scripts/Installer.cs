@@ -6,6 +6,7 @@ namespace SimpleMotions {
     public sealed class Installer : MonoBehaviour {
 
 		[Header("UI")]
+		[SerializeField] private VideoPlaybackView _videoPlaybackView;
         [SerializeField] private VideoTimelineView _videoTimelineView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
 
@@ -14,8 +15,12 @@ namespace SimpleMotions {
 		[SerializeField] private string _projectDataFileName;
 		[SerializeField] private string _editorDataFileName;
 
+		[Header("Video Settings")]
+		[SerializeField, Range(12, 1024)] private int _targetFrameRate = 60;
+
 		private IEventService _eventService;
 
+		private IVideoPlayback _videoPlayback;
 		private IVideoTimeline _videoTimeline;
 		private VideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
@@ -33,6 +38,7 @@ namespace SimpleMotions {
 		private EditorData _editorData;
 
         private void Start() {
+			Application.targetFrameRate = _targetFrameRate;
 			_eventService = new EventDispatcher();
 			
 			// DO NOT CHANGE ORDER OF EXECUTION.
@@ -71,16 +77,19 @@ namespace SimpleMotions {
 		private void BuildVideoEditor() {
 			var videoData = _projectData.Video;
 
-			_videoPlayer = new VideoPlayer(videoData);
-			_videoTimeline = new VideoTimeline(_videoPlayer);
-            _videoCanvas = new VideoCanvas(_componentStorage, _eventService);
-			_videoEntities = new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
+			_videoPlayer 	= new VideoPlayer(videoData);
+			_videoPlayback 	= new VideoPlayback(_videoPlayer);
+			_videoTimeline 	= new VideoTimeline(_videoPlayer);
+            _videoCanvas 	= new VideoCanvas(_componentStorage, _eventService);
+			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
 		}
 
 		private void BuildGUI() {
-			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities);
+			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback);
+			var videoTimelineViewModel = new VideoTimelineViewModel(_videoEntities);
 			var videoCanvasViewModel = new VideoCanvasViewModel(_eventService);
 
+			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
 		}
@@ -89,6 +98,9 @@ namespace SimpleMotions {
 			_projectData.Timeline.Entities = _entityStorage.GetEntitiesData();
 			_projectData.Timeline.Components = _componentStorage.GetComponentsData();
 			_projectData.Video = _videoPlayer.GetVideoData();
+			
+			_projectData.Video.CurrentTime = 0;
+			_projectData.Video.CurrentFrame = 0;
 			_projectData.Video.IsPlaying = false;
 
 			_projectDataHandler.SaveData(_projectData);

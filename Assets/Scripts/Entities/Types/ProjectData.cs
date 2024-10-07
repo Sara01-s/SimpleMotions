@@ -22,10 +22,11 @@ namespace SimpleMotions {
 		public bool IsLooping;
 		public bool IsPlaying;
 		public float CurrentTime;
-		public float Duration = 20.0f; // In seconds
+		public float Duration; // In seconds
 
+		public int TargetFrameRate;
 		public int CurrentFrame;
-		public int TotalFrames;
+		public int TotalFrames = 300;
 
 		public Color CanvasBackgroundColor = new();
 		public Scale Resolution = new();
