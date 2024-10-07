@@ -3,12 +3,12 @@ namespace SimpleMotions {
 	public sealed class Keyframe<T> : System.IComparable {
 
 		public int EntityId;
-		public float Time;
+		public int Frame;
 		public T Value;
 
-		public Keyframe(int entityId, float time, T value) {
+		public Keyframe(int entityId, float frame, T value) {
 			EntityId = entityId;
-			Time = time;
+			Frame = frame
 			Value = value;
 		}
 

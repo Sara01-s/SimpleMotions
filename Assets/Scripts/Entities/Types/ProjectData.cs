@@ -19,8 +19,15 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class VideoData {
-		public Color CanvasBackgroundColor = new();
+		public bool IsLooping;
+		public bool IsPlaying;
+		public float CurrentTime;
+		public float Duration = 20.0f; // In seconds
+
+		public int CurrentFrame;
 		public int TotalFrames;
+
+		public Color CanvasBackgroundColor = new();
 		public Scale Resolution = new();
 	}
 

@@ -10,7 +10,7 @@ namespace SimpleMotions {
 
 		private readonly IVideoTimeline _videoTimeline;
 		private readonly IVideoEntities _videoEntities;
-        private bool _isPlaying = false;
+        private bool _shouldPlay = false;
 
         public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoEntities videoEntities) {
             _videoTimeline = videoTimeline;
@@ -21,10 +21,10 @@ namespace SimpleMotions {
         }
 
         private void OnTogglePlay() {
-            _isPlaying = !_isPlaying;
+            _shouldPlay = !_shouldPlay;
 
-            if (_isPlaying) {
-                _videoTimeline.Resume();
+            if (_shouldPlay) {
+                _videoTimeline.Play();
             }
             else {
                 _videoTimeline.Pause();

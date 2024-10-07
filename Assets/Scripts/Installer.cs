@@ -16,16 +16,17 @@ namespace SimpleMotions {
 
 		private IEventService _eventService;
 
-		private IKeyframeStorage _keyframeStorage;
-		private IComponentStorage _componentStorage;
-		private IEntityStorage _entityStorage;
-		private IVideoDatabase _videoDatabase;
-
 		private IVideoTimeline _videoTimeline;
 		private VideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 
+		private IVideoPlayer _videoPlayer;
+
 		// APP DATA //
+		private IKeyframeStorage _keyframeStorage;
+		private IComponentStorage _componentStorage;
+		private IEntityStorage _entityStorage;
+
 		private ProjectDataHandler _projectDataHandler;
 		private EditorDataHandler _editorDataHandler;
 		private ProjectData _projectData;
@@ -34,6 +35,7 @@ namespace SimpleMotions {
         private void Start() {
 			_eventService = new EventDispatcher();
 			
+			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
 			BuildVideoEditor();
 			BuildGUI();
@@ -55,22 +57,22 @@ namespace SimpleMotions {
 			_projectData = _projectDataHandler.LoadData();
 			_editorData = _editorDataHandler.LoadData();
 
-			print(_projectData.ProjectName);
 			_projectData.ProjectName = _projectName;
 
 			var componentsData = _projectData.Timeline.Components;
 			var entitiesData = _projectData.Timeline.Entities;
 			var keyframeData = _projectData.Timeline.Keyframes;
-			var videoData = new VideoData();
-
+			
 			_keyframeStorage = new KeyframeStorage(keyframeData);
             _componentStorage = new ComponentStorage(componentsData);
 			_entityStorage = new EntityStorage(entitiesData);
-            //_videoDatabase = new VideoData();
 		}
 
 		private void BuildVideoEditor() {
-			_videoTimeline = new VideoTimeline(_videoDatabase);
+			var videoData = _projectData.Video;
+
+			_videoPlayer = new VideoPlayer(videoData);
+			_videoTimeline = new VideoTimeline(_videoPlayer);
             _videoCanvas = new VideoCanvas(_componentStorage, _eventService);
 			_videoEntities = new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
 		}
@@ -86,6 +88,8 @@ namespace SimpleMotions {
 		private void Save() {
 			_projectData.Timeline.Entities = _entityStorage.GetEntitiesData();
 			_projectData.Timeline.Components = _componentStorage.GetComponentsData();
+			_projectData.Video = _videoPlayer.GetVideoData();
+			_projectData.Video.IsPlaying = false;
 
 			_projectDataHandler.SaveData(_projectData);
 			_editorDataHandler.SaveData(_editorData);
