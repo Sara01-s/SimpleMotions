@@ -23,7 +23,7 @@ namespace SimpleMotions {
 		}
 
 		public override string ToString() {
-			return $"Keyframe for entity with id: {EntityId}, at time: {Frame} and value: {Value}";
+			return $"Keyframe (entity id: {EntityId}, frame: {Frame} value: {Value}";
 		}
 
 	}

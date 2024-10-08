@@ -1,10 +1,17 @@
 namespace SimpleMotions {
 
     public sealed class VideoAnimator : IVideoAnimator {
-
-        public void InterpolateKeyframes<T>(Keyframe<T>[] keyframes) where T : Component {
-            throw new System.NotImplementedException();
-        }
         
+        private readonly IKeyframeStorage _keyframeStorage;
+
+        public VideoAnimator(IKeyframeStorage keyframeStorage) {
+            _keyframeStorage = keyframeStorage;
+        }
+
+        public void InterpolateKeyframes(int currentFrame) {
+
+            UnityEngine.Debug.Log(_keyframeStorage.GetKeyframeAt(currentFrame));
+
+        }
     }
 }

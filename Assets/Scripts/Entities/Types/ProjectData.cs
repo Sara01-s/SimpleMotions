@@ -19,7 +19,7 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class VideoData {
-		public bool IsLooping;
+		public bool IsLooping = true;
 		public bool IsPlaying;
 		public float CurrentTime;
 		public float Duration; // In seconds

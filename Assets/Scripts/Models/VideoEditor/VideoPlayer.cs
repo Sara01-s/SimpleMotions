@@ -64,14 +64,15 @@ namespace SimpleMotions {
 				
 				UnityEngine.Debug.Log($"({_videoData.CurrentFrame} / {_videoData.TotalFrames})");
 
-				// Avisar a IVideoAnimator que interpole los keyframes de todas las entidades.P:
+				// Avisar a IVideoAnimator que interpole los keyframes de todas las entidades
+				_videoAnimator.InterpolateKeyframes(_videoData.CurrentFrame);
 
 				if (_videoData.IsLooping) {
 					_videoData.CurrentFrame %= _videoData.TotalFrames;
 				}
 				else if (_videoData.CurrentFrame >= _videoData.TotalFrames) {
 					_videoData.CurrentFrame = _videoData.TotalFrames;
-					Pause();
+					TogglePlay();
 					break;
 				}
 

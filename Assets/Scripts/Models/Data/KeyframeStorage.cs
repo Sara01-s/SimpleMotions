@@ -1,41 +1,41 @@
 using System.Collections.Generic;
+using System;
 
 namespace SimpleMotions {
 
 	public sealed class KeyframeStorage : IKeyframeStorage {
 
-		private readonly HashSet<SortedSet<Keyframe<System.Type>>> _allKeyframes;
+		private readonly SortedDictionary<int, Keyframe<Transform>> _transformKeyframes = new();
+		private readonly SortedDictionary<int, Keyframe<Shape>> _shapeKeyframes = new();
+		private readonly SortedDictionary<int, Keyframe<Text>> _textKeyframes = new();
 
-		private readonly SortedSet<Keyframe<Position>> _positionKeyframes = new();
-		private readonly SortedSet<Keyframe<Scale>> _scaleKeyframes = new();
-		private readonly SortedSet<Keyframe<Shape>> _shapeKeyframes = new();
-		private readonly SortedSet<Keyframe<Roll>> _rollKeyframes = new();
-		private readonly SortedSet<Keyframe<Text>> _textKeyframes = new();
+		private readonly Dictionary<Type, SortedDictionary<int, Keyframe<Component>>> _allKeyframes = new();
 
 		public KeyframeStorage(KeyframesData keyframesData) {
-			_allKeyframes = keyframesData.AllKeyframes;
-			
-			_positionKeyframes = keyframesData.PositionKeyframes;
-			_scaleKeyframes = keyframesData.ScaleKeyframes;
+			_transformKeyframes = keyframesData.TransformKeyframes;
 			_shapeKeyframes = keyframesData.ShapeKeyframes;
-			_rollKeyframes = keyframesData.RollKeyframes;
 			_textKeyframes = keyframesData.TextKeyframes;
 		}
 
 		public void AddKeyframe(Entity entity, int frame, Position value) {
-			var keyframe = new Keyframe<Position>(entity.Id, frame, value);
+			var keyframe = new Keyframe<Transform>(entity.Id, frame, new Transform { Position = value });
 
-			_positionKeyframes.Add(keyframe);
+			_transformKeyframes.Add(frame, keyframe);
 		}
 
-		public KeyframesData GetKeyframesData() {
-			return new KeyframesData {
-				AllKeyframes = _allKeyframes,
+        public Keyframe<Transform> GetKeyframeAt(int frame) {
+			if (_transformKeyframes.TryGetValue(frame, out var keyframe)) {
+				return keyframe;
+			}
+			else {
+				return new Keyframe<Transform>(-1, 0, new Transform());
+			}
+        }
 
-				PositionKeyframes = _positionKeyframes,
-				ScaleKeyframes = _scaleKeyframes,
+        public KeyframesData GetKeyframesData() {
+			return new KeyframesData {
+				TransformKeyframes = _transformKeyframes,
 				ShapeKeyframes = _shapeKeyframes,
-				RollKeyframes = _rollKeyframes,
 				TextKeyframes = _textKeyframes
 			};
 		}

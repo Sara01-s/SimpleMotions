@@ -78,7 +78,7 @@ namespace SimpleMotions {
 		private void BuildVideoEditor() {
 			var videoData = _projectData.Video;
 
-			_videoAnimator	= new VideoAnimator();
+			_videoAnimator	= new VideoAnimator(_keyframeStorage);
 			_videoPlayer 	= new VideoPlayer(videoData, _videoAnimator);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
 			_videoTimeline 	= new VideoTimeline(_videoPlayer);

@@ -11,7 +11,13 @@ namespace SimpleMotions {
 		public Position Position = new();
 		public Scale Scale = new();
 		public Roll Roll = new();
-	}
+
+#if DEBUG
+        public override string ToString() {
+			return $"Transform (Position: {Position}, Scale {Scale}, Roll {Roll})";
+        }
+#endif
+    }
 
 	public sealed class Position {
 		public static Position Zero = new(0.0f, 0.0f);
