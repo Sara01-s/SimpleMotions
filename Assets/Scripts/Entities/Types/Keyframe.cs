@@ -2,6 +2,8 @@ namespace SimpleMotions {
 
 	public sealed class Keyframe<T> : System.IComparable {
 
+		public static Keyframe<T> Empty = new(-1, -1, default); 
+
 		public int EntityId;
 		public int Frame;
 		public T Value;

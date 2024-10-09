@@ -59,6 +59,8 @@ namespace SimpleMotions {
 				_videoData.CurrentFrame = 0;
 			}
 
+			_videoAnimator.GenerateVideoCache();
+
 			while (_videoData.IsPlaying) {
 				_videoData.CurrentFrame++;
 				
@@ -67,6 +69,8 @@ namespace SimpleMotions {
 				// Avisar a IVideoAnimator que interpole los keyframes de todas las entidades
 				_videoAnimator.InterpolateKeyframes(_videoData.CurrentFrame);
 
+
+				// End behaviour
 				if (_videoData.IsLooping) {
 					_videoData.CurrentFrame %= _videoData.TotalFrames;
 				}

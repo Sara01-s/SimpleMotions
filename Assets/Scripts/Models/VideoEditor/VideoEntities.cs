@@ -27,9 +27,9 @@ namespace SimpleMotions {
 			shape.Color = Color.Red;
 			shape.PrimitiveShape = Shape.Primitive.Circle;
 
-			_keyframeStorage.AddKeyframe(newEntity, frame: 0,  value: new Position(5.0f, 10.0f));
-			_keyframeStorage.AddKeyframe(newEntity, frame: 10, value: new Position(-5.0f, -8.0f));
-			_keyframeStorage.AddKeyframe(newEntity, frame: 40, value: new Position(-10.0f, -4.0f));
+			_keyframeStorage.AddKeyframe(newEntity, frame: 1,  value: new Position(5.0f, 10.0f));
+			_keyframeStorage.AddKeyframe(newEntity, frame: 150, value: new Position(-5.0f, -8.0f));
+			_keyframeStorage.AddKeyframe(newEntity, frame: 300, value: new Position(-10.0f, -4.0f));
 
 
 			_videoCanvas.UpdateCanvas(newEntity);
