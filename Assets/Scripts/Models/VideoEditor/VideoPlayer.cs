@@ -56,19 +56,14 @@ namespace SimpleMotions {
 
 		private async void IncreaseCurrentTime() {
 			if (CursorIsAtTheEnd()) {
-				_videoData.CurrentFrame = 0;
+				_videoData.CurrentFrame = TimelineData.FIRST_KEYFRAME;
 			}
 
 			_videoAnimator.GenerateVideoCache();
 
-			while (_videoData.IsPlaying) {
-				_videoData.CurrentFrame++;
-				
-				UnityEngine.Debug.Log($"({_videoData.CurrentFrame} / {_videoData.TotalFrames})");
-
+			while (_videoData.IsPlaying) {			
 				// Avisar a IVideoAnimator que interpole los keyframes de todas las entidades
 				_videoAnimator.InterpolateKeyframes(_videoData.CurrentFrame);
-
 
 				// End behaviour
 				if (_videoData.IsLooping) {
@@ -79,6 +74,8 @@ namespace SimpleMotions {
 					TogglePlay();
 					break;
 				}
+
+				_videoData.CurrentFrame++;
 
 				await Task.Yield();
 			}

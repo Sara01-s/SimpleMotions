@@ -78,8 +78,7 @@ namespace SimpleMotions {
 		}
 
 		private void BuildVideoEditor() {
-
-			_videoAnimator	= new VideoAnimator(_keyframeStorage);
+			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage);
 			_videoPlayer 	= new VideoPlayer(_videoData, _videoAnimator);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
 			_videoTimeline 	= new VideoTimeline(_videoPlayer);

@@ -60,22 +60,30 @@ namespace SimpleMotions {
 		}
 
 		public T GetComponent<T>(Entity entity) where T : Component {
+			return GetComponent<T>(entity.Id);
+		}
+
+		public T GetComponent<T>(int entityId) where T : Component {
 			var type = typeof(T);
 			
-			if (_components.ContainsKey(type) && _components[type].ContainsKey(entity.Id)) {
+			if (_components.ContainsKey(type) && _components[type].ContainsKey(entityId)) {
 				// get instance of component "T" from entity "Id"
-				return (T)_components[type][entity.Id];
+				return (T)_components[type][entityId];
 			}
 
 			return null;
 		}
 
 		public Component[] GetAllComponents(Entity entity) {
+			return GetAllComponents(entity.Id);
+		}
+
+		public Component[] GetAllComponents(int entityId) {
 			var components = new List<Component>();
 
 			foreach (var componentType in _components.Keys) { 					// For all registered components
-				if (_components[componentType].ContainsKey(entity.Id)) {		// if entity "id" has that component
-					components.Add(_components[componentType][entity.Id]);		// add the unique component instance associated with entity "id"
+				if (_components[componentType].ContainsKey(entityId)) {		// if entity "id" has that component
+					components.Add(_components[componentType][entityId]);		// add the unique component instance associated with entity "id"
 				}
 			}
 
@@ -83,8 +91,12 @@ namespace SimpleMotions {
 		}
 
 		public bool HasComponent<T>(Entity entity) where T : Component {
+			return HasComponent<T>(entity.Id);
+		}
+
+		public bool HasComponent<T>(int entityId) where T : Component {
 			var type = typeof(T);
-			return _components.ContainsKey(type) && _components[type].ContainsKey(entity.Id);
+			return _components.ContainsKey(type) && _components[type].ContainsKey(entityId);
 		}
 
 		public IEnumerable<int> GetEntitiesWithComponent<T>() where T : Component {

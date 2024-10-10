@@ -32,9 +32,8 @@ namespace SimpleMotions {
 			if (_transformKeyframes.TryGetValue(frame, out var keyframe)) {
 				return keyframe;
 			}
-			else {
-				return Keyframe<Transform>.Empty;
-			}
+
+			return Keyframe<Transform>.Empty;
         }
 
 		public int GetTotalFrames() {

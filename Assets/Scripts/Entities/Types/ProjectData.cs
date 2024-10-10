@@ -12,6 +12,7 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class TimelineData {
+		public const int FIRST_KEYFRAME = 0;
 		public KeyframesData Keyframes = new();
 		public EntitiesData Entities = new();
 		public ComponentsData Components = new();
@@ -25,7 +26,7 @@ namespace SimpleMotions {
 		public float Duration; // In seconds
 
 		public int TargetFrameRate;
-		public int CurrentFrame;
+		public int CurrentFrame = TimelineData.FIRST_KEYFRAME;
 		public int TotalFrames = 300;
 
 		public Color CanvasBackgroundColor = new();
