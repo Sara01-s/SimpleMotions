@@ -5,6 +5,9 @@ namespace SimpleMotions {
     
     public sealed class VideoCanvasView : MonoBehaviour {
 
+		[Header("Entity prefab")]
+		[SerializeField] private GameObject _entityPrefab;
+
 		[Header("Primitive Sprites")]
 		[SerializeField] private Sprite _circleSprite;
 		[SerializeField] private Sprite _rectSprite;
@@ -36,10 +39,11 @@ namespace SimpleMotions {
 
 		private void CreateNewEntity(Entity entity, Component[] components) {
 			string entityName = $"Entity {entity.Id}: \"{entity.Name}\"";
-			var entityGameObject = new GameObject(entityName);
+			var entityGameObject = Instantiate(_entityPrefab, parent: transform);
 
-			entityGameObject.transform.SetParent(transform);
+			entityGameObject.transform.name = entityName;
 
+			// Add components
 			foreach (var component in components) {
 				if (component is SimpleMotions.Transform) {
 					var entityTransform = component as SimpleMotions.Transform;
