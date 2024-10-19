@@ -32,7 +32,7 @@ namespace SimpleMotions {
 		}
 
 		public void Serialize<T>(T data, string filepath) {
-			var dataToStore = JsonConvert.SerializeObject(data, Formatting.Indented);
+ 			var dataToStore = JsonConvert.SerializeObject(data, Formatting.Indented);
 
 			Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 

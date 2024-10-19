@@ -5,36 +5,60 @@ namespace SimpleMotions {
 
 	public sealed class KeyframeStorage : IKeyframeStorage {
 
-		private readonly SortedDictionary<int, Keyframe<Transform>> _transformKeyframes = new();
-		private readonly SortedDictionary<int, Keyframe<Shape>> _shapeKeyframes = new();
-		private readonly SortedDictionary<int, Keyframe<Text>> _textKeyframes = new();
-
-		private readonly Dictionary<Type, SortedDictionary<int, Keyframe<Component>>> _allKeyframes = new();
+		private readonly Dictionary<Type, IKeyframeSpline<Component>> _allKeyframes;
 		private readonly VideoData _videoData;
 
 		public KeyframeStorage(KeyframesData keyframesData, VideoData videoData) {
-			_transformKeyframes = keyframesData.TransformKeyframes;
-			_shapeKeyframes = keyframesData.ShapeKeyframes;
-			_textKeyframes = keyframesData.TextKeyframes;
-
+			_allKeyframes = keyframesData.AllKeyframes;
 			_videoData = videoData;
 		}
 
-		public void AddKeyframe(Entity entity, int frame, Position value) {
-			var keyframe = new Keyframe<Transform>(entity.Id, frame, new Transform { Position = value });
+		private IKeyframeSpline<T> RegisterComponentKeyframes<T>() where T : Component {
+			var componentKeyframes = new KeyframeSpline<T>();
 
-			if (!_transformKeyframes.TryAdd(frame, keyframe)) {
-				return;
-			}
+			_allKeyframes.Add(typeof(T), componentKeyframes);
+			return componentKeyframes;
 		}
 
-        public Keyframe<Transform> GetKeyframeAt(int frame) {
-			if (_transformKeyframes.TryGetValue(frame, out var keyframe)) {
+		public IKeyframeSpline<Component> GetAllKeyframesOfType<T>() where T : Component {
+			var componentType = typeof(T);
+
+			if (_allKeyframes.TryGetValue(componentType, out var componentKeyframes)) {
+				return componentKeyframes;
+			}
+
+			return RegisterComponentKeyframes<T>();
+		}
+
+
+		public void AddKeyframe<T>(int entityId, int frame, T value) where T : Component {
+			IKeyframe<T> keyframe = new Keyframe<T>(entityId, frame, value);
+			var componentKeyframes = GetAllKeyframesOfType<T>();
+
+			UnityEngine.Debug.Log(componentKeyframes);
+
+			componentKeyframes.Add(frame, keyframe);
+		}
+
+        public Keyframe<T> GetKeyframeAt<T>(int frame) where T : Component {
+			var componentKeyframes = GetAllKeyframesOfType<T>();
+
+			if (componentKeyframes.TryGetValue<T>(frame, out var keyframe)) {
 				return keyframe;
 			}
 
-			return Keyframe<Transform>.Empty;
+			return Keyframe<T>.Empty;
         }
+
+		public bool EntityHasKeyframes<T>(int entityId) where T : Component {
+			var componentKeyframes = GetAllKeyframesOfType<T>();
+
+			if (componentKeyframes.Count <= 0) {
+				return false;
+			}
+
+			return componentKeyframes[0].EntityId == entityId;
+		}
 
 		public int GetTotalFrames() {
 			return _videoData.TotalFrames;
@@ -42,9 +66,7 @@ namespace SimpleMotions {
 
         public KeyframesData GetKeyframesData() {
 			return new KeyframesData {
-				TransformKeyframes = _transformKeyframes,
-				ShapeKeyframes = _shapeKeyframes,
-				TextKeyframes = _textKeyframes
+				AllKeyframes = _allKeyframes
 			};
 		}
 

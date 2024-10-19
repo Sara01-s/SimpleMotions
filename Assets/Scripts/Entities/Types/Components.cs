@@ -12,6 +12,41 @@ namespace SimpleMotions {
 		public Scale Scale = new();
 		public Roll Roll = new();
 
+		public Transform() {}
+
+		public Transform(Position position, Scale scale, Roll roll) {
+			Position = position;
+			Scale = scale;
+			Roll = roll;	
+		}
+
+		public Transform(Position position, Scale scale) {
+			Position = position;
+			Scale = scale;
+		}
+
+		public Transform(Scale scale, Roll roll) {
+			Scale = scale;
+			Roll = roll;
+		}
+
+		public Transform(Position position, Roll roll) {
+			Position = position;
+			Roll = roll;
+		}
+
+		public Transform(Position position) {
+			Position = position;
+		}
+
+		public Transform(Scale scale) {
+			Scale = scale;
+		}
+
+		public Transform(Roll roll) {
+			Roll = roll;
+		}
+
 #if DEBUG
         public override string ToString() {
 			return $"Transform (Position: {Position}, Scale {Scale}, Roll {Roll})";

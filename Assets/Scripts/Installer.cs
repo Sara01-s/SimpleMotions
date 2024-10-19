@@ -71,6 +71,7 @@ namespace SimpleMotions {
 			var entitiesData = _projectData.Timeline.Entities;
 			var keyframeData = _projectData.Timeline.Keyframes;
 			_videoData = _projectData.Video;
+			_videoData.TargetFrameRate = _targetFrameRate;
 			
 			_keyframeStorage = new KeyframeStorage(keyframeData, _videoData);
             _componentStorage = new ComponentStorage(componentsData);
@@ -78,7 +79,7 @@ namespace SimpleMotions {
 		}
 
 		private void BuildVideoEditor() {
-			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage);
+			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _eventService, _entityStorage);
 			_videoPlayer 	= new VideoPlayer(_videoData, _videoAnimator);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
 			_videoTimeline 	= new VideoTimeline(_videoPlayer);

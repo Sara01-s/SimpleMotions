@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 namespace SimpleMotions {
@@ -13,7 +14,7 @@ namespace SimpleMotions {
 		[SerializeField] private Sprite _rectSprite;
 		[SerializeField] private Sprite _triangleSprite;
 
-		private readonly Dictionary<Entity, GameObject> _activeEntities = new();
+		private readonly Dictionary<int, GameObject> _activeEntities = new();
 
         public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
 			videoCanvasViewModel.UpdateCanvas.Subscribe(OnUpdateCanvas);
@@ -27,50 +28,68 @@ namespace SimpleMotions {
 			var entity = entityDisplayInfo.Entity;
 			var components = entityDisplayInfo.Components;
 
-			if (!_activeEntities.ContainsKey(entity)) {
+			// entity not registered, create it.
+			if (!_activeEntities.ContainsKey(entity.Id)) {
 				CreateNewEntity(entity, components);
 				return;
 			}
 
-			if (_activeEntities.TryGetValue(entity, out var _)) {
-				print("YA ESTABA REGISTRADA XD");
+			// entity already registered, update it.
+			UpdateEntity(entity, components);
+		}
+
+		private void UpdateEntity(Entity entity, Component[] components) {
+			if (_activeEntities.TryGetValue(entity.Id, out var entityUnity)) {
+				var entityUnityTransform = entityUnity.GetComponent<RectTransform>();
+
+				foreach (var component in components) {
+					if (component is Transform transform) {
+						var entitySimplePosition = new Vector2(transform.Position.X, transform.Position.Y);
+						entityUnityTransform.anchoredPosition = entitySimplePosition;
+					}
+					else if (component is Shape shape) {
+						var entityUnityRenderer = entityUnity.GetComponent<Image>();
+						var entityUnityColor = new UnityEngine.Color(shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A);
+						entityUnityRenderer.color = entityUnityColor;
+					}
+				}
 			}
+
 		}
 
 		private void CreateNewEntity(Entity entity, Component[] components) {
 			string entityName = $"Entity {entity.Id}: \"{entity.Name}\"";
-			var entityGameObject = Instantiate(_entityPrefab, parent: transform);
+			var entityUnity = Instantiate(_entityPrefab, parent: transform);
 
-			entityGameObject.transform.name = entityName;
+			entityUnity.transform.name = entityName;
 
 			// Add components
 			foreach (var component in components) {
-				if (component is SimpleMotions.Transform) {
-					var entityTransform = component as SimpleMotions.Transform;
-					var entityPosition = new Vector2(entityTransform.Position.X, entityTransform.Position.Y);
-					var entityScale = new Vector2(entityTransform.Scale.Width, entityTransform.Scale.Height);
-					var entityRoll = new Vector3(0.0f, 0.0f, entityTransform.Roll.Angle);
+				if (component is SimpleMotions.Transform transform) {
+					var entitySimplePosition = new Vector2(transform.Position.X, transform.Position.Y);
+					var entitySimpleScale	 = new Vector2(transform.Scale.Width, transform.Scale.Height);
+					var entitySimpleRoll 	 = new Vector3(0.0f, 0.0f, transform.Roll.Angle);
 
-					entityGameObject.transform.position = entityPosition;
-					entityGameObject.transform.localScale = entityScale;
-					entityGameObject.transform.eulerAngles = entityRoll;
+					var entityUnityTransform 				= entityUnity.GetComponent<RectTransform>();
+					entityUnityTransform.anchoredPosition 	= entitySimplePosition;
+					entityUnityTransform.localScale 		= entitySimpleScale;
+					entityUnityTransform.eulerAngles 		= entitySimpleRoll;
 				}
-				else if (component is SimpleMotions.Shape) {
-					var entityShape = component as Shape;
-					var entityColor = new UnityEngine.Color(entityShape.Color.R, entityShape.Color.G, entityShape.Color.B, entityShape.Color.A);
-					var entityRenderer = entityGameObject.AddComponent<SpriteRenderer>();
+				else if (component is SimpleMotions.Shape shape) {
+					var entitySimpleColor = new UnityEngine.Color(shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A);
+					var entitySimpleRenderer = entityUnity.AddComponent<Image>();
 
-					entityRenderer.color = entityColor;
+					entitySimpleRenderer.color = entitySimpleColor;
 
-					switch (entityShape.PrimitiveShape) {
+					switch (shape.PrimitiveShape) {
 						case Shape.Primitive.Triangle:
-							entityRenderer.sprite = _triangleSprite;
+							entitySimpleRenderer.sprite = _triangleSprite;
 							break;
 						case Shape.Primitive.Circle:
-							entityRenderer.sprite = _circleSprite;
+							entitySimpleRenderer.sprite = _circleSprite;
 							break;
 						case Shape.Primitive.Rect:
-							entityRenderer.sprite = _rectSprite;
+							entitySimpleRenderer.sprite = _rectSprite;
 							break;
 						default:
 							Debug.LogError("Something horrendous happened.");
@@ -79,7 +98,7 @@ namespace SimpleMotions {
 				}
 			}
 
-			_activeEntities.Add(entity, entityGameObject);
+			_activeEntities.Add(entity.Id, entityUnity);
 			Debug.Log("Creada entidad: " + entity.Name);
 		}
 

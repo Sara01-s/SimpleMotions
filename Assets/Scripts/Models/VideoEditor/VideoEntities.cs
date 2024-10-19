@@ -27,9 +27,16 @@ namespace SimpleMotions {
 			shape.Color = Color.Red;
 			shape.PrimitiveShape = Shape.Primitive.Circle;
 
-			_keyframeStorage.AddKeyframe(newEntity, frame: 20,  value: new Position(5.0f, 10.0f));
-			_keyframeStorage.AddKeyframe(newEntity, frame: 150, value: new Position(-5.0f, -8.0f));
-			_keyframeStorage.AddKeyframe(newEntity, frame: 250, value: new Position(-10.0f, -4.0f));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 0  , value: new Transform(new Position( 0.0f  ,  0.0f  )));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 20 , value: new Transform(new Position( 300.0f,  0.0f  )));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 50 , value: new Transform(new Position( 0.0f  ,  200.0f)));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 100, value: new Transform(new Position( 0.0f  , -200.0f)));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 150, value: new Transform(new Position(-300.0f, -150.0f)));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 200, value: new Transform(new Position(-100.0f,  200.0f)));
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 250, value: new Transform(new Position( 100.0f, -200.0f)));
+
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 0, value: new Shape { Color = Color.Yellow });
+			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 100, value: new Shape { Color = Color.Blue });
 
 
 			_videoCanvas.UpdateCanvas(newEntity);

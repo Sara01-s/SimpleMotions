@@ -33,7 +33,7 @@ namespace SimpleMotions {
 			var type = typeof(T);
 
 			if (!_componentBitmasks.ContainsKey(type)) {
-				_componentBitmasks[type] = _nextComponentBitmask;
+				_componentBitmasks.Add(type, _nextComponentBitmask);
 				_nextComponentBitmask <<= 1;
 			}
 		}
@@ -59,10 +59,6 @@ namespace SimpleMotions {
 			_components[componentType].Remove(entity.Id);
 		}
 
-		public T GetComponent<T>(Entity entity) where T : Component {
-			return GetComponent<T>(entity.Id);
-		}
-
 		public T GetComponent<T>(int entityId) where T : Component {
 			var type = typeof(T);
 			
@@ -72,10 +68,6 @@ namespace SimpleMotions {
 			}
 
 			return null;
-		}
-
-		public Component[] GetAllComponents(Entity entity) {
-			return GetAllComponents(entity.Id);
 		}
 
 		public Component[] GetAllComponents(int entityId) {
@@ -88,10 +80,6 @@ namespace SimpleMotions {
 			}
 
 			return components.ToArray();
-		}
-
-		public bool HasComponent<T>(Entity entity) where T : Component {
-			return HasComponent<T>(entity.Id);
 		}
 
 		public bool HasComponent<T>(int entityId) where T : Component {

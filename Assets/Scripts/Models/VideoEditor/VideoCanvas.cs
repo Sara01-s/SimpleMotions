@@ -16,7 +16,7 @@ namespace SimpleMotions {
 		}
 
 		public void UpdateCanvas(Entity entity) {
-			var components = _componentStorage.GetAllComponents(entity);
+			var components = _componentStorage.GetAllComponents(entity.Id);
 			var entityDisplayInfo = new EntityDisplayInfo {
 				Entity = entity,
 				Components = components
