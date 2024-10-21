@@ -1,39 +1,41 @@
-using System.Collections;
 using System.Collections.Generic;
 
 namespace SimpleMotions {
 
     public interface IKeyframeSpline<out T> where T : Component {
 		
-		public IKeyframe<T> this[int frame] { get; }
-		public int Count { get; }
-		void Add<TComponent>(int frame, IKeyframe<TComponent> keyframe) where TComponent : Component;
-		IEnumerable<IKeyframe<T>> GetKeyframes();
-		bool TryGetValue<TComponent>(int frame, out Keyframe<TComponent> keyframe) where TComponent : Component;
+		void Add(int frame, IKeyframe<Component> keyframe);
+		IEnumerable<IKeyframe<Component>> GetKeyframes();
+		bool TryGetValue(int frame, out IKeyframe<Component> keyframe);
+
+		int Count { get; }
+		IKeyframe<Component> this[int frame] { get; }
+
 	}
 
 	[System.Serializable]
     public class KeyframeSpline<T> : IKeyframeSpline<T> where T : Component {
 
-		public IKeyframe<T> this[int frame] => _keyframes[frame];
-        private readonly SortedDictionary<int, IKeyframe<T>> _keyframes = new();
-		public IEnumerable<IKeyframe<T>> Keyframes => _keyframes.Values;
+		public SortedDictionary<int, IKeyframe<Component>> Keyframes => _keyframes;
+		public IKeyframe<Component> this[int frame] => _keyframes[frame];
 		public int Count => _keyframes.Values.Count;
+
+		private readonly SortedDictionary<int, IKeyframe<Component>> _keyframes = new();
 
 		public KeyframeSpline() {}
 
-		public IEnumerable<IKeyframe<T>> GetKeyframes() {
+		public IEnumerable<IKeyframe<Component>> GetKeyframes() {
             return _keyframes.Values;
         }
 
-		public void Add<TComponent>(int frame, IKeyframe<TComponent> keyframe) where TComponent : Component {
-			_keyframes.Add(frame, keyframe as IKeyframe<T>);
+		public void Add(int frame, IKeyframe<Component> keyframe) {
+			_keyframes[frame] = keyframe;
 		}
 
-		public bool TryGetValue<TComponent>(int frame, out Keyframe<TComponent> keyframe) where TComponent : Component {
+		public bool TryGetValue(int frame, out IKeyframe<Component> keyframe) {
 			bool result = _keyframes.TryGetValue(frame, out var storedKeyframe);
 
-			keyframe = storedKeyframe as Keyframe<TComponent>;
+			keyframe = storedKeyframe;
 			return result;
 		}
 

@@ -7,15 +7,19 @@ namespace SimpleMotions {
 	}
 
 	[System.Serializable]
-	public class Keyframe<T> : IKeyframe<T>, System.IComparable where T : Component {
+	public class Keyframe<T> : IKeyframe<T>, System.IComparable where T : Component, new() {
 
-		public static Keyframe<T> Empty = new(Entity.INVALID_ID, TimelineData.INVALID_FRAME, default);
+		public static Keyframe<T> Invalid = new(Entity.INVALID_ID, TimelineData.INVALID_FRAME, new());
 		
 		public int EntityId { get; set; }
 		public int Frame { get; set; }
 		public T Value { get; set; }
 
-		public Keyframe() {}
+		public Keyframe(int entityId) {
+			EntityId = entityId;
+			Frame = TimelineData.FIRST_KEYFRAME;
+			Value = new T();
+		}
 
 		public Keyframe(int entityId, int frame, T value) {
 			EntityId = entityId;

@@ -3,8 +3,8 @@ using System;
 namespace SimpleMotions {
 
 	[Serializable]
-	public abstract class Component 
-	{
+	public class Component {
+		public Component() {}
 	}
 
 	public sealed class Transform : Component {
@@ -95,17 +95,17 @@ namespace SimpleMotions {
 	}
 
 	public sealed class Roll {
-		public float Angle = 0.0f;
+		public float AngleDegrees = 0.0f;
 
 		public Roll() {}
 
-		public Roll(float angle) {
-			Angle = angle;
+		public Roll(float angleDegrees) {
+			AngleDegrees = angleDegrees;
 		}
 
 #if DEBUG
 		public override string ToString() {
-			return $"({Angle})";
+			return $"({AngleDegrees})";
 		}
 #endif
 	}

@@ -45,7 +45,12 @@ namespace SimpleMotions {
 				foreach (var component in components) {
 					if (component is Transform transform) {
 						var entitySimplePosition = new Vector2(transform.Position.X, transform.Position.Y);
+						var entitySimpleScale = new Vector2(transform.Scale.Width, transform.Scale.Height);
+						var entitySimpleRoll = Quaternion.Euler(0.0f, 0.0f, transform.Roll.AngleDegrees);
+
 						entityUnityTransform.anchoredPosition = entitySimplePosition;
+						entityUnityTransform.localScale = entitySimpleScale;
+						entityUnityTransform.rotation = entitySimpleRoll;
 					}
 					else if (component is Shape shape) {
 						var entityUnityRenderer = entityUnity.GetComponent<Image>();
@@ -68,7 +73,7 @@ namespace SimpleMotions {
 				if (component is SimpleMotions.Transform transform) {
 					var entitySimplePosition = new Vector2(transform.Position.X, transform.Position.Y);
 					var entitySimpleScale	 = new Vector2(transform.Scale.Width, transform.Scale.Height);
-					var entitySimpleRoll 	 = new Vector3(0.0f, 0.0f, transform.Roll.Angle);
+					var entitySimpleRoll 	 = new Vector3(0.0f, 0.0f, transform.Roll.AngleDegrees);
 
 					var entityUnityTransform 				= entityUnity.GetComponent<RectTransform>();
 					entityUnityTransform.anchoredPosition 	= entitySimplePosition;
