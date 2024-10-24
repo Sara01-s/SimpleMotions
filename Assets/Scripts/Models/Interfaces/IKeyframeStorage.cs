@@ -22,6 +22,6 @@ namespace SimpleMotions {
 		int GetTotalFrames();
 		bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline<Component> keyframeSpline) where T : Component;
 		bool EntityHasKeyframesOfAnyType(int entityId);
-		
+		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
 	}
 }

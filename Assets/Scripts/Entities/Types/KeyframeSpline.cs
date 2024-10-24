@@ -16,6 +16,7 @@ namespace SimpleMotions {
 	[System.Serializable]
     public class KeyframeSpline<T> : IKeyframeSpline<T> where T : Component {
 
+		// 					 frame -> IKeyframe<Component>
 		public SortedDictionary<int, IKeyframe<Component>> Keyframes => _keyframes;
 		public IKeyframe<Component> this[int frame] => _keyframes[frame];
 		public int Count => _keyframes.Values.Count;

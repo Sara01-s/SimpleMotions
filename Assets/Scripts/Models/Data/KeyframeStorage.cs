@@ -21,6 +21,22 @@ namespace SimpleMotions {
 			return componentKeyframes;
 		}
 
+		public IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int frame) {
+			var keyframesAtFrame = new List<IKeyframe<Component>>();
+
+			foreach (var componentType in _allKeyframes.Keys) {
+				if (_allKeyframes[componentType].TryGetValue(frame, out var keyframe)) {
+					keyframesAtFrame.Add(keyframe);
+				}
+			}
+
+			if (keyframesAtFrame.Count <= 0) {
+				keyframesAtFrame.Add(Keyframe<Component>.Invalid);
+			}
+
+			return keyframesAtFrame;
+		}
+
 		public IEnumerable<Type> GetKeyframeTypes() {
 			return _allKeyframes.Keys;
 		}

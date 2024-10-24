@@ -159,19 +159,19 @@ namespace SimpleMotions {
 		
 #if DEBUG
 		public override string ToString() {
-			return $"({PrimitiveShape}, {Color})";
+			return $"Shape: (Primitive: {PrimitiveShape}, Color: {Color})";
 		}
 #endif
 	}
 
 	public sealed class Text : Component {
-		public string Value = string.Empty;
+		public string Content = string.Empty;
 
 		public Text() {}
 
 #if DEBUG
 		public override string ToString() {
-			return $"({Value})";
+			return $"Text: (Content: {Content})";
 		}
 #endif
 	}

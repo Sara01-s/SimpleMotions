@@ -10,14 +10,14 @@ namespace SimpleMotions {
         private readonly IComponentStorage _componentStorage;
 		private readonly IEventService _eventService;
 		private readonly IEntityStorage _entityStorage;
-
-		private readonly List<int> _keyframeIndices = new();
+		private readonly Dictionary<Type, List<int>> _keyframeIndices = new();
 
 		private IEnumerable<int> _entitiesWithKeyframes;
 		private bool _videoCacheGenerated = false;
 		private int _lastKeyframeIndex = -1;
 		private IList<IKeyframe<Component>> _componentKeyframes;
 		private Component _component;
+		private readonly IEnumerable<Type> _componentTypes;
 
 		
         public VideoAnimator(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
@@ -27,6 +27,8 @@ namespace SimpleMotions {
             _componentStorage = componentStorage;
 			_eventService = eventService;
 			_entityStorage = entityStorage;
+
+			_componentTypes = _keyframeStorage.GetKeyframeTypes();
         }
 
 		// TODO - Only call when there are new keyframes.
@@ -35,19 +37,25 @@ namespace SimpleMotions {
 			var activeEntities = _entityStorage.GetActiveEntities();
 
 			_entitiesWithKeyframes = activeEntities.Where(entityId => _keyframeStorage.EntityHasKeyframesOfAnyType(entityId));
-			_lastKeyframeIndex = -1;
+			_lastKeyframeIndex = 0;
 
             int totalFrames = _keyframeStorage.GetTotalFrames();
 
             for (int currentFrame = TimelineData.FIRST_KEYFRAME; currentFrame <= totalFrames; currentFrame++) {
-                var keyframe = _keyframeStorage.GetKeyframeAt(currentFrame);
+				var keyframesAtCurrentFrame = _keyframeStorage.GetAllKeyframesAt(currentFrame);
 
-                if (keyframe.EntityId == Entity.INVALID_ID) {
-                    continue;
-                }
+				foreach (var keyframe in keyframesAtCurrentFrame) {
+					if (keyframe.EntityId != Entity.INVALID_ID) {
+						var keyframeType = keyframe.Value.GetType();
 
-				UnityEngine.Debug.Log($"Se encontró: {keyframe} en el frame {currentFrame}");
-				_keyframeIndices.Add(currentFrame);
+						if (!_keyframeIndices.ContainsKey(keyframeType)) {
+							_keyframeIndices[keyframeType] = new List<int>(); // TODO - Se podría reservar un array de tamaño fijo conociendo la cantidad de keyframes por tipo.
+						}
+
+						UnityEngine.Debug.Log($"Se encontró: {keyframe} de tipo {keyframeType} en el frame {currentFrame}");
+						_keyframeIndices[keyframeType].Add(currentFrame);
+					}
+				}
             }
 
 			_videoCacheGenerated = true;
@@ -64,36 +72,41 @@ namespace SimpleMotions {
 		}
 
 		public void InterpolateEntityKeyframes(int entityId, int currentFrame) {
-			var keyframe = _keyframeStorage.GetKeyframeAt(currentFrame);
-			var componentTypes = _keyframeStorage.GetKeyframeTypes();
-
+			IEnumerable<IKeyframe<Component>> keyframesInFrame = _keyframeStorage.GetAllKeyframesAt(currentFrame);
 			// Since all entites have a default keyframe at frame 0, this condition will always be true for currentFrame = 0.
-			if (keyframe.EntityId != Entity.INVALID_ID) {
-				foreach (var componentType in componentTypes) {
-					
-					if (componentType == typeof(Transform)) {
+
+			// Keyframes con valores asociados
+			foreach (var componentType in _componentTypes) {
+				// Transform, Shape, Text - entramos acá 3 veces SI O SI.
+				
+				var keyframe = (from k in keyframesInFrame
+								where k.Value.GetType() == componentType
+								select k).SingleOrDefault()
+								?? Keyframe<Component>.Invalid;
+
+				if (keyframe.EntityId != Entity.INVALID_ID) {
+					if (keyframe.Value is Transform) {
 						_component = _componentStorage.GetComponent<Transform>(entityId);
 						_componentKeyframes = _keyframeStorage.GetEntityKeyframesOfType<Transform>(entityId);
 					}
-//					if (componentType == typeof(Shape)) {
-//						_component = _componentStorage.GetComponent<Shape>(entityId);
-//						_componentKeyframes = _keyframeStorage.GetEntityKeyframesOfType<Shape>(entityId);
-//					}
-//					else if (componentType == typeof(Text)) {
-//						_component = _componentStorage.GetComponent<Text>(entityId);
-//						_componentKeyframes = _keyframeStorage.GetEntityKeyframesOfType<Text>(entityId);
-//					}
-						
-					//throw new Exception($"Tried to interpolate invalid component type. Component type: {keyframe.Value}");
+					else if (keyframe.Value is Shape) {
+						_component = _componentStorage.GetComponent<Shape>(entityId);
+						_componentKeyframes = _keyframeStorage.GetEntityKeyframesOfType<Shape>(entityId);
+					}
+					else if (keyframe.Value is Text) {
+						_component = _componentStorage.GetComponent<Text>(entityId);
+						_componentKeyframes = _keyframeStorage.GetEntityKeyframesOfType<Text>(entityId);
+					}
 
+					// ENSEÑARLE MATEMATICAS BASICAS AL PC.
 				}
+				
+				InterpolateEntityComponent(entityId, _component, _componentKeyframes, currentFrame);
 			}
-
-			InterpolateEntityComponent(entityId, _component, _componentKeyframes, currentFrame);
 		}
 
 		public void InterpolateEntityComponent<T>(int entityId, T component, IList<IKeyframe<Component>> componentKeyframes, int currentFrame) where T : Component {
-			if (_keyframeIndices.Contains(currentFrame)) {
+			if (_keyframeIndices[component.GetType()].Contains(currentFrame)) {
 				if (_lastKeyframeIndex + 1 < componentKeyframes.Count) {
 					_lastKeyframeIndex += 1;
 				}
@@ -145,8 +158,6 @@ namespace SimpleMotions {
 			};
 
 			_eventService.Dispatch<EntityDisplayInfo>(entityDisplayInfoCurrentFrame);
-
-
 		}
 
 
