@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace SimpleMotions {
 
+	// TODO - SACAR ESTO XD
+
     [System.Serializable]
     /// <summary> since Dictionaries cannot be serialized, you can use this class instead. </summary>
     public sealed class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver {

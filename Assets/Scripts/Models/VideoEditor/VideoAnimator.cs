@@ -1,3 +1,4 @@
+using static SimpleMotions.SimpleMath;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -123,9 +124,9 @@ namespace SimpleMotions {
 					var startTransform = start.Value as Transform;
 					var targetTransform = target.Value as Transform;
 
-					var deltaPosition = LerpPos(startTransform.Position, targetTransform.Position, t);
-					var deltaScale = LerpScale(startTransform.Scale, targetTransform.Scale, t);
-					var deltaRoll = Lerp(startTransform.Roll.AngleDegrees, targetTransform.Roll.AngleDegrees, t);
+					var deltaPosition = lerpPos(startTransform.Position, targetTransform.Position, t);
+					var deltaScale = lerpScale(startTransform.Scale, targetTransform.Scale, t);
+					var deltaRoll = lerp(startTransform.Roll.AngleDegrees, targetTransform.Roll.AngleDegrees, t);
 
 					transform.Position = deltaPosition;
 					transform.Scale = deltaScale;
@@ -136,40 +137,12 @@ namespace SimpleMotions {
 					var startShape = start.Value as Shape;
 					var targetShape = target.Value as Shape;
 
-					var deltaColor = LerpColor(startShape.Color, targetShape.Color, t);
+					var deltaColor = lerpColor(startShape.Color, targetShape.Color, t);
 
 					shape.Color = deltaColor;
 					break;
 				}
 			}
-		}
-
-
-		private static float Lerp(float a, float b, float t) {
-			return a * (1.0f - t) + b * t;
-		}
-
-		private static Color LerpColor(Color c, Color d, float t) {
-			float dr = Lerp(c.R, d.R, t);
-			float dg = Lerp(c.G, d.G, t);
-			float db = Lerp(c.B, d.B, t);
-			float da = Lerp(c.A, d.A, t);
-
-			return new Color(dr, dg, db, da);
-		}
-
-		private static Position LerpPos(Position u, Position v, float t) {
-			float dx = Lerp(u.X, v.X, t);
-			float dy = Lerp(u.Y, v.Y, t);
-
-			return new Position(dx, dy);
-		}
-
-		private static Scale LerpScale(Scale u, Scale v, float t) {
-			float dw = Lerp(u.Width, v.Width, t);
-			float dh = Lerp(u.Height, v.Height, t);
-
-			return new Scale(dw, dh);
 		}
 
 	}
