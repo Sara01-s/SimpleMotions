@@ -5,7 +5,8 @@ namespace SimpleMotions {
 	public interface IKeyframeStorage {
 
 #nullable enable
-		IKeyframeSpline<Component>? GetKeyframeSplineOfType<T>() where T : Component;
+		IKeyframeSpline? GetKeyframeSplineOfType<T>() where T : Component;
+		IKeyframeSpline? GetEntityKeyframesOfType<T>(int entityId) where T : Component;
 #nullable disable
 
 		IKeyframe<Component> GetKeyframeAt<T>(int frame) where T : Component;
@@ -13,15 +14,16 @@ namespace SimpleMotions {
 		KeyframesData GetKeyframesData();
 		void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component;
 		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component;
-		IList<IKeyframe<Component>> GetEntityKeyframes(int entityId);
-		IList<IKeyframe<Component>> GetEntityKeyframesOfType<T>(int entityId) where T : Component;
+		IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId);
 
 		IEnumerable<System.Type> GetKeyframeTypes();
 
+		bool FrameHasKeyframe(int frame);
 		bool EntityHasKeyframesOfType<T>(int entityId) where T : Component;
-		int GetTotalFrames();
-		bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline<Component> keyframeSpline) where T : Component;
+		bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline keyframeSpline) where T : Component;
 		bool EntityHasKeyframesOfAnyType(int entityId);
+
+		int GetTotalFrames();
 		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
 	}
 }
