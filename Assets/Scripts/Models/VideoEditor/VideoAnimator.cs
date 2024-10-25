@@ -11,13 +11,14 @@ namespace SimpleMotions {
 		private readonly IComponentStorage _componentStorage;
 		private readonly IEventService _eventService;
 		private readonly IEntityStorage _entityStorage;
-		private readonly Dictionary<Type, List<int>> _keyframeIndices = new();
 		private readonly IEnumerable<Type> _componentTypes;
 
 		private IEnumerable<int> _entitiesWithKeyframes;
+		private IEnumerable<int> _lastEntitiesWithKeyframes;
 		private bool _videoCacheGenerated;
-		private IKeyframeSpline _componentKeyframes;
-		private Component _component;
+
+		private IKeyframeSpline _currentComponentSpline;
+		private Component _currentInterpolatedComponent;
 
 		
 		public VideoAnimator(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
@@ -31,33 +32,17 @@ namespace SimpleMotions {
 			_componentTypes = _keyframeStorage.GetKeyframeTypes();
 		}
 
-		// TODO - Only call when there are new keyframes.
 		public void GenerateVideoCache() {
 			_videoCacheGenerated = false;
+
 			var activeEntities = _entityStorage.GetActiveEntities();
-			int totalFrames = _keyframeStorage.GetTotalFrames();
+			bool cacheAlreadyGenerated = _lastEntitiesWithKeyframes != null && _entitiesWithKeyframes != _lastEntitiesWithKeyframes;
 
-			_entitiesWithKeyframes = activeEntities.Where(entityId => _keyframeStorage.EntityHasKeyframesOfAnyType(entityId));
-
-			for (int currentFrame = TimelineData.FIRST_KEYFRAME; currentFrame <= totalFrames; currentFrame++) {
-				var keyframesAtCurrentFrame = _keyframeStorage.GetAllKeyframesAt(currentFrame);
-
-				foreach (var keyframe in keyframesAtCurrentFrame) {
-					if (keyframe.EntityId == Entity.INVALID_ID)  {
-						continue;
-					}
-					
-					var keyframeType = keyframe.Value.GetType();
-
-					if (!_keyframeIndices.ContainsKey(keyframeType)) {
-						_keyframeIndices[keyframeType] = new List<int>(); // TODO - Se podría reservar un array de tamaño fijo conociendo la cantidad de keyframes por tipo.
-					}
-
-					UnityEngine.Debug.Log($"Se encontró: {keyframe} de tipo {keyframeType} en el frame {currentFrame}");
-					_keyframeIndices[keyframeType].Add(currentFrame);
-				}
+			if (!cacheAlreadyGenerated) {
+				_entitiesWithKeyframes = activeEntities.Where(entityId => _keyframeStorage.EntityHasKeyframesOfAnyType(entityId));
 			}
 
+			_lastEntitiesWithKeyframes = _entitiesWithKeyframes;
 			_videoCacheGenerated = true;
 		}
 
@@ -84,17 +69,17 @@ namespace SimpleMotions {
 						continue;
 				}
 
-				InterpolateEntityComponent(_component, _componentKeyframes, currentFrame);
+				InterpolateKeyframeSpline(_currentComponentSpline, _currentInterpolatedComponent, currentFrame);
 				SendInterpolationData(entityId);
 			}
 		}
 
 		private void SetCurrentInterpolatedComponent<T>(int entityId) where T : Component {
-			_componentKeyframes = _keyframeStorage.GetEntityKeyframesOfType<T>(entityId);
-			_component = _componentStorage.GetComponent<T>(entityId);
+			_currentComponentSpline = _keyframeStorage.GetEntityKeyframesOfType<T>(entityId);
+			_currentInterpolatedComponent = _componentStorage.GetComponent<T>(entityId);
 		}
 
-		private void InterpolateEntityComponent<T>(T component, IKeyframeSpline keyframeSpline, int currentFrame) where T : Component {
+		private void InterpolateKeyframeSpline<T>(IKeyframeSpline keyframeSpline, T component, int currentFrame) where T : Component {
 			var startKeyframe = keyframeSpline.GetLastKeyframe(currentFrame);
 			var targetKeyframe = keyframeSpline.GetNextKeyframe(currentFrame);
 
@@ -102,7 +87,8 @@ namespace SimpleMotions {
 			int deltaFrame = targetKeyframe.Frame - startKeyframe.Frame;
 
 			if (deltaFrame > 0) { // Different keyframes.
-				t = (currentFrame - startKeyframe.Frame) / deltaFrame;
+				float dt = currentFrame - startKeyframe.Frame;
+				t = dt / deltaFrame;
 			}
 
 			InterpolateComponent(component, startKeyframe, targetKeyframe, t);
