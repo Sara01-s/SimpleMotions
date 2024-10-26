@@ -57,7 +57,7 @@ namespace SimpleMotions {
 			string projectDataFilepath = Path.Combine(Application.persistentDataPath, _projectDataFileName);
 			string editorDataFilepath = Path.Combine(Application.persistentDataPath, _editorDataFileName);
 
-			Debug.Log("original: " + projectDataFilepath);
+			Debug.Log("Data path: " + projectDataFilepath);
 
 			_projectDataHandler = new ProjectDataHandler(projectDataSerializer, projectDataFilepath);
 			_editorDataHandler = new EditorDataHandler(editorDataSerializer, editorDataFilepath);
@@ -68,14 +68,15 @@ namespace SimpleMotions {
 			_projectData.ProjectName = _projectName;
 
 			var componentsData = _projectData.Timeline.Components;
-			var entitiesData = _projectData.Timeline.Entities;
-			var keyframeData = _projectData.Timeline.Keyframes;
+			var entitiesData   = _projectData.Timeline.Entities;
+			var keyframeData   = _projectData.Timeline.Keyframes;
+			
 			_videoData = _projectData.Video;
 			_videoData.TargetFrameRate = _targetFrameRate;
 			
-			_keyframeStorage = new KeyframeStorage(keyframeData, _videoData);
+			_keyframeStorage  = new KeyframeStorage(keyframeData, _videoData);
             _componentStorage = new ComponentStorage(componentsData);
-			_entityStorage = new EntityStorage(entitiesData);
+			_entityStorage 	  = new EntityStorage(entitiesData);
 		}
 
 		private void BuildVideoEditor() {
@@ -98,8 +99,9 @@ namespace SimpleMotions {
 		}
 
 		private void Save() {
-			_projectData.Timeline.Entities = _entityStorage.GetEntitiesData();
+			_projectData.Timeline.Entities   = _entityStorage.GetEntitiesData();
 			_projectData.Timeline.Components = _componentStorage.GetComponentsData();
+			_projectData.Timeline.Keyframes  = _keyframeStorage.GetKeyframesData();
 			_projectData.Video = _videoPlayer.GetVideoData();
 			
 			_projectData.Video.CurrentTime = 0;

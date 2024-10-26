@@ -21,90 +21,64 @@ namespace SimpleMotions {
         }
 
         private void OnUpdateCanvas(EntityDisplayInfo entityDisplayInfo) {
-			UpdateEntity(entityDisplayInfo);
+			UpdateEntityDisplay(entityDisplayInfo);
         }
 
-		private void UpdateEntity(EntityDisplayInfo entityDisplayInfo) {
+		private void UpdateEntityDisplay(EntityDisplayInfo entityDisplayInfo) {
 			var entity = entityDisplayInfo.Entity;
 			var components = entityDisplayInfo.Components;
 
 			// entity not registered, create it.
 			if (!_activeEntities.ContainsKey(entity.Id)) {
-				CreateNewEntity(entity, components);
-				return;
+				CreateNewEntity(entity);
 			}
 
 			// entity already registered, update it.
 			UpdateEntity(entity, components);
 		}
 
-		private void UpdateEntity(Entity entity, Component[] components) {
-			if (_activeEntities.TryGetValue(entity.Id, out var entityUnity)) {
-				var entityUnityTransform = entityUnity.GetComponent<RectTransform>();
+		private void CreateNewEntity(Entity entity) {
+			string entityName = $"Entity {entity.Id}: \"{entity.Name}\"";
+			var unityObject = Instantiate(_entityPrefab, parent: transform);
 
-				foreach (var component in components) {
-					if (component is Transform transform) {
-						var entitySimplePosition = new Vector2(transform.Position.X, transform.Position.Y);
-						var entitySimpleScale = new Vector2(transform.Scale.Width, transform.Scale.Height);
-						var entitySimpleRoll = Quaternion.Euler(0.0f, 0.0f, transform.Roll.AngleDegrees);
+			unityObject.transform.name = entityName;
+			_activeEntities.Add(entity.Id, unityObject);
 
-						entityUnityTransform.anchoredPosition = entitySimplePosition;
-						entityUnityTransform.localScale = entitySimpleScale;
-						entityUnityTransform.rotation = entitySimpleRoll;
-					}
-					else if (component is Shape shape) {
-						var entityUnityRenderer = entityUnity.GetComponent<Image>();
-						var entityUnityColor = new UnityEngine.Color(shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A);
-						entityUnityRenderer.color = entityUnityColor;
-					}
-				}
-			}
-
+			Debug.Log("Creada entidad: " + entity.Name);
 		}
 
-		private void CreateNewEntity(Entity entity, Component[] components) {
-			string entityName = $"Entity {entity.Id}: \"{entity.Name}\"";
-			var entityUnity = Instantiate(_entityPrefab, parent: transform);
-
-			entityUnity.transform.name = entityName;
-
-			// Add components
-			foreach (var component in components) {
-				if (component is SimpleMotions.Transform transform) {
-					var entitySimplePosition = new Vector2(transform.Position.X, transform.Position.Y);
-					var entitySimpleScale	 = new Vector2(transform.Scale.Width, transform.Scale.Height);
-					var entitySimpleRoll 	 = new Vector3(0.0f, 0.0f, transform.Roll.AngleDegrees);
-
-					var entityUnityTransform 				= entityUnity.GetComponent<RectTransform>();
-					entityUnityTransform.anchoredPosition 	= entitySimplePosition;
-					entityUnityTransform.localScale 		= entitySimpleScale;
-					entityUnityTransform.eulerAngles 		= entitySimpleRoll;
-				}
-				else if (component is SimpleMotions.Shape shape) {
-					var entitySimpleColor = new UnityEngine.Color(shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A);
-					var entitySimpleRenderer = entityUnity.AddComponent<Image>();
-
-					entitySimpleRenderer.color = entitySimpleColor;
-
-					switch (shape.PrimitiveShape) {
-						case Shape.Primitive.Triangle:
-							entitySimpleRenderer.sprite = _triangleSprite;
-							break;
-						case Shape.Primitive.Circle:
-							entitySimpleRenderer.sprite = _circleSprite;
-							break;
-						case Shape.Primitive.Rect:
-							entitySimpleRenderer.sprite = _rectSprite;
-							break;
-						default:
-							Debug.LogError("Something horrendous happened.");
-							break;
-					}
-				}
+		private void UpdateEntity(Entity entity, Component[] components) {
+			if (!_activeEntities.TryGetValue(entity.Id, out var unityObject)) {
+				return;
 			}
 
-			_activeEntities.Add(entity.Id, entityUnity);
-			Debug.Log("Creada entidad: " + entity.Name);
+			var unityRectTransform = unityObject.GetComponent<RectTransform>();
+
+			if (!unityObject.TryGetComponent<Image>(out var unityImage)) {
+				unityImage = unityObject.AddComponent<Image>();
+			}
+
+			// TODO - cachear esto de alguna forma?
+			foreach (var component in components) {
+				switch (component) {
+					case Transform transform:
+						unityRectTransform.FromSM(transform);
+						break;
+					case Shape shape:
+						unityImage.sprite = GetSpriteFromPrimitive(shape.PrimitiveShape);
+						unityImage.color = SmToUnity.GetColorFrom(shape.Color);
+						break;
+				}
+			}
+		}
+
+		private Sprite GetSpriteFromPrimitive(Shape.Primitive primitiveType) {
+			return primitiveType switch {
+				Shape.Primitive.Rect => _rectSprite,
+				Shape.Primitive.Circle => _circleSprite,
+				Shape.Primitive.Triangle => _triangleSprite,
+				_ => throw new System.ArgumentException(primitiveType.ToString())
+			};
 		}
 
 	}
