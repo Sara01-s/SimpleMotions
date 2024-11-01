@@ -14,6 +14,10 @@ namespace SimpleMotions {
 			_videoCanvas = videoCanvas;
 		}
 
+		public void CreateEntity() {
+			var newEntity = _entityStorage.CreateEntity(name: "entidad xd");
+		}
+
 		public void CreateTestEntity() {
 			var newEntity = _entityStorage.CreateEntity();
 

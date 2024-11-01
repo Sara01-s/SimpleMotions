@@ -29,6 +29,13 @@ namespace SimpleMotions {
 			};
 		}
 
+		public Entity CreateEntity(string name) {
+			var entity = CreateEntity();
+			entity.Name = name;
+			
+			return entity;
+		}
+
 		public Entity CreateEntity() {
 			int assignedId;
 
