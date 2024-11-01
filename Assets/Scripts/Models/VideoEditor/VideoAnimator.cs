@@ -37,7 +37,7 @@ namespace SimpleMotions {
 			if (cacheAlreadyGenerated) {
 				return;
 			}
-			
+
 			_videoCacheGenerated = false;
 
 			var activeEntities = _entityStorage.GetActiveEntities();

@@ -2,16 +2,22 @@ using System.Threading.Tasks;
 
 namespace SimpleMotions {
 
+	public struct VideoDisplayInfo {
+		public int CurrentFrame;
+	}
+
 	public sealed class VideoPlayer : IVideoPlayer {
 
 		private readonly VideoData _videoData;
 		private readonly IVideoAnimator _videoAnimator;
+		private readonly IEventService _eventService;
 
 		private Task _playVideo;
 
-		public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator) {
+		public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator, IEventService eventService) {
 			_videoData = videoData;
 			_videoAnimator = videoAnimator;
+			_eventService = eventService;
 		}
 
 		~VideoPlayer() {
@@ -47,6 +53,7 @@ namespace SimpleMotions {
 		}
 
 		public void SetCurrentFrame(int frame) {
+			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();
 			_videoAnimator.InterpolateAllEntities(frame);
 		}
@@ -70,10 +77,9 @@ namespace SimpleMotions {
 
 			while (_videoData.IsPlaying) {
 				_videoAnimator.InterpolateAllEntities(_videoData.CurrentFrame);
-
 				_videoData.CurrentTime += 1.0f / _videoData.TargetFrameRate;
-				_videoData.CurrentFrame++;
 
+				IncreaseFrame();
 				//UnityEngine.Debug.Log($"f: {_videoData.CurrentFrame} | t: {_videoData.CurrentTime:0.00}");
 
 				if (_videoData.CurrentFrame >= _videoData.TotalFrames) {
@@ -81,12 +87,22 @@ namespace SimpleMotions {
 						Pause();
 						break;
 					}
-					
+
 					Reset();
 				}
 
 				await Task.Yield();
 			}
+		}
+
+		private void IncreaseFrame() {
+			_videoData.CurrentFrame++;
+
+			var videoDisplayInfo = new VideoDisplayInfo() {
+				CurrentFrame = _videoData.CurrentFrame
+			};
+
+			_eventService.Dispatch(videoDisplayInfo);
 		}
 
 	}

@@ -5,7 +5,7 @@ namespace SimpleMotions {
         public ReactiveCommand<EntityDisplayInfo> UpdateCanvas { get; set; } = new();
 
         public VideoCanvasViewModel(IEventService eventService) {
-			eventService.Subscribe<EntityDisplayInfo>(OnCanvasUpdate);
+			eventService.Subscribe<EntityDisplayInfo>(OnCanvasUpdate); // TODO - Refactor event/command names
         }
 
 		private void OnCanvasUpdate(EntityDisplayInfo entityDisplayInfo) {
