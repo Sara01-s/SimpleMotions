@@ -7,9 +7,15 @@ namespace SimpleMotions {
 		private readonly VideoData _videoData;
 		private readonly IVideoAnimator _videoAnimator;
 
+		private Task _playVideo;
+
 		public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator) {
 			_videoData = videoData;
 			_videoAnimator = videoAnimator;
+		}
+
+		~VideoPlayer() {
+			_playVideo.Dispose();
 		}
 
 		public void TogglePlay() {
@@ -23,28 +29,21 @@ namespace SimpleMotions {
 
 		public void Play() {
 			_videoData.IsPlaying = true;
-			UnityEngine.Debug.Log("Play");
-			PlayVideo();
+			
+			if (_playVideo == null || _playVideo.IsCompleted) {
+				_playVideo = PlayVideo();
+			}
 		}
 
+
 		public void Pause() {
-			UnityEngine.Debug.Log("Pause");
+			UnityEngine.Debug.Log("Paused.");
 			_videoData.IsPlaying = false;
 		}
 
 		public void Reset() {
 			_videoData.CurrentFrame = TimelineData.FIRST_KEYFRAME;
 			_videoData.CurrentTime = 0.0f;
-		}
-
-		public void StopAndReset() {
-			Pause();
-			Reset();
-		}
-
-		public void ResetAndPlay() {
-			Reset();
-			Play();
 		}
 
 		public void SetCurrentTime(float seconds) {
@@ -59,29 +58,30 @@ namespace SimpleMotions {
 			return !_videoData.IsLooping && _videoData.CurrentFrame == _videoData.TotalFrames;
 		}
 
-		private async void PlayVideo() {
+		private async Task PlayVideo() {
 			if (IsAtTheEnd()) {
-				ResetAndPlay();
+				Reset();
 			}
+
+			UnityEngine.Debug.Log("Playing.");
 
 			_videoAnimator.GenerateVideoCache();
 
 			while (_videoData.IsPlaying) {
-				// Avisar a IVideoAnimator que interpole los keyframes de todas las entidades
 				_videoAnimator.InterpolateAllEntities(_videoData.CurrentFrame);
 
 				_videoData.CurrentTime += 1.0f / _videoData.TargetFrameRate;
 				_videoData.CurrentFrame++;
 
-				// Last frame behaviour
-				UnityEngine.Debug.Log(_videoData.CurrentFrame);
+				//UnityEngine.Debug.Log($"f: {_videoData.CurrentFrame} | t: {_videoData.CurrentTime:0.00}");
+
 				if (_videoData.CurrentFrame >= _videoData.TotalFrames) {
 					if (!_videoData.IsLooping) {
 						Pause();
 						break;
 					}
-
-					ResetAndPlay();				
+					
+					Reset();
 				}
 
 				await Task.Yield();

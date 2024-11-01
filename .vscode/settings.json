@@ -55,9 +55,7 @@
         "UserSettings/": true,
         "temp/": true,
         "Temp/": true,
-		
-		"**/*.csproj": true,
-        "**/*.bkp": true,
+        "**/*.bkp": true
     },
     "dotnet.defaultSolution": "SimpleMotions.sln"
 }

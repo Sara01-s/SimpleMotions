@@ -28,7 +28,7 @@ namespace SimpleMotions {
 		}
 
 		public int CompareTo(object obj) {
-			var keyframe = obj as Keyframe<T>;
+			var keyframe = obj as Keyframe<T> ?? throw new System.ArgumentException($"Only compare keyframes with another keyframes. " + nameof(obj));
 
 			if (keyframe is not null) {
 				return Frame.CompareTo(keyframe.Frame);
