@@ -7,7 +7,7 @@ namespace SimpleMotions {
 		void Play();
 		void Pause();
 		void Reset();
-		void SetCurrentTime(float seconds);
+		void SetCurrentFrame(int frame);
 
 	}
 }

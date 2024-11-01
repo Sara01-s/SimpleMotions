@@ -8,9 +8,8 @@ namespace SimpleMotions {
 			_videoPlayer = videoPlayer;
 		}
 
-		public void SetTime(float newCurrentTime) {
-			_videoPlayer.SetCurrentTime(newCurrentTime);
+		public void SetCurrentFrame(int frame) {
+			_videoPlayer.SetCurrentFrame(frame);
 		}
-		
 	}
 }

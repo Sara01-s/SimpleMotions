@@ -33,14 +33,15 @@ namespace SimpleMotions {
 		}
 
 		public void GenerateVideoCache() {
+			bool cacheAlreadyGenerated = _lastEntitiesWithKeyframes != null && _entitiesWithKeyframes != _lastEntitiesWithKeyframes;
+			if (cacheAlreadyGenerated) {
+				return;
+			}
+			
 			_videoCacheGenerated = false;
 
 			var activeEntities = _entityStorage.GetActiveEntities();
-			bool cacheAlreadyGenerated = _lastEntitiesWithKeyframes != null && _entitiesWithKeyframes != _lastEntitiesWithKeyframes;
-
-			if (!cacheAlreadyGenerated) {
-				_entitiesWithKeyframes = activeEntities.Where(entityId => _keyframeStorage.EntityHasKeyframesOfAnyType(entityId));
-			}
+			_entitiesWithKeyframes = activeEntities.Where(entityId => _keyframeStorage.EntityHasKeyframesOfAnyType(entityId));
 
 			_lastEntitiesWithKeyframes = _entitiesWithKeyframes;
 			_videoCacheGenerated = true;

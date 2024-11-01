@@ -843,6 +843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _createTestEntity: {fileID: 1260166608}
+  _cursor: {fileID: 1985956967}
 --- !u!1 &1205375448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,7 +1769,7 @@ GameObject:
   - component: {fileID: 1985956966}
   - component: {fileID: 1985956967}
   m_Layer: 5
-  m_Name: Slider - Time
+  m_Name: Slider - Frames
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1841,8 +1842,8 @@ MonoBehaviour:
   m_HandleRect: {fileID: 146091465}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MaxValue: 300
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:

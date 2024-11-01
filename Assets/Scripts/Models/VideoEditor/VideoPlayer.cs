@@ -46,8 +46,9 @@ namespace SimpleMotions {
 			_videoData.CurrentTime = 0.0f;
 		}
 
-		public void SetCurrentTime(float seconds) {
-			_videoData.CurrentTime = seconds;
+		public void SetCurrentFrame(int frame) {
+			_videoAnimator.GenerateVideoCache();
+			_videoAnimator.InterpolateAllEntities(frame);
 		}
 
 		public VideoData GetVideoData() {
