@@ -1,5 +1,11 @@
 namespace SimpleMotions {
 
+	public interface IVideoEntities {
+
+		void CreateTestEntity();
+
+	}
+
 	public sealed class VideoEntities : IVideoEntities {
 
 		private readonly IKeyframeStorage _keyframeStorage;

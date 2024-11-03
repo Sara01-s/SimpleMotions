@@ -5,6 +5,13 @@ using System;
 
 namespace SimpleMotions {
 
+    public interface IVideoAnimator {
+        
+        void GenerateVideoCache();
+        void InterpolateAllEntities(int currentFrame);
+
+    }
+
 	public sealed class VideoAnimator : IVideoAnimator {
 		
 		private readonly IKeyframeStorage _keyframeStorage;

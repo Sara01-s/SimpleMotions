@@ -3,6 +3,14 @@ using System.Collections.Generic;
 
 namespace SimpleMotions {
 
+	public interface IEventService {
+
+		void Subscribe<T>(Action<T> callback);
+		void Unsubscribe<T>(Action<T> callback);
+		void Dispatch<T>(T signal);
+
+	}
+
     public sealed class EventDispatcher : IEventService {
 		
         private readonly Dictionary<Type, List<Delegate>> _events;

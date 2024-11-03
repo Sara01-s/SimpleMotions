@@ -1,5 +1,11 @@
 namespace SimpleMotions {
 
+	public interface IVideoCanvasViewModel {
+
+		ReactiveCommand<EntityDisplayInfo> UpdateCanvas { get; set; }
+
+	}
+
     public sealed class VideoCanvasViewModel : IVideoCanvasViewModel {
 
         public ReactiveCommand<EntityDisplayInfo> UpdateCanvas { get; set; } = new();

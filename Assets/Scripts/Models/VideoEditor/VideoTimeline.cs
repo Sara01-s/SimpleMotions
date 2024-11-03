@@ -1,5 +1,11 @@
 namespace SimpleMotions {
 
+	public interface IVideoTimeline {
+		
+		void SetCurrentFrame(int frame);
+
+	}
+
 	public sealed class VideoTimeline : IVideoTimeline {
 
 		private readonly IVideoPlayer _videoPlayer;
