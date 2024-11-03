@@ -47,6 +47,6 @@ public static class SmToUnity {
 			SecondaryColor = UnityToSmColor(unityTheme.SecondaryColor),
 			AccentColor = UnityToSmColor(unityTheme.AccentColor)
 		};
+		
 	}
-
 }

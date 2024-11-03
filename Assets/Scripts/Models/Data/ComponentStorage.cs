@@ -3,6 +3,24 @@ using System;
 
 namespace SimpleMotions {
 
+	public interface IComponentStorage {
+
+		T AddComponent<T>(Entity entity) where T : Component, new();
+		void RemoveComponent<T>(Entity entity) where T : Component;
+
+		T GetComponent<T>(int entityId) where T : Component;
+		bool HasComponent<T>(int entityId) where T : Component;
+
+		IEnumerable<int> GetEntitiesWithComponent<T>() where T : Component;
+		Dictionary<int, Component> GetComponentsOfType<T>() where T : Component;
+		int GetComponentBitmask<T>() where T : Component;
+
+		Component[] GetAllComponents(int entityId);
+
+		ComponentsData GetComponentsData();
+
+	}
+
 	public sealed class ComponentStorage : IComponentStorage {
 
 		// Example Usage: Dictionary<Position Type, Dictionary<entityID, Position instance>>
