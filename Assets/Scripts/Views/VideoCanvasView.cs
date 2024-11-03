@@ -62,11 +62,11 @@ namespace SimpleMotions {
 			foreach (var component in components) {
 				switch (component) {
 					case Transform transform:
-						unityRectTransform.FromSM(transform);
+						unityRectTransform.FromSmTransform(transform);
 						break;
 					case Shape shape:
 						unityImage.sprite = GetSpriteFromPrimitive(shape.PrimitiveShape);
-						unityImage.color = SmToUnity.GetColorFrom(shape.Color);
+						unityImage.color = SmToUnity.SmToUnityColor(shape.Color);
 						break;
 				}
 			}

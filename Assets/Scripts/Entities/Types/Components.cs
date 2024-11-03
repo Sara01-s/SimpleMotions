@@ -116,12 +116,12 @@ namespace SimpleMotions {
 		public static Color Black = new(0.0f, 0.0f, 0.0f, 1.0f);
 		public static Color Clear = new(0.0f, 0.0f, 0.0f, 0.0f);
 
-		public static Color Red = new(1.0f, 0.0f, 0.0f, 1.0f);
-		public static Color Green = new(0.0f, 1.0f, 0.0f, 1.0f);
-		public static Color Blue = new(0.0f, 0.0f, 1.0f, 1.0f);
-		public static Color Cyan = new(0.0f, 1.0f, 1.0f, 1.0f);
+		public static Color Red 	= new(1.0f, 0.0f, 0.0f, 1.0f);
+		public static Color Green 	= new(0.0f, 1.0f, 0.0f, 1.0f);
+		public static Color Blue 	= new(0.0f, 0.0f, 1.0f, 1.0f);
+		public static Color Cyan 	= new(0.0f, 1.0f, 1.0f, 1.0f);
 		public static Color Magenta = new(1.0f, 0.0f, 1.0f, 1.0f);
-		public static Color Yellow = new(1.0f, 1.0f, 0.0f, 1.0f);
+		public static Color Yellow 	= new(1.0f, 1.0f, 0.0f, 1.0f);
 
 		public float R = 1.0f;
 		public float G = 1.0f;
@@ -135,6 +135,26 @@ namespace SimpleMotions {
 			G = g;
 			B = b;
 			A = a;
+		}
+
+		public static bool operator==(Color color, Color otherColor) {
+			return color.R == otherColor.R && color.G == otherColor.G && color.B == otherColor.B && color.A == otherColor.A;
+		}
+
+		public static bool operator!=(Color color, Color otherColor) {
+			return color.R != otherColor.R || color.G != otherColor.G || color.B != otherColor.B || color.A != otherColor.A;
+		}
+
+		public override bool Equals(object obj) {
+			if (obj is not Color otherColor) {
+				return false;
+			}
+
+			return this == otherColor;
+		}
+
+		public override int GetHashCode() {
+			return base.GetHashCode();
 		}
 
 #if DEBUG

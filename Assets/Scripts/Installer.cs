@@ -9,6 +9,7 @@ namespace SimpleMotions {
 		[SerializeField] private VideoPlaybackView _videoPlaybackView;
         [SerializeField] private VideoTimelineView _videoTimelineView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
+		[SerializeField] private SmToUnity.EditorThemeUnity _editorTheme;
 
 		[Header("Data")]
 		[SerializeField] private string _projectName;
@@ -39,6 +40,9 @@ namespace SimpleMotions {
 		private EditorData _editorData;
 		private VideoData _videoData;
 
+		private EditorTheme _theme;
+
+
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
 			_eventService = new EventDispatcher();
@@ -65,6 +69,7 @@ namespace SimpleMotions {
 			_projectData = _projectDataHandler.LoadData();
 			_editorData = _editorDataHandler.LoadData();
 
+			_theme = _editorTheme.ToSmTheme();
 			_projectData.ProjectName = _projectName;
 
 			var componentsData = _projectData.Timeline.Components;
@@ -94,7 +99,7 @@ namespace SimpleMotions {
 			var videoCanvasViewModel = new VideoCanvasViewModel(_eventService);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
-            _videoTimelineView.Configure(videoTimelineViewModel);
+            _videoTimelineView.Configure(videoTimelineViewModel, _theme);
 			_videoCanvasView.Configure(videoCanvasViewModel);
 		}
 
@@ -107,6 +112,8 @@ namespace SimpleMotions {
 			_projectData.Video.CurrentTime = 0;
 			_projectData.Video.CurrentFrame = 0;
 			_projectData.Video.IsPlaying = false;
+
+			_editorData.Theme = _theme;
 
 			_projectDataHandler.SaveData(_projectData);
 			_editorDataHandler.SaveData(_editorData);
