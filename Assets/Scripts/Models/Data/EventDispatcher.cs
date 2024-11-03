@@ -3,7 +3,7 @@ using System;
 
 namespace SimpleMotions {
 
-	public interface IEventService {
+	public interface IEventService : IDisposable {
 
 		void Subscribe<T>(Action<T> callback);
 		void Unsubscribe<T>(Action<T> callback);
@@ -46,6 +46,10 @@ namespace SimpleMotions {
                 }
             }
         }
+
+		public void Dispose() {
+			_events.Clear();
+		}
 
 	}
 }

@@ -120,6 +120,7 @@ namespace SimpleMotions {
 		}
 
 		private void OnDisable() {
+			_eventService.Dispose();
 			Save();
         }
 
