@@ -1,9 +1,13 @@
+using Unity.VisualScripting;
+
 namespace SimpleMotions {
 
 	public interface IVideoPlayback {
         
         void TogglePlay();
 		void SetCurrentFrame(int frame);
+        void IncreaseFrame();
+        void DecreaseFrame();
 
     }
 
@@ -22,6 +26,14 @@ namespace SimpleMotions {
 		public void TogglePlay() {
             _videoPlayer.TogglePlay();
         }
-        
+
+        public void IncreaseFrame() {
+            _videoPlayer.IncreaseFrame();
+        }
+
+        public void DecreaseFrame() {
+            _videoPlayer.DecreaseFrame();
+        }
+
     }
 }

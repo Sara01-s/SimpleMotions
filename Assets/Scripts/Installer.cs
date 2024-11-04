@@ -95,7 +95,7 @@ namespace SimpleMotions {
 		}
 
 		private void BuildGUI() {
-			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback);
+			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _eventService);
 			var videoTimelineViewModel = new VideoTimelineViewModel(_videoEntities, _videoTimeline, _eventService);
 			var videoCanvasViewModel = new VideoCanvasViewModel(_eventService);
 
