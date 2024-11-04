@@ -24,12 +24,12 @@ namespace SimpleMotions {
 
 			_editorTheme = editorTheme;
 
-			DrawTimeline();
+			DrawTimeline(videoTimelineViewModel.DefaultKeyframes);
         }
 
-		private void DrawTimeline() {
-			for (int i = 0; i < 100; i++) {
-				Instantiate(_framePrefab, parent: _framesHolder.transform);
+		private void DrawTimeline(int framesCount) {
+			for (int i = 0; i < framesCount; i++) {
+				Instantiate(_framePrefab, parent: _framesHolder.transform).name = $"Frame_{i}";
 			}
 		}
 

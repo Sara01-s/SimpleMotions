@@ -13,7 +13,8 @@ namespace SimpleMotions {
 	public sealed class TimelineData {
 		public const int INVALID_FRAME = -1;
 		public const int FIRST_KEYFRAME = 0;
-		
+		public readonly int DefaultKeyframes = 100;
+
 		public KeyframesData Keyframes = new();
 		public EntitiesData Entities = new();
 		public ComponentsData Components = new();

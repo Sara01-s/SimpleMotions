@@ -558,8 +558,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1338916550}
   m_HandleRect: {fileID: 1338916549}
   m_Direction: 0
-  m_Value: -0.00000013044213
-  m_Size: 0.1976732
+  m_Value: -0.0000001304421
+  m_Size: 0.19767317
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1552,8 +1552,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _createTestEntity: {fileID: 1260166608}
   _cursor: {fileID: 1411017613}
-  _whiteTexture: {fileID: 0}
-  _framePrefab: {fileID: 0}
+  _whiteTexture: {fileID: 7482667652216324306, guid: 8360e2441ba6d9bc385341a4588aaf29, type: 3}
+  _framesHolder: {fileID: 2036002114}
+  _framePrefab: {fileID: 6172985303513405951, guid: e59e605ac560bc686b0b36fdfb7ba4b0, type: 3}
 --- !u!1 &1212651250
 GameObject:
   m_ObjectHideFlags: 0
