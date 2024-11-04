@@ -39,6 +39,15 @@ public static class SmToUnity {
 		};
 	}
 
+	public static Color ToUnityColor(this SimpleMotions.Color color) {
+		return new Color {
+			r = color.R,
+			g = color.G,
+			b = color.B,
+			a = color.A
+		};
+	}
+
 	public static SimpleMotions.EditorTheme ToSmTheme(this EditorThemeUnity unityTheme) {
 		return new SimpleMotions.EditorTheme {
 			TextColor = UnityToSmColor(unityTheme.TextColor),

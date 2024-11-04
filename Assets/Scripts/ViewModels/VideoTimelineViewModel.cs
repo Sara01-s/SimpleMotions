@@ -2,7 +2,7 @@
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {
-		int DefaultKeyframes { get; } 
+		int DefaultFrameCount { get; } 
 		ReactiveCommand<Void> OnCreateTestEntity { get; }
 		ReactiveCommand<int> OnSetCurrentFrame { get; }
 		ReactiveCommand<VideoDisplayInfo> OnTimelineUpdate { get; }
@@ -14,7 +14,7 @@ namespace SimpleMotions {
 		public ReactiveCommand<int> OnSetCurrentFrame { get; } = new();
 		public ReactiveCommand<VideoDisplayInfo> OnTimelineUpdate { get; } = new();
 
-        public int DefaultKeyframes => _videoTimeline.DefaultKeyframes;
+        public int DefaultFrameCount => _videoTimeline.DefaultKeyframes;
 
         private readonly IVideoEntities _videoEntities;
 		private readonly IVideoTimeline _videoTimeline;

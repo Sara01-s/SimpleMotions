@@ -6,6 +6,7 @@ namespace SimpleMotions {
     public sealed class Installer : MonoBehaviour {
 
 		[Header("UI")]
+		[SerializeField] private EditorPainter _editorPainter;
 		[SerializeField] private VideoPlaybackView _videoPlaybackView;
         [SerializeField] private VideoTimelineView _videoTimelineView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
@@ -99,8 +100,12 @@ namespace SimpleMotions {
 			var videoCanvasViewModel = new VideoCanvasViewModel(_eventService);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
-            _videoTimelineView.Configure(videoTimelineViewModel, _theme);
+            _videoTimelineView.Configure(videoTimelineViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
+
+			// TODO - Detalle para Julián
+			_editorPainter.FindUI();
+			_editorPainter.PaintUI(_editorTheme);
 		}
 
 		private void Save() {
