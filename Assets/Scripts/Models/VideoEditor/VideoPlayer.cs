@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SimpleMotions {
@@ -40,10 +39,10 @@ namespace SimpleMotions {
 			_videoAnimator = videoAnimator;
 			_eventService = eventService;
 
-			// SUS
+			// SUS - Ver quien y donde hay que llamar esto.
 			_videoData.Duration = _videoData.TotalFrames / _videoData.TargetFrameRate;
-			_videoDisplayInfo.Duration = _videoData.Duration;
 			_videoDisplayInfo.TotalFrames = _videoData.TotalFrames;
+			_videoDisplayInfo.Duration = _videoData.Duration;
 		}
 
 		~VideoPlayer() {
@@ -57,9 +56,6 @@ namespace SimpleMotions {
             else {
                 Pause();
             }
-
-			// SUS
-			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
 		public void Play() {
@@ -86,6 +82,12 @@ namespace SimpleMotions {
 			_videoAnimator.GenerateVideoCache();
 			_videoAnimator.InterpolateAllEntities(frame);
 
+
+			// ---- TOTALMENTE SUS ----
+			_videoData.CurrentFrame = frame;
+			// ---- TOTALMENTE SUS ----
+
+			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
 			_eventService.Dispatch(_videoDisplayInfo);
 		}
 

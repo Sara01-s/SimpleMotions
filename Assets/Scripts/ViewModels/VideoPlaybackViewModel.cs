@@ -45,7 +45,7 @@ namespace SimpleMotions {
         }
 
         private void OnFirstFrame() {
-            _videoPlayback.SetCurrentFrame(_videoPlayback.GetFirstFrame());
+            _videoPlayback.SetCurrentFrame(_videoPlayback.SetFirstFrame());
         }
 
         private void OnBackward() {
@@ -61,7 +61,7 @@ namespace SimpleMotions {
         }
 
         private void OnLastFrame() {
-            _videoPlayback.SetCurrentFrame(_videoPlayback.GetLastFrame());
+            _videoPlayback.SetCurrentFrame(_videoPlayback.SetLastFrame());
         }
 
         private void OnCurrentTimeUpdated(float time) {

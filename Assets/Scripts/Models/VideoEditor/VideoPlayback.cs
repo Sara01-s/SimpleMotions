@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 
 namespace SimpleMotions {
 
@@ -8,8 +7,8 @@ namespace SimpleMotions {
 		void SetCurrentFrame(int frame);
         void IncreaseFrame();
         void DecreaseFrame();
-        int GetFirstFrame();
-        int GetLastFrame();
+        int SetFirstFrame();
+        int SetLastFrame();
 
     }
 
@@ -37,12 +36,20 @@ namespace SimpleMotions {
             _videoPlayer.DecreaseFrame();
         }
 
-        public int GetFirstFrame() {
-            return _videoPlayer.GetFirstFrame();
+        public int SetFirstFrame() {
+            int frame = _videoPlayer.GetFirstFrame();
+
+            SetCurrentFrame(frame);
+
+            return frame;
         }
 
-        public int GetLastFrame() {
-            return _videoPlayer.GetLastFrame();
+        public int SetLastFrame() {
+            int frame = _videoPlayer.GetLastFrame();
+        
+            SetCurrentFrame(frame);
+
+            return frame;
         }
 
     }
