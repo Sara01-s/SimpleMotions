@@ -13,6 +13,8 @@ namespace SimpleMotions {
 		void SetCurrentFrame(int frame);
 		void IncreaseFrame();
 		void DecreaseFrame();
+		int GetFirstFrame();
+		int GetLastFrame();
 
 	}
 
@@ -41,7 +43,6 @@ namespace SimpleMotions {
 			// SUS
 			_videoData.Duration = _videoData.TotalFrames / _videoData.TargetFrameRate;
 			_videoDisplayInfo.Duration = _videoData.Duration;
-
 			_videoDisplayInfo.TotalFrames = _videoData.TotalFrames;
 		}
 
@@ -143,5 +144,14 @@ namespace SimpleMotions {
 			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
-	}
+        public int GetFirstFrame() {
+			// SUS
+			return TimelineData.FIRST_KEYFRAME;
+        }
+
+        public int GetLastFrame() {
+			return _videoData.TotalFrames;
+        }
+
+    }
 }

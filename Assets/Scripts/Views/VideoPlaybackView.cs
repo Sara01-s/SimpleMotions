@@ -17,14 +17,23 @@ namespace SimpleMotions {
         [SerializeField] private TextMeshProUGUI _totalFrames;
         [SerializeField] private TextMeshProUGUI _duration;
 
+        [SerializeField] private GameObject _play;
+        [SerializeField] private GameObject _pause;
+
         private IVideoPlaybackViewModel _videoPlaybackViewModel;
+        private bool _isPlaying;
 
         public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel) {
             _videoPlaybackViewModel = videoPlaybackViewModel;
 
             _firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.FirstFrame.Execute(value: null));
             _backward.onClick.AddListener(() => _videoPlaybackViewModel.Backward.Execute(value: null));
-			_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.TogglePlay.Execute(value: null));
+
+            _togglePlay.onClick.AddListener(() => {
+                _videoPlaybackViewModel.TogglePlay.Execute(value: null);
+                SetIcon();
+            });
+            
             _forward.onClick.AddListener(() => _videoPlaybackViewModel.Forward.Execute(value: null));
             _lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.LastFrame.Execute(value: null));
 
@@ -32,6 +41,13 @@ namespace SimpleMotions {
             _videoPlaybackViewModel.CurrentFrame.Subscribe(SetCurrentFrame);
             _videoPlaybackViewModel.TotalFrames.Subscribe(SetTotalFrames);
             _videoPlaybackViewModel.Duration.Subscribe(SetDuration);
+        }
+
+        private void SetIcon() {
+            _isPlaying = !_isPlaying;
+
+            _play.SetActive(!_isPlaying);
+            _pause.SetActive(_isPlaying);
         }
 
         private void SetCurrentTime(float time) {

@@ -8,6 +8,8 @@ namespace SimpleMotions {
 		void SetCurrentFrame(int frame);
         void IncreaseFrame();
         void DecreaseFrame();
+        int GetFirstFrame();
+        int GetLastFrame();
 
     }
 
@@ -33,6 +35,14 @@ namespace SimpleMotions {
 
         public void DecreaseFrame() {
             _videoPlayer.DecreaseFrame();
+        }
+
+        public int GetFirstFrame() {
+            return _videoPlayer.GetFirstFrame();
+        }
+
+        public int GetLastFrame() {
+            return _videoPlayer.GetLastFrame();
         }
 
     }

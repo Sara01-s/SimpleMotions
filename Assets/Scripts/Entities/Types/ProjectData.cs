@@ -11,7 +11,9 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class TimelineData {
+		// SUS
 		public const int INVALID_FRAME = -1;
+		// SUS
 		public const int FIRST_KEYFRAME = 0;
 		public readonly int DefaultKeyframes = 100;
 

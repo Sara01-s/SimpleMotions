@@ -1,6 +1,3 @@
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.NCalc;
-using UnityEngine;
 
 namespace SimpleMotions {
 
@@ -48,7 +45,7 @@ namespace SimpleMotions {
         }
 
         private void OnFirstFrame() {
-            _videoPlayback.SetCurrentFrame(0);
+            _videoPlayback.SetCurrentFrame(_videoPlayback.GetFirstFrame());
         }
 
         private void OnBackward() {
@@ -64,7 +61,7 @@ namespace SimpleMotions {
         }
 
         private void OnLastFrame() {
-            _videoPlayback.SetCurrentFrame(300);
+            _videoPlayback.SetCurrentFrame(_videoPlayback.GetLastFrame());
         }
 
         private void OnCurrentTimeUpdated(float time) {
