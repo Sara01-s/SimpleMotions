@@ -27,6 +27,7 @@ namespace SimpleMotions {
 	public sealed class VideoPlayer : IVideoPlayer {
 
 		private readonly VideoData _videoData;
+		private readonly TimelineData _timelineData;
 		private readonly IVideoAnimator _videoAnimator;
 		private readonly IEventService _eventService;
 
@@ -34,8 +35,9 @@ namespace SimpleMotions {
 
 		private VideoDisplayInfo _videoDisplayInfo = new();
 
-		public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator, IEventService eventService) {
+		public VideoPlayer(VideoData videoData, TimelineData timelineData, IVideoAnimator videoAnimator, IEventService eventService) {
 			_videoData = videoData;
+			_timelineData = timelineData;
 			_videoAnimator = videoAnimator;
 			_eventService = eventService;
 
@@ -73,7 +75,7 @@ namespace SimpleMotions {
 		}
 
 		public void Reset() {
-			_videoData.CurrentFrame = TimelineData.FIRST_KEYFRAME;
+			_videoData.CurrentFrame = _timelineData.FirstKeyframe;
 			_videoData.CurrentTime = 0.0f;
 		}
 
@@ -147,8 +149,7 @@ namespace SimpleMotions {
 		}
 
         public int GetFirstFrame() {
-			// SUS
-			return TimelineData.FIRST_KEYFRAME;
+			return _timelineData.FirstKeyframe;
         }
 
         public int GetLastFrame() {
