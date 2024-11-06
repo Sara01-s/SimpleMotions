@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEngine;
 using SimpleMotions;
+using UnityEngine;
 
 public sealed class VideoCanvasView : MonoBehaviour {
 

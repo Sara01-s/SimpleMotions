@@ -1,8 +1,8 @@
-using UnityEngine;
 using UnityEngine.UI;
+using SimpleMotions;
+using UnityEngine;
 using System.Linq;
 using TMPro;
-using SimpleMotions;
 
 public class EditorPainter : MonoBehaviour {
 

@@ -71,7 +71,7 @@ namespace SimpleMotions {
 			_editorData = _editorDataHandler.LoadData();
 
 			_projectData.ProjectName = _projectName;
-			_projectData.Video = new VideoData(_projectData.Timeline.FirstFrame, _targetFrameRate);
+			_projectData.Video = new VideoData(_targetFrameRate, 300); // TODO - XDDDDD
 
 			var componentsData = _projectData.Timeline.Components;
 			var entitiesData   = _projectData.Timeline.Entities;
@@ -87,7 +87,7 @@ namespace SimpleMotions {
 
 		private void BuildVideoEditor() {
 			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _eventService, _entityStorage);
-			_videoPlayer 	= new VideoPlayer(_videoData, _projectData.Timeline, _videoAnimator, _eventService);
+			_videoPlayer 	= new VideoPlayer(_videoData, _videoAnimator, _eventService);
 			_videoTimeline 	= new VideoTimeline(_projectData.Video, _videoPlayer);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
             _videoCanvas 	= new VideoCanvas(_componentStorage, _eventService);
@@ -96,7 +96,7 @@ namespace SimpleMotions {
 
 		private void BuildGUI() {
 			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _eventService);
-			var videoTimelineViewModel = new VideoTimelineViewModel(_videoEntities, _videoTimeline, _eventService);
+			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities, _eventService);
 			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _eventService);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);

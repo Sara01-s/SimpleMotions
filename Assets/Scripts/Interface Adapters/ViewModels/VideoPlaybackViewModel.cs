@@ -1,3 +1,4 @@
+
 namespace SimpleMotions {
 
 	public interface IVideoPlaybackViewModel {
@@ -7,8 +8,10 @@ namespace SimpleMotions {
         ReactiveCommand<Void> OnTogglePlayUpdated { get; set; }
         ReactiveCommand<Void> OnForwardUpdated { get; set; }
         ReactiveCommand<Void> OnLastFrameUpdated { get; set; }
+
         ReactiveValue<int> CurrentFrame { get; set; }
         ReactiveValue<int> TotalFrames { get; set; }
+        public ReactiveValue<bool> IsPlaying { get; set; }
         ReactiveValue<float> CurrentTime { get; set; }
         ReactiveValue<float> Duration { get; set; }
 
@@ -21,10 +24,12 @@ namespace SimpleMotions {
         public ReactiveCommand<Void> OnTogglePlayUpdated { get; set; } = new();
         public ReactiveCommand<Void> OnForwardUpdated { get; set; } = new();
         public ReactiveCommand<Void> OnLastFrameUpdated { get; set; } = new();
+
         public ReactiveValue<float> CurrentTime { get; set; } = new();
-        public ReactiveValue<float> Duration { get; set; } = new();
         public ReactiveValue<int> CurrentFrame { get; set; } = new();
+        public ReactiveValue<bool> IsPlaying { get; set; } = new();
         public ReactiveValue<int> TotalFrames { get; set; } = new();
+        public ReactiveValue<float> Duration { get; set; } = new();
 
         private readonly IVideoPlayback _videoPlayback;
 
@@ -39,12 +44,13 @@ namespace SimpleMotions {
 
             eventService.Subscribe<VideoDisplayInfo>(value => UpdateCurrentTime(value.CurrentTime));
             eventService.Subscribe<VideoDisplayInfo>(value => UpdateCurrentFrame(value.CurrentFrame));
+            eventService.Subscribe<VideoDisplayInfo>(value => UpdateTogglePlayIcon(value.IsPlaying));
             eventService.Subscribe<VideoDisplayInfo>(value => UpdateTotalFrames(value.TotalFrames));
-            eventService.Subscribe<VideoDisplayInfo>(value => UpdateDuration(value.Duration));
+            eventService.Subscribe<VideoDisplayInfo>(value => UpdateDuration(value.DurationSeconds));
         }
 
         private void UpdateFirstFrame() {
-            _videoPlayback.SetCurrentFrame(_videoPlayback.SetFirstFrame());
+            _videoPlayback.SetFirstFrame();
         }
 
         private void UpdateBackward() {
@@ -60,8 +66,9 @@ namespace SimpleMotions {
         }
 
         private void UpdateLastFrame() {
-            _videoPlayback.SetCurrentFrame(_videoPlayback.SetLastFrame());
+            _videoPlayback.SetLastFrame();
         }
+        
 
         private void UpdateCurrentTime(float time) {
             CurrentTime.Value = time;
@@ -69,6 +76,10 @@ namespace SimpleMotions {
 
         private void UpdateCurrentFrame(int frame) {
             CurrentFrame.Value = frame;
+        }
+
+        private void UpdateTogglePlayIcon(bool isPlaying) {
+            IsPlaying.Value = isPlaying;
         }
 
         private void UpdateTotalFrames(int frame) {

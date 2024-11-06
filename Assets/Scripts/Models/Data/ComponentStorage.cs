@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System;
 using SimpleMotions.Internal;
+using System;
 
 namespace SimpleMotions {
 

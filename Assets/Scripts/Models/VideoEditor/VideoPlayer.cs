@@ -22,14 +22,14 @@ namespace SimpleMotions {
 	public class VideoDisplayInfo {
 		public int CurrentFrame;
 		public float CurrentTime;
+		public bool IsPlaying;
 		public int TotalFrames;
-		public float Duration;
+		public float DurationSeconds;
 	}
 
 	public sealed class VideoPlayer : IVideoPlayer {
 
 		private readonly VideoData _videoData;
-		private readonly TimelineData _timelineData;
 		private readonly IVideoAnimator _videoAnimator;
 		private readonly IEventService _eventService;
 
@@ -37,15 +37,24 @@ namespace SimpleMotions {
 
 		private readonly VideoDisplayInfo _videoDisplayInfo = new();
 
-		public VideoPlayer(VideoData videoData, TimelineData timelineData, IVideoAnimator videoAnimator, IEventService eventService) {
+		public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator, IEventService eventService) {
 			_videoData = videoData;
-			_timelineData = timelineData;
 			_videoAnimator = videoAnimator;
 			_eventService = eventService;
+
+			ConfigureVideoDisplayInfo();
 		}
 
 		~VideoPlayer() {
 			_playVideo.Dispose();
+		}
+
+		private void ConfigureVideoDisplayInfo() {
+			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
+			_videoDisplayInfo.CurrentTime = _videoData.CurrentTime;
+			_videoDisplayInfo.IsPlaying = _videoData.IsPlaying;
+			_videoDisplayInfo.TotalFrames = _videoData.TotalFrames;
+			_videoDisplayInfo.DurationSeconds = _videoData.DurationSeconds;
 		}
 
 		public void TogglePlay() {
@@ -63,28 +72,34 @@ namespace SimpleMotions {
 			if (_playVideo == null || _playVideo.IsCompleted) {
 				_playVideo = PlayVideo();
 			}
+
+			_videoDisplayInfo.IsPlaying = _videoData.IsPlaying;
+			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
 
 		public void Pause() {
 			UnityEngine.Debug.Log("Paused.");
 			_videoData.IsPlaying = false;
+
+			_videoDisplayInfo.IsPlaying = _videoData.IsPlaying;
+			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
 		public void Reset() {
-			_videoData.CurrentFrame = _timelineData.FirstFrame;
+			UnityEngine.Debug.Log("Reset");
+			_videoData.CurrentFrame = TimelineData.FIRST_FRAME;
 			_videoData.CurrentTime = 0.0f;
 		}
 
 		public void SetCurrentFrame(int frame) {
+			// ---- TOTALMENTE SUS ---- POR ALGUNA RAZÓN QUE DESCONOZCO, 
+			_videoData.CurrentFrame = frame;
+			// ---- TOTALMENTE SUS ---- ESTA LINEA HACE QUE SE EJECUTE DOS VECES ESTE METODO (ME DEMORE MUCHO EN CACHARLO XD)
+
 			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();
 			_videoAnimator.InterpolateAllEntities(frame);
-
-
-			// ---- TOTALMENTE SUS ----
-			_videoData.CurrentFrame = frame;
-			// ---- TOTALMENTE SUS ----
 
 			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
 			_eventService.Dispatch(_videoDisplayInfo);
@@ -139,14 +154,14 @@ namespace SimpleMotions {
 		}
 
 		public void DecreaseFrame() {
-			_videoData.CurrentFrame = max(_videoData.CurrentFrame - 1, _timelineData.FirstFrame);
+			_videoData.CurrentFrame = max(_videoData.CurrentFrame - 1, TimelineData.FIRST_FRAME);
 
 			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
 			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
         public int GetFirstFrame() {
-			return _timelineData.FirstFrame;
+			return TimelineData.FIRST_FRAME;
         }
 
         public int GetLastFrame() {

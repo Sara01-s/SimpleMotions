@@ -20,33 +20,21 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	[SerializeField] private GameObject _pause;
 
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
-	private bool _isPlaying;
 
 	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel) {
 		_videoPlaybackViewModel = videoPlaybackViewModel;
 
 		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrameUpdated.Execute(value: null));
 		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardUpdated.Execute(value: null));
-
-		_togglePlay.onClick.AddListener(() => {
-			_videoPlaybackViewModel.OnTogglePlayUpdated.Execute(value: null);
-			SetIcon();
-		});
-		
+		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlayUpdated.Execute(value: null));
 		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardUpdated.Execute(value: null));
 		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrameUpdated.Execute(value: null));
 
 		_videoPlaybackViewModel.CurrentTime.Subscribe(SetCurrentTime);
 		_videoPlaybackViewModel.CurrentFrame.Subscribe(SetCurrentFrame);
+		_videoPlaybackViewModel.IsPlaying.Subscribe(SetCurrentIcon);
 		_videoPlaybackViewModel.TotalFrames.Subscribe(SetTotalFrames);
 		_videoPlaybackViewModel.Duration.Subscribe(SetDuration);
-	}
-
-	private void SetIcon() {
-		_isPlaying = !_isPlaying;
-
-		_play.SetActive(!_isPlaying);
-		_pause.SetActive(_isPlaying);
 	}
 
 	private void SetCurrentTime(float currentTime) {
@@ -55,6 +43,11 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private void SetCurrentFrame(int currentFrame) {
 		_currentFrame.text = currentFrame.ToString();
+	}
+
+	private void SetCurrentIcon(bool isPlaying) {
+		_play.SetActive(!isPlaying);
+		_pause.SetActive(isPlaying);
 	}
 
 	private void SetTotalFrames(int totalFrames) {

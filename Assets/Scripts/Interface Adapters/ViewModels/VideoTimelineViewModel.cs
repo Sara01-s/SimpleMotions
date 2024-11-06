@@ -1,3 +1,4 @@
+
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {
@@ -15,12 +16,12 @@ namespace SimpleMotions {
 
         public int TotalFrameCount => _videoTimeline.TotalFrames;
 
-        private readonly IVideoEntities _videoEntities;
 		private readonly IVideoTimeline _videoTimeline;
+        private readonly IVideoEntities _videoEntities;
 
-        public VideoTimelineViewModel(IVideoEntities videoEntities, IVideoTimeline videoTimeline, IEventService eventService) {
-			_videoEntities = videoEntities;
+        public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoEntities videoEntities, IEventService eventService) {
 			_videoTimeline = videoTimeline;
+			_videoEntities = videoEntities;
 
 			eventService.Subscribe<VideoDisplayInfo>(UpdateTimeline);
 

@@ -1,3 +1,4 @@
+
 namespace SimpleMotions.Internal {
 
 	[System.Serializable]
@@ -54,6 +55,6 @@ namespace SimpleMotions.Internal {
 		public override int GetHashCode() {
 			return base.GetHashCode();
 		}
-	}
 
+	}
 }

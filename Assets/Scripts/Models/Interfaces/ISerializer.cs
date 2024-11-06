@@ -1,3 +1,4 @@
+
 namespace SimpleMotions {
 
 	public interface ISerializer {

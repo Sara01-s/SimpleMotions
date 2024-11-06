@@ -7,8 +7,8 @@ namespace SimpleMotions {
 		void SetCurrentFrame(int frame);
         void IncreaseFrame();
         void DecreaseFrame();
-        int SetFirstFrame();
-        int SetLastFrame();
+        void SetFirstFrame();
+        void SetLastFrame();
 
     }
 
@@ -19,10 +19,6 @@ namespace SimpleMotions {
         public VideoPlayback(IVideoPlayer videoPlayer) {
             _videoPlayer = videoPlayer;
         }
-
-		public void SetCurrentFrame(int frame) {
-			_videoPlayer.SetCurrentFrame(frame);
-		}
 
 		public void TogglePlay() {
             _videoPlayer.TogglePlay();
@@ -36,21 +32,17 @@ namespace SimpleMotions {
             _videoPlayer.DecreaseFrame();
         }
 
-        public int SetFirstFrame() {
-            int frame = _videoPlayer.GetFirstFrame();
-
-            SetCurrentFrame(frame);
-
-            return frame;
+        public void SetFirstFrame() {
+            SetCurrentFrame(_videoPlayer.GetFirstFrame());
         }
 
-        public int SetLastFrame() {
-            int frame = _videoPlayer.GetLastFrame();
-        
-            SetCurrentFrame(frame);
-
-            return frame;
+        public void SetLastFrame() {
+            SetCurrentFrame(_videoPlayer.GetLastFrame());
         }
+
+        public void SetCurrentFrame(int frame) {
+			_videoPlayer.SetCurrentFrame(frame);
+		}
 
     }
 }

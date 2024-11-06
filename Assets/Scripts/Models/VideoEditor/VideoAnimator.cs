@@ -1,8 +1,8 @@
 using static SimpleMotions.SmMath;
 using System.Collections.Generic;
+using SimpleMotions.Internal;
 using System.Linq;
 using System;
-using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -30,8 +30,7 @@ namespace SimpleMotions {
 
 		
 		public VideoAnimator(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
-							 IEventService eventService, IEntityStorage entityStorage) 
-		{
+							 IEventService eventService, IEntityStorage entityStorage) {
 			_keyframeStorage = keyframeStorage;
 			_componentStorage = componentStorage;
 			_eventService = eventService;

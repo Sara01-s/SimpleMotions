@@ -1,5 +1,3 @@
-using UnityEngine;
-using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 	
@@ -14,8 +12,8 @@ namespace SimpleMotions {
 
 	public interface IEditorPainterParser {
 
-		EditorTheme EditorThemeUnityToSm(EditorThemeUnity editorThemeUnity);
-		EditorThemeUnity SmEditorThemeToUnity(EditorTheme theme);
+		Internal.EditorTheme EditorThemeUnityToSm(EditorThemeUnity editorThemeUnity);
+		EditorThemeUnity SmEditorThemeToUnity(Internal.EditorTheme theme);
 		Internal.Color UnityColorToSm(UnityEngine.Color color);
 		UnityEngine.Color SmColorToUnity(Internal.Color color);
 		
@@ -23,8 +21,8 @@ namespace SimpleMotions {
 
 	public class EditorPainterParser : IEditorPainterParser {
 
-		public EditorTheme EditorThemeUnityToSm(EditorThemeUnity theme) {
-			return new EditorTheme() {
+		public Internal.EditorTheme EditorThemeUnityToSm(EditorThemeUnity theme) {
+			return new Internal.EditorTheme() {
 				PrimaryColor = UnityColorToSm(theme.PrimaryColor),
 				SecondaryColor = UnityColorToSm(theme.SecondaryColor),
 				BackgroundColor = UnityColorToSm(theme.BackgroundColor),
@@ -33,7 +31,7 @@ namespace SimpleMotions {
 			};
 		}
 
-		public EditorThemeUnity SmEditorThemeToUnity(EditorTheme theme) {
+		public EditorThemeUnity SmEditorThemeToUnity(Internal.EditorTheme theme) {
 			return new EditorThemeUnity {
 				PrimaryColor = SmColorToUnity(theme.PrimaryColor),
 				SecondaryColor = SmColorToUnity(theme.SecondaryColor),

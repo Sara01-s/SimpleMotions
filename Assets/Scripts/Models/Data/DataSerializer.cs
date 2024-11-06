@@ -1,3 +1,4 @@
+
 namespace SimpleMotions {
 
 	public sealed class DataSerializer<T> {

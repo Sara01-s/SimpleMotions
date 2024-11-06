@@ -11,8 +11,8 @@ namespace SimpleMotions.Internal {
 
 	[Serializable]
 	public sealed class TimelineData {
-		public readonly int InvalidFrame = -1;
-		public readonly int FirstFrame = 0;
+		public const int INVALID_FRAME = -1;
+		public const int FIRST_FRAME = 0;
 
 		public KeyframesData Keyframes = new();
 		public EntitiesData Entities = new();
@@ -34,10 +34,10 @@ namespace SimpleMotions.Internal {
 		
 		public bool IsLooping = false;
 		public bool IsPlaying = false;
-		public float CurrentTime;
+		public float CurrentTime = 0;
 		public float DurationSeconds => TotalFrames / TargetFrameRate;
 
-		public int CurrentFrame;
+		public int CurrentFrame = TimelineData.FIRST_FRAME;
 		public int TotalFrames;
 
 		public Color CanvasBackgroundColor = new();
@@ -47,11 +47,9 @@ namespace SimpleMotions.Internal {
 
 		public VideoData() {}
 
-		public VideoData(int firstFrame, int targetFrameRate) {
-			CurrentTime = firstFrame;
-			CurrentFrame = firstFrame;
-			TotalFrames = 300;
+		public VideoData(int targetFrameRate, int totalFrames) {
 			TargetFrameRate = targetFrameRate;
+			TotalFrames = totalFrames;
 		}
 	}
 
