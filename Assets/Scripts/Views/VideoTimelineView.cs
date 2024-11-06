@@ -2,7 +2,6 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using SimpleMotions;
-
     
 public sealed class VideoTimelineView : MonoBehaviour {
 

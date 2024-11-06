@@ -50,7 +50,7 @@ namespace SimpleMotions.Internal {
 		public VideoData(int firstFrame, int targetFrameRate) {
 			CurrentTime = firstFrame;
 			CurrentFrame = firstFrame;
-			TotalFrames = 100;
+			TotalFrames = 300;
 			TargetFrameRate = targetFrameRate;
 		}
 	}

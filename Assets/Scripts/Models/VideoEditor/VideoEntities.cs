@@ -13,9 +13,9 @@ namespace SimpleMotions {
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IComponentStorage _componentStorage;
 		private readonly IEntityStorage _entityStorage;
-		private readonly VideoCanvas _videoCanvas;
+		private readonly IVideoCanvas _videoCanvas;
 
-		public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, IEntityStorage entityStorage, VideoCanvas videoCanvas) {
+		public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, IEntityStorage entityStorage, IVideoCanvas videoCanvas) {
 			_keyframeStorage = keyframeStorage;
 			_componentStorage = componentStorage;
 			_entityStorage = entityStorage;

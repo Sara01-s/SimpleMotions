@@ -105,12 +105,14 @@ namespace SimpleMotions {
 
 		private void SendInterpolationData(int entityId) {
 			// Send updated data to view.
-			var entityDisplayInfoCurrentFrame = new EntityDisplayInfo {
-				Entity = _entityStorage.GetEntity(entityId),
-				Components = _componentStorage.GetAllComponents(entityId)
+			var entity = _entityStorage.GetEntity(entityId);
+
+			var entityDisplayInfo = new EntityDisplayInfo {
+				EntityId = entityId,
+				EntityName = entity.Name
 			};
 
-			_eventService.Dispatch(entityDisplayInfoCurrentFrame);
+			_eventService.Dispatch(entityDisplayInfo);
 		}
 
 		private void InterpolateComponent<T>(T component, IKeyframe<Component> start, IKeyframe<Component> target, float t) {

@@ -11,7 +11,6 @@ namespace SimpleMotions {
 		[SerializeField] private VideoPlaybackView _videoPlaybackView;
         [SerializeField] private VideoTimelineView _videoTimelineView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
-		[SerializeField] private SmToUnity.EditorThemeUnity _editorTheme;
 
 		[Header("Data")]
 		[SerializeField] private string _projectName;
@@ -22,10 +21,11 @@ namespace SimpleMotions {
 		[SerializeField, Range(12, 1024)] private int _targetFrameRate = 60;
 
 		private IEventService _eventService;
+		private IEditorPainterParser _editorPainterParser;
 
 		private IVideoPlayback _videoPlayback;
 		private IVideoTimeline _videoTimeline;
-		private VideoCanvas _videoCanvas;
+		private IVideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 
 		private IVideoAnimator _videoAnimator;
@@ -42,12 +42,11 @@ namespace SimpleMotions {
 		private EditorData _editorData;
 		private VideoData _videoData;
 
-		private EditorTheme _theme;
-
 
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
 			_eventService = new EventDispatcher();
+			_editorPainterParser = new EditorPainterParser();
 			
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -71,7 +70,6 @@ namespace SimpleMotions {
 			_projectData = _projectDataHandler.LoadData();
 			_editorData = _editorDataHandler.LoadData();
 
-			_theme = _editorTheme.ToSmTheme();
 			_projectData.ProjectName = _projectName;
 			_projectData.Video = new VideoData(_projectData.Timeline.FirstFrame, _targetFrameRate);
 
@@ -99,16 +97,13 @@ namespace SimpleMotions {
 		private void BuildGUI() {
 			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _eventService);
 			var videoTimelineViewModel = new VideoTimelineViewModel(_videoEntities, _videoTimeline, _eventService);
-			var videoCanvasViewModel = new VideoCanvasViewModel(_eventService);
+			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _eventService);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
 
-			// TODO - Detalle para Julián (Configure)
-
-			_editorPainter.FindUI();
-			_editorPainter.PaintUI(_editorTheme);
+			_editorPainter.ApplyThemeIfNotEmpty(_editorPainterParser.SmEditorThemeToUnity(_editorData.Theme));
 		}
 
 		private void Save() {
@@ -121,7 +116,7 @@ namespace SimpleMotions {
 			_projectData.Video.CurrentFrame = 0;
 			_projectData.Video.IsPlaying = false;
 
-			_editorData.Theme = _theme;
+			_editorData.Theme = _editorPainterParser.EditorThemeUnityToSm(_editorPainter.Theme);
 
 			_projectDataHandler.SaveData(_projectData);
 			_editorDataHandler.SaveData(_editorData);

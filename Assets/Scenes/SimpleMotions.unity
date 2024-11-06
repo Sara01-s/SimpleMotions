@@ -206,7 +206,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1838585640}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -678,12 +678,6 @@ MonoBehaviour:
   _videoPlaybackView: {fileID: 116801215}
   _videoTimelineView: {fileID: 1135518586}
   _videoCanvasView: {fileID: 1212651254}
-  _editorTheme:
-    TextColor: {r: 0.95686275, g: 0.87058824, b: 0.8666667, a: 1}
-    BackgroundColor: {r: 0.09411765, g: 0.09411765, b: 0.09411765, a: 1}
-    PrimaryColor: {r: 0.26666668, g: 0.26666668, b: 0.26666668, a: 1}
-    SecondaryColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
-    AccentColor: {r: 0.8784314, g: 0.7978138, b: 0.42352942, a: 1}
   _projectName: test_project
   _projectDataFileName: project.json
   _editorDataFileName: editor.json
@@ -785,8 +779,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1338916550}
   m_HandleRect: {fileID: 1338916549}
   m_Direction: 0
-  m_Value: 1.0000489
-  m_Size: 0.000000065983954
+  m_Value: 1.0000366
+  m_Size: 0.99729735
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1361,11 +1355,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea0fc02ae20bcea1182cb69c586f0b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _imagesWithPrimaryColor: []
-  _imagesWithSecondaryColor: []
-  _imagesWithAccentColor: []
-  _imagesWithBackgroundColor: []
-  _texts: []
+  <Theme>k__BackingField:
+    TextColor: {r: 0.95686275, g: 0.87058824, b: 0.8666667, a: 1}
+    BackgroundColor: {r: 0.09411765, g: 0.09411765, b: 0.09411765, a: 1}
+    PrimaryColor: {r: 0.26666668, g: 0.26666668, b: 0.26666668, a: 1}
+    SecondaryColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
+    AccentColor: {r: 0.62352943, g: 0.42352942, b: 0.8784314, a: 1}
+  _primaryColorTag: PrimaryColor
+  _secondaryColorTag: SecondaryColor
+  _backgroundColorTag: BackgroundColor
+  _accentColorTag: AccentColor
 --- !u!4 &524110108
 Transform:
   m_ObjectHideFlags: 0
@@ -3582,7 +3581,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -5.000244, y: 0}
+  m_AnchoredPosition: {x: -5.000122, y: 0}
   m_SizeDelta: {x: 1850, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1527046419

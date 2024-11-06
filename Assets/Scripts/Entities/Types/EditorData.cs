@@ -15,6 +15,16 @@ namespace SimpleMotions.Internal {
 		public Color SecondaryColor = Color.White;
 		public Color AccentColor = Color.White;
 
+		public EditorTheme() {}
+
+		public EditorTheme(Color text, Color bg, Color primary, Color secondary, Color accent) {
+			TextColor = text;
+			BackgroundColor = bg;
+			PrimaryColor = primary;
+			SecondaryColor = secondary;
+			AccentColor = accent;
+		}
+
 #if DEBUG
 		public override string ToString() {
 			return $"Text: {TextColor}, BG: {BackgroundColor}, Primary: {PrimaryColor}, Secondary: {SecondaryColor}, Accent: {AccentColor}";

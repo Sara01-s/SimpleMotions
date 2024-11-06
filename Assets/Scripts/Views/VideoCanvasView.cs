@@ -1,86 +1,83 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using SimpleMotions.Internal; // XD
+using SimpleMotions;
 
-namespace SimpleMotions {
-    
-    public sealed class VideoCanvasView : MonoBehaviour {
+public sealed class VideoCanvasView : MonoBehaviour {
 
-		[Header("Entity prefab")]
-		[SerializeField] private GameObject _entityPrefab;
+	[Header("Entity prefab")]
+	[SerializeField] private GameObject _entityPrefab;
 
-		[Header("Primitive Sprites")]
-		[SerializeField] private Sprite _circleSprite;
-		[SerializeField] private Sprite _rectSprite;
-		[SerializeField] private Sprite _triangleSprite;
+	[Header("Primitive Sprites")]
+	[SerializeField] private Sprite _circleSprite;
+	[SerializeField] private Sprite _rectSprite;
+	[SerializeField] private Sprite _triangleSprite;
 
-		private readonly Dictionary<int, GameObject> _activeEntities = new();
+	private readonly Dictionary<int, GameObject> _displayedEntites = new();
+	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
+	private IVideoCanvasViewModel _videoCanvasViewModel;
 
-        public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
-			videoCanvasViewModel.UpdateCanvas.Subscribe(OnUpdateCanvas);
-        }
+	public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
+		_videoCanvasViewModel = videoCanvasViewModel;
 
-        private void OnUpdateCanvas(EntityDisplayInfo entityDisplayInfo) {
-			UpdateEntityDisplay(entityDisplayInfo);
-        }
+		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
+		PopulateSpriteDictionary();
+	}
 
-		private void UpdateEntityDisplay(EntityDisplayInfo entityDisplayInfo) {
-			var entity = entityDisplayInfo.Entity;
-			var components = entityDisplayInfo.Components;
+	private void PopulateSpriteDictionary() {
+		_spriteByPrimitiveShape = new Dictionary<string, Sprite>() {
+			{ "Circle", _circleSprite },
+			{ "Triangle", _triangleSprite },
+			{ "Rect", _rectSprite }
+		};
+	}
 
-			// entity not registered, create it.
-			if (!_activeEntities.ContainsKey(entity.Id)) {
-				CreateNewEntity(entity);
-			}
+	private void OnUpdateCanvas(EntityDisplayInfo entityDisplayInfo) {
+		UpdateEntityDisplay(entityDisplayInfo);
+	}
 
-			// entity already registered, update it.
-			UpdateEntity(entity, components);
+	private void UpdateEntityDisplay(EntityDisplayInfo info) {
+		// entity not registered, create it.
+		if (!_displayedEntites.ContainsKey(info.EntityId)) {
+			DisplayNewEntity(info.EntityId, info.EntityName);
 		}
 
-		private void CreateNewEntity(Entity entity) {
-			string entityName = $"Entity {entity.Id}: \"{entity.Name}\"";
-			var unityObject = Instantiate(_entityPrefab, parent: transform);
+		// entity already registered, update it.
+		UpdateEntity(info.EntityId);
+	}
 
-			unityObject.transform.name = entityName;
-			_activeEntities.Add(entity.Id, unityObject);
+	private void DisplayNewEntity(int entityId, string entityName) {
+		string entity = $"Entity {entityId}: \"{entityName}\"";
+		var displayedEntity = Instantiate(_entityPrefab, parent: transform);
 
-			Debug.Log("Creada entidad: " + entity.Name);
+		displayedEntity.transform.name = entity;
+		_displayedEntites.Add(entityId, displayedEntity);
+
+		Debug.Log("Creada entidad: " + entity);
+	}
+
+	private void UpdateEntity(int entityId) {
+		if (!_displayedEntites.TryGetValue(entityId, out var displayedEntity)) {
+			return;
 		}
 
-		private void UpdateEntity(Entity entity, SimpleMotions.Internal.Component[] components) {
-			if (!_activeEntities.TryGetValue(entity.Id, out var unityObject)) {
-				return;
-			}
+		if (_videoCanvasViewModel.EntityHasTransform(entityId, out var transform)) {
+			var entityRect = displayedEntity.GetComponent<RectTransform>();
 
-			var unityRectTransform = unityObject.GetComponent<RectTransform>();
-
-			if (!unityObject.TryGetComponent<Image>(out var unityImage)) {
-				unityImage = unityObject.AddComponent<Image>();
-			}
-
-			// TODO - cachear esto de alguna forma?
-			foreach (var component in components) {
-				switch (component) {
-					case SimpleMotions.Internal.Transform transform:
-						unityRectTransform.FromSmTransform(transform);
-						break;
-					case Shape shape:
-						unityImage.sprite = GetSpriteFromPrimitive(shape.PrimitiveShape);
-						unityImage.color = SmToUnity.SmToUnityColor(shape.Color);
-						break;
-				}
-			}
+			entityRect.anchoredPosition = new Vector2(transform.pos.x, transform.pos.y);
+			entityRect.localScale = new Vector2(transform.scale.w, transform.scale.h);
+			entityRect.rotation = Quaternion.AngleAxis(transform.rollAngleDegrees, Vector3.forward);
 		}
 
-		private Sprite GetSpriteFromPrimitive(Shape.Primitive primitiveType) {
-			return primitiveType switch {
-				Shape.Primitive.Rect => _rectSprite,
-				Shape.Primitive.Circle => _circleSprite,
-				Shape.Primitive.Triangle => _triangleSprite,
-				_ => throw new System.ArgumentException(primitiveType.ToString())
-			};
+		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
+			if (!displayedEntity.TryGetComponent<Image>(out var image)) {
+				image = displayedEntity.AddComponent<Image>();
+			}
+
+			image.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
+			image.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
 		}
 
 	}
+
 }
