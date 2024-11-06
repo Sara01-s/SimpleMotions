@@ -1,4 +1,3 @@
-
 namespace SimpleMotions {
 
 	public interface IVideoPlaybackViewModel {

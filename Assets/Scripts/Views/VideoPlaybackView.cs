@@ -50,20 +50,20 @@ namespace SimpleMotions {
             _pause.SetActive(_isPlaying);
         }
 
-        private void SetCurrentTime(float time) {
-            _currentTime.text = time.ToString("00:00:00");
+        private void SetCurrentTime(float currentTime) {
+			_currentTime.text = $"{currentTime:00:00:00}";
         }
 
-        private void SetCurrentFrame(int frame) {
-            _currentFrame.text = frame.ToString();
+        private void SetCurrentFrame(int currentFrame) {
+            _currentFrame.text = currentFrame.ToString();
         }
 
-        private void SetTotalFrames(int frame) {
-            _totalFrames.text = frame.ToString();
+        private void SetTotalFrames(int totalFrames) {
+            _totalFrames.text = totalFrames.ToString();
         }
 
-        private void SetDuration(float time) {
-            _duration.text = time.ToString("00:00:00");
+        private void SetDuration(float durationSeconds) {
+            _duration.text = $"{durationSeconds:00:00:00}";
         }
 
     }

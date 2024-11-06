@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SimpleMotions {
+namespace SimpleMotions.Internal {
 
 	[System.Serializable]
 	public sealed class ComponentsData {

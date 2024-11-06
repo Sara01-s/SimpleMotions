@@ -1,3 +1,5 @@
+using SimpleMotions.Internal;
+
 namespace SimpleMotions {
 
 	public interface IVideoEntities {

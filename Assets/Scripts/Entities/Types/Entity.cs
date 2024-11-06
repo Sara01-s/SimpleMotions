@@ -1,4 +1,4 @@
-namespace SimpleMotions {
+namespace SimpleMotions.Internal {
 
 	[System.Serializable]
 	public sealed class Entity {

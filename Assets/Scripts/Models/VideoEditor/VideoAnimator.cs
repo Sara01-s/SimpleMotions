@@ -2,6 +2,7 @@ using static SimpleMotions.SmMath;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -118,8 +119,8 @@ namespace SimpleMotions {
 					var startTransform = start.Value as Transform;
 					var targetTransform = target.Value as Transform;
 
-					var deltaPosition = lerpPos(startTransform.Position, targetTransform.Position, t);
-					var deltaScale = lerpScale(startTransform.Scale, targetTransform.Scale, t);
+					var deltaPosition = lerp(startTransform.Position, targetTransform.Position, t);
+					var deltaScale = lerp(startTransform.Scale, targetTransform.Scale, t);
 					var deltaRoll = lerp(startTransform.Roll.AngleDegrees, targetTransform.Roll.AngleDegrees, t);
 
 					transform.Position = deltaPosition;
@@ -131,7 +132,7 @@ namespace SimpleMotions {
 					var startShape = start.Value as Shape;
 					var targetShape = target.Value as Shape;
 
-					var deltaColor = lerpColor(startShape.Color, targetShape.Color, t);
+					var deltaColor = lerp(startShape.Color, targetShape.Color, t);
 
 					shape.Color = deltaColor;
 					break;

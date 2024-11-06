@@ -1,4 +1,4 @@
-namespace SimpleMotions {
+namespace SimpleMotions.Internal {
 
 	public interface IKeyframe<out T> where T : Component {
 		int EntityId { get; set; }

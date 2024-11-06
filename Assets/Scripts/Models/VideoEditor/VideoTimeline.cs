@@ -1,21 +1,23 @@
+using SimpleMotions.Internal;
+
 namespace SimpleMotions {
 
 	public interface IVideoTimeline {
 		
-		int DefaultKeyframes { get; }
+		int TotalFrames { get; }
 		void SetCurrentFrame(int frame);
 
 	}
 
 	public sealed class VideoTimeline : IVideoTimeline {
 
-		private TimelineData _timelineData;
+		private readonly VideoData _videoData;
 		private readonly IVideoPlayer _videoPlayer;
 
-        public int DefaultKeyframes => _timelineData.DefaultKeyframes;
+		public int TotalFrames => _videoData.TotalFrames;
 
-        public VideoTimeline(TimelineData timelineData, IVideoPlayer videoPlayer) {
-			_timelineData = timelineData;
+		public VideoTimeline(VideoData videoData, IVideoPlayer videoPlayer) {
+			_videoData = videoData;
 			_videoPlayer = videoPlayer;
 		}
 

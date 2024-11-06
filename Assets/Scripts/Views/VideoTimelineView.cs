@@ -22,7 +22,7 @@ public sealed class VideoTimelineView : MonoBehaviour {
 
 		videoTimelineViewModel.OnTimelineUpdate.Subscribe(SetCursorValue);
 
-		DrawTimeline(videoTimelineViewModel.DefaultFrameCount);
+		DrawTimeline(videoTimelineViewModel.TotalFrameCount);
 	}
 
 	private void DrawTimeline(int framesCount) {

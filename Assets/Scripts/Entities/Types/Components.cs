@@ -1,6 +1,6 @@
 using System;
 
-namespace SimpleMotions {
+namespace SimpleMotions.Internal {
 
 	[Serializable]
 	public class Component {

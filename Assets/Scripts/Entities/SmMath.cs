@@ -1,4 +1,6 @@
+using static System.Math;
 using System.Runtime.CompilerServices;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -12,7 +14,7 @@ namespace SimpleMotions {
 		}
 
 		[MethodImpl(INLINE)]
-		public static Color lerpColor(Color c, Color d, float t) {
+		public static Color lerp(Color c, Color d, float t) {
 			float dr = lerp(c.R, d.R, t);
 			float dg = lerp(c.G, d.G, t);
 			float db = lerp(c.B, d.B, t);
@@ -22,7 +24,7 @@ namespace SimpleMotions {
 		}
 
 		[MethodImpl(INLINE)]
-		public static Position lerpPos(Position u, Position v, float t) {
+		public static Position lerp(Position u, Position v, float t) {
 			float dx = lerp(u.X, v.X, t);
 			float dy = lerp(u.Y, v.Y, t);
 
@@ -30,13 +32,37 @@ namespace SimpleMotions {
 		}
 
 		[MethodImpl(INLINE)]
-		public static Scale lerpScale(Scale u, Scale v, float t) {
+		public static Scale lerp(Scale u, Scale v, float t) {
 			float dw = lerp(u.Width, v.Width, t);
 			float dh = lerp(u.Height, v.Height, t);
 
 			return new Scale(dw, dh);
 		}
 
-	}
+		[MethodImpl(INLINE)]
+		public static float clamp(float v, float min, float max) {
+			return Clamp(v, min, max);
+		}
 
+		[MethodImpl(INLINE)]
+		public static float min(float a, float b) {
+			return Min(a, b);
+		}
+
+		[MethodImpl(INLINE)]
+		public static float max(float a, float b) {
+			return Max(a, b);
+		}
+
+		[MethodImpl(INLINE)]
+		public static int min(int a, int b) {
+			return Min(a, b);
+		}
+
+		[MethodImpl(INLINE)]
+		public static int max(int a, int b) {
+			return Max(a, b);
+		}
+
+	}
 }

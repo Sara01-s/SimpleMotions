@@ -1,4 +1,6 @@
+using static SimpleMotions.SmMath;
 using System.Threading.Tasks;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -33,18 +35,13 @@ namespace SimpleMotions {
 
 		private Task _playVideo;
 
-		private VideoDisplayInfo _videoDisplayInfo = new();
+		private readonly VideoDisplayInfo _videoDisplayInfo = new();
 
 		public VideoPlayer(VideoData videoData, TimelineData timelineData, IVideoAnimator videoAnimator, IEventService eventService) {
 			_videoData = videoData;
 			_timelineData = timelineData;
 			_videoAnimator = videoAnimator;
 			_eventService = eventService;
-
-			// SUS - Ver quien y donde hay que llamar esto.
-			_videoData.Duration = _videoData.TotalFrames / _videoData.TargetFrameRate;
-			_videoDisplayInfo.TotalFrames = _videoData.TotalFrames;
-			_videoDisplayInfo.Duration = _videoData.Duration;
 		}
 
 		~VideoPlayer() {
@@ -75,7 +72,7 @@ namespace SimpleMotions {
 		}
 
 		public void Reset() {
-			_videoData.CurrentFrame = _timelineData.FirstKeyframe;
+			_videoData.CurrentFrame = _timelineData.FirstFrame;
 			_videoData.CurrentTime = 0.0f;
 		}
 
@@ -135,21 +132,21 @@ namespace SimpleMotions {
 		}
 
 		public void IncreaseFrame() {
-			_videoData.CurrentFrame++;
+			_videoData.CurrentFrame = min(_videoData.CurrentFrame + 1, _videoData.TotalFrames);
 
 			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
 			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
 		public void DecreaseFrame() {
-			_videoData.CurrentFrame--;
+			_videoData.CurrentFrame = max(_videoData.CurrentFrame - 1, _timelineData.FirstFrame);
 
 			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
 			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
         public int GetFirstFrame() {
-			return _timelineData.FirstKeyframe;
+			return _timelineData.FirstFrame;
         }
 
         public int GetLastFrame() {

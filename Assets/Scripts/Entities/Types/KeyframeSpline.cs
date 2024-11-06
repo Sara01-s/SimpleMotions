@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimpleMotions {
+namespace SimpleMotions.Internal {
 
     public interface IKeyframeSpline : IEnumerable<IKeyframe<Component>> {
 		

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using SimpleMotions.Internal; // XD
 
 namespace SimpleMotions {
     
@@ -47,7 +48,7 @@ namespace SimpleMotions {
 			Debug.Log("Creada entidad: " + entity.Name);
 		}
 
-		private void UpdateEntity(Entity entity, Component[] components) {
+		private void UpdateEntity(Entity entity, SimpleMotions.Internal.Component[] components) {
 			if (!_activeEntities.TryGetValue(entity.Id, out var unityObject)) {
 				return;
 			}
@@ -61,7 +62,7 @@ namespace SimpleMotions {
 			// TODO - cachear esto de alguna forma?
 			foreach (var component in components) {
 				switch (component) {
-					case Transform transform:
+					case SimpleMotions.Internal.Transform transform:
 						unityRectTransform.FromSmTransform(transform);
 						break;
 					case Shape shape:

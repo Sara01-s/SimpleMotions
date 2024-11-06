@@ -1,6 +1,6 @@
 using System;
 
-namespace SimpleMotions {
+namespace SimpleMotions.Internal {
 
 	[Serializable]
 	public sealed class ProjectData {
@@ -11,11 +11,8 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class TimelineData {
-		// TODO - VER QUE HACER
-		public readonly int InvalidKeyframe = -1;
-		// TODO - VER QUE HACER
-		public readonly int FirstKeyframe = 0;
-		public readonly int DefaultKeyframes = 100;
+		public readonly int InvalidFrame = -1;
+		public readonly int FirstFrame = 0;
 
 		public KeyframesData Keyframes = new();
 		public EntitiesData Entities = new();
@@ -24,20 +21,38 @@ namespace SimpleMotions {
 
 	[Serializable]
 	public sealed class VideoData {
+		public int TargetFrameRate {
+			get => _targetFrameRate;
+			set {
+				if (value <= 0) {
+					throw new ArgumentException($"Target frame rate cannot be less or equal to 0. {value}");
+				}
+
+				_targetFrameRate = value;
+			}
+		}
 		
 		public bool IsLooping = false;
 		public bool IsPlaying = false;
-		public float CurrentTime = 0.0f;
-		public float Duration; // In seconds
+		public float CurrentTime;
+		public float DurationSeconds => TotalFrames / TargetFrameRate;
 
-		public int TargetFrameRate = 60;
-		// TODO - VER QUE HACER
-		public int CurrentFrame = 0;
-		// TODO - VER QUE HACER
-		public int TotalFrames = 300;
+		public int CurrentFrame;
+		public int TotalFrames;
 
 		public Color CanvasBackgroundColor = new();
 		public Scale Resolution = new();
+
+		private int _targetFrameRate;
+
+		public VideoData() {}
+
+		public VideoData(int firstFrame, int targetFrameRate) {
+			CurrentTime = firstFrame;
+			CurrentFrame = firstFrame;
+			TotalFrames = 100;
+			TargetFrameRate = targetFrameRate;
+		}
 	}
 
 }

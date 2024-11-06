@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -72,6 +73,7 @@ namespace SimpleMotions {
 
 			_theme = _editorTheme.ToSmTheme();
 			_projectData.ProjectName = _projectName;
+			_projectData.Video = new VideoData(_projectData.Timeline.FirstFrame, _targetFrameRate);
 
 			var componentsData = _projectData.Timeline.Components;
 			var entitiesData   = _projectData.Timeline.Entities;
@@ -88,8 +90,8 @@ namespace SimpleMotions {
 		private void BuildVideoEditor() {
 			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _eventService, _entityStorage);
 			_videoPlayer 	= new VideoPlayer(_videoData, _projectData.Timeline, _videoAnimator, _eventService);
+			_videoTimeline 	= new VideoTimeline(_projectData.Video, _videoPlayer);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
-			_videoTimeline 	= new VideoTimeline(_projectData.Timeline, _videoPlayer);
             _videoCanvas 	= new VideoCanvas(_componentStorage, _eventService);
 			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
 		}
@@ -103,7 +105,8 @@ namespace SimpleMotions {
             _videoTimelineView.Configure(videoTimelineViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
 
-			// TODO - Detalle para Julián
+			// TODO - Detalle para Julián (Configure)
+
 			_editorPainter.FindUI();
 			_editorPainter.PaintUI(_editorTheme);
 		}
