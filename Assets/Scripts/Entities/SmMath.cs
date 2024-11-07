@@ -7,6 +7,14 @@ namespace SimpleMotions {
 	public static class SmMath {
 
 		private const MethodImplOptions INLINE = MethodImplOptions.AggressiveInlining;
+
+		[MethodImpl(INLINE)]
+		public static float easeOutBack(float t) {
+			const float smooth = 1.70158f;
+			const float ending = smooth + 1.0f;
+
+			return 1.0f + ending * pow(t - 1.0f, 3.0f) + smooth * pow(t - 1.0f, 2.0f);
+		}
 		
 		[MethodImpl(INLINE)]
 		public static float lerp(float a, float b, float t) {
@@ -63,6 +71,11 @@ namespace SimpleMotions {
 		public static int max(int a, int b) {
 			return Max(a, b);
 		}
+
+		[MethodImpl(INLINE)]
+		public static float pow(float x, float power) {
+			return (float)Pow(x, power);
+		} 
 
 	}
 }
