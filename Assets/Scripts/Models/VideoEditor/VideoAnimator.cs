@@ -99,7 +99,7 @@ namespace SimpleMotions {
 				t = dt / deltaFrame;
 			}
 
-			InterpolateComponent(component, startKeyframe, targetKeyframe, t);
+			InterpolateComponent(component, startKeyframe, targetKeyframe, easeOutBack(t));
 		}
 
 		private void SendInterpolationData(int entityId) {

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b7ac111ca715c8b06b42652e8df573e7
+guid: 00a265d51dc833046abe821a14170432
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -70,9 +70,9 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
-    resizeAlgorithm: 1
+    resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tex_icons_fix_0
+      name: tex_icons_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4aaffb55ba248b9b0be13203b987338c
-      internalID: 666928636
+      spriteID: a59af9c32b085fc4180701708aabdf1b
+      internalID: 1592744581
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_1
+      name: tex_icons_1
       rect:
         serializedVersion: 2
         x: 64
@@ -145,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3e1d3f26c0a652916852fd136847b726
-      internalID: -173904397
+      spriteID: de04576259a247243873937630ef6387
+      internalID: -1629589600
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_2
+      name: tex_icons_2
       rect:
         serializedVersion: 2
         x: 128
@@ -166,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3edcbfe9a31acbcaeb257846c65c1edd
-      internalID: 164947223
+      spriteID: a8db063749b70c04088b48d21fc7255e
+      internalID: 1511886455
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_3
+      name: tex_icons_3
       rect:
         serializedVersion: 2
         x: 192
@@ -187,14 +187,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6ef953d9b0849c4de86e18a879898995
-      internalID: 250407092
+      spriteID: a8dd075ef5b8ff24f845681877c1ca6a
+      internalID: -1280018871
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_4
+      name: tex_icons_4
       rect:
         serializedVersion: 2
         x: 256
@@ -208,14 +208,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: de6f3686af26476fcab50437379218ee
-      internalID: -102305204
+      spriteID: 22585ee9f19ae814d812ffc23e4eda28
+      internalID: 1991363999
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_5
+      name: tex_icons_5
       rect:
         serializedVersion: 2
         x: 320
@@ -229,14 +229,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0de72299cbcb41cc9a308fdb4df65da5
-      internalID: 1439652293
+      spriteID: 71f20d5ed602dfd4b935b00db9185ac0
+      internalID: -63623030
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_6
+      name: tex_icons_6
       rect:
         serializedVersion: 2
         x: 384
@@ -250,14 +250,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0ae4b80d159f319b1904b84cb1c31d53
-      internalID: -809475929
+      spriteID: 54d66fb5eac9a264eab1ffd5fc748438
+      internalID: -2086937050
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_7
+      name: tex_icons_7
       rect:
         serializedVersion: 2
         x: 448
@@ -271,14 +271,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f4a85afbb953a5999a16b470ff4b6cbb
-      internalID: -1960842462
+      spriteID: b37e15b817284054ba331dfccf71393b
+      internalID: 1399019781
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_8
+      name: tex_icons_8
       rect:
         serializedVersion: 2
         x: 0
@@ -292,14 +292,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a36a2a82858bc106b99d40c38a3fbe2b
-      internalID: -1069454131
+      spriteID: 1d632029c9ece0b41826859970667dbd
+      internalID: 945815835
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_9
+      name: tex_icons_9
       rect:
         serializedVersion: 2
         x: 64
@@ -313,14 +313,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9b0054f8177be1a08af7cc01aa8b75df
-      internalID: 170081686
+      spriteID: 876dcac43a7be754d94f96ea9636f8f1
+      internalID: 355378323
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_10
+      name: tex_icons_10
       rect:
         serializedVersion: 2
         x: 128
@@ -334,14 +334,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17f20ba596ebae5a384a8a6d4d4ca769
-      internalID: -1206238641
+      spriteID: 1661ca2f3af455b4cb14be64085d0148
+      internalID: -1470613054
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_icons_fix_11
+      name: tex_icons_11
       rect:
         serializedVersion: 2
         x: 192
@@ -355,8 +355,113 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8a81659edc26acf759b8418dae95dc53
-      internalID: -1195372946
+      spriteID: 1d18613732eb7d04bb732b40503b65ee
+      internalID: 1337468028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_icons_12
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1cc31b001fa194248b16dabafe506c11
+      internalID: 588643403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_icons_13
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f4fd298917e9434e8f4248157b0526f
+      internalID: 1013467562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_icons_14
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a372a22c9bdd1b749b660e6955d48e0b
+      internalID: -715289301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_icons_15
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea2c011d3794ae744b8c68b5d1a9fd8e
+      internalID: -1153440052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_icons_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba768440f28cc944089f131839b354ff
+      internalID: 77421587
       vertices: []
       indices: 
       edges: []
@@ -372,18 +477,23 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      tex_icons_fix_0: 666928636
-      tex_icons_fix_1: -173904397
-      tex_icons_fix_10: -1206238641
-      tex_icons_fix_11: -1195372946
-      tex_icons_fix_2: 164947223
-      tex_icons_fix_3: 250407092
-      tex_icons_fix_4: -102305204
-      tex_icons_fix_5: 1439652293
-      tex_icons_fix_6: -809475929
-      tex_icons_fix_7: -1960842462
-      tex_icons_fix_8: -1069454131
-      tex_icons_fix_9: 170081686
+      tex_icons_0: 1592744581
+      tex_icons_1: -1629589600
+      tex_icons_10: -1470613054
+      tex_icons_11: 1337468028
+      tex_icons_12: 588643403
+      tex_icons_13: 1013467562
+      tex_icons_14: -715289301
+      tex_icons_15: -1153440052
+      tex_icons_16: 77421587
+      tex_icons_2: 1511886455
+      tex_icons_3: -1280018871
+      tex_icons_4: 1991363999
+      tex_icons_5: -63623030
+      tex_icons_6: -2086937050
+      tex_icons_7: 1399019781
+      tex_icons_8: 945815835
+      tex_icons_9: 355378323
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

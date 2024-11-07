@@ -7,6 +7,7 @@ using TMPro;
 public class EditorPainter : MonoBehaviour {
 
 	[field:SerializeField] public EditorThemeUnity Theme { get; private set; }
+	[SerializeField] private TMP_FontAsset _font;
 
 	[Header("Color Tags")]
 	[SerializeField] private string _primaryColorTag 	 = "PrimaryColor";
@@ -14,22 +15,23 @@ public class EditorPainter : MonoBehaviour {
 	[SerializeField] private string _backgroundColorTag  = "BackgroundColor";
 	[SerializeField] private string _accentColorTag 	 = "AccentColor";
 
-	private Image[] _imagesWithPrimaryColor;
-	private Image[] _imagesWithSecondaryColor;
-	private Image[] _imagesWithAccentColor;
-	private Image[] _imagesWithBackgroundColor;
-	private TextMeshProUGUI[] _texts;
+	[Space(20.0f)]
+	[SerializeField] private Image[] _imagesWithPrimaryColor;
+	[SerializeField] private Image[] _imagesWithSecondaryColor;
+	[SerializeField] private Image[] _imagesWithAccentColor;
+	[SerializeField] private Image[] _imagesWithBackgroundColor;
+	[SerializeField] private TextMeshProUGUI[] _texts;
 
 	public void Awake() {
 		FindUI();
 	}
 
 	public void FindUI() {
-		_imagesWithAccentColor = GetImagesWithTag(_primaryColorTag);
+		_imagesWithPrimaryColor = GetImagesWithTag(_primaryColorTag);
 		_imagesWithSecondaryColor = GetImagesWithTag(_secondaryColorTag);
 		_imagesWithBackgroundColor = GetImagesWithTag(_backgroundColorTag);
 		_imagesWithAccentColor = GetImagesWithTag(_accentColorTag);
-		_texts = FindObjectsOfType<TextMeshProUGUI>().ToArray();
+		_texts = FindObjectsOfType<TextMeshProUGUI>(includeInactive: true).ToArray();
 	}
 
 	public void ApplyThemeIfNotEmpty(EditorThemeUnity newTheme) {
@@ -73,6 +75,7 @@ public class EditorPainter : MonoBehaviour {
 
 		foreach (var text in texts) {
 			text.color = color;
+			text.font = _font;
 		}
 	}
 
@@ -81,5 +84,11 @@ public class EditorPainter : MonoBehaviour {
                          .Where(go => go.TryGetComponent<Image>(out _))
                          .Select(go => go.GetComponent<Image>())
                          .ToArray();
+	}
+
+	[ContextMenu("Apply Editor Theme")]
+	private void ApplyEditorTheme() {
+		FindUI();
+		ApplyTheme(Theme);
 	}
 }
