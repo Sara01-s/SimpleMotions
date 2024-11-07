@@ -21,12 +21,11 @@ namespace SimpleMotions {
 
 	public sealed class EntityStorage : IEntityStorage {
 
-		private int _nextAvailableId = 0;
+		private readonly Dictionary<int, Entity> _entities = new();
 		private readonly List<int> _availableIds = new();
 		private readonly HashSet<int> _aliveEntities = new();
 		private readonly HashSet<int> _activeEntities = new();
-
-		private readonly Dictionary<int, Entity> _entities = new();
+		private int _nextAvailableId = 0;
 
 		public EntityStorage(EntitiesData entitiesData) {
 			_nextAvailableId = entitiesData.NextAvailableId;

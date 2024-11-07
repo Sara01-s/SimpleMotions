@@ -18,7 +18,7 @@ namespace SimpleMotions {
 		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component;
 		IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId);
 
-		IEnumerable<System.Type> GetKeyframeTypes();
+		IEnumerable<Type> GetKeyframeTypes();
 
 		bool FrameHasKeyframe(int frame);
 		bool EntityHasKeyframesOfType<T>(int entityId) where T : Component;
