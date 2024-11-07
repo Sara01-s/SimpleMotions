@@ -4,7 +4,7 @@ namespace SimpleMotions {
 
 	public interface IVideoCanvasViewModel {
 
-		ReactiveCommand<EntityDisplayInfo> OnCanvasUpdate { get; set; }
+		ReactiveCommand<EntityDisplayInfo> OnCanvasUpdate { get; }
 		bool EntityHasTransform(int entityId, out ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData);
 		bool EntityHasShape(int entityId, out ((float r, float g, float b, float a) color, string primitiveShape) shapeData);
 		bool EntityHasText(int entityId, out string text);
@@ -13,7 +13,7 @@ namespace SimpleMotions {
 
     public sealed class VideoCanvasViewModel : IVideoCanvasViewModel {
 
-        public ReactiveCommand<EntityDisplayInfo> OnCanvasUpdate { get; set; } = new();
+        public ReactiveCommand<EntityDisplayInfo> OnCanvasUpdate { get; } = new();
 
 		private readonly IVideoCanvas _videoCanvas;
 

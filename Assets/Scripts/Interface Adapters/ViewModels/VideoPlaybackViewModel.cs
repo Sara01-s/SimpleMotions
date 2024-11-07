@@ -3,33 +3,33 @@ namespace SimpleMotions {
 
 	public interface IVideoPlaybackViewModel {
         
-        ReactiveCommand<Void> OnFirstFrameUpdated { get; set; }
-        ReactiveCommand<Void> OnBackwardUpdated { get; set; }
-        ReactiveCommand<Void> OnTogglePlayUpdated { get; set; }
-        ReactiveCommand<Void> OnForwardUpdated { get; set; }
-        ReactiveCommand<Void> OnLastFrameUpdated { get; set; }
+        ReactiveCommand<Void> OnFirstFrameUpdated { get; }
+        ReactiveCommand<Void> OnBackwardUpdated { get; }
+        ReactiveCommand<Void> OnTogglePlayUpdated { get; }
+        ReactiveCommand<Void> OnForwardUpdated { get; }
+        ReactiveCommand<Void> OnLastFrameUpdated { get; }
 
-        ReactiveValue<int> CurrentFrame { get; set; }
-        ReactiveValue<int> TotalFrames { get; set; }
-        public ReactiveValue<bool> IsPlaying { get; set; }
-        ReactiveValue<float> CurrentTime { get; set; }
-        ReactiveValue<float> Duration { get; set; }
+        ReactiveValue<int> CurrentFrame { get; }
+        ReactiveValue<int> TotalFrames { get; }
+        ReactiveValue<bool> IsPlaying { get; }
+        ReactiveValue<float> CurrentTime { get; }
+        ReactiveValue<float> Duration { get; }
 
     }
 
     public sealed class VideoPlaybackViewModel : IVideoPlaybackViewModel {
 
-        public ReactiveCommand<Void> OnFirstFrameUpdated { get; set; } = new();
-        public ReactiveCommand<Void> OnBackwardUpdated { get; set; } = new();
-        public ReactiveCommand<Void> OnTogglePlayUpdated { get; set; } = new();
-        public ReactiveCommand<Void> OnForwardUpdated { get; set; } = new();
-        public ReactiveCommand<Void> OnLastFrameUpdated { get; set; } = new();
+        public ReactiveCommand<Void> OnFirstFrameUpdated { get; } = new();
+        public ReactiveCommand<Void> OnBackwardUpdated { get; } = new();
+        public ReactiveCommand<Void> OnTogglePlayUpdated { get; } = new();
+        public ReactiveCommand<Void> OnForwardUpdated { get; } = new();
+        public ReactiveCommand<Void> OnLastFrameUpdated { get; } = new();
 
-        public ReactiveValue<float> CurrentTime { get; set; } = new();
-        public ReactiveValue<int> CurrentFrame { get; set; } = new();
-        public ReactiveValue<bool> IsPlaying { get; set; } = new();
-        public ReactiveValue<int> TotalFrames { get; set; } = new();
-        public ReactiveValue<float> Duration { get; set; } = new();
+        public ReactiveValue<float> CurrentTime { get; } = new();
+        public ReactiveValue<int> CurrentFrame { get; } = new();
+        public ReactiveValue<bool> IsPlaying { get; } = new();
+        public ReactiveValue<int> TotalFrames { get; } = new();
+        public ReactiveValue<float> Duration { get; } = new();
 
         private readonly IVideoPlayback _videoPlayback;
 

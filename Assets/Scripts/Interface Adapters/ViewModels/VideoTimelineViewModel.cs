@@ -2,10 +2,12 @@
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {
+
 		int TotalFrameCount { get; } 
 		ReactiveCommand<Void> OnCreateTestEntity { get; }
 		ReactiveCommand<int> OnSetCurrentFrame { get; }
 		ReactiveCommand<VideoDisplayInfo> OnTimelineUpdate { get; }
+		
 	}
 
     public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
