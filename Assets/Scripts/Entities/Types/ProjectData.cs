@@ -32,7 +32,7 @@ namespace SimpleMotions.Internal {
 			}
 		}
 		
-		public bool IsLooping = false;
+		public bool IsLooping = true;
 		public bool IsPlaying = false;
 		public float CurrentTime = 0;
 		public float DurationSeconds => TotalFrames / TargetFrameRate;

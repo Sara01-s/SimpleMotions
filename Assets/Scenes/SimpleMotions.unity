@@ -332,7 +332,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1838585640}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -842,8 +842,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 673621542}
   m_HandleRect: {fileID: 673621541}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.82802707
+  m_Value: 1.0000008
+  m_Size: 0.8280271
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1683,7 +1683,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1338916550}
   m_HandleRect: {fileID: 1338916549}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 1.0000004
   m_Size: 0
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2604,7 +2604,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 709003437}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.9999997
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2918,7 +2918,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 156.5, y: -0}
+  m_AnchoredPosition: {x: 156.5, y: 0}
   m_SizeDelta: {x: 313, y: 160}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &426576277
@@ -7951,6 +7951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _entityPrefab: {fileID: 7663911443088728725, guid: 3e3a6d9c0b9d61a5a9a85ce9795fe9e5, type: 3}
+  _perObjectMotionBlur: {fileID: 4800000, guid: 8861af51818f5857a9ec50e76422a16a, type: 3}
   _circleSprite: {fileID: 21300000, guid: 035f981b5f29d644cbddda535c9aa750, type: 3}
   _rectSprite: {fileID: 21300000, guid: 8360e2441ba6d9bc385341a4588aaf29, type: 3}
   _triangleSprite: {fileID: 21300000, guid: 37c1e75084b845b4cbbf4728cd89c25e, type: 3}
