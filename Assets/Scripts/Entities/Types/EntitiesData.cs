@@ -9,5 +9,7 @@ namespace SimpleMotions.Internal {
 		public int NextAvailableId = 0;
 		public HashSet<int> AliveEntities = new();
 		public HashSet<int> ActiveEntities = new();
+
+		public int SelectedEntity;
 	}
 }

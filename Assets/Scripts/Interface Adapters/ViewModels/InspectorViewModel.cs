@@ -1,20 +1,20 @@
 namespace SimpleMotions {
 
-    public interface IInspectorViewModel {
-        ReactiveCommand<string> OnSelectedEntityNameUpdated { get; }
+    public interface IInspectorViewModel : IEntityViewModel {
+        ReactiveCommand<EntityDisplayInfo> OnEntitySelected { get; }
     }
 
-    public class InspectorViewModel : IInspectorViewModel {
+    public class InspectorViewModel : EntityViewModel, IInspectorViewModel {
 
-        public ReactiveCommand<string> OnSelectedEntityNameUpdated { get; } = new();
-        
+        public ReactiveCommand<EntityDisplayInfo> OnEntitySelected { get; } = new();
 
-        public InspectorViewModel(IEventService eventService) {
-            eventService.Subscribe<EntityDisplayInfo>(UpdateSelectedEntityName);
+        public InspectorViewModel(IVideoCanvas videoCanvas, IEventService eventService) : base(videoCanvas) {
+            eventService.Subscribe<EntityDisplayInfo>(UpdateSelectedEntityInspector);
         }
 
-        private void UpdateSelectedEntityName(EntityDisplayInfo info) {
-            OnSelectedEntityNameUpdated.Execute(info.EntityName);
+        private void UpdateSelectedEntityInspector(EntityDisplayInfo info) {
+            OnEntitySelected.Execute(info);
         }
+
     }
 }

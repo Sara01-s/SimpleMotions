@@ -28,9 +28,10 @@ namespace SimpleMotions {
 		private IVideoTimeline _videoTimeline;
 		private IVideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
-
 		private IVideoAnimator _videoAnimator;
 		private IVideoPlayer _videoPlayer;
+
+		private IEntitySelector _entitySelector;
 
 		// APP DATA //
 		private IKeyframeStorage _keyframeStorage;
@@ -93,13 +94,15 @@ namespace SimpleMotions {
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
             _videoCanvas 	= new VideoCanvas(_componentStorage, _eventService);
 			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
+
+			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData());
 		}
 
 		private void BuildGUI() {
 			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _eventService);
 			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities, _eventService);
 			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _eventService);
-			var inspectorViewModel = new InspectorViewModel(_eventService);
+			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _eventService);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
