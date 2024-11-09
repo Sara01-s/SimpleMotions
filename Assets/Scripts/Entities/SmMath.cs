@@ -7,6 +7,8 @@ namespace SimpleMotions {
 	public static class SmMath {
 
 		private const MethodImplOptions INLINE = MethodImplOptions.AggressiveInlining;
+		
+		public const float Deg2Rad = (float)PI / 180.0F;
 
 		[MethodImpl(INLINE)]
 		public static float easeOutBack(float t) {
@@ -75,7 +77,63 @@ namespace SimpleMotions {
 		[MethodImpl(INLINE)]
 		public static float pow(float x, float power) {
 			return (float)Pow(x, power);
-		} 
+		}
+
+		[MethodImpl(INLINE)]
+		public static ((float x, float y) min, (float x, float y) max) calculateBounds((float x, float y) pos, (float w, float h) scale, float angleDegrees) {
+			var halfScale = new Scale(scale.w, scale.h);
+			var localCorners = new Position[] {
+				new(-halfScale.Width , -halfScale.Height),
+				new( halfScale.Width , -halfScale.Height),
+				new(-halfScale.Width ,  halfScale.Height),
+				new( halfScale.Width ,  halfScale.Height),
+			};
+
+			// Calculate corners rotation
+			float angleRadians = angleDegrees * Deg2Rad;
+			float cosa = (float)Cos(angleRadians);
+			float sina = (float)Sin(angleRadians);
+			var rotatedCorners = new Position[4];
+
+			for (int i = 0; i < localCorners.Length; i++) {
+				var corner = localCorners[i];
+
+				rotatedCorners[i] = new Position (
+					corner.X * cosa - corner.Y * sina,
+					corner.X * sina + corner.Y * cosa
+				);
+
+				rotatedCorners[i].X += pos.x;
+				rotatedCorners[i].Y += pos.y;
+			}
+
+			// Calculate AABB corners without rotation
+			var minCorner = rotatedCorners[0];
+			var maxCorner = rotatedCorners[0];
+
+			for (int i = 1; i < rotatedCorners.Length; i++) {
+				minCorner = min(minCorner, rotatedCorners[i]);
+				maxCorner = max(maxCorner, rotatedCorners[i]);
+			}
+
+			return ((minCorner.X, minCorner.Y), (maxCorner.X, maxCorner.Y));
+		}
+
+		[MethodImpl(INLINE)]
+		public static Position min(Position a, Position b) {
+			return new Position() {
+				X = Min(a.X, b.X),
+				Y = Min(a.X, b.X)
+			};
+		}
+
+		[MethodImpl(INLINE)]
+		public static Position max(Position a, Position b) {
+			return new Position() {
+				X = Max(a.X, b.X),
+				Y = Max(a.X, b.X)
+			};
+		}
 
 	}
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
@@ -9,6 +8,7 @@ namespace SimpleMotions {
 
 		void SelectEntity(int entityId);
 		void DeselectEntity(int entityId);
+		bool HasSelectedEntity();
 		
     }
 
@@ -25,6 +25,10 @@ namespace SimpleMotions {
 
 		public void DeselectEntity(int entityId) {
 			SelectedEntity = Entity.INVALID_ID;
+		}
+
+		public bool HasSelectedEntity() {
+			return SelectedEntity != Entity.INVALID_ID;
 		}
 
 	}

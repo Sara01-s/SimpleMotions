@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 
@@ -13,6 +12,10 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[SerializeField] private Sprite _rectSprite;
 	[SerializeField] private Sprite _triangleSprite;
 
+	[Header("Render")]
+	[SerializeField] private UnityEngine.UI.RawImage _canvasImage;
+	[SerializeField] private RenderTexture _canvasTexture;
+
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
 	private IVideoCanvasViewModel _videoCanvasViewModel;
@@ -22,6 +25,17 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		PopulateSpriteDictionary();
+		GenerateCanvas();
+	}
+
+	private void GenerateCanvas() {
+		var canvasCamera = new GameObject("Camera - Canvas").AddComponent<Camera>();
+		var canvasTexture = new RenderTexture(Screen.width, Screen.height, depth: 0);
+
+		canvasCamera.targetTexture = canvasTexture;
+		canvasCamera.Render();
+
+		_canvasImage.texture = canvasTexture;
 	}
 
 	private void PopulateSpriteDictionary() {
@@ -62,20 +76,20 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		}
 
 		if (_videoCanvasViewModel.EntityHasTransform(entityId, out var transform)) {
-			var entityRect = displayedEntity.GetComponent<RectTransform>();
+			var entityTransform = displayedEntity.GetComponent<Transform>();
 
-			entityRect.anchoredPosition = new Vector2(transform.pos.x, transform.pos.y);
-			entityRect.localScale = new Vector2(transform.scale.w, transform.scale.h);
-			entityRect.rotation = Quaternion.AngleAxis(transform.rollAngleDegrees, Vector3.forward);
+			entityTransform.position = new Vector2(transform.pos.x, transform.pos.y);
+			entityTransform.localScale = new Vector2(transform.scale.w, transform.scale.h);
+			entityTransform.rotation = Quaternion.AngleAxis(transform.rollAngleDegrees, Vector3.forward);
 		}
 
 		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
-			if (!displayedEntity.TryGetComponent<Image>(out var image)) {
-				image = displayedEntity.AddComponent<Image>();
+			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
+				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
 			}
 
-			image.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
-			image.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
+			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
+			spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
 		}
 
 	}
