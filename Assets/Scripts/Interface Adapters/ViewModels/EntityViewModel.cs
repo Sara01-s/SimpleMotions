@@ -41,7 +41,7 @@ namespace SimpleMotions {
 		}
 
 		public bool EntityHasText(int entityId, out string text) {
-			if (_videoCanvas.EntityHasComponent<Text>(entityId)) {
+			if (!_videoCanvas.EntityHasComponent<Text>(entityId)) {
 				text = default;
 				return false;
 			}

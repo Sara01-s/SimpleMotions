@@ -1,6 +1,7 @@
+using SimpleMotions;
 using UnityEngine;
 using TMPro;
-using SimpleMotions;
+using System;
 
 public class InspectorView : MonoBehaviour {
     
@@ -30,7 +31,9 @@ public class InspectorView : MonoBehaviour {
 		_transformComponent.SetActive(selectedEntityHasTransform);
 
 		if (selectedEntityHasTransform) {
-			// TODO -  utilizar transformData para pintar los datos del transform en el inspector
+			if (_shapeComponent.TryGetComponent<TransformComponentUI>(out var transformComponentUI)) {
+				transformComponentUI.RefreshData(transformData);
+			}
 		}
 	}
 
@@ -40,7 +43,9 @@ public class InspectorView : MonoBehaviour {
 		_shapeComponent.SetActive(selectedEntityHasShape);
 
 		if (selectedEntityHasShape) {
-			// TODO -  utilizar shapeData para pintar los datos del shape en el inspector
+			if (_shapeComponent.TryGetComponent<ShapeComponentUI>(out var shapeComponentUI)) {
+				shapeComponentUI.RefreshData(shapeData);
+			}
 		}
 	}
 
@@ -50,7 +55,9 @@ public class InspectorView : MonoBehaviour {
 		_textComponent.SetActive(selectedEntityHasText);
 
 		if (selectedEntityHasText) {
-			// TODO -  utilizar text para pintar los datos del texto en el inspector
+			if (_shapeComponent.TryGetComponent<TextComponentUI>(out var textComponentUI)) {
+				textComponentUI.RefreshData(text);
+			}
 		}
 	}
 
