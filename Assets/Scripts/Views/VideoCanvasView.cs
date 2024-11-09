@@ -4,9 +4,6 @@ using UnityEngine;
 
 public sealed class VideoCanvasView : MonoBehaviour {
 
-	[Header("Entity prefab")]
-	[SerializeField] private GameObject _entityPrefab;
-
 	[Header("Primitive Sprites")]
 	[SerializeField] private Sprite _circleSprite;
 	[SerializeField] private Sprite _rectSprite;
@@ -14,7 +11,9 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	[Header("Render")]
 	[SerializeField] private UnityEngine.UI.RawImage _canvasImage;
-	[SerializeField] private RenderTexture _canvasTexture;
+	[SerializeField] private Camera _canvasCamera;
+
+	private RenderTexture _canvasTexture;
 
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
@@ -25,17 +24,16 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		PopulateSpriteDictionary();
-		GenerateCanvas();
+		RenderCanvas();
 	}
 
-	private void GenerateCanvas() {
-		var canvasCamera = new GameObject("Camera - Canvas").AddComponent<Camera>();
-		var canvasTexture = new RenderTexture(Screen.width, Screen.height, depth: 0);
+	private void RenderCanvas() {
+		_canvasTexture = new RenderTexture(Screen.width, Screen.height, depth: 0);
+		_canvasCamera.targetTexture = _canvasTexture;
 
-		canvasCamera.targetTexture = canvasTexture;
-		canvasCamera.Render();
+		_canvasCamera.Render();
 
-		_canvasImage.texture = canvasTexture;
+		_canvasImage.texture = _canvasTexture;
 	}
 
 	private void PopulateSpriteDictionary() {
@@ -62,7 +60,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	private void DisplayNewEntity(int entityId, string entityName) {
 		string entity = $"Entity {entityId}: \"{entityName}\"";
-		var displayedEntity = Instantiate(_entityPrefab, parent: transform);
+		var displayedEntity = new GameObject(entityName);
 
 		displayedEntity.transform.name = entity;
 		_displayedEntites.Add(entityId, displayedEntity);
