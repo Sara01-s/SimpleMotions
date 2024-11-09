@@ -1,7 +1,6 @@
 using SimpleMotions;
 using UnityEngine;
 using TMPro;
-using System;
 
 public class InspectorView : MonoBehaviour {
     
@@ -11,9 +10,12 @@ public class InspectorView : MonoBehaviour {
 	[SerializeField] private GameObject _textComponent;
 
 	private IInspectorViewModel _inspectorViewModel;
+	private EditorPainter _editorPainter;
 
-    public void Configure(IInspectorViewModel inspectorViewModel) {
+    public void Configure(IInspectorViewModel inspectorViewModel, EditorPainter editorPainter) {
         _inspectorViewModel = inspectorViewModel;
+		_editorPainter = editorPainter;
+
 		inspectorViewModel.OnEntitySelected.Subscribe(UpdateInspector);
     }
 
@@ -31,7 +33,7 @@ public class InspectorView : MonoBehaviour {
 		_transformComponent.SetActive(selectedEntityHasTransform);
 
 		if (selectedEntityHasTransform) {
-			if (_shapeComponent.TryGetComponent<TransformComponentUI>(out var transformComponentUI)) {
+			if (_transformComponent.TryGetComponent<TransformComponentUI>(out var transformComponentUI)) {
 				transformComponentUI.RefreshData(transformData);
 			}
 		}
@@ -44,7 +46,7 @@ public class InspectorView : MonoBehaviour {
 
 		if (selectedEntityHasShape) {
 			if (_shapeComponent.TryGetComponent<ShapeComponentUI>(out var shapeComponentUI)) {
-				shapeComponentUI.RefreshData(shapeData);
+				shapeComponentUI.RefreshData(shapeData, _editorPainter);
 			}
 		}
 	}
@@ -55,7 +57,7 @@ public class InspectorView : MonoBehaviour {
 		_textComponent.SetActive(selectedEntityHasText);
 
 		if (selectedEntityHasText) {
-			if (_shapeComponent.TryGetComponent<TextComponentUI>(out var textComponentUI)) {
+			if (_textComponent.TryGetComponent<TextComponentUI>(out var textComponentUI)) {
 				textComponentUI.RefreshData(text);
 			}
 		}

@@ -107,7 +107,7 @@ namespace SimpleMotions {
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
-			_inspectorView.Configure(inspectorViewModel);
+			_inspectorView.Configure(inspectorViewModel, _editorPainter);
 
 			_editorPainter.ApplyThemeIfNotEmpty(_editorPainterParser.SmEditorThemeToUnity(_editorData.Theme));
 		}

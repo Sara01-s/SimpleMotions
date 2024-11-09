@@ -4,19 +4,16 @@ using TMPro;
 
 public class ShapeComponentUI : MonoBehaviour {
 
-    [SerializeField] private GameObject _rect;
-    [SerializeField] private GameObject _circle;
-    [SerializeField] private GameObject _line;
-    [SerializeField] private GameObject _triangle;
-    [SerializeField] private GameObject _star;
-    [SerializeField] private GameObject _hexagon;
-    [SerializeField] private GameObject _octagon;
-    [SerializeField] private GameObject _heart;
+    [SerializeField] private GameObject[] _entitiesUI;
 
     [SerializeField] private TMP_InputField _colorHex; 
     [SerializeField] private TMP_InputField _colorAlpha; 
 
-    public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData) {
+    private EditorPainter _editorPainter;
+
+    public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData, EditorPainter editorPainter) {
+        _editorPainter = editorPainter;
+
         UpdateColor(shapeData.color.r, shapeData.color.g, shapeData.color.b, shapeData.color.a);
         UpdateShape(shapeData.primitiveShape);
     }
@@ -30,18 +27,12 @@ public class ShapeComponentUI : MonoBehaviour {
     }
 
     private void UpdateShape(string primitiveShape) {
-        switch (primitiveShape) {
-            case "Rect":
-                _rect.GetComponent<Image>().color = Color.yellow;
-            break;
+        foreach (var entityUI in _entitiesUI) {
+            var shapeType = entityUI.GetComponent<ShapeType>().ShapeTypeUI;
 
-            case "Circle":
-                _circle.GetComponent<Image>().color = Color.yellow; // Ejemplo de feedback.
-            break;
-
-            case "Triangle":
-                _triangle.GetComponent<Image>().color = Color.yellow;
-            break;
+            if (shapeType.ToString() == primitiveShape) {
+                entityUI.GetComponent<Image>().color = _editorPainter.Theme.AccentColor;
+            }
         }
     }
 
