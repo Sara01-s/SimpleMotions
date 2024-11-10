@@ -13,6 +13,10 @@ namespace SimpleMotions {
 		[SerializeField] private VideoCanvasView _videoCanvasView;
 		[SerializeField] private InspectorView _inspectorView;
 
+		[SerializeField] private TransformComponentView _transformComponentView;
+		[SerializeField] private ShapeComponentView _shapeComponentView;
+		[SerializeField] private TextComponentView _textComponentView;
+
 		[Header("Data")]
 		[SerializeField] private string _projectName;
 		[SerializeField] private string _projectDataFileName;
@@ -106,6 +110,14 @@ namespace SimpleMotions {
             _videoTimelineView.Configure(videoTimelineViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
 			_inspectorView.Configure(inspectorViewModel, _editorPainter);
+
+			var transformComponentViewModel = new TransformComponentViewModel();
+			var shapeComponentViewModel = new ShapeComponentViewModel();
+			var textComponentViewModel = new TextComponentViewModel();
+
+			_transformComponentView.Configure(transformComponentViewModel);
+			_shapeComponentView.Configure(shapeComponentViewModel);
+			_textComponentView.Configure(textComponentViewModel);
 
 			_editorPainter.ApplyThemeIfNotEmpty(_editorPainterParser.SmEditorThemeToUnity(_editorData.Theme));
 		}

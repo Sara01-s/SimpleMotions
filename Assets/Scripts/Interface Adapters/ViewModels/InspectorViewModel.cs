@@ -17,7 +17,6 @@ namespace SimpleMotions {
         }
 
         private void UpdateEntityId((int id, string name) entity) {
-            UnityEngine.Debug.Log(entity);
             OnEntitySelected.Execute(entity);
         }
 

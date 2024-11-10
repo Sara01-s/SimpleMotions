@@ -1,26 +1,47 @@
 using UnityEngine.UI;
+using SimpleMotions;
 using UnityEngine;
 using TMPro;
-using SimpleMotions;
 
 public class TransformComponentView : MonoBehaviour {
 
     [SerializeField] private TMP_InputField _positionX; 
     [SerializeField] private TMP_InputField _positionY; 
-    [SerializeField] private Button _savePosition;
     [SerializeField] private TMP_InputField _scaleW; 
     [SerializeField] private TMP_InputField _scaleH; 
-    [SerializeField] private Button _saveScale;
     [SerializeField] private TMP_InputField _roll; 
-    [SerializeField] private Button _saveRoll;
+    [SerializeField] private Button _save;
 
-	// TODO - Hacer esto para los otros componentes (Damián)
+    private ITransformComponentViewModel _transformComponentViewModel;
+
 	public void Configure(ITransformComponentViewModel transformComponentViewModel) {
-		
+        _transformComponentViewModel = transformComponentViewModel;
+
+		_positionX.onValueChanged.AddListener(SendPositionX);
+        _positionY.onValueChanged.AddListener(SendPositionY);
+        _scaleW.onValueChanged.AddListener(SendScaleW);
+        _scaleH.onValueChanged.AddListener(SendScaleH);
+        _roll.onValueChanged.AddListener(SendRollAngles);
 	}
 
-	public void SendComponentData() {
-		
+	public void SendPositionX(string value) {
+		_transformComponentViewModel.PositionX.Execute(value);
+	}
+
+    public void SendPositionY(string value) {
+		_transformComponentViewModel.PositionY.Execute(value);
+	}
+
+    public void SendScaleW(string value) {
+		_transformComponentViewModel.ScaleW.Execute(value);
+	}
+
+    public void SendScaleH(string value) {
+		_transformComponentViewModel.ScaleH.Execute(value);
+	}
+
+    public void SendRollAngles(string value) {
+		_transformComponentViewModel.RollAngles.Execute(value);
 	}
 
     public void RefreshData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
