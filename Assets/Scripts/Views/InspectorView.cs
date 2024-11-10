@@ -33,7 +33,7 @@ public class InspectorView : MonoBehaviour {
 		_transformComponent.SetActive(selectedEntityHasTransform);
 
 		if (selectedEntityHasTransform) {
-			if (_transformComponent.TryGetComponent<TransformComponentUI>(out var transformComponentUI)) {
+			if (_transformComponent.TryGetComponent<TransformComponentView>(out var transformComponentUI)) {
 				transformComponentUI.RefreshData(transformData);
 			}
 		}
@@ -45,7 +45,7 @@ public class InspectorView : MonoBehaviour {
 		_shapeComponent.SetActive(selectedEntityHasShape);
 
 		if (selectedEntityHasShape) {
-			if (_shapeComponent.TryGetComponent<ShapeComponentUI>(out var shapeComponentUI)) {
+			if (_shapeComponent.TryGetComponent<ShapeComponentView>(out var shapeComponentUI)) {
 				shapeComponentUI.RefreshData(shapeData, _editorPainter);
 			}
 		}
@@ -57,7 +57,7 @@ public class InspectorView : MonoBehaviour {
 		_textComponent.SetActive(selectedEntityHasText);
 
 		if (selectedEntityHasText) {
-			if (_textComponent.TryGetComponent<TextComponentUI>(out var textComponentUI)) {
+			if (_textComponent.TryGetComponent<TextComponentView>(out var textComponentUI)) {
 				textComponentUI.RefreshData(text);
 			}
 		}

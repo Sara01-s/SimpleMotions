@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class TextComponentUI : MonoBehaviour {
+public class TextComponentView : MonoBehaviour {
 
     [SerializeField] private TMP_InputField _value;
 

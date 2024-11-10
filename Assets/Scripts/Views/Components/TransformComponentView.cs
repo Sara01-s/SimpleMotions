@@ -1,8 +1,9 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using SimpleMotions;
 
-public class TransformComponentUI : MonoBehaviour {
+public class TransformComponentView : MonoBehaviour {
 
     [SerializeField] private TMP_InputField _positionX; 
     [SerializeField] private TMP_InputField _positionY; 
@@ -12,6 +13,15 @@ public class TransformComponentUI : MonoBehaviour {
     [SerializeField] private Button _saveScale;
     [SerializeField] private TMP_InputField _roll; 
     [SerializeField] private Button _saveRoll;
+
+	// TODO - Hacer esto para los otros componentes (Damián)
+	public void Configure(ITransformComponentViewModel transformComponentViewModel) {
+		
+	}
+
+	public void SendComponentData() {
+		
+	}
 
     public void RefreshData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
         _positionX.text = transformData.pos.x.ToString("0.0");

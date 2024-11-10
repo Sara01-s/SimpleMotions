@@ -99,7 +99,7 @@ namespace SimpleMotions {
 
 		public void SetCurrentFrame(int frame) {
 			// ---- TOTALMENTE SUS ---- POR ALGUNA RAZÓN QUE DESCONOZCO, 
-			_videoData.CurrentFrame = frame;
+			//_videoData.CurrentFrame = frame;
 			CurrentFrame.Value = _videoData.CurrentFrame;
 			// ---- TOTALMENTE SUS ---- ESTA LINEA HACE QUE SE EJECUTE DOS VECES ESTE METODO (ME DEMORE MUCHO EN CACHARLO XD)
 

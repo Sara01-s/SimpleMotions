@@ -2,7 +2,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
-public class ShapeComponentUI : MonoBehaviour {
+public class ShapeComponentView : MonoBehaviour {
 
     [SerializeField] private GameObject[] _entitiesUI;
 
