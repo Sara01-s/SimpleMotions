@@ -1,22 +1,24 @@
 namespace SimpleMotions {
 
 	public interface IEntitySelectorViewModel : IEntityViewModel {
-        ReactiveCommand<EntityDisplayInfo> OnEntitySelected { get; }
+
+		ReactiveCommand<(int, string)> OnEntitySelected { get; }
         ReactiveCommand<Void> OnEntityDeselected { get; }
 		((float x, float y) min, (float x, float y) max) GetEntityBounds(int entityId);
+
 	}
 
 	public class EntitySelectorViewModel : EntityViewModel, IEntitySelectorViewModel {
 
-        public ReactiveCommand<EntityDisplayInfo> OnEntitySelected { get; } = new();
-		public ReactiveCommand<Void> OnEntityDeselected { get; } = new();
+		public ReactiveCommand<(int, string)> OnEntitySelected { get; } = new();
+		public ReactiveCommand<Void> OnEntityDeselected { get; } = new(); // ¿Qué es esto?
 
-		public EntitySelectorViewModel(IVideoCanvas videoCanvas, IEventService eventService) : base(videoCanvas) {
-            eventService.Subscribe<EntityDisplayInfo>(UpdateRectSelection);
+		public EntitySelectorViewModel(IVideoCanvas videoCanvas) : base(videoCanvas) {
+			videoCanvas.EntityDisplayInfo.Subscribe(UpdateRectSelection);
         }
 
-        private void UpdateRectSelection(EntityDisplayInfo info) {
-            OnEntitySelected.Execute(info);
+        private void UpdateRectSelection((int id, string name) entity) {
+            OnEntitySelected.Execute(entity);
         }
 
 		public ((float x, float y) min, (float x, float y) max) GetEntityBounds(int entityId) {
@@ -27,5 +29,6 @@ namespace SimpleMotions {
 
 			return ((-1.0f, -1.0f), (1.0f, 1.0f));
 		}
+
 	}
 }

@@ -44,18 +44,18 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		};
 	}
 
-	private void OnUpdateCanvas(EntityDisplayInfo entityDisplayInfo) {
-		UpdateEntityDisplay(entityDisplayInfo);
+	private void OnUpdateCanvas((int id, string name) entity) {
+		UpdateEntityDisplay(entity);
 	}
 
-	private void UpdateEntityDisplay(EntityDisplayInfo info) {
+	private void UpdateEntityDisplay((int id, string name) entity) {
 		// entity not registered, create it.
-		if (!_displayedEntites.ContainsKey(info.EntityId)) {
-			DisplayNewEntity(info.EntityId, info.EntityName);
+		if (!_displayedEntites.ContainsKey(entity.id)) {
+			DisplayNewEntity(entity.id, entity.name);
 		}
 
 		// entity already registered, update it.
-		UpdateEntity(info.EntityId);
+		UpdateEntity(entity.id);
 	}
 
 	private void DisplayNewEntity(int entityId, string entityName) {
@@ -89,7 +89,6 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
 			spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
 		}
-
 	}
-
+	
 }

@@ -53,7 +53,6 @@ namespace SimpleMotions {
 			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 250, value: new Shape { Color = Color.Cyan 	});
 			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 300, value: new Shape { Color = Color.Green   });
 
-
 			_videoCanvas.UpdateCanvas(newEntity);
 		}
 

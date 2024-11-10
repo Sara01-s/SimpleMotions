@@ -13,7 +13,7 @@ namespace SimpleMotions {
         ReactiveValue<int> TotalFrames { get; }
         ReactiveValue<bool> IsPlaying { get; }
         ReactiveValue<float> CurrentTime { get; }
-        ReactiveValue<float> Duration { get; }
+        ReactiveValue<float> DurationSeconds { get; }
 
     }
 
@@ -29,11 +29,11 @@ namespace SimpleMotions {
         public ReactiveValue<int> CurrentFrame { get; } = new();
         public ReactiveValue<bool> IsPlaying { get; } = new();
         public ReactiveValue<int> TotalFrames { get; } = new();
-        public ReactiveValue<float> Duration { get; } = new();
+        public ReactiveValue<float> DurationSeconds { get; } = new();
 
         private readonly IVideoPlayback _videoPlayback;
 
-        public VideoPlaybackViewModel(IVideoPlayback videoPlayback, IEventService eventService) {
+        public VideoPlaybackViewModel(IVideoPlayback videoPlayback, IVideoPlayerData videoPlayerData) {
             _videoPlayback = videoPlayback;
 
             OnFirstFrameUpdated.Subscribe(value => UpdateFirstFrame());
@@ -42,11 +42,11 @@ namespace SimpleMotions {
             OnForwardUpdated.Subscribe(value => UpdateForward());
             OnLastFrameUpdated.Subscribe(value => UpdateLastFrame());
 
-            eventService.Subscribe<VideoDisplayInfo>(value => UpdateCurrentTime(value.CurrentTime));
-            eventService.Subscribe<VideoDisplayInfo>(value => UpdateCurrentFrame(value.CurrentFrame));
-            eventService.Subscribe<VideoDisplayInfo>(value => UpdateTogglePlayIcon(value.IsPlaying));
-            eventService.Subscribe<VideoDisplayInfo>(value => UpdateTotalFrames(value.TotalFrames));
-            eventService.Subscribe<VideoDisplayInfo>(value => UpdateDuration(value.DurationSeconds));
+            videoPlayerData.CurrentFrame.Subscribe(UpdateCurrentFrame);
+            videoPlayerData.CurrentTime.Subscribe(UpdateCurrentTime);
+            videoPlayerData.TotalFrames.Subscribe(UpdateTotalFrames);
+            videoPlayerData.DurationSeconds.Subscribe(UpdateDurationSeconds);
+            videoPlayerData.IsPlaying.Subscribe(UpdateTogglePlayIcon);
         }
 
         private void UpdateFirstFrame() {
@@ -86,8 +86,8 @@ namespace SimpleMotions {
             TotalFrames.Value = frame;
         }
 
-        private void UpdateDuration(float time) {
-            Duration.Value = time;
+        private void UpdateDurationSeconds(float time) {
+            DurationSeconds.Value = time;
         }
 
     }

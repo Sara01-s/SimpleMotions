@@ -91,4 +91,5 @@ public class EditorPainter : MonoBehaviour {
 		FindUI();
 		ApplyTheme(Theme);
 	}
+	
 }

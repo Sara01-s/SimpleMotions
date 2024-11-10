@@ -19,12 +19,12 @@ public class InspectorView : MonoBehaviour {
 		inspectorViewModel.OnEntitySelected.Subscribe(UpdateInspector);
     }
 
-    private void UpdateInspector(EntityDisplayInfo info) {
-        _selectedEntityName.text = info.EntityName;
+    private void UpdateInspector((int id, string name) entity) {
+        _selectedEntityName.text = entity.name;
 
-		CheckTransformComponent(info.EntityId);
-		CheckShapeComponent(info.EntityId);
-		CheckTextComponent(info.EntityId);
+		CheckTransformComponent(entity.id);
+		CheckShapeComponent(entity.id);
+		CheckTextComponent(entity.id);
     }
 
 	private void CheckTransformComponent(int entityId) {
@@ -62,5 +62,5 @@ public class InspectorView : MonoBehaviour {
 			}
 		}
 	}
-
+	
 }

@@ -2,27 +2,23 @@ using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
-	public struct EntityDisplayInfo {
-		public int EntityId;
-		public string EntityName;
-	}
-
 	public interface IVideoCanvas {
 
 		void UpdateCanvas(Entity entity);
 		bool EntityHasComponent<T>(int entityId) where T : Component;
 		T GetEntityComponent<T>(int entityId) where T : Component;
+		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
 
 	}
 
 	public sealed class VideoCanvas : IVideoCanvas {
 
 		private readonly IComponentStorage _componentStorage;
-		private readonly IEventService _eventService;
 
-		public VideoCanvas(IComponentStorage componentStorage, IEventService eventService) {
+        public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
+
+        public VideoCanvas(IComponentStorage componentStorage) {
 			_componentStorage = componentStorage;
-			_eventService = eventService;
 		}
 
 		public bool EntityHasComponent<T>(int entityId) where T : Component {
@@ -34,12 +30,7 @@ namespace SimpleMotions {
 		}
 
 		public void UpdateCanvas(Entity entity) {
-			var entityDisplayInfo = new EntityDisplayInfo {
-				EntityId = entity.Id,
-				EntityName = entity.Name,
-			};
-
-			_eventService.Dispatch(entityDisplayInfo);
+			EntityDisplayInfo.Value = (entity.Id, entity.Name);
 		}
 
 	}

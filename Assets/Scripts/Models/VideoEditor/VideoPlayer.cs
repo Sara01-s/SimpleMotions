@@ -19,42 +19,43 @@ namespace SimpleMotions {
 
 	}
 
-	public class VideoDisplayInfo {
-		public int CurrentFrame;
-		public float CurrentTime;
-		public bool IsPlaying;
-		public int TotalFrames;
-		public float DurationSeconds;
+	public interface IVideoPlayerData {
+		ReactiveValue<bool> IsPlaying { get; }
+		ReactiveValue<int> CurrentFrame { get; }
+		ReactiveValue<int> TotalFrames { get; }
+		ReactiveValue<float> CurrentTime { get; }
+		ReactiveValue<float> DurationSeconds { get; }
 	}
 
-	public sealed class VideoPlayer : IVideoPlayer {
+	public sealed class VideoPlayer : IVideoPlayer, IVideoPlayerData {
 
 		private readonly VideoData _videoData;
 		private readonly IVideoAnimator _videoAnimator;
-		private readonly IEventService _eventService;
 
 		private Task _playVideo;
 
-		private readonly VideoDisplayInfo _videoDisplayInfo = new();
+		public ReactiveValue<bool> IsPlaying { get; } = new();
+        public ReactiveValue<int> CurrentFrame { get; } = new();
+        public ReactiveValue<int> TotalFrames { get; } = new();
+        public ReactiveValue<float> CurrentTime { get; } = new();
+        public ReactiveValue<float> DurationSeconds { get; } = new();
 
-		public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator, IEventService eventService) {
+        public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator) {
 			_videoData = videoData;
 			_videoAnimator = videoAnimator;
-			_eventService = eventService;
-
-			ConfigureVideoDisplayInfo();
 		}
 
 		~VideoPlayer() {
 			_playVideo.Dispose();
 		}
 
-		private void ConfigureVideoDisplayInfo() {
-			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
-			_videoDisplayInfo.CurrentTime = _videoData.CurrentTime;
-			_videoDisplayInfo.IsPlaying = _videoData.IsPlaying;
-			_videoDisplayInfo.TotalFrames = _videoData.TotalFrames;
-			_videoDisplayInfo.DurationSeconds = _videoData.DurationSeconds;
+		// TODO - Encontrar lugar para hacer esto.
+		private void ENCONTRAR_LUGAR_PARA_HACER_ESTO() {
+			IsPlaying.Value = _videoData.IsPlaying;
+			CurrentFrame.Value = _videoData.CurrentFrame;
+			TotalFrames.Value = _videoData.TotalFrames;
+			CurrentTime.Value = _videoData.CurrentTime;
+			DurationSeconds.Value = _videoData.DurationSeconds;
 		}
 
 		public void TogglePlay() {
@@ -64,6 +65,9 @@ namespace SimpleMotions {
             else {
                 Pause();
             }
+
+			// TEMPORAL
+			ENCONTRAR_LUGAR_PARA_HACER_ESTO();
 		}
 
 		public void Play() {
@@ -73,8 +77,7 @@ namespace SimpleMotions {
 				_playVideo = PlayVideo();
 			}
 
-			_videoDisplayInfo.IsPlaying = _videoData.IsPlaying;
-			_eventService.Dispatch(_videoDisplayInfo);
+			IsPlaying.Value = _videoData.IsPlaying;
 		}
 
 
@@ -82,27 +85,28 @@ namespace SimpleMotions {
 			UnityEngine.Debug.Log("Paused.");
 			_videoData.IsPlaying = false;
 
-			_videoDisplayInfo.IsPlaying = _videoData.IsPlaying;
-			_eventService.Dispatch(_videoDisplayInfo);
+			IsPlaying.Value = _videoData.IsPlaying;
 		}
 
 		public void Reset() {
 			UnityEngine.Debug.Log("Reset");
 			_videoData.CurrentFrame = TimelineData.FIRST_FRAME;
 			_videoData.CurrentTime = 0.0f;
+
+			CurrentFrame.Value = _videoData.CurrentFrame;
+			CurrentTime.Value = _videoData.CurrentTime;
 		}
 
 		public void SetCurrentFrame(int frame) {
 			// ---- TOTALMENTE SUS ---- POR ALGUNA RAZÓN QUE DESCONOZCO, 
 			_videoData.CurrentFrame = frame;
+			CurrentFrame.Value = _videoData.CurrentFrame;
 			// ---- TOTALMENTE SUS ---- ESTA LINEA HACE QUE SE EJECUTE DOS VECES ESTE METODO (ME DEMORE MUCHO EN CACHARLO XD)
 
 			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();
 			_videoAnimator.InterpolateAllEntities(frame);
 
-			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
-			_eventService.Dispatch(_videoDisplayInfo);
 		}
 
 		public VideoData GetVideoData() {
@@ -126,8 +130,7 @@ namespace SimpleMotions {
 				_videoAnimator.InterpolateAllEntities(_videoData.CurrentFrame);
 				_videoData.CurrentTime += 1.0f / _videoData.TargetFrameRate;
 
-				_videoDisplayInfo.CurrentTime = _videoData.CurrentTime;
-				_eventService.Dispatch(_videoDisplayInfo);
+				CurrentTime.Value = _videoData.CurrentTime;
 
 				IncreaseFrame();
 
@@ -149,15 +152,13 @@ namespace SimpleMotions {
 		public void IncreaseFrame() {
 			_videoData.CurrentFrame = min(_videoData.CurrentFrame + 1, _videoData.TotalFrames);
 
-			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
-			_eventService.Dispatch(_videoDisplayInfo);
+			CurrentFrame.Value = _videoData.CurrentFrame;
 		}
 
 		public void DecreaseFrame() {
 			_videoData.CurrentFrame = max(_videoData.CurrentFrame - 1, TimelineData.FIRST_FRAME);
 
-			_videoDisplayInfo.CurrentFrame = _videoData.CurrentFrame;
-			_eventService.Dispatch(_videoDisplayInfo);
+			CurrentFrame.Value = _videoData.CurrentFrame;
 		}
 
         public int GetFirstFrame() {

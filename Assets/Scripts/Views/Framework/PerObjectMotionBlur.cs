@@ -1,5 +1,5 @@
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 
 [ExecuteAlways]
 [RequireComponent(typeof(Image))]
@@ -39,4 +39,5 @@ public class PerObjectMotionBlur : MonoBehaviour {
 
         _previousModelMatrix = currentModelMatrix;
     }
+	
 }

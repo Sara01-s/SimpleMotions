@@ -21,7 +21,6 @@ namespace SimpleMotions {
 		[Header("Video Settings")]
 		[SerializeField, Range(12, 1024)] private int _targetFrameRate = 60;
 
-		private IEventService _eventService;
 		private IEditorPainterParser _editorPainterParser;
 
 		private IVideoPlayback _videoPlayback;
@@ -29,7 +28,7 @@ namespace SimpleMotions {
 		private IVideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 		private IVideoAnimator _videoAnimator;
-		private IVideoPlayer _videoPlayer;
+		private VideoPlayer _videoPlayer;
 
 		private IEntitySelector _entitySelector;
 
@@ -47,7 +46,6 @@ namespace SimpleMotions {
 
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
-			_eventService = new EventDispatcher();
 			_editorPainterParser = new EditorPainterParser();
 			
 			// DO NOT CHANGE ORDER OF EXECUTION.
@@ -88,21 +86,21 @@ namespace SimpleMotions {
 		}
 
 		private void BuildVideoEditor() {
-			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _eventService, _entityStorage);
-			_videoPlayer 	= new VideoPlayer(_videoData, _videoAnimator, _eventService);
+			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _entityStorage);
+			_videoPlayer 	= new VideoPlayer(_videoData, _videoAnimator);
 			_videoTimeline 	= new VideoTimeline(_projectData.Video, _videoPlayer);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
-            _videoCanvas 	= new VideoCanvas(_componentStorage, _eventService);
+            _videoCanvas 	= new VideoCanvas(_componentStorage);
 			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
 
 			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData());
 		}
 
 		private void BuildGUI() {
-			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _eventService);
-			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities, _eventService);
-			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _eventService);
-			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _eventService);
+			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _videoPlayer);
+			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities, _videoPlayer);
+			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _videoAnimator);
+			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _videoAnimator);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
@@ -129,7 +127,6 @@ namespace SimpleMotions {
 		}
 
 		private void OnDisable() {
-			_eventService.Dispose();
 			Save();
         }
 

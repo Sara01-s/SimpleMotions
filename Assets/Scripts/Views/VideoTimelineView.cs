@@ -1,7 +1,7 @@
 using UnityEngine.UI;
+using SimpleMotions;
 using UnityEngine;
 using TMPro;
-using SimpleMotions;
     
 public sealed class VideoTimelineView : MonoBehaviour {
 
@@ -19,7 +19,7 @@ public sealed class VideoTimelineView : MonoBehaviour {
 		_createTestEntity.onClick.AddListener(() => videoTimelineViewModel.OnCreateTestEntity.Execute(null));
 		_cursor.onValueChanged.AddListener(value => videoTimelineViewModel.OnSetCurrentFrame.Execute((int)value));
 
-		videoTimelineViewModel.OnTimelineUpdate.Subscribe(SetCursorValue);
+		videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorValue);
 
 		DrawTimeline(videoTimelineViewModel.TotalFrameCount);
 	}
@@ -55,8 +55,8 @@ public sealed class VideoTimelineView : MonoBehaviour {
 		holder.sizeDelta = new Vector2(timelineWidth, holder.sizeDelta.y);
 	}
 
-	private void SetCursorValue(VideoDisplayInfo videoDisplayInfo) {
-		_cursor.value = videoDisplayInfo.CurrentFrame;
+	private void SetCursorValue(int currentFrame) {
+		_cursor.value = currentFrame;
 	}
 
 }

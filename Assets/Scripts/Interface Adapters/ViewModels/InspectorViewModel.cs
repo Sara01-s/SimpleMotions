@@ -1,19 +1,24 @@
+
 namespace SimpleMotions {
 
     public interface IInspectorViewModel : IEntityViewModel {
-        ReactiveCommand<EntityDisplayInfo> OnEntitySelected { get; }
+
+        ReactiveCommand<(int id, string name)> OnEntitySelected { get; }
+
     }
 
     public class InspectorViewModel : EntityViewModel, IInspectorViewModel {
 
-        public ReactiveCommand<EntityDisplayInfo> OnEntitySelected { get; } = new();
+        public ReactiveCommand<(int id, string name)> OnEntitySelected { get; } = new();
 
-        public InspectorViewModel(IVideoCanvas videoCanvas, IEventService eventService) : base(videoCanvas) {
-            eventService.Subscribe<EntityDisplayInfo>(UpdateSelectedEntityInspector);
+        public InspectorViewModel(IVideoCanvas videoCanvas, IVideoAnimator videoAnimator) : base(videoCanvas) {
+            videoCanvas.EntityDisplayInfo.Subscribe(UpdateEntityId);
+            videoAnimator.EntityDisplayInfo.Subscribe(UpdateEntityId);
         }
 
-        private void UpdateSelectedEntityInspector(EntityDisplayInfo info) {
-            OnEntitySelected.Execute(info);
+        private void UpdateEntityId((int id, string name) entity) {
+            UnityEngine.Debug.Log(entity);
+            OnEntitySelected.Execute(entity);
         }
 
     }

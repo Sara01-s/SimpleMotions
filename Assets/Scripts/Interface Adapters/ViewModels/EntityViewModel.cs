@@ -50,6 +50,5 @@ namespace SimpleMotions {
 			return true;
 		}
 
-
 	}
 }

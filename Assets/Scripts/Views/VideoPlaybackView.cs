@@ -1,7 +1,7 @@
 using UnityEngine.UI;
+using SimpleMotions;
 using UnityEngine;
 using TMPro;
-using SimpleMotions;
 
 public sealed class VideoPlaybackView : MonoBehaviour {
 
@@ -34,7 +34,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		_videoPlaybackViewModel.CurrentFrame.Subscribe(SetCurrentFrame);
 		_videoPlaybackViewModel.IsPlaying.Subscribe(SetCurrentIcon);
 		_videoPlaybackViewModel.TotalFrames.Subscribe(SetTotalFrames);
-		_videoPlaybackViewModel.Duration.Subscribe(SetDuration);
+		_videoPlaybackViewModel.DurationSeconds.Subscribe(SetDuration);
 	}
 
 	private void SetCurrentTime(float currentTime) {
