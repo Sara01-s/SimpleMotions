@@ -33,11 +33,11 @@ namespace SimpleMotions {
         }
 
         public void SetFirstFrame() {
-            SetCurrentFrame(_videoPlayer.GetFirstFrame());
+            SetCurrentFrame(_videoPlayer.FirstFrame);
         }
 
         public void SetLastFrame() {
-            SetCurrentFrame(_videoPlayer.GetLastFrame());
+            SetCurrentFrame(_videoPlayer.LastFrame);
         }
 
         public void SetCurrentFrame(int frame) {

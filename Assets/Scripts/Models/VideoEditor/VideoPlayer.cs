@@ -14,12 +14,13 @@ namespace SimpleMotions {
 		void SetCurrentFrame(int frame);
 		void IncreaseFrame();
 		void DecreaseFrame();
-		int GetFirstFrame();
-		int GetLastFrame();
 
 	}
 
 	public interface IVideoPlayerData {
+		int FirstFrame { get; }
+		int LastFrame { get; }
+		
 		ReactiveValue<bool> IsPlaying { get; }
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveValue<int> TotalFrames { get; }
@@ -29,19 +30,30 @@ namespace SimpleMotions {
 
 	public sealed class VideoPlayer : IVideoPlayer, IVideoPlayerData {
 
-		private readonly VideoData _videoData;
-		private readonly IVideoAnimator _videoAnimator;
-
-		private Task _playVideo;
+		public int FirstFrame => TimelineData.FIRST_FRAME;
+		public int LastFrame => TotalFrames.Value;
 
 		public ReactiveValue<bool> IsPlaying { get; } = new();
         public ReactiveValue<int> CurrentFrame { get; } = new();
         public ReactiveValue<int> TotalFrames { get; } = new();
         public ReactiveValue<float> CurrentTime { get; } = new();
         public ReactiveValue<float> DurationSeconds { get; } = new();
+		public ReactiveValue<bool> IsLooping { get; } = new();
+		public ReactiveValue<int> TargetFrameRate { get; } = new();
+
+		private readonly IVideoAnimator _videoAnimator;
+
+		private Task _playVideo;
 
         public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator) {
-			_videoData = videoData;
+			IsPlaying.Value = videoData.IsPlaying;
+			CurrentFrame.Value = videoData.CurrentFrame;
+			TotalFrames.Value = videoData.TotalFrames;
+			CurrentTime.Value = videoData.CurrentTime;
+			DurationSeconds.Value = videoData.DurationSeconds;
+			IsLooping.Value = videoData.IsLooping;
+			TargetFrameRate.Value = videoData.TargetFrameRate;
+
 			_videoAnimator = videoAnimator;
 		}
 
@@ -49,59 +61,37 @@ namespace SimpleMotions {
 			_playVideo.Dispose();
 		}
 
-		// TODO - Encontrar lugar para hacer esto.
-		private void ENCONTRAR_LUGAR_PARA_HACER_ESTO() {
-			IsPlaying.Value = _videoData.IsPlaying;
-			CurrentFrame.Value = _videoData.CurrentFrame;
-			TotalFrames.Value = _videoData.TotalFrames;
-			CurrentTime.Value = _videoData.CurrentTime;
-			DurationSeconds.Value = _videoData.DurationSeconds;
-		}
-
 		public void TogglePlay() {
-            if (!_videoData.IsPlaying) {
+            if (!IsPlaying.Value) {
                 Play();
             }
             else {
                 Pause();
             }
-
-			// TEMPORAL
-			ENCONTRAR_LUGAR_PARA_HACER_ESTO();
 		}
 
 		public void Play() {
-			_videoData.IsPlaying = true;
+			IsPlaying.Value = true;
 			
 			if (_playVideo == null || _playVideo.IsCompleted) {
 				_playVideo = PlayVideo();
 			}
-
-			IsPlaying.Value = _videoData.IsPlaying;
 		}
 
 
 		public void Pause() {
 			UnityEngine.Debug.Log("Paused.");
-			_videoData.IsPlaying = false;
-
-			IsPlaying.Value = _videoData.IsPlaying;
+			IsPlaying.Value = false;
 		}
 
 		public void Reset() {
 			UnityEngine.Debug.Log("Reset");
-			_videoData.CurrentFrame = TimelineData.FIRST_FRAME;
-			_videoData.CurrentTime = 0.0f;
-
-			CurrentFrame.Value = _videoData.CurrentFrame;
-			CurrentTime.Value = _videoData.CurrentTime;
+			CurrentFrame.Value = TimelineData.FIRST_FRAME;
+			CurrentTime.Value = 0.0f;
 		}
 
 		public void SetCurrentFrame(int frame) {
-			// ---- TOTALMENTE SUS ---- POR ALGUNA RAZÓN QUE DESCONOZCO, 
-			//_videoData.CurrentFrame = frame;
-			CurrentFrame.Value = _videoData.CurrentFrame;
-			// ---- TOTALMENTE SUS ---- ESTA LINEA HACE QUE SE EJECUTE DOS VECES ESTE METODO (ME DEMORE MUCHO EN CACHARLO XD)
+			CurrentFrame.Value = frame;
 
 			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();
@@ -110,11 +100,17 @@ namespace SimpleMotions {
 		}
 
 		public VideoData GetVideoData() {
-			return _videoData;
+			return new VideoData {
+				IsPlaying = IsPlaying.Value,
+				CurrentFrame = CurrentFrame.Value,
+				CurrentTime = CurrentTime.Value,
+				IsLooping = IsLooping.Value,
+				TotalFrames = TotalFrames.Value,
+			};
 		}
 
 		private bool IsAtTheEnd() {
-			return !_videoData.IsLooping && _videoData.CurrentFrame == _videoData.TotalFrames;
+			return !IsLooping.Value && CurrentFrame.Value == TotalFrames.Value;
 		}
 
 		private async Task PlayVideo() {
@@ -126,18 +122,14 @@ namespace SimpleMotions {
 
 			_videoAnimator.GenerateVideoCache();
 
-			while (_videoData.IsPlaying) {
-				_videoAnimator.InterpolateAllEntities(_videoData.CurrentFrame);
-				_videoData.CurrentTime += 1.0f / _videoData.TargetFrameRate;
-
-				CurrentTime.Value = _videoData.CurrentTime;
+			while (IsPlaying.Value) {
+				_videoAnimator.InterpolateAllEntities(CurrentFrame.Value);
+				CurrentTime.Value += 1.0f / TargetFrameRate.Value;
 
 				IncreaseFrame();
 
-				//UnityEngine.Debug.Log($"f: {_videoData.CurrentFrame} | t: {_videoData.CurrentTime:0.00}");
-
-				if (_videoData.CurrentFrame >= _videoData.TotalFrames) {
-					if (!_videoData.IsLooping) {
+				if (CurrentFrame.Value >= TotalFrames.Value) {
+					if (!IsLooping.Value) {
 						Pause();
 						break;
 					}
@@ -150,24 +142,12 @@ namespace SimpleMotions {
 		}
 
 		public void IncreaseFrame() {
-			_videoData.CurrentFrame = min(_videoData.CurrentFrame + 1, _videoData.TotalFrames);
-
-			CurrentFrame.Value = _videoData.CurrentFrame;
+			CurrentFrame.Value = min(CurrentFrame.Value + 1, TotalFrames.Value);
 		}
 
 		public void DecreaseFrame() {
-			_videoData.CurrentFrame = max(_videoData.CurrentFrame - 1, TimelineData.FIRST_FRAME);
-
-			CurrentFrame.Value = _videoData.CurrentFrame;
+			CurrentFrame.Value = max(CurrentFrame.Value - 1, TimelineData.FIRST_FRAME);
 		}
-
-        public int GetFirstFrame() {
-			return TimelineData.FIRST_FRAME;
-        }
-
-        public int GetLastFrame() {
-			return _videoData.TotalFrames;
-        }
 
     }
 }

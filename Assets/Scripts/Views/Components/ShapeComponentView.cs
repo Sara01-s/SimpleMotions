@@ -38,8 +38,8 @@ public class ShapeComponentView : MonoBehaviour {
     private void UpdateColor(float red, float green, float blue, float alpha) {
         var color = new Color(red, green,blue, alpha);
         string hexColor = "#" + ColorUtility.ToHtmlStringRGB(color);
+		
         _hex.text = hexColor;
-
         _alpha.text = alpha.ToString("0.0");
     }
 

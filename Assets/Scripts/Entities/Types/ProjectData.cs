@@ -43,7 +43,7 @@ namespace SimpleMotions.Internal {
 		public Color CanvasBackgroundColor = new();
 		public Scale Resolution = new();
 
-		private int _targetFrameRate;
+		private int _targetFrameRate = 1;
 
 		public VideoData() {}
 

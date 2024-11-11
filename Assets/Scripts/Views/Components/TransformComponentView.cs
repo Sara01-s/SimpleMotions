@@ -51,7 +51,7 @@ public class TransformComponentView : MonoBehaviour {
         _scaleW.text = transformData.scale.w.ToString("0.0");
         _scaleH.text = transformData.scale.h.ToString("0.0");
 
-        _roll.text = transformData.rollAngleDegrees.ToString("0.0");
+        _roll.text = transformData.rollAngleDegrees.ToString("0.0º");
     }
 
 }
