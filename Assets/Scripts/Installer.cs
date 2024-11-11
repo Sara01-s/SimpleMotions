@@ -10,12 +10,17 @@ namespace SimpleMotions {
 		[SerializeField] private EditorPainter _editorPainter;
 		[SerializeField] private VideoPlaybackView _videoPlaybackView;
         [SerializeField] private VideoTimelineView _videoTimelineView;
+		[SerializeField] private TimelinePanelView _timelinePanelView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
 		[SerializeField] private InspectorView _inspectorView;
+		[SerializeField] private EntitySelectorView _entitySelectorView;
 
 		[SerializeField] private TransformComponentView _transformComponentView;
 		[SerializeField] private ShapeComponentView _shapeComponentView;
 		[SerializeField] private TextComponentView _textComponentView;
+
+		[Header("Gizmos")]
+		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
 
 		[Header("Data")]
 		[SerializeField] private string _projectName;
@@ -90,26 +95,29 @@ namespace SimpleMotions {
 		}
 
 		private void BuildVideoEditor() {
+			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData(), _entityStorage);
 			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _entityStorage);
 			_videoPlayer 	= new VideoPlayer(_videoAnimator, _videoData);
 			_videoTimeline 	= new VideoTimeline(_projectData.Video, _videoPlayer);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
             _videoCanvas 	= new VideoCanvas(_componentStorage);
-			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
-
-			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData(), _entityStorage);
+			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _entitySelector, _videoCanvas);
 		}
 
 		private void BuildGUI() {
 			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayer, _videoPlayback);
-			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities, _videoPlayer);
-			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _videoAnimator);
-			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _videoAnimator);
+			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoPlayer);
+			var timelinePanelViewModel = new TimelinePanelViewModel(_videoEntities);
+			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _videoAnimator, _entitySelector);
+			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _videoAnimator, _entitySelector);
+			var entitySelectorViewModel = new EntitySelectorViewModel(_entitySelector, _videoCanvas);
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
+			_timelinePanelView.Configure(timelinePanelViewModel);
 			_videoCanvasView.Configure(videoCanvasViewModel);
 			_inspectorView.Configure(inspectorViewModel, _editorPainter);
+			_entitySelectorView.Configure(entitySelectorViewModel);
 
 			var transformComponentViewModel = new TransformComponentViewModel();
 			var shapeComponentViewModel = new ShapeComponentViewModel();
@@ -118,6 +126,8 @@ namespace SimpleMotions {
 			_transformComponentView.Configure(transformComponentViewModel);
 			_shapeComponentView.Configure(shapeComponentViewModel);
 			_textComponentView.Configure(textComponentViewModel);
+
+			_selectionGizmoBody.Configure(videoCanvasViewModel, _entitySelector);
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);

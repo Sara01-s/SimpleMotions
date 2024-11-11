@@ -41,7 +41,8 @@ namespace SimpleMotions {
 				ActiveEntities = _activeEntities,
 				AliveEntities = _aliveEntities,
 				AvailableIds = _availableIds,
-				Entities = _entities
+				Entities = _entities,
+				SelectedEntity = Entity.InvalidEntity
 			};
 		}
 
@@ -112,8 +113,12 @@ namespace SimpleMotions {
 			return _activeEntities;
 		}
 
-		public Entity GetEntity(int id) {
-			return _entities[id];
+		public Entity GetEntity(int entityId) {
+			if (entityId <= Entity.INVALID_ID) {
+				return Entity.InvalidEntity;
+			}
+
+			return _entities[entityId];
 		}
 
 	}

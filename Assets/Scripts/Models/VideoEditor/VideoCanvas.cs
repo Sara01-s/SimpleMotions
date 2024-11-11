@@ -4,7 +4,7 @@ namespace SimpleMotions {
 
 	public interface IVideoCanvas {
 
-		void UpdateCanvas(Entity entity);
+		void DisplayEntity(Entity entity);
 		bool EntityHasComponent<T>(int entityId) where T : Component;
 		T GetEntityComponent<T>(int entityId) where T : Component;
 		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
@@ -29,7 +29,7 @@ namespace SimpleMotions {
 			return _componentStorage.GetComponent<T>(entityId);
 		}
 
-		public void UpdateCanvas(Entity entity) {
+		public void DisplayEntity(Entity entity) {
 			EntityDisplayInfo.Value = (entity.Id, entity.Name);
 		}
 

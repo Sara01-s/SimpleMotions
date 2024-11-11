@@ -18,11 +18,8 @@ public sealed class VideoTimelineView : MonoBehaviour {
 	private IVideoTimelineViewModel _videoTimelineViewModel;
 
 	public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
-		_videoTimelineViewModel = videoTimelineViewModel; 
-
-		_createTestEntity.onClick.AddListener(() => videoTimelineViewModel.OnCreateTestEntity.Execute(null));
+		_videoTimelineViewModel = videoTimelineViewModel;
 		_cursor.onValueChanged.AddListener(value => videoTimelineViewModel.OnSetCurrentFrame.Execute((int)value));
-
 		_videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorValue);
 
 		RefreshUI();

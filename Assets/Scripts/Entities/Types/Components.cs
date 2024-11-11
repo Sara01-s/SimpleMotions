@@ -67,6 +67,10 @@ namespace SimpleMotions.Internal {
 			Y = y;
 		}
 
+		public static Position operator +(Position a, Position b) {
+			return new Position(a.X + b.X, a.Y + b.Y);
+		}
+
 #if DEBUG
 		public override string ToString() {
 			return $"({X}, {Y})";
@@ -85,6 +89,11 @@ namespace SimpleMotions.Internal {
 		public Scale(float width, float height) {
 			Width = width;
 			Height = height;
+		}
+
+		
+		public static Scale operator +(Scale a, Scale b) {
+			return new Scale(a.Width + b.Width, a.Height + b.Height);
 		}
 
 #if DEBUG

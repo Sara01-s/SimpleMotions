@@ -1,33 +1,31 @@
+using SimpleMotions.Internal;
+
 namespace SimpleMotions {
+
 
 	public interface IEntitySelectorViewModel : IEntityViewModel {
 
-		ReactiveCommand<(int, string)> OnEntitySelected { get; }
-        ReactiveCommand<Void> OnEntityDeselected { get; }
-		((float x, float y) min, (float x, float y) max) GetEntityBounds(int entityId);
+		ReactiveCommand<(int, string)> OnShowSelectionGizmo { get; }
+		ReactiveCommand<Void> OnHideSelectionGizmo { get; }
 
 	}
 
 	public class EntitySelectorViewModel : EntityViewModel, IEntitySelectorViewModel {
 
-		public ReactiveCommand<(int, string)> OnEntitySelected { get; } = new();
-		public ReactiveCommand<Void> OnEntityDeselected { get; } = new(); // ¿Qué es esto?
+		public ReactiveCommand<(int, string)> OnShowSelectionGizmo { get; } = new();
+		public ReactiveCommand<Void> OnHideSelectionGizmo { get; } = new();
 
-		public EntitySelectorViewModel(IVideoCanvas videoCanvas) : base(videoCanvas) {
-			videoCanvas.EntityDisplayInfo.Subscribe(UpdateRectSelection);
+		public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
+			entitySelector.OnEntitySelected.Subscribe(ShowSelectionGizmo);
+			entitySelector.OnEntityDeselected.Subscribe(HideSelectionGizmo);
         }
 
-        private void UpdateRectSelection((int id, string name) entity) {
-            OnEntitySelected.Execute(entity);
+        private void ShowSelectionGizmo(Entity entity) {
+            OnShowSelectionGizmo.Execute((entity.Id, entity.Name));
         }
 
-		public ((float x, float y) min, (float x, float y) max) GetEntityBounds(int entityId) {
-			if (EntityHasTransform(entityId, out var transformData)) {
-				var (pos, scale, angle) = transformData;
-				return SmMath.calculateBounds(pos, scale, angle);
-			}
-
-			return ((-1.0f, -1.0f), (1.0f, 1.0f));
+		private void HideSelectionGizmo(Void _) {
+			OnHideSelectionGizmo.Execute(value: null);
 		}
 
 	}

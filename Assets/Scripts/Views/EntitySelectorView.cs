@@ -3,26 +3,29 @@ using UnityEngine;
 
 public class EntitySelectorView : MonoBehaviour {
 
-	[SerializeField] private RectTransform _rectSelection;
+	[SerializeField] private EditorPainter _editorPainter;
+	[SerializeField] private RectTransform _selectionGizmo;
 
 	private IEntitySelectorViewModel _entitySelectorViewModel;
 
 	public void Configure(IEntitySelectorViewModel entitySelectorViewModel) {
+		entitySelectorViewModel.OnShowSelectionGizmo.Subscribe(DrawSelectionGizmoOverEntity);
+		entitySelectorViewModel.OnHideSelectionGizmo.Subscribe(HideSelectionGizmo);
 		_entitySelectorViewModel = entitySelectorViewModel;
-		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawRectSelectionOverEntity);
+
+		_selectionGizmo.GetComponent<UnityEngine.UI.Image>().color = _editorPainter.Theme.AccentColor;
 	}
 
-	private void HideRectSelection() {
-		_rectSelection.gameObject.SetActive(false);
+	private void HideSelectionGizmo(Void _) {
+		_selectionGizmo.gameObject.SetActive(false);
 	}
 
-	private void DrawRectSelectionOverEntity((int id, string name) entity) {
-		if (_entitySelectorViewModel.EntityHasTransform(entity.id, out var _)) {
-			var (min, max) = _entitySelectorViewModel.GetEntityBounds(entity.id);
-
-			_rectSelection.anchorMin = new Vector2(min.x, min.y);
-			_rectSelection.anchorMax = new Vector2(max.x, max.y);
-			_rectSelection.gameObject.SetActive(true);
+	private void DrawSelectionGizmoOverEntity((int id, string _) entity) {
+		if (_entitySelectorViewModel.EntityHasTransform(entity.id, out var t)) {
+			_selectionGizmo.anchoredPosition = new Vector2(t.pos.x, t.pos.y);
+			_selectionGizmo.localScale = new Vector2(t.scale.w, t.scale.h);
+			_selectionGizmo.rotation = Quaternion.AngleAxis(t.rollAngleDegrees, Vector3.forward);
+			_selectionGizmo.gameObject.SetActive(true);
 		}
 	}
 	

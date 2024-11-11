@@ -81,7 +81,7 @@ namespace SimpleMotions {
 
 		[MethodImpl(INLINE)]
 		public static ((float x, float y) min, (float x, float y) max) calculateBounds((float x, float y) pos, (float w, float h) scale, float angleDegrees) {
-			var halfScale = new Scale(scale.w, scale.h);
+			var halfScale = new Scale(scale.w / 2.0f, scale.h / 2.0f);
 			var localCorners = new Position[] {
 				new(-halfScale.Width , -halfScale.Height),
 				new( halfScale.Width , -halfScale.Height),

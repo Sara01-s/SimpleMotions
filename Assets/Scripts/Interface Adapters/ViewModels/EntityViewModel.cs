@@ -4,9 +4,13 @@ namespace SimpleMotions {
 
 	public interface IEntityViewModel {
 
+		bool EntityHasTransform(int entityId);
 		bool EntityHasTransform(int entityId, out ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData);
 		bool EntityHasShape(int entityId, out ((float r, float g, float b, float a) color, string primitiveShape) shapeData);
 		bool EntityHasText(int entityId, out string text);
+
+		void IncrementEntityPosition(int entityId, (float x, float y) position);
+		void IncrementEntityScale(int entityId, (float w, float h) scale);
 		
 	}
 
@@ -16,6 +20,18 @@ namespace SimpleMotions {
 
 		public EntityViewModel(IVideoCanvas videoCanvas) {
 			_videoCanvas = videoCanvas;
+		}
+
+		public void IncrementEntityPosition(int entityId, (float x, float y) position) {
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Position += new Position(position.x, position.y);
+		}
+
+		public void IncrementEntityScale(int entityId, (float w, float h) scale) {
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale += new Scale(scale.w, scale.h);
+		}
+
+		public bool EntityHasTransform(int entityId) {
+			return _videoCanvas.EntityHasComponent<Transform>(entityId);
 		}
 
 		public bool EntityHasTransform(int entityId, out ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {

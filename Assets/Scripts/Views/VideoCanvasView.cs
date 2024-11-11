@@ -23,6 +23,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		_videoCanvasViewModel = videoCanvasViewModel;
 
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
+
 		PopulateSpriteDictionary();
 		RenderCanvas();
 	}
@@ -90,5 +91,5 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
 		}
 	}
-	
+
 }

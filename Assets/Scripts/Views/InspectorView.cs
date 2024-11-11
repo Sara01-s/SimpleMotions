@@ -4,7 +4,7 @@ using TMPro;
 
 public class InspectorView : MonoBehaviour {
     
-    [SerializeField] private TextMeshProUGUI _selectedEntityName;
+	[SerializeField] private TMP_InputField _selectedEntityName;
 	[SerializeField] private GameObject _transformComponent;
 	[SerializeField] private GameObject _shapeComponent;
 	[SerializeField] private GameObject _textComponent;
@@ -16,6 +16,7 @@ public class InspectorView : MonoBehaviour {
         _inspectorViewModel = inspectorViewModel;
 		_editorPainter = editorPainter;
 
+		_selectedEntityName.onValueChanged.AddListener(name => inspectorViewModel.SelectedEntityName = name);
 		inspectorViewModel.OnEntitySelected.Subscribe(UpdateInspector);
 
 		InitializeUI();
