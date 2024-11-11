@@ -15,7 +15,7 @@ namespace SimpleMotions {
 	public class EntitySelector : IEntitySelector {
 		public int SelectedEntity { get; private set; }
 
-		public EntitySelector(EntitiesData entitiesData) {
+		public EntitySelector(EntitiesData entitiesData, IEntityStorage entityStorage) {
 			SelectedEntity = entitiesData.SelectedEntity;
 		}
 

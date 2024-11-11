@@ -22,8 +22,17 @@ public class EditorPainter : MonoBehaviour {
 	[SerializeField] private Image[] _imagesWithBackgroundColor;
 	[SerializeField] private TextMeshProUGUI[] _texts;
 
-	public void Awake() {
-		FindUI();
+	[Space(20.0f)]
+	[SerializeField] private bool _findUIOnAwake;
+
+	private void Awake() {
+		if (_findUIOnAwake) {
+			FindUI();
+		}
+	}
+
+	private void OnDisable() {
+		ClearCache();
 	}
 
 	public void FindUI() {
@@ -34,7 +43,11 @@ public class EditorPainter : MonoBehaviour {
 		_texts = FindObjectsOfType<TextMeshProUGUI>(includeInactive: true).ToArray();
 	}
 
-	public void ApplyThemeIfNotEmpty(EditorThemeUnity newTheme) {
+	public void ApplyThemeIfNotEmpty(EditorThemeUnity newTheme, bool checkForNewUI = false) {
+		if (checkForNewUI) {
+			FindUI();
+		}
+		
 		var themeColors = new Color[] {
 			newTheme.PrimaryColor, newTheme.SecondaryColor, newTheme.BackgroundColor, 
 			newTheme.AccentColor, newTheme.TextColor
@@ -49,7 +62,11 @@ public class EditorPainter : MonoBehaviour {
 		}
 	}
 
-	public void ApplyTheme(EditorThemeUnity theme) {
+	public void ApplyTheme(EditorThemeUnity theme, bool checkForNewUI = false) {
+		if (checkForNewUI) {
+			FindUI();
+		}
+
 		PaintImages(_imagesWithPrimaryColor, theme.PrimaryColor);
 		PaintImages(_imagesWithSecondaryColor, theme.SecondaryColor);
 		PaintImages(_imagesWithAccentColor, theme.AccentColor);
@@ -77,6 +94,18 @@ public class EditorPainter : MonoBehaviour {
 			text.color = color;
 			text.font = _font;
 		}
+	}
+
+	private void ClearCache() {
+		ClearArray(_imagesWithPrimaryColor);
+		ClearArray(_imagesWithSecondaryColor);
+		ClearArray(_imagesWithBackgroundColor);
+		ClearArray(_imagesWithAccentColor);
+		ClearArray(_texts);
+	}
+
+	private static void ClearArray(System.Array array) {
+		System.Array.Clear(array, 0, array.Length);
 	}
 
 	private Image[] GetImagesWithTag(string tag) {

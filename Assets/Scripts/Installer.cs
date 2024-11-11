@@ -97,7 +97,7 @@ namespace SimpleMotions {
             _videoCanvas 	= new VideoCanvas(_componentStorage);
 			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _videoCanvas);
 
-			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData());
+			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData(), _entityStorage);
 		}
 
 		private void BuildGUI() {
@@ -119,7 +119,8 @@ namespace SimpleMotions {
 			_shapeComponentView.Configure(shapeComponentViewModel);
 			_textComponentView.Configure(textComponentViewModel);
 
-			_editorPainter.ApplyThemeIfNotEmpty(_editorPainterParser.SmEditorThemeToUnity(_editorData.Theme));
+			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
+			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);
 		}
 
 		private void Save() {
