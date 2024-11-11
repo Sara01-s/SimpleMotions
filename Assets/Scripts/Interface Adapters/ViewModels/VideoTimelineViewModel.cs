@@ -12,12 +12,10 @@ namespace SimpleMotions {
 
     public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
 
+        public int TotalFrameCount => _videoTimeline.TotalFrames;
 		public ReactiveCommand<Void> OnCreateTestEntity { get; } = new();
 		public ReactiveCommand<int> OnSetCurrentFrame { get; } = new();
-
 		public ReactiveValue<int> CurrentFrame { get; } = new();
-
-        public int TotalFrameCount => _videoTimeline.TotalFrames;
 
 		private readonly IVideoTimeline _videoTimeline;
         private readonly IVideoEntities _videoEntities;
@@ -27,7 +25,6 @@ namespace SimpleMotions {
         public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoEntities videoEntities, IVideoPlayerData videoPlayerData) {
 			_videoTimeline = videoTimeline;
 			_videoEntities = videoEntities;
-
 			_videoPlayerData = videoPlayerData;
 
 			_videoPlayerData.CurrentFrame.Subscribe(UpdateCursorPosition);

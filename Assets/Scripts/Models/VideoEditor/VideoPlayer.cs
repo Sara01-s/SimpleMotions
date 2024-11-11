@@ -86,7 +86,6 @@ namespace SimpleMotions {
 			}
 		}
 
-
 		public void Pause() {
 			UnityEngine.Debug.Log("Paused.");
 			IsPlaying.Value = false;

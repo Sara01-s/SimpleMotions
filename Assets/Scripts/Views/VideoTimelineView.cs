@@ -43,7 +43,7 @@ public sealed class VideoTimelineView : MonoBehaviour {
 
 	private void ConfigureCursor(int framesCount) {
 		_cursor.value = 0;
-		_cursor.maxValue = framesCount - 1; // TODO - SUS
+		_cursor.maxValue = framesCount;
 	}
 
 	private void ConfigureTimelineSize(int framesCount) {
@@ -52,7 +52,7 @@ public sealed class VideoTimelineView : MonoBehaviour {
 		var cursor = _cursor.GetComponent<RectTransform>();
 		var gridLayout = _framesHolder.GetComponent<GridLayoutGroup>();
 		float frameWidth = gridLayout.cellSize.x;
-		float timelineWidth = frameWidth * framesCount;
+		float timelineWidth = frameWidth * (framesCount + 1); // TODO - SUS
 
 		cursor.sizeDelta = new Vector3(timelineWidth, cursor.sizeDelta.y);
 		content.sizeDelta = new Vector2(timelineWidth, content.sizeDelta.y);
