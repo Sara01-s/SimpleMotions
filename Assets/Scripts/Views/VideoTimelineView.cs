@@ -15,17 +15,22 @@ public sealed class VideoTimelineView : MonoBehaviour {
 	[SerializeField] private GameObject _framesHolder;
 	[SerializeField] private GameObject _framePrefab;
 
+	private IVideoTimelineViewModel _videoTimelineViewModel;
+
 	public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
+		_videoTimelineViewModel = videoTimelineViewModel; 
+
 		_createTestEntity.onClick.AddListener(() => videoTimelineViewModel.OnCreateTestEntity.Execute(null));
 		_cursor.onValueChanged.AddListener(value => videoTimelineViewModel.OnSetCurrentFrame.Execute((int)value));
 
-		videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorValue);
+		_videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorValue);
 
-		DrawTimeline(videoTimelineViewModel.TotalFrameCount);
+		RefreshUI();
 	}
 
-	private void Refresh() {
-		
+	private void RefreshUI() {
+		_videoTimelineViewModel.RefreshData();
+		DrawTimeline(_videoTimelineViewModel.TotalFrameCount);
 	}
 
 	private void DrawTimeline(int framesCount) {

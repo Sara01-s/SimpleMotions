@@ -51,8 +51,6 @@ namespace SimpleMotions {
         public VideoPlayer(IVideoAnimator videoAnimator, VideoData videoData) {
 			_videoAnimator = videoAnimator;
 			_videoData = videoData;
-
-			SetReactiveValues();
 		}
 
 		public void SetReactiveValues() {

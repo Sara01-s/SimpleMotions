@@ -7,6 +7,8 @@ namespace SimpleMotions {
 		ReactiveCommand<Void> OnCreateTestEntity { get; }
 		ReactiveCommand<int> OnSetCurrentFrame { get; }
 		public ReactiveValue<int> CurrentFrame { get; }
+
+		void RefreshData();
 		
 	}
 
@@ -43,6 +45,10 @@ namespace SimpleMotions {
 
 		private void CreateTestEntity() {
 			_videoEntities.CreateTestEntity();
+		}
+
+		public void RefreshData() {
+			_videoPlayerData.SetReactiveValues();
 		}
 
     }

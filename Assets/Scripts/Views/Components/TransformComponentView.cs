@@ -24,27 +24,27 @@ public class TransformComponentView : MonoBehaviour {
         _roll.onValueChanged.AddListener(SendRollAngles);
 	}
 
-	public void SendPositionX(string value) {
+	private void SendPositionX(string value) {
 		_transformComponentViewModel.PositionX.Execute(value);
 	}
 
-    public void SendPositionY(string value) {
+    private void SendPositionY(string value) {
 		_transformComponentViewModel.PositionY.Execute(value);
 	}
 
-    public void SendScaleW(string value) {
+    private void SendScaleW(string value) {
 		_transformComponentViewModel.ScaleW.Execute(value);
 	}
 
-    public void SendScaleH(string value) {
+    private void SendScaleH(string value) {
 		_transformComponentViewModel.ScaleH.Execute(value);
 	}
 
-    public void SendRollAngles(string value) {
+    private void SendRollAngles(string value) {
 		_transformComponentViewModel.RollAngles.Execute(value);
 	}
 
-    public void RefreshData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
+    public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
         _positionX.text = transformData.pos.x.ToString("0.0");
         _positionY.text = transformData.pos.y.ToString("0.0");
 
@@ -52,6 +52,10 @@ public class TransformComponentView : MonoBehaviour {
         _scaleH.text = transformData.scale.h.ToString("0.0");
 
         _roll.text = transformData.rollAngleDegrees.ToString("0.0º");
+    }
+
+    public void RefreshUI() {
+        
     }
 
 }
