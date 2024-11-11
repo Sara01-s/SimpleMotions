@@ -91,7 +91,7 @@ namespace SimpleMotions {
 
 		private void BuildVideoEditor() {
 			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _entityStorage);
-			_videoPlayer 	= new VideoPlayer(_videoData, _videoAnimator);
+			_videoPlayer 	= new VideoPlayer(_videoAnimator, _videoData);
 			_videoTimeline 	= new VideoTimeline(_projectData.Video, _videoPlayer);
 			_videoPlayback 	= new VideoPlayback(_videoPlayer);
             _videoCanvas 	= new VideoCanvas(_componentStorage);
@@ -101,7 +101,7 @@ namespace SimpleMotions {
 		}
 
 		private void BuildGUI() {
-			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayback, _videoPlayer);
+			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayer, _videoPlayback);
 			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoEntities, _videoPlayer);
 			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _videoAnimator);
 			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _videoAnimator);

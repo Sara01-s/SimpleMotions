@@ -24,6 +24,10 @@ public sealed class VideoTimelineView : MonoBehaviour {
 		DrawTimeline(videoTimelineViewModel.TotalFrameCount);
 	}
 
+	private void Refresh() {
+		
+	}
+
 	private void DrawTimeline(int framesCount) {
 		ConfigureCursor(framesCount);
 		ConfigureTimelineSize(framesCount);

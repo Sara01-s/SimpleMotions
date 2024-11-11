@@ -24,17 +24,9 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel) {
 		_videoPlaybackViewModel = videoPlaybackViewModel;
 
-		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrameUpdated.Execute(value: null));
-		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardUpdated.Execute(value: null));
-		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlayUpdated.Execute(value: null));
-		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardUpdated.Execute(value: null));
-		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrameUpdated.Execute(value: null));
-
-		_videoPlaybackViewModel.CurrentTime.Subscribe(SetCurrentTime);
-		_videoPlaybackViewModel.CurrentFrame.Subscribe(SetCurrentFrame);
-		_videoPlaybackViewModel.IsPlaying.Subscribe(SetCurrentIcon);
-		_videoPlaybackViewModel.TotalFrames.Subscribe(SetTotalFrames);
-		_videoPlaybackViewModel.DurationSeconds.Subscribe(SetDuration);
+		InitReactiveCommands();
+		InitReactiveValues();
+		RefreshUI();
 	}
 
 	private void SetCurrentTime(float currentTime) {
@@ -56,6 +48,26 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private void SetDuration(float durationSeconds) {
 		_duration.text = $"{durationSeconds:00:00:00}";
+	}
+
+	private void InitReactiveCommands() {
+		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrameUpdated.Execute(value: null));
+		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardUpdated.Execute(value: null));
+		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlayUpdated.Execute(value: null));
+		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardUpdated.Execute(value: null));
+		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrameUpdated.Execute(value: null));
+	}
+
+	private void InitReactiveValues() {
+		_videoPlaybackViewModel.IsPlaying.Subscribe(SetCurrentIcon);
+		_videoPlaybackViewModel.CurrentTime.Subscribe(SetCurrentTime);
+		_videoPlaybackViewModel.DurationSeconds.Subscribe(SetDuration);
+		_videoPlaybackViewModel.CurrentFrame.Subscribe(SetCurrentFrame);
+		_videoPlaybackViewModel.TotalFrames.Subscribe(SetTotalFrames);
+	}
+
+	private void RefreshUI() {
+		_videoPlaybackViewModel.RefreshData();
 	}
 
 }

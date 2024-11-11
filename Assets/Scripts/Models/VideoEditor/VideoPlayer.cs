@@ -6,14 +6,14 @@ namespace SimpleMotions {
 
 	public interface IVideoPlayer {
 		
-		void TogglePlay();
-		VideoData GetVideoData();
 		void Play();
 		void Pause();
+		void TogglePlay();
 		void Reset();
 		void SetCurrentFrame(int frame);
 		void IncreaseFrame();
 		void DecreaseFrame();
+		VideoData GetVideoData();
 
 	}
 
@@ -22,10 +22,12 @@ namespace SimpleMotions {
 		int LastFrame { get; }
 		
 		ReactiveValue<bool> IsPlaying { get; }
-		ReactiveValue<int> CurrentFrame { get; }
-		ReactiveValue<int> TotalFrames { get; }
 		ReactiveValue<float> CurrentTime { get; }
 		ReactiveValue<float> DurationSeconds { get; }
+		ReactiveValue<int> CurrentFrame { get; }
+		ReactiveValue<int> TotalFrames { get; }
+
+		void SetReactiveValues();
 	}
 
 	public sealed class VideoPlayer : IVideoPlayer, IVideoPlayerData {
@@ -34,27 +36,33 @@ namespace SimpleMotions {
 		public int LastFrame => TotalFrames.Value;
 
 		public ReactiveValue<bool> IsPlaying { get; } = new();
-        public ReactiveValue<int> CurrentFrame { get; } = new();
-        public ReactiveValue<int> TotalFrames { get; } = new();
         public ReactiveValue<float> CurrentTime { get; } = new();
         public ReactiveValue<float> DurationSeconds { get; } = new();
+        public ReactiveValue<int> CurrentFrame { get; } = new();
+        public ReactiveValue<int> TotalFrames { get; } = new();
 		public ReactiveValue<bool> IsLooping { get; } = new();
 		public ReactiveValue<int> TargetFrameRate { get; } = new();
 
 		private readonly IVideoAnimator _videoAnimator;
+		private readonly VideoData _videoData;
 
 		private Task _playVideo;
 
-        public VideoPlayer(VideoData videoData, IVideoAnimator videoAnimator) {
-			IsPlaying.Value = videoData.IsPlaying;
-			CurrentFrame.Value = videoData.CurrentFrame;
-			TotalFrames.Value = videoData.TotalFrames;
-			CurrentTime.Value = videoData.CurrentTime;
-			DurationSeconds.Value = videoData.DurationSeconds;
-			IsLooping.Value = videoData.IsLooping;
-			TargetFrameRate.Value = videoData.TargetFrameRate;
-
+        public VideoPlayer(IVideoAnimator videoAnimator, VideoData videoData) {
 			_videoAnimator = videoAnimator;
+			_videoData = videoData;
+
+			SetReactiveValues();
+		}
+
+		public void SetReactiveValues() {
+			IsPlaying.Value = _videoData.IsPlaying;
+			CurrentTime.Value = _videoData.CurrentTime;
+			DurationSeconds.Value = _videoData.DurationSeconds;
+			CurrentFrame.Value = _videoData.CurrentFrame;
+			TotalFrames.Value = _videoData.TotalFrames;
+			IsLooping.Value = _videoData.IsLooping;
+			TargetFrameRate.Value = _videoData.TargetFrameRate;
 		}
 
 		~VideoPlayer() {
@@ -92,11 +100,15 @@ namespace SimpleMotions {
 
 		public void SetCurrentFrame(int frame) {
 			CurrentFrame.Value = frame;
+			SetCurrentTime(frame);
 
 			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();
 			_videoAnimator.InterpolateAllEntities(frame);
+		}
 
+		public void SetCurrentTime(int frame) {
+			CurrentTime.Value = (float)frame / TargetFrameRate.Value;
 		}
 
 		public VideoData GetVideoData() {
@@ -149,5 +161,6 @@ namespace SimpleMotions {
 			CurrentFrame.Value = max(CurrentFrame.Value - 1, TimelineData.FIRST_FRAME);
 		}
 
+        
     }
 }
