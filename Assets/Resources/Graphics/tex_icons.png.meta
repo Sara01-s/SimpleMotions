@@ -731,6 +731,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: tex_icons_29
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d123bb6168b08a4b3b0d6c808ec2ab75
+      internalID: 1824366760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -764,6 +785,7 @@ TextureImporter:
       tex_icons_26: 2041453222
       tex_icons_27: 1272572363
       tex_icons_28: -548494785
+      tex_icons_29: 1824366760
       tex_icons_3: -1280018871
       tex_icons_4: 1991363999
       tex_icons_5: -63623030
