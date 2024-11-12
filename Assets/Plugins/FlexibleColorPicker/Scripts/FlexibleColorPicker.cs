@@ -110,7 +110,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     [Tooltip("Make sure FCP seperates its picker materials so that the dynamic mode works consistently, even when multiple FPCs are active at the same time. Turning this off yields a slight performance boost.")]
     public bool multiInstance = true;
 
-    public ColorUpdateEvent onColorChange;
+    public ColorUpdateEvent OnColorChange;
 
     [Serializable]
     public class ColorUpdateEvent : UnityEvent<Color> { }
@@ -195,7 +195,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
             UpdateTextures();
             UpdateHex();
             typeUpdate = true;
-            onColorChange.Invoke(value);
+            OnColorChange.Invoke(value);
         }
     }
 
@@ -255,7 +255,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
         MakeModeOptions();
         UpdateMarkers();
         UpdateHex();
-        onColorChange.Invoke(startingColor);
+        OnColorChange.Invoke(startingColor);
     }
 
     private void Update() {
@@ -305,7 +305,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
-        onColorChange.Invoke(bufferedColor.color);
+        OnColorChange.Invoke(bufferedColor.color);
     }
 
     /// <summary>
@@ -390,7 +390,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
-        onColorChange.Invoke(bufferedColor.color);
+        OnColorChange.Invoke(bufferedColor.color);
     }
     
     /// <summary>
@@ -407,8 +407,9 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
-        onColorChange.Invoke(bufferedColor.color);
+        OnColorChange.Invoke(bufferedColor.color);
     }
+
 
     /// <summary>
     /// Get a color that is the current color, but changed by the given picker and value.
@@ -416,6 +417,8 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     /// <param name="type">Picker type to base change on</param>
     /// <param name="v">normalized x and y values (both values may not be used)</param>
     private BufferedColor PickColor(BufferedColor color, PickerType type, Vector2 v) {
+        print("PickColor");
+
         return type switch {
             PickerType.Main => PickColorMain(color, v),
             PickerType.Preview or PickerType.PreviewAlpha => color,
@@ -424,17 +427,19 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     }
 
     private BufferedColor PickColorMain(BufferedColor color, Vector2 v) {
-        print("PickColorMain");
+        print("PickColorMain: II");
         return PickColorMain(color, this.mode, v);
     }
 
     private BufferedColor PickColor1D(BufferedColor color, PickerType type, Vector2 v) {
+        print("PickColor1D");
         bool horizontal = IsHorizontal(pickers[(int)type]);
         float value = horizontal ? v.x : v.y;
         return PickColor1D(color, type, value);
     }
 
     private BufferedColor PickColorMain(BufferedColor color, MainPickingMode mode, Vector2 v) {
+        print("PickColorMain: II");
         return mode switch {
             MainPickingMode.HS => PickColor2D(color, PickerType.H, v.x, PickerType.S, v.y),
             MainPickingMode.HV => PickColor2D(color, PickerType.H, v.x, PickerType.V, v.y),
@@ -789,7 +794,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
                 bufferedColor.Set(newColor);
                 UpdateMarkers();
                 UpdateTextures();
-                onColorChange.Invoke(newColor);
+                OnColorChange.Invoke(newColor);
             }
             else {
                 startingColor = newColor;

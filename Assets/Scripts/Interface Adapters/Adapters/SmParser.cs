@@ -11,16 +11,18 @@ public interface ISmParser {
 	(float r, float g, float b, float a) accentColor,
 	(float r, float g, float b, float a) textColor) 
 	DeconstructSmEditorTheme(EditorTheme t);
+
+	Color ConstructSmColor((float r, float g, float b, float a) color);
 	
 }
 
 public class SmParser : ISmParser {
 
-	public (float posX, float posY, float width, float height, float angleDeg) DeconstructSmTransform(Transform t) {
+	public (float posX, float posY, float width, float height, float angleDeg) DeconstructSmTransform(SimpleMotions.Internal.Transform t) {
 		return (t.Position.X, t.Position.Y, t.Scale.Width, t.Scale.Height, t.Roll.AngleDegrees);
 	}
 
-	public (float r, float g, float b, float a) DeconstructSmColor(Color c) {
+	public (float r, float g, float b, float a) DeconstructSmColor(SimpleMotions.Internal.Color c) {
 		return (c.R, c.G, c.B, c.A);
 	}
 
@@ -36,5 +38,9 @@ public class SmParser : ISmParser {
 				(t.AccentColor.R, t.AccentColor.G, t.AccentColor.B, t.AccentColor.A),
 				(t.TextColor.R, t.TextColor.G, t.TextColor.B, t.TextColor.A));
 	}
+
+    public Color ConstructSmColor((float r, float g, float b, float a) color) {
+		return new Color(color.r, color.g, color.b, color.a);
+    }
 
 }

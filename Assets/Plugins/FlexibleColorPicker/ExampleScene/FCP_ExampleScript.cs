@@ -10,7 +10,7 @@ public class FCP_ExampleScript : MonoBehaviour {
         if(getStartingColorFromMaterial)
             fcp.Color = material.color;
 
-        fcp.onColorChange.AddListener(OnChangeColor);
+        fcp.OnColorChange.AddListener(OnChangeColor);
     }
 
     private void OnChangeColor(Color co) {
