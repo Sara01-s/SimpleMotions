@@ -7,9 +7,9 @@ namespace SimpleMotions.Internal {
 
     public class ColorPickerModel : IColorPickerModel {
 
-        private readonly ComponentStorage _componentStorage;
+        private readonly IComponentStorage _componentStorage;
 
-        public ColorPickerModel(ComponentStorage componentStorage) {
+        public ColorPickerModel(IComponentStorage componentStorage) {
             _componentStorage = componentStorage;
         }
 

@@ -417,8 +417,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     /// <param name="type">Picker type to base change on</param>
     /// <param name="v">normalized x and y values (both values may not be used)</param>
     private BufferedColor PickColor(BufferedColor color, PickerType type, Vector2 v) {
-        print("PickColor");
-
         return type switch {
             PickerType.Main => PickColorMain(color, v),
             PickerType.Preview or PickerType.PreviewAlpha => color,
@@ -427,19 +425,16 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     }
 
     private BufferedColor PickColorMain(BufferedColor color, Vector2 v) {
-        print("PickColorMain: II");
         return PickColorMain(color, this.mode, v);
     }
 
     private BufferedColor PickColor1D(BufferedColor color, PickerType type, Vector2 v) {
-        print("PickColor1D");
         bool horizontal = IsHorizontal(pickers[(int)type]);
         float value = horizontal ? v.x : v.y;
         return PickColor1D(color, type, value);
     }
 
     private BufferedColor PickColorMain(BufferedColor color, MainPickingMode mode, Vector2 v) {
-        print("PickColorMain: II");
         return mode switch {
             MainPickingMode.HS => PickColor2D(color, PickerType.H, v.x, PickerType.S, v.y),
             MainPickingMode.HV => PickColor2D(color, PickerType.H, v.x, PickerType.V, v.y),

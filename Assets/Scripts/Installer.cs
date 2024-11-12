@@ -19,6 +19,9 @@ namespace SimpleMotions {
 		[SerializeField] private ShapeComponentView _shapeComponentView;
 		[SerializeField] private TextComponentView _textComponentView;
 
+		[SerializeField] private FlexibleColorPicker _flexibleColorPicker;
+		[SerializeField] private ColorPickerView _colorPickerView;
+
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
 
@@ -78,6 +81,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IVideoPlayback, VideoPlayback>();
 			_services.RegisterService<IVideoCanvas, VideoCanvas>();
 			_services.RegisterService<IVideoEntities, VideoEntities>();
+            _services.RegisterService<IColorPickerModel, ColorPickerModel>();
 
 			// ViewModels
 			_services.RegisterService<IVideoPlaybackViewModel, VideoPlaybackViewModel>();
@@ -89,7 +93,8 @@ namespace SimpleMotions {
 			_services.RegisterService<ITransformComponentViewModel, TransformComponentViewModel>();
 			_services.RegisterService<IShapeComponentViewModel, ShapeComponentViewModel>();
 			_services.RegisterService<ITextComponentViewModel, TextComponentViewModel>();
-			
+			_services.RegisterService<IColorPickerViewModel, ColorPickerViewModel>();
+
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
 			BuildVideoEditor();
@@ -149,6 +154,7 @@ namespace SimpleMotions {
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>());
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
 			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
+			_colorPickerView		.Configure(_services.GetService<IColorPickerViewModel>(), _flexibleColorPicker, _editorPainterParser);
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);

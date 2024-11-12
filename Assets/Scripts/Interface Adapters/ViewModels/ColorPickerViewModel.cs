@@ -3,38 +3,27 @@ using SimpleMotions.Internal;
 namespace SimpleMotions {
 
     public interface IColorPickerViewModel {
-        void SetColorToEntity((float r, float g, float b, float a) color);
+        void SetColorToEntity(Color color);
     }
 
     public class ColorPickerViewModel : IColorPickerViewModel {
         
-        private readonly SmParser _smParser;
-        private readonly EntitySelector _entitySelector;
         private readonly IColorPickerModel _colorPickerModel;
+        private readonly IEntitySelector _entitySelector;
 
-        private Entity _selectedEntity;
-        private Color _color;
-
-        public ColorPickerViewModel(SmParser smParser, EntitySelector entitySelector, IColorPickerViewModel colorPickerModel) {
-            _smParser = smParser;
+        public ColorPickerViewModel(IEntitySelector entitySelector, IColorPickerModel colorPickerModel) {
+            _colorPickerModel = colorPickerModel;
             _entitySelector = entitySelector;
-
-            _entitySelector.OnEntitySelected.Subscribe(GetSelectedEntity);
-
         }
 
-        ~ColorPickerViewModel() {
-            _entitySelector.OnEntitySelected.Dispose();
-        }
+        public void SetColorToEntity(Color color) {
+            var selectedEntity = _entitySelector.SelectedEntity;
 
-        public void GetSelectedEntity(Entity entity) {
-            _selectedEntity = entity;
-        }
-
-        public void SetColorToEntity((float r, float g, float b, float a) color) {
-            _color = _smParser.ConstructSmColor((color.r, color.g, color.b, color.a));
-
-            _colorPickerModel.SetColorToEntity(_selectedEntity, _color);
+            if (selectedEntity.Id == Entity.InvalidEntity.Id) {
+                return;
+            }
+            
+            _colorPickerModel.SetColorToEntity(selectedEntity, color);
         }
 
     }

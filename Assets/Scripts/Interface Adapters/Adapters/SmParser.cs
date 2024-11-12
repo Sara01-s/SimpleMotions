@@ -18,11 +18,11 @@ public interface ISmParser {
 
 public class SmParser : ISmParser {
 
-	public (float posX, float posY, float width, float height, float angleDeg) DeconstructSmTransform(SimpleMotions.Internal.Transform t) {
+	public (float posX, float posY, float width, float height, float angleDeg) DeconstructSmTransform(Transform t) {
 		return (t.Position.X, t.Position.Y, t.Scale.Width, t.Scale.Height, t.Roll.AngleDegrees);
 	}
 
-	public (float r, float g, float b, float a) DeconstructSmColor(SimpleMotions.Internal.Color c) {
+	public (float r, float g, float b, float a) DeconstructSmColor(Color c) {
 		return (c.R, c.G, c.B, c.A);
 	}
 
