@@ -21,6 +21,7 @@ public class EditorPainter : MonoBehaviour {
 	[SerializeField] private Image[] _imagesWithAccentColor;
 	[SerializeField] private Image[] _imagesWithBackgroundColor;
 	[SerializeField] private TextMeshProUGUI[] _texts;
+	[SerializeField] private TMP_InputField[] _inputFields;
 
 	[Space(20.0f)]
 	[SerializeField] private bool _findUIOnAwake;
@@ -41,6 +42,7 @@ public class EditorPainter : MonoBehaviour {
 		_imagesWithBackgroundColor = GetImagesWithTag(_backgroundColorTag);
 		_imagesWithAccentColor = GetImagesWithTag(_accentColorTag);
 		_texts = FindObjectsOfType<TextMeshProUGUI>(includeInactive: true).ToArray();
+		_inputFields = FindObjectsOfType<TMP_InputField>(includeInactive: true).ToArray();
 	}
 
 	public void ApplyThemeIfNotEmpty(EditorThemeUnity newTheme, bool checkForNewUI = false) {
@@ -73,6 +75,7 @@ public class EditorPainter : MonoBehaviour {
 		PaintImages(_imagesWithBackgroundColor, theme.BackgroundColor);
 
 		PaintTexts(_texts, theme.TextColor);
+		PaintInputFields(_inputFields, theme.TextColor, theme.AccentColor);
 	}
 
 	private void PaintImages(Image[] images, Color color) {
@@ -85,14 +88,25 @@ public class EditorPainter : MonoBehaviour {
 		}
 	}
 
-	private void PaintTexts(TextMeshProUGUI[] texts, Color color) {
+	private void PaintTexts(TextMeshProUGUI[] texts, Color textColor) {
 		if (texts == null || texts.Length <= 0) {
 			return;
 		}
 
 		foreach (var text in texts) {
-			text.color = color;
+			text.color = textColor;
 			text.font = _font;
+		}
+	}
+
+	private void PaintInputFields(TMP_InputField[] inputFields, Color textColor, Color accentColor) {
+		if (inputFields == null || inputFields.Length <= 0) {
+			return;
+		}
+
+		foreach (var inputField in inputFields) {
+			inputField.textComponent.color = textColor;
+			inputField.selectionColor = accentColor;
 		}
 	}
 
