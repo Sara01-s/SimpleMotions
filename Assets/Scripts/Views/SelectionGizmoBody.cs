@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using SimpleMotions;
 
-public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
+public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler {
     
 	[SerializeField] private Canvas _mainCanvas;
 
@@ -10,30 +10,34 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
     private IEntityViewModel _entityViewModel;
     private IEntitySelector _entitySelector;
 
+	private Vector3 _pointerOffset;
+	private Camera _mainCamera;
+
     public void Configure(IEntityViewModel entityViewModel, IEntitySelector entitySelector) {
 		_rect = GetComponent<RectTransform>();
         _entityViewModel = entityViewModel;
         _entitySelector = entitySelector;
+		_mainCamera = Camera.main;
     }
 
-    public void OnDrag(PointerEventData eventData) {
+	public void OnBeginDrag(PointerEventData eventData) {
+		_pointerOffset = _mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+	}
+
+	public void OnDrag(PointerEventData eventData) {
 		int selectedEntityId = _entitySelector.SelectedEntity.Id;
-	
+
 		if (_entityViewModel.EntityHasTransform(selectedEntityId)) {
 			print("moviendo se supone: " + eventData.delta);
-			var delta = (eventData.delta.x, eventData.delta.y);
 
-			_entityViewModel.IncrementEntityPosition(selectedEntityId, delta);
+			var pos = _mainCamera.ScreenToWorldPoint(Input.mousePosition) - _pointerOffset;
 
-			RectTransformUtility.ScreenPointToLocalPointInRectangle (
-				_mainCanvas.transform as RectTransform,
-				Input.mousePosition,
-				_mainCanvas.worldCamera,
-				out var movePosition
-			);
+			print(pos);
 
-			_rect.transform.position = _mainCanvas.transform.TransformPoint(movePosition);
+			var mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition) - _pointerOffset;
+			_entityViewModel.IncrementEntityPosition(selectedEntityId, (pos.x, pos.y));
 		}
-    }
+	}
+
 
 }

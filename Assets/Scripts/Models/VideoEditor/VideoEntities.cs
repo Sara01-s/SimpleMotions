@@ -27,19 +27,19 @@ namespace SimpleMotions {
 		}
 
 		public void CreateEntity() {
-			var newEntity = _entityStorage.CreateEntity();
+			var entity = _entityStorage.CreateEntity();
 
-			newEntity.Name = $"Entity ({newEntity.Id})";
-			_componentStorage.AddComponent<Transform>(newEntity);
-			_keyframeStorage.AddDefaultKeyframes(newEntity.Id);
-			_videoCanvas.DisplayEntity(newEntity);
+			entity.Name = $"Entity ({entity.Id})";
+			UnityEngine.Debug.Log($"Entidad Creada: {entity}");
 
-			var shape = _componentStorage.AddComponent<Shape>(newEntity);
-
-			shape.Color = Color.White;
+			var shape = _componentStorage.AddComponent<Shape>(entity);
 			shape.PrimitiveShape = Shape.Primitive.Circle;
-
-			_entitySelector.SelectEntity(newEntity.Id);
+			shape.Color = Color.Magenta;
+			
+			_componentStorage.AddComponent<Transform>(entity);
+			_keyframeStorage.AddDefaultKeyframes(entity.Id);
+			_entitySelector.SelectEntity(entity.Id);
+			_videoCanvas.DisplayEntity(entity.Id);
 		}
 
 		public void CreateTestEntity() {
@@ -65,6 +65,7 @@ namespace SimpleMotions {
 			_keyframeStorage.AddKeyframe(newEntity.Id, frame: 300, value: new Shape { Color = Color.Green   });
 
 			_videoCanvas.DisplayEntity(newEntity);
+			_entitySelector.SelectEntity(newEntity.Id);
 		}
 
 	}

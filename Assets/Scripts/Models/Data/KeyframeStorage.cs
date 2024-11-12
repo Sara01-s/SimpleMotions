@@ -139,7 +139,7 @@ namespace SimpleMotions {
 		}
 
 		public bool FrameHasKeyframe(int frame) {
-			return GetKeyframeAt(frame).EntityId != Entity.INVALID_ID;
+			return GetKeyframeAt(frame).EntityId != Entity.Invalid.Id;
 		}
 
         public IKeyframe<Component> GetKeyframeAt<T>(int frame) where T : Component {
@@ -161,7 +161,7 @@ namespace SimpleMotions {
 				}
 			}
 
-			return new Keyframe<Component>(Entity.INVALID_ID);
+			return new Keyframe<Component>(Entity.Invalid.Id);
 		}
 
 		public bool EntityHasKeyframesOfAnyType(int entityId) {

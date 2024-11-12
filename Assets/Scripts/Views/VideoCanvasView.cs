@@ -66,7 +66,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		displayedEntity.transform.name = entity;
 		_displayedEntites.Add(entityId, displayedEntity);
 
-		Debug.Log("Creada entidad: " + entity);
+		Debug.Log("Mostrando entidad: " + entity);
 	}
 
 	private void UpdateEntity(int entityId) {

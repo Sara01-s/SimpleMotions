@@ -10,7 +10,7 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _scaleW; 
     [SerializeField] private TMP_InputField _scaleH; 
     [SerializeField] private TMP_InputField _roll; 
-    [SerializeField] private Button _save;
+    [SerializeField] private Button _saveKeyframe;
 
     private ITransformComponentViewModel _transformComponentViewModel;
 
@@ -41,7 +41,7 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
     private void SendRollAngles(string value) {
-		_transformComponentViewModel.RollAngles.Execute(value);
+		_transformComponentViewModel.Roll.Execute(value);
 	}
 
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {

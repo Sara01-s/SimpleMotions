@@ -10,6 +10,6 @@ namespace SimpleMotions.Internal {
 		public HashSet<int> AliveEntities = new();
 		public HashSet<int> ActiveEntities = new();
 
-		public Entity SelectedEntity = Entity.InvalidEntity;
+		public Entity SelectedEntity = Entity.Invalid;
 	}
 }

@@ -5,6 +5,7 @@ namespace SimpleMotions {
 	public interface IVideoCanvas {
 
 		void DisplayEntity(Entity entity);
+		void DisplayEntity(int entityId);
 		bool EntityHasComponent<T>(int entityId) where T : Component;
 		T GetEntityComponent<T>(int entityId) where T : Component;
 		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
@@ -14,11 +15,13 @@ namespace SimpleMotions {
 	public sealed class VideoCanvas : IVideoCanvas {
 
 		private readonly IComponentStorage _componentStorage;
+		private readonly IEntityStorage _entityStorage;
 
         public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
 
-        public VideoCanvas(IComponentStorage componentStorage) {
+        public VideoCanvas(IComponentStorage componentStorage, IEntityStorage entityStorage) {
 			_componentStorage = componentStorage;
+			_entityStorage = entityStorage;
 		}
 
 		public bool EntityHasComponent<T>(int entityId) where T : Component {
@@ -27,6 +30,11 @@ namespace SimpleMotions {
 
 		public T GetEntityComponent<T>(int entityId) where T : Component {
 			return _componentStorage.GetComponent<T>(entityId);
+		}
+
+		public void DisplayEntity(int entityId) {
+			var entity = _entityStorage.GetEntity(entityId);
+			DisplayEntity(entity);
 		}
 
 		public void DisplayEntity(Entity entity) {

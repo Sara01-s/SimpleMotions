@@ -42,7 +42,7 @@ namespace SimpleMotions {
 				AliveEntities = _aliveEntities,
 				AvailableIds = _availableIds,
 				Entities = _entities,
-				SelectedEntity = Entity.InvalidEntity
+				SelectedEntity = Entity.Invalid
 			};
 		}
 
@@ -114,8 +114,9 @@ namespace SimpleMotions {
 		}
 
 		public Entity GetEntity(int entityId) {
-			if (entityId <= Entity.INVALID_ID) {
-				return Entity.InvalidEntity;
+			if (entityId <= Entity.Invalid.Id) {
+				UnityEngine.Debug.Log("Retorné una entidad inválida.");
+				return Entity.Invalid;
 			}
 
 			return _entities[entityId];

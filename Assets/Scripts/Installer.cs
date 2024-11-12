@@ -65,35 +65,35 @@ namespace SimpleMotions {
 			_services.RegisterService<IEditorPainterParser, EditorPainterParser>();
 
 			// Data
-			_services.RegisterService<VideoData, VideoData>();
-			_services.RegisterService<ComponentsData, ComponentsData>();
-			_services.RegisterService<EntitiesData, EntitiesData>();
-			_services.RegisterService<IKeyframeStorage, KeyframeStorage>();
+			_services.RegisterService<VideoData, 		 VideoData>();
+			_services.RegisterService<ComponentsData, 	 ComponentsData>();
+			_services.RegisterService<EntitiesData, 	 EntitiesData>();
+			_services.RegisterService<IKeyframeStorage,  KeyframeStorage>();
 			_services.RegisterService<IComponentStorage, ComponentStorage>();
-			_services.RegisterService<IEntityStorage, EntityStorage>();
-			_services.RegisterService<IVideoPlayerData, VideoPlayer>();
+			_services.RegisterService<IEntityStorage, 	 EntityStorage>();
+			_services.RegisterService<IVideoPlayerData,  VideoPlayer>();
 
 			// Models
-			_services.RegisterService<IEntitySelector, EntitySelector>();
-			_services.RegisterService<IVideoAnimator, VideoAnimator>();
-			_services.RegisterService<IVideoPlayer, VideoPlayer>();
-			_services.RegisterService<IVideoTimeline, VideoTimeline>();
-			_services.RegisterService<IVideoPlayback, VideoPlayback>();
-			_services.RegisterService<IVideoCanvas, VideoCanvas>();
-			_services.RegisterService<IVideoEntities, VideoEntities>();
+			_services.RegisterService<IEntitySelector, 	 EntitySelector>();
+			_services.RegisterService<IVideoAnimator, 	 VideoAnimator>();
+			_services.RegisterService<IVideoPlayer, 	 VideoPlayer>();
+			_services.RegisterService<IVideoTimeline, 	 VideoTimeline>();
+			_services.RegisterService<IVideoPlayback, 	 VideoPlayback>();
+			_services.RegisterService<IVideoCanvas, 	 VideoCanvas>();
+			_services.RegisterService<IVideoEntities, 	 VideoEntities>();
             _services.RegisterService<IColorPickerModel, ColorPickerModel>();
 
 			// ViewModels
-			_services.RegisterService<IVideoPlaybackViewModel, VideoPlaybackViewModel>();
-			_services.RegisterService<IVideoTimelineViewModel, VideoTimelineViewModel>();
-			_services.RegisterService<ITimelinePanelViewModel, TimelinePanelViewModel>();
-			_services.RegisterService<IVideoCanvasViewModel, VideoCanvasViewModel>();
-			_services.RegisterService<IInspectorViewModel, InspectorViewModel>();
-			_services.RegisterService<IEntitySelectorViewModel, EntitySelectorViewModel>();
+			_services.RegisterService<IVideoPlaybackViewModel, 		VideoPlaybackViewModel>();
+			_services.RegisterService<IVideoTimelineViewModel, 		VideoTimelineViewModel>();
+			_services.RegisterService<ITimelinePanelViewModel, 		TimelinePanelViewModel>();
+			_services.RegisterService<IVideoCanvasViewModel, 		VideoCanvasViewModel>();
+			_services.RegisterService<IInspectorViewModel, 			InspectorViewModel>();
+			_services.RegisterService<IEntitySelectorViewModel, 	EntitySelectorViewModel>();
 			_services.RegisterService<ITransformComponentViewModel, TransformComponentViewModel>();
-			_services.RegisterService<IShapeComponentViewModel, ShapeComponentViewModel>();
-			_services.RegisterService<ITextComponentViewModel, TextComponentViewModel>();
-			_services.RegisterService<IColorPickerViewModel, ColorPickerViewModel>();
+			_services.RegisterService<IShapeComponentViewModel, 	ShapeComponentViewModel>();
+			_services.RegisterService<ITextComponentViewModel, 		TextComponentViewModel>();
+			_services.RegisterService<IColorPickerViewModel, 		ColorPickerViewModel>();
 
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -144,9 +144,9 @@ namespace SimpleMotions {
 
 		private void BuildGUI() {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
+			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
 			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
-			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
 			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());

@@ -1,4 +1,3 @@
-using System;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
@@ -31,17 +30,17 @@ namespace SimpleMotions {
 
 		public void SelectEntity(int entityId) {
 			SelectedEntity = _entityStorage.GetEntity(entityId);
-			UnityEngine.Debug.Log($"Entitdad {entityId} seleccionada.");
+			UnityEngine.Debug.Log($"Entidad {entityId} seleccionada.");
 			OnEntitySelected.Execute(SelectedEntity);
 		}
 
 		public void DeselectEntity() {
-			SelectedEntity = Entity.InvalidEntity;
+			SelectedEntity = Entity.Invalid;
 			OnEntityDeselected.Execute(value: null);
 		}
 
 		public bool HasSelectedEntity() {
-			return SelectedEntity.Id != Entity.INVALID_ID;
+			return SelectedEntity.Id != Entity.Invalid.Id;
 		}
 
 	}

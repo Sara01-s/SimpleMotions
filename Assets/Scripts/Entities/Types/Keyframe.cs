@@ -10,7 +10,7 @@ namespace SimpleMotions.Internal {
 	[System.Serializable]
 	public class Keyframe<T> : IKeyframe<T>, System.IComparable where T : Component, new() {
 
-		public static Keyframe<T> Invalid = new(Entity.INVALID_ID, TimelineData.INVALID_FRAME, new());
+		public static Keyframe<T> Invalid = new(Entity.Invalid.Id, TimelineData.INVALID_FRAME, new());
 		
 		public int EntityId { get; set; }
 		public int Frame { get; set; }

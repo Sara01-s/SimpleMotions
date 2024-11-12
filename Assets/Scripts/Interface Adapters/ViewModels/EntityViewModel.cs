@@ -23,11 +23,13 @@ namespace SimpleMotions {
 		}
 
 		public void IncrementEntityPosition(int entityId, (float x, float y) position) {
-			_videoCanvas.GetEntityComponent<Transform>(entityId).Position += new Position(position.x, position.y);
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Position = new Position(position.x, position.y);
+			_videoCanvas.DisplayEntity(entityId);
 		}
 
 		public void IncrementEntityScale(int entityId, (float w, float h) scale) {
-			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale += new Scale(scale.w, scale.h);
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale = new Scale(scale.w, scale.h);
+			_videoCanvas.DisplayEntity(entityId);
 		}
 
 		public bool EntityHasTransform(int entityId) {

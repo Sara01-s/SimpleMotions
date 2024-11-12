@@ -19,7 +19,7 @@ namespace SimpleMotions {
         public void SetColorToEntity(Color color) {
             var selectedEntity = _entitySelector.SelectedEntity;
 
-            if (selectedEntity.Id == Entity.InvalidEntity.Id) {
+            if (selectedEntity.Id == Entity.Invalid.Id) {
                 return;
             }
             
