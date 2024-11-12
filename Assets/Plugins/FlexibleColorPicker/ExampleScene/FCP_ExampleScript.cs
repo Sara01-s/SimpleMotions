@@ -8,7 +8,7 @@ public class FCP_ExampleScript : MonoBehaviour {
 
     private void Start() {
         if(getStartingColorFromMaterial)
-            fcp.color = material.color;
+            fcp.Color = material.color;
 
         fcp.onColorChange.AddListener(OnChangeColor);
     }

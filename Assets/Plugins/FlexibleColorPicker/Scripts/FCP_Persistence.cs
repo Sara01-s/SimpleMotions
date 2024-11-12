@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
+using System.IO;
+using System;
 
 /// <summary>
 /// Handles persistence of FCP colors across scenes or gaming sessions
@@ -55,11 +55,11 @@ public class FCP_Persistence : MonoBehaviour {
         if(savedColors == null)
             InitStatic();
         if(LoadColor(out Color c))
-            fcp.color = c;
+            fcp.Color = c;
     }
 
     private void OnDisable() {
-        SaveColor(fcp.color);
+        SaveColor(fcp.Color);
     }
 
     private void LoadDataFile() {
