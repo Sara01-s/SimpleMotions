@@ -56,10 +56,10 @@ namespace SimpleMotions {
 
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
-			_editorPainterParser = new EditorPainterParser();
 
 			_services = new Services();
 			_services.RegisterService<ISerializer, NewtonJsonSerializer>();
+			_services.RegisterService<IEditorPainterParser, EditorPainterParser>();
 
 			// Data
 			_services.RegisterService<VideoData, VideoData>();
@@ -138,29 +138,17 @@ namespace SimpleMotions {
 		}
 
 		private void BuildGUI() {
-			var videoPlaybackViewModel  = _services.GetService<IVideoPlaybackViewModel>();
-			var videoTimelineViewModel  = _services.GetService<IVideoTimelineViewModel>();
-			var timelinePanelViewModel  = _services.GetService<ITimelinePanelViewModel>();
-			var videoCanvasViewModel    = _services.GetService<IVideoCanvasViewModel>();
-			var inspectorViewModel      = _services.GetService<IInspectorViewModel>();
-			var entitySelectorViewModel = _services.GetService<IEntitySelectorViewModel>();
-
-			_videoPlaybackView.Configure(videoPlaybackViewModel);
-            _videoTimelineView.Configure(videoTimelineViewModel);
-			_timelinePanelView.Configure(timelinePanelViewModel);
-			_videoCanvasView.Configure(videoCanvasViewModel);
-			_inspectorView.Configure(inspectorViewModel, _editorPainter);
-			_entitySelectorView.Configure(entitySelectorViewModel);
-
-			var transformComponentViewModel = _services.GetService<ITransformComponentViewModel>();
-			var shapeComponentViewModel = _services.GetService<IShapeComponentViewModel>();
-			var textComponentViewModel = _services.GetService<ITextComponentViewModel>();
-
-			_transformComponentView.Configure(transformComponentViewModel);
-			_shapeComponentView.Configure(shapeComponentViewModel);
-			_textComponentView.Configure(textComponentViewModel);
-
-			_selectionGizmoBody.Configure(videoCanvasViewModel, _entitySelector);
+			_editorPainterParser = _services.GetService<IEditorPainterParser>();
+			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>());
+            _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
+			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
+			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>());
+			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
+			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());
+			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>());
+			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>());
+			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
+			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);
@@ -170,8 +158,8 @@ namespace SimpleMotions {
 			_projectData.Timeline.Entities   = _entityStorage.GetEntitiesData();
 			_projectData.Timeline.Components = _componentStorage.GetComponentsData();
 			_projectData.Timeline.Keyframes  = _keyframeStorage.GetKeyframesData();
-			_projectData.Video = _videoPlayer.GetVideoData();
 			
+			_projectData.Video = _videoPlayer.GetVideoData();
 			_projectData.Video.CurrentTime = 0;
 			_projectData.Video.CurrentFrame = 0;
 			_projectData.Video.IsPlaying = false;
