@@ -6,6 +6,9 @@ namespace SimpleMotions {
 
 	public interface IVideoPlayer {
 		
+		int FirstFrame { get; }
+		int LastFrame { get; }
+
 		void Play();
 		void Pause();
 		void TogglePlay();

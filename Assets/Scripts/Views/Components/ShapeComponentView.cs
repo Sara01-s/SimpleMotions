@@ -10,10 +10,10 @@ public class ShapeComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _hex; 
     [SerializeField] private TMP_InputField _alpha; 
 
-    private ShapeComponentViewModel _shapeComponentViewModel;
+    private IShapeComponentViewModel _shapeComponentViewModel;
     private EditorPainter _editorPainter;
 
-    public void Configure(ShapeComponentViewModel shapeComponentViewModel) {
+    public void Configure(IShapeComponentViewModel shapeComponentViewModel) {
         _shapeComponentViewModel = shapeComponentViewModel;
 
         _hex.onValueChanged.AddListener(SendColorHex);

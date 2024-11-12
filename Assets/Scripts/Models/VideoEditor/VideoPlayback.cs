@@ -14,9 +14,9 @@ namespace SimpleMotions {
 
     public sealed class VideoPlayback : IVideoPlayback {
 
-        private readonly VideoPlayer _videoPlayer;
+        private readonly IVideoPlayer _videoPlayer;
 
-        public VideoPlayback(VideoPlayer videoPlayer) {
+		public VideoPlayback(IVideoPlayer videoPlayer) {
             _videoPlayer = videoPlayer;
         }
 

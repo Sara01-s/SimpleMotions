@@ -12,11 +12,11 @@ namespace SimpleMotions {
 	public sealed class VideoTimeline : IVideoTimeline {
 
 		private readonly VideoData _videoData;
-		private readonly VideoPlayer _videoPlayer;
+		private readonly IVideoPlayer _videoPlayer;
 
 		public int TotalFrames => _videoData.TotalFrames;
 
-		public VideoTimeline(VideoData videoData, VideoPlayer videoPlayer) {
+		public VideoTimeline(VideoData videoData, IVideoPlayer videoPlayer) {
 			_videoData = videoData;
 			_videoPlayer = videoPlayer;
 		}

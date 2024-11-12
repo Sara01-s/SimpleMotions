@@ -37,7 +37,7 @@ namespace SimpleMotions {
 		private IVideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 		private IVideoAnimator _videoAnimator;
-		private VideoPlayer _videoPlayer;
+		private IVideoPlayer _videoPlayer;
 
 		private IEntitySelector _entitySelector;
 
@@ -50,12 +50,45 @@ namespace SimpleMotions {
 		private EditorDataHandler _editorDataHandler;
 		private ProjectData _projectData;
 		private EditorData _editorData;
-		private VideoData _videoData;
+
+		private IServices _services;
 
 
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
 			_editorPainterParser = new EditorPainterParser();
+
+			_services = new Services();
+			_services.RegisterService<ISerializer, NewtonJsonSerializer>();
+
+			// Data
+			_services.RegisterService<VideoData, VideoData>();
+			_services.RegisterService<ComponentsData, ComponentsData>();
+			_services.RegisterService<EntitiesData, EntitiesData>();
+			_services.RegisterService<IKeyframeStorage, KeyframeStorage>();
+			_services.RegisterService<IComponentStorage, ComponentStorage>();
+			_services.RegisterService<IEntityStorage, EntityStorage>();
+			_services.RegisterService<IVideoPlayerData, VideoPlayer>();
+
+			// Models
+			_services.RegisterService<IEntitySelector, EntitySelector>();
+			_services.RegisterService<IVideoAnimator, VideoAnimator>();
+			_services.RegisterService<IVideoPlayer, VideoPlayer>();
+			_services.RegisterService<IVideoTimeline, VideoTimeline>();
+			_services.RegisterService<IVideoPlayback, VideoPlayback>();
+			_services.RegisterService<IVideoCanvas, VideoCanvas>();
+			_services.RegisterService<IVideoEntities, VideoEntities>();
+
+			// ViewModels
+			_services.RegisterService<IVideoPlaybackViewModel, VideoPlaybackViewModel>();
+			_services.RegisterService<IVideoTimelineViewModel, VideoTimelineViewModel>();
+			_services.RegisterService<ITimelinePanelViewModel, TimelinePanelViewModel>();
+			_services.RegisterService<IVideoCanvasViewModel, VideoCanvasViewModel>();
+			_services.RegisterService<IInspectorViewModel, InspectorViewModel>();
+			_services.RegisterService<IEntitySelectorViewModel, EntitySelectorViewModel>();
+			_services.RegisterService<ITransformComponentViewModel, TransformComponentViewModel>();
+			_services.RegisterService<IShapeComponentViewModel, ShapeComponentViewModel>();
+			_services.RegisterService<ITextComponentViewModel, TextComponentViewModel>();
 			
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -64,13 +97,12 @@ namespace SimpleMotions {
         }
 
 		private void BuildStorage() {
-			ISerializer serializer = new NewtonJsonSerializer(); // Intercambiable por otros serializadores
+			var serializer = _services.GetService<ISerializer>();
 			var projectDataSerializer = new DataSerializer<ProjectData>(serializer);
 			var editorDataSerializer = new DataSerializer<EditorData>(serializer);
 
 			string projectDataFilepath = Path.Combine(Application.persistentDataPath, _projectDataFileName);
 			string editorDataFilepath = Path.Combine(Application.persistentDataPath, _editorDataFileName);
-
 			Debug.Log("Data path: " + projectDataFilepath);
 
 			_projectDataHandler = new ProjectDataHandler(projectDataSerializer, projectDataFilepath);
@@ -80,37 +112,38 @@ namespace SimpleMotions {
 			_editorData = _editorDataHandler.LoadData();
 
 			_projectData.ProjectName = _projectName;
-			_projectData.Video = new VideoData(_targetFrameRate, 300); // TODO - XDDDDD
+			_projectData.Video = new VideoData() {
+				TargetFrameRate = _targetFrameRate,
+				TotalFrames = 300, // TODO - El 300 debería llegar de otro lado.
+			};
 
-			var componentsData = _projectData.Timeline.Components;
-			var entitiesData   = _projectData.Timeline.Entities;
-			var keyframeData   = _projectData.Timeline.Keyframes;
+			_services.RegisterInstance(_projectData.Timeline.Components);
+			_services.RegisterInstance(_projectData.Timeline.Entities);
+			_services.RegisterInstance(_projectData.Timeline.Keyframes);
+			_services.RegisterInstance(_projectData.Video);
 			
-			_videoData = _projectData.Video;
-			_videoData.TargetFrameRate = _targetFrameRate;
-			
-			_keyframeStorage  = new KeyframeStorage(keyframeData, _videoData);
-            _componentStorage = new ComponentStorage(componentsData);
-			_entityStorage 	  = new EntityStorage(entitiesData);
+			_keyframeStorage  = _services.GetService<IKeyframeStorage>();
+            _componentStorage = _services.GetService<IComponentStorage>();
+			_entityStorage 	  = _services.GetService<IEntityStorage>();
 		}
 
 		private void BuildVideoEditor() {
-			_entitySelector = new EntitySelector(_entityStorage.GetEntitiesData(), _entityStorage);
-			_videoAnimator	= new VideoAnimator(_keyframeStorage, _componentStorage, _entityStorage);
-			_videoPlayer 	= new VideoPlayer(_videoAnimator, _videoData);
-			_videoTimeline 	= new VideoTimeline(_projectData.Video, _videoPlayer);
-			_videoPlayback 	= new VideoPlayback(_videoPlayer);
-            _videoCanvas 	= new VideoCanvas(_componentStorage);
-			_videoEntities 	= new VideoEntities(_keyframeStorage, _componentStorage, _entityStorage, _entitySelector, _videoCanvas);
+			_entitySelector = _services.GetService<IEntitySelector>();
+			_videoAnimator  = _services.GetService<IVideoAnimator>();
+			_videoPlayer 	= _services.GetService<IVideoPlayer>();
+			_videoTimeline 	= _services.GetService<IVideoTimeline>();
+			_videoPlayback 	= _services.GetService<IVideoPlayback>();
+            _videoCanvas 	= _services.GetService<IVideoCanvas>();
+			_videoEntities 	= _services.GetService<IVideoEntities>();
 		}
 
 		private void BuildGUI() {
-			var videoPlaybackViewModel = new VideoPlaybackViewModel(_videoPlayer, _videoPlayback);
-			var videoTimelineViewModel = new VideoTimelineViewModel(_videoTimeline, _videoPlayer);
-			var timelinePanelViewModel = new TimelinePanelViewModel(_videoEntities);
-			var videoCanvasViewModel = new VideoCanvasViewModel(_videoCanvas, _videoAnimator, _entitySelector);
-			var inspectorViewModel = new InspectorViewModel(_videoCanvas, _videoAnimator, _entitySelector);
-			var entitySelectorViewModel = new EntitySelectorViewModel(_entitySelector, _videoCanvas);
+			var videoPlaybackViewModel  = _services.GetService<IVideoPlaybackViewModel>();
+			var videoTimelineViewModel  = _services.GetService<IVideoTimelineViewModel>();
+			var timelinePanelViewModel  = _services.GetService<ITimelinePanelViewModel>();
+			var videoCanvasViewModel    = _services.GetService<IVideoCanvasViewModel>();
+			var inspectorViewModel      = _services.GetService<IInspectorViewModel>();
+			var entitySelectorViewModel = _services.GetService<IEntitySelectorViewModel>();
 
 			_videoPlaybackView.Configure(videoPlaybackViewModel);
             _videoTimelineView.Configure(videoTimelineViewModel);
@@ -119,9 +152,9 @@ namespace SimpleMotions {
 			_inspectorView.Configure(inspectorViewModel, _editorPainter);
 			_entitySelectorView.Configure(entitySelectorViewModel);
 
-			var transformComponentViewModel = new TransformComponentViewModel();
-			var shapeComponentViewModel = new ShapeComponentViewModel();
-			var textComponentViewModel = new TextComponentViewModel();
+			var transformComponentViewModel = _services.GetService<ITransformComponentViewModel>();
+			var shapeComponentViewModel = _services.GetService<IShapeComponentViewModel>();
+			var textComponentViewModel = _services.GetService<ITextComponentViewModel>();
 
 			_transformComponentView.Configure(transformComponentViewModel);
 			_shapeComponentView.Configure(shapeComponentViewModel);
