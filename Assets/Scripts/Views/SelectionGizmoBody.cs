@@ -2,42 +2,42 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using SimpleMotions;
 
-public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler {
+public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
     
-	[SerializeField] private Canvas _mainCanvas;
+	[SerializeField] RectTransform _canvasArea;
+	[SerializeField] private Camera _canvasCamera;
+	[SerializeField] private Canvas _editorCanvas;
 
-	private RectTransform _rect;
+	private RectTransform _rectTransform;
     private IEntityViewModel _entityViewModel;
     private IEntitySelector _entitySelector;
 
-	private Vector3 _pointerOffset;
-	private Camera _mainCamera;
-
     public void Configure(IEntityViewModel entityViewModel, IEntitySelector entitySelector) {
-		_rect = GetComponent<RectTransform>();
+		_rectTransform = GetComponent<RectTransform>();
         _entityViewModel = entityViewModel;
         _entitySelector = entitySelector;
-		_mainCamera = Camera.main;
     }
-
-	public void OnBeginDrag(PointerEventData eventData) {
-		_pointerOffset = _mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-	}
 
 	public void OnDrag(PointerEventData eventData) {
 		int selectedEntityId = _entitySelector.SelectedEntity.Id;
 
-		if (_entityViewModel.EntityHasTransform(selectedEntityId)) {
-			print("moviendo se supone: " + eventData.delta);
+		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var t)) {
+			// Drag gizmo
+			_rectTransform.anchoredPosition += eventData.delta / _editorCanvas.scaleFactor;
 
-			var pos = _mainCamera.ScreenToWorldPoint(Input.mousePosition) - _pointerOffset;
+			// Drag entity
+			var entityScreenPos = _editorCanvas.worldCamera.WorldToScreenPoint(new Vector2(t.pos.x, t.pos.y));
 
-			print(pos);
+			RectTransformUtility.ScreenPointToLocalPointInRectangle (
+				_canvasArea,
+				Input.mousePosition,
+				_editorCanvas.worldCamera,
+				out var localPoint
+			);
 
-			var mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition) - _pointerOffset;
-			_entityViewModel.IncrementEntityPosition(selectedEntityId, (pos.x, pos.y));
+			print(localPoint);
+			return;
 		}
 	}
-
 
 }

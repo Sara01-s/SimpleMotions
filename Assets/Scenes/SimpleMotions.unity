@@ -1468,14 +1468,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 3
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 3
   m_RegexValue: 
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
@@ -3834,15 +3834,15 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 9
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
-  m_RegexValue: 
+  m_CharacterValidation: 6
+  m_RegexValue: ^0(\.\d+)?|1(\.0+)?$
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
   m_OnEndEdit:
@@ -4293,14 +4293,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 3
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 3
   m_RegexValue: 
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
@@ -6333,7 +6333,7 @@ GameObject:
   - component: {fileID: 516072836}
   - component: {fileID: 516072835}
   m_Layer: 5
-  m_Name: InputField - X Value
+  m_Name: InputField - Angle Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6407,14 +6407,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 3
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 3
   m_RegexValue: 
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
@@ -6507,7 +6507,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   m_Layer: 3
-  m_Name: Camera - Main
+  m_Name: Camera - Editor
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6553,7 +6553,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 100
+  far clip plane: 20
   field of view: 60
   orthographic: 1
   orthographic size: 5
@@ -6581,7 +6581,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8001,8 +8001,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1691507592}
   m_HandleRect: {fileID: 1691507591}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.9885906
+  m_Value: -0.000003590329
+  m_Size: 0.98859066
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8207,15 +8207,15 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 9
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
-  m_RegexValue: 
+  m_CharacterValidation: 6
+  m_RegexValue: ^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
   m_OnEndEdit:
@@ -9140,14 +9140,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 3
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 3
   m_RegexValue: 
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
@@ -15838,7 +15838,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 519420031}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 10
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -15959,7 +15959,7 @@ GameObject:
   - component: {fileID: 1123448606}
   - component: {fileID: 1123448609}
   m_Layer: 5
-  m_Name: Canvas Position
+  m_Name: Canvas Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15980,11 +15980,11 @@ RectTransform:
   - {fileID: 1403847089}
   m_Father: {fileID: 613548530}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 30, y: -30}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 30, y: 173}
   m_SizeDelta: {x: 1120, y: 674}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1123448609
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19825,7 +19825,7 @@ GameObject:
   - component: {fileID: 1407660051}
   - component: {fileID: 1407660050}
   m_Layer: 5
-  m_Name: Button - Save Position
+  m_Name: Button - Save Transform Keyframe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24017,9 +24017,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _headerContent: {fileID: 1293725298}
   _headerHolder: {fileID: 600922451}
-  _headerScrollbar: {fileID: 1503146932}
+  _headerScrollbar: {fileID: 572687639}
   _headerPrefab: {fileID: 6172985303513405951, guid: 49a55835592ba19909b170db9eed11eb, type: 3}
-  _timelineCursorView: {fileID: 1283388020}
+  _timelineCursorView: {fileID: 0}
 --- !u!1 &1672921625
 GameObject:
   m_ObjectHideFlags: 0
@@ -24508,7 +24508,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9eb95275e075b3999508cb3de41869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainCanvas: {fileID: 1094580098}
+  _canvasArea: {fileID: 1123448606}
+  _canvasCamera: {fileID: 1838425777}
+  _editorCanvas: {fileID: 1094580098}
 --- !u!114 &1683209941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24967,14 +24969,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 3
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 3
   m_RegexValue: 
   m_GlobalPointSize: 15
   m_CharacterLimit: 0
@@ -28774,7 +28776,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.46
+  m_Size: 0.46000007
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -29676,7 +29678,7 @@ MonoBehaviour:
   _scaleW: {fileID: 344469429}
   _scaleH: {fileID: 122386699}
   _roll: {fileID: 516072835}
-  _saveKeyframe: {fileID: 0}
+  _saveKeyframe: {fileID: 1407660050}
 --- !u!114 &2065154768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30969,8 +30971,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1502532503}
   m_HandleRect: {fileID: 1502532502}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9279661
+  m_Value: 0.9999991
+  m_Size: 0.9279662
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

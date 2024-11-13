@@ -13,6 +13,7 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private Button _saveKeyframe;
 
     private ITransformComponentViewModel _transformComponentViewModel;
+	private const string DEGREES_SYMBOL = "º";
 
 	public void Configure(ITransformComponentViewModel transformComponentViewModel) {
         _transformComponentViewModel = transformComponentViewModel;
@@ -22,6 +23,16 @@ public class TransformComponentView : MonoBehaviour {
         _scaleW.onValueChanged.AddListener(SendScaleW);
         _scaleH.onValueChanged.AddListener(SendScaleH);
         _roll.onValueChanged.AddListener(SendRollAngles);
+
+		_saveKeyframe.onClick.AddListener(() => transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData()));
+	}
+
+	private ((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) GetTransformData() {
+		var position = (_positionX.text, _positionY.text);
+		var scale = (_scaleW.text, _scaleH.text);
+		string rollAngleDegrees = _roll.text.Replace(DEGREES_SYMBOL, string.Empty);
+
+		return (position, scale, rollAngleDegrees);
 	}
 
 	private void SendPositionX(string value) {
@@ -41,7 +52,7 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
     private void SendRollAngles(string value) {
-		_transformComponentViewModel.Roll.Execute(value);
+		_transformComponentViewModel.Roll.Execute(value.Replace(DEGREES_SYMBOL, string.Empty));
 	}
 
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
@@ -51,7 +62,7 @@ public class TransformComponentView : MonoBehaviour {
         _scaleW.text = transformData.scale.w.ToString("0.0");
         _scaleH.text = transformData.scale.h.ToString("0.0");
 
-        _roll.text = transformData.rollAngleDegrees.ToString("0.0º");
+        _roll.text = transformData.rollAngleDegrees.ToString("0.0" + DEGREES_SYMBOL);
     }
 
     public void RefreshUI() {
