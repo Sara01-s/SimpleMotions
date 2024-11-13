@@ -38,7 +38,7 @@ public sealed class TimelineView : MonoBehaviour {
 
 	private void OnScrollbarValueChanged(float value) {
 		_timelineHeaderView.SetContentValue(_timelineContent.anchoredPosition.x);
-		_timelineCursorView.SetCursorValue(value);
+		_timelineCursorView.SetCursorValue(value, _timelineContent.anchoredPosition.x);
 	}
 
 	private void DrawTimeline() {
