@@ -8001,8 +8001,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1691507592}
   m_HandleRect: {fileID: 1691507591}
   m_Direction: 0
-  m_Value: -0.000003590329
-  m_Size: 0.98859066
+  m_Value: 0
+  m_Size: 0.9885906
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -24019,7 +24019,7 @@ MonoBehaviour:
   _headerHolder: {fileID: 600922451}
   _headerScrollbar: {fileID: 572687639}
   _headerPrefab: {fileID: 6172985303513405951, guid: 49a55835592ba19909b170db9eed11eb, type: 3}
-  _timelineCursorView: {fileID: 0}
+  _timelineCursorView: {fileID: 1283388020}
 --- !u!1 &1672921625
 GameObject:
   m_ObjectHideFlags: 0
@@ -28776,7 +28776,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.46000007
+  m_Size: 0.46000004
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -30971,7 +30971,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1502532503}
   m_HandleRect: {fileID: 1502532502}
   m_Direction: 2
-  m_Value: 0.9999991
+  m_Value: 1
   m_Size: 0.9279662
   m_NumberOfSteps: 0
   m_OnValueChanged:

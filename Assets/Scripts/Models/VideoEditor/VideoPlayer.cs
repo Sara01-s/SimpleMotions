@@ -101,6 +101,9 @@ namespace SimpleMotions {
 		public void SetCurrentFrame(int frame) {
 			CurrentFrame.Value = frame;
 			SetCurrentTime(frame);
+			
+
+			UnityEngine.Debug.LogWarning(CurrentFrame.Value);
 
 			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();

@@ -14,6 +14,7 @@ namespace SimpleMotions {
 		IKeyframe<Component> GetKeyframeAt<T>(int frame) where T : Component;
 		IKeyframe<Component> GetKeyframeAt(int frame);
 		KeyframesData GetKeyframesData();
+		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component;
 		void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component;
 		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component;
 		void AddDefaultKeyframes(int entityId);
@@ -84,6 +85,10 @@ namespace SimpleMotions {
 
 			componentKeyframes = null;
 			return false;
+		}
+
+		public void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component {
+			AddKeyframe(keyframe.EntityId, keyframe.Frame, keyframe.Value);
 		}
 
 		public void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component {
