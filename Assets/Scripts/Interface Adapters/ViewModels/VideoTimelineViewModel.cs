@@ -5,7 +5,7 @@ namespace SimpleMotions {
 
 		int TotalFrameCount { get; } 
 		ReactiveCommand<int> OnSetCurrentFrame { get; }
-		public ReactiveValue<int> CurrentFrame { get; }
+		ReactiveValue<int> CurrentFrame { get; }
 
 		void RefreshData();
 		

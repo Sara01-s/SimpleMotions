@@ -9,8 +9,10 @@ namespace SimpleMotions {
 		[Header("UI")]
 		[SerializeField] private EditorPainter _editorPainter;
 		[SerializeField] private VideoPlaybackView _videoPlaybackView;
-        [SerializeField] private VideoTimelineView _videoTimelineView;
+        [SerializeField] private TimelineView _videoTimelineView;
 		[SerializeField] private TimelinePanelView _timelinePanelView;
+		[SerializeField] private TimelineHeaderView _timelineHeaderView;
+		[SerializeField] private TimelineCursorView _timelineCursorView;
 		[SerializeField] private VideoCanvasView _videoCanvasView;
 		[SerializeField] private InspectorView _inspectorView;
 		[SerializeField] private EntitySelectorView _entitySelectorView;
@@ -146,6 +148,8 @@ namespace SimpleMotions {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
 			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
 			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>());
+			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
+			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
