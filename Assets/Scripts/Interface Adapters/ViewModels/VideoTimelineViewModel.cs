@@ -1,4 +1,6 @@
 
+using System.Runtime.InteropServices;
+
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {

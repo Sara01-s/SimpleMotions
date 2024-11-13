@@ -1,12 +1,10 @@
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-    
+
 public sealed class TimelineView : MonoBehaviour {
 
 	[Header("References")]
-	[SerializeField] private Button _createTestEntity;
-	[SerializeField] private Sprite _whiteTexture;
 	[SerializeField] private Scrollbar _horizontalTimelineScrollbar;
 
 	[Header("Draw")]
@@ -31,14 +29,11 @@ public sealed class TimelineView : MonoBehaviour {
 	private void RefreshUI() {
 		_videoTimelineViewModel.RefreshData();
 		DrawTimeline();
-		
-		_timelineHeaderView.RefreshUI();
-		_timelineCursorView.RefreshUI();
 	}
 
-	private void OnScrollbarValueChanged(float value) {
-		_timelineHeaderView.SetContentValue(_timelineContent.anchoredPosition.x);
-		_timelineCursorView.SetCursorValue(value, _timelineContent.anchoredPosition.x);
+	private void OnScrollbarValueChanged(float frameNormalized) {
+		_timelineHeaderView.UpdateHeaderPositions(_timelineContent.anchoredPosition.x);
+		_timelineCursorView.UpdateToCurrentFrame(frameNormalized, _timelineContent.anchoredPosition.x);
 	}
 
 	private void DrawTimeline() {

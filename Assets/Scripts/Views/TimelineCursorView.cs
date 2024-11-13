@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
+using System;
 
 public class TimelineCursorView : MonoBehaviour {
 
@@ -15,6 +16,8 @@ public class TimelineCursorView : MonoBehaviour {
 
         _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorValue);
         _cursor.onValueChanged.AddListener(value => _videoTimelineViewModel.OnSetCurrentFrame.Execute((int)value));
+
+        RefreshUI();
     }
 
     public void RefreshUI() {
@@ -39,9 +42,11 @@ public class TimelineCursorView : MonoBehaviour {
         _cursor.value = currentFrame;
     }
 
-    public void SetCursorValue(float value, float contentXPos) {
-        var desnormalizedValue = _videoTimelineViewModel.TotalFrameCount * value;
-        _cursor.value = desnormalizedValue;
+    public void UpdateToCurrentFrame(float frameNormalized, float contentXPos) {
+        var currentFrame = (int)Math.Floor(frameNormalized * _videoTimelineViewModel.TotalFrameCount);
+
+        _videoTimelineViewModel.CurrentFrame.Value = currentFrame;
+        _videoTimelineViewModel.OnSetCurrentFrame.Execute(currentFrame);
 
         _sliderArea.anchoredPosition = new Vector2(contentXPos - 42, _sliderArea.anchoredPosition.y);
     }
