@@ -43,12 +43,12 @@ public class TimelineCursorView : MonoBehaviour {
     }
 
     public void UpdateToCurrentFrame(float frameNormalized, float contentXPos) {
+        _sliderArea.anchoredPosition = new Vector2(contentXPos - 42, _sliderArea.anchoredPosition.y);
+        
         var currentFrame = (int)Math.Floor(frameNormalized * _videoTimelineViewModel.TotalFrameCount);
 
         _videoTimelineViewModel.CurrentFrame.Value = currentFrame;
         _videoTimelineViewModel.OnSetCurrentFrame.Execute(currentFrame);
-
-        _sliderArea.anchoredPosition = new Vector2(contentXPos - 42, _sliderArea.anchoredPosition.y);
     }
 
 }
