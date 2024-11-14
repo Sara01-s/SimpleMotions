@@ -14,6 +14,12 @@ public class TransformComponentView : MonoBehaviour {
 
     private IInputValidator _inputValidator;
 
+    private string _previousXInput;
+    private string _previousYInput;
+    private string _previousWInput;
+    private string _previousHInput;
+    private string _previousRInput;
+
     private ITransformComponentViewModel _transformComponentViewModel;
 	private const string DEGREES_SYMBOL = "º";
 
@@ -38,37 +44,51 @@ public class TransformComponentView : MonoBehaviour {
 		return (position, scale, rollAngleDegrees);
 	}
 
-	private void SendPositionX(string value) {
-        value = _inputValidator.ValidateInput(value);
-        print(value);
-		_transformComponentViewModel.PositionX.Execute(value);
+	private void SendPositionX(string newInput) {
+        newInput = _inputValidator.ValidateInput(newInput, _previousXInput);
+		_transformComponentViewModel.PositionX.Execute(newInput);
 	}
 
     private void SendPositionY(string value) {
+        value = _inputValidator.ValidateInput(value, _previousYInput);
 		_transformComponentViewModel.PositionY.Execute(value);
 	}
 
     private void SendScaleW(string value) {
+        value = _inputValidator.ValidateInput(value, _previousWInput);
 		_transformComponentViewModel.ScaleW.Execute(value);
 	}
 
     private void SendScaleH(string value) {
+        value = _inputValidator.ValidateInput(value, _previousHInput);
 		_transformComponentViewModel.ScaleH.Execute(value);
 	}
 
     private void SendRollAngles(string value) {
+        value = _inputValidator.ValidateInput(value, _previousRInput);
 		_transformComponentViewModel.Roll.Execute(value.Replace(DEGREES_SYMBOL, string.Empty));
 	}
 
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
-        _positionX.text = transformData.pos.x.ToString("G");
-        _positionY.text = transformData.pos.y.ToString("G");
+        var firstInput = transformData.pos.x.ToString("G");
+        _previousXInput = firstInput;
+        _positionX.text = firstInput;
 
-        _scaleW.text = transformData.scale.w.ToString("G");
-        _scaleH.text = transformData.scale.h.ToString("G");
+        firstInput = transformData.pos.y.ToString("G");
+        _previousYInput = firstInput;
+        _positionY.text = firstInput;
 
-        var rollText = transformData.rollAngleDegrees.ToString("G");
-        _roll.text = rollText + DEGREES_SYMBOL;
+        firstInput = transformData.scale.w.ToString("G");
+        _previousWInput = firstInput;
+        _scaleW.text = firstInput;
+
+        firstInput = transformData.scale.h.ToString("G");
+        _previousHInput = firstInput;
+        _scaleH.text = firstInput;
+
+        firstInput = transformData.rollAngleDegrees.ToString("G");
+        _previousRInput = firstInput;
+        _roll.text = firstInput + DEGREES_SYMBOL;
     }
 
     public void RefreshUI() {

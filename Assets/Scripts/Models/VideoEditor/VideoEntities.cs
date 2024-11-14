@@ -54,10 +54,6 @@ namespace SimpleMotions {
 			var shape = _componentStorage.AddComponent<Shape>(entity);
 			shape.PrimitiveShape = Shape.Primitive.Circle;
 
-			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 100, new Transform(position: new(3.0f, 2.0f))));
-			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 200, new Transform(position: new(-3.0f, -4.0f))));
-
-			
 			_componentStorage.AddComponent<Transform>(entity);
 			_keyframeStorage.AddDefaultKeyframes(entity.Id);
 			_entitySelector.SelectEntity(entity.Id);
