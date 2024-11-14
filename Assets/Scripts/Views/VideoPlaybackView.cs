@@ -51,11 +51,11 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	}
 
 	private void InitReactiveCommands() {
-		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrameUpdated.Execute(value: null));
-		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardUpdated.Execute(value: null));
-		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlayUpdated.Execute(value: null));
-		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardUpdated.Execute(value: null));
-		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrameUpdated.Execute(value: null));
+		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrame.Execute(value: null));
+		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardFrame.Execute(value: null));
+		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlay.Execute(value: null));
+		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardFrame.Execute(value: null));
+		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrame.Execute(value: null));
 	}
 
 	private void InitReactiveValues() {

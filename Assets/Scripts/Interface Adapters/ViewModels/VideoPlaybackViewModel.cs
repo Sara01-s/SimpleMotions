@@ -3,11 +3,11 @@ namespace SimpleMotions {
 
 	public interface IVideoPlaybackViewModel {
         
-        ReactiveCommand<Void> OnTogglePlayUpdated { get; }
-        ReactiveCommand<Void> OnFirstFrameUpdated { get; }
-        ReactiveCommand<Void> OnLastFrameUpdated { get; }
-        ReactiveCommand<Void> OnBackwardUpdated { get; }
-        ReactiveCommand<Void> OnForwardUpdated { get; }
+        ReactiveCommand<Void> OnTogglePlay { get; }
+        ReactiveCommand<Void> OnFirstFrame { get; }
+        ReactiveCommand<Void> OnLastFrame { get; }
+        ReactiveCommand<Void> OnBackwardFrame { get; }
+        ReactiveCommand<Void> OnForwardFrame { get; }
 
         ReactiveValue<bool> IsPlaying { get; }
         ReactiveValue<float> CurrentTime { get; }
@@ -21,11 +21,11 @@ namespace SimpleMotions {
 
     public sealed class VideoPlaybackViewModel : IVideoPlaybackViewModel {
 
-        public ReactiveCommand<Void> OnTogglePlayUpdated { get; } = new();
-        public ReactiveCommand<Void> OnFirstFrameUpdated { get; } = new();
-        public ReactiveCommand<Void> OnLastFrameUpdated { get; } = new();
-        public ReactiveCommand<Void> OnBackwardUpdated { get; } = new();
-        public ReactiveCommand<Void> OnForwardUpdated { get; } = new();
+        public ReactiveCommand<Void> OnTogglePlay { get; } = new();
+        public ReactiveCommand<Void> OnFirstFrame { get; } = new();
+        public ReactiveCommand<Void> OnLastFrame { get; } = new();
+        public ReactiveCommand<Void> OnBackwardFrame { get; } = new();
+        public ReactiveCommand<Void> OnForwardFrame { get; } = new();
 
         public ReactiveValue<bool> IsPlaying { get; } = new();
         public ReactiveValue<float> CurrentTime { get; } = new();
@@ -89,11 +89,11 @@ namespace SimpleMotions {
         }
 
         private void InitReactiveCommands() {
-            OnTogglePlayUpdated.Subscribe(value => UpdateTogglePlay());
-            OnFirstFrameUpdated.Subscribe(value => UpdateFirstFrame());
-            OnLastFrameUpdated.Subscribe(value => UpdateLastFrame());
-            OnBackwardUpdated.Subscribe(value => UpdateBackward());
-            OnForwardUpdated.Subscribe(value => UpdateForward());
+            OnTogglePlay.Subscribe(value => UpdateTogglePlay());
+            OnFirstFrame.Subscribe(value => UpdateFirstFrame());
+            OnLastFrame.Subscribe(value => UpdateLastFrame());
+            OnBackwardFrame.Subscribe(value => UpdateBackward());
+            OnForwardFrame.Subscribe(value => UpdateForward());
         }
 
         private void InitReactiveValues() {

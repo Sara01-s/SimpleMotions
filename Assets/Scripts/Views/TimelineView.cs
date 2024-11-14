@@ -49,8 +49,8 @@ public sealed class TimelineView : MonoBehaviour {
 	}
 
 	private void OnScrollbarValueChanged(float frameNormalized) {
-		_headerView.UpdateHeaderPositions(frameNormalized, _content.anchoredPosition.x);
-		_cursorView.UpdateToCurrentFrame(frameNormalized, _content.anchoredPosition.x);
+		_headerView.UpdateHeaderPositions(_content.anchoredPosition.x);
+		_cursorView.UpdateSliderArea(_content.anchoredPosition.x);
 	}
 
 }

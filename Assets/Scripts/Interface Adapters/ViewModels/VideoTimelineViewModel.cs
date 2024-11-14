@@ -1,13 +1,11 @@
 
-using System.Runtime.InteropServices;
-
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {
 
 		int TotalFrameCount { get; } 
-		ReactiveCommand<int> OnSetCurrentFrame { get; }
 		ReactiveValue<int> CurrentFrame { get; }
+		ReactiveCommand<int> OnFrameChanged { get; }
 
 		void RefreshData();
 		
@@ -16,8 +14,8 @@ namespace SimpleMotions {
     public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
 
         public int TotalFrameCount => _videoTimeline.TotalFrames;
-		public ReactiveCommand<int> OnSetCurrentFrame { get; } = new();
 		public ReactiveValue<int> CurrentFrame { get; } = new();
+		public ReactiveCommand<int> OnFrameChanged { get; } = new();
 
 		private readonly IVideoTimeline _videoTimeline;
 		private readonly IVideoPlayerData _videoPlayerData;
@@ -27,8 +25,7 @@ namespace SimpleMotions {
 			_videoPlayerData = videoPlayerData;
 
 			_videoPlayerData.CurrentFrame.Subscribe(UpdateCursorPosition);
-
-			OnSetCurrentFrame.Subscribe(value => SetCurrentFrame(value));
+			OnFrameChanged.Subscribe(value => SetCurrentFrame(value));
         }
 
 		private void UpdateCursorPosition(int currentFrame) {

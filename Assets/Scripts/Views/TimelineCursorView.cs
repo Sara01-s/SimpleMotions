@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-using System;
 
 public class TimelineCursorView : MonoBehaviour {
 
@@ -14,13 +13,15 @@ public class TimelineCursorView : MonoBehaviour {
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
-        _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorValue);
-        _cursor.onValueChanged.AddListener(value => _videoTimelineViewModel.OnSetCurrentFrame.Execute((int)value));
+        _cursor.onValueChanged.AddListener(value => _videoTimelineViewModel.OnFrameChanged.Execute((int)value));
+
+        _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);;
 
         RefreshUI();
     }
 
     public void RefreshUI() {
+        _videoTimelineViewModel.RefreshData();
         ConfigureCursorAreaSize();
         ConfigureCursor();
     }
@@ -35,17 +36,12 @@ public class TimelineCursorView : MonoBehaviour {
         _cursor.maxValue = _videoTimelineViewModel.TotalFrameCount;
     }
 
-    public void SetCursorValue(int currentFrame) {
-        _cursor.value = currentFrame;
+    public void UpdateSliderArea(float contentXPos) {
+        _sliderArea.anchoredPosition = new Vector2(contentXPos - _framesHolder.cellSize.x, _sliderArea.anchoredPosition.y);
     }
 
-    public void UpdateToCurrentFrame(float frameNormalized, float contentXPos) {
-        _sliderArea.anchoredPosition = new Vector2(contentXPos - _framesHolder.cellSize.x, _sliderArea.anchoredPosition.y);
-        
-        var currentFrame = (int)Math.Floor(frameNormalized * _videoTimelineViewModel.TotalFrameCount);
-        
-        _videoTimelineViewModel.CurrentFrame.Value = currentFrame;
-        _videoTimelineViewModel.OnSetCurrentFrame.Execute(currentFrame);
+    public void SetCursorNewFrame(int currentFrame) {
+        _cursor.value = currentFrame;
     }
 
 }

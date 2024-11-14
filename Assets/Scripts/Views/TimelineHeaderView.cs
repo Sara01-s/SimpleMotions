@@ -47,10 +47,9 @@ public class TimelineHeaderView : MonoBehaviour {
         _scrollbar.GetComponent<RectTransform>().sizeDelta = new Vector2(totalWidth - gridLayout.cellSize.x, _scrollbar.GetComponent<RectTransform>().sizeDelta.y);
     }
 
-    public void UpdateHeaderPositions(float scrollbarValue, float contentXPos) {
+    public void UpdateHeaderPositions(float contentXPos) {
         _content.anchoredPosition = new Vector2(contentXPos, _content.anchoredPosition.y);
         _scrollbar.GetComponent<RectTransform>().anchoredPosition = new Vector2(contentXPos, _scrollbar.GetComponent<RectTransform>().anchoredPosition.y);
-        _scrollbar.value = scrollbarValue;
     }
 
     public void OnScrollbarValueChanged(float normalizedValue) {
@@ -60,7 +59,7 @@ public class TimelineHeaderView : MonoBehaviour {
         }
 
         var value = normalizedValue * _videoTimelineViewModel.TotalFrameCount;
-        _timelineCursorView.SetCursorValue((int)Mathf.Floor(value));
+        _timelineCursorView.SetCursorNewFrame((int)Mathf.Floor(value));
     }
 
     private float GetCursorNormalizedPosition() {
