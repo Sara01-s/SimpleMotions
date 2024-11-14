@@ -59,7 +59,6 @@ namespace SimpleMotions {
 
 		private IServices _services;
 
-
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
 
@@ -97,6 +96,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IShapeComponentViewModel, 	ShapeComponentViewModel>();
 			_services.RegisterService<ITextComponentViewModel, 		TextComponentViewModel>();
 			_services.RegisterService<IColorPickerViewModel, 		ColorPickerViewModel>();
+			_services.RegisterService<IInputValidator, 				InputValidator>();
 
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -155,7 +155,7 @@ namespace SimpleMotions {
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
 			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());
-			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>());
+			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), new InputValidator());
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>());
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
 			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);

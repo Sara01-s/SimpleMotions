@@ -10,21 +10,24 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _scaleW; 
     [SerializeField] private TMP_InputField _scaleH; 
     [SerializeField] private TMP_InputField _roll; 
-    [SerializeField] private Button _saveKeyframe;
+    [SerializeField] private Button _addKeyframe;
+
+    private IInputValidator _inputValidator;
 
     private ITransformComponentViewModel _transformComponentViewModel;
 	private const string DEGREES_SYMBOL = "º";
 
-	public void Configure(ITransformComponentViewModel transformComponentViewModel) {
+	public void Configure(ITransformComponentViewModel transformComponentViewModel, IInputValidator inputValidator) {
         _transformComponentViewModel = transformComponentViewModel;
+        _inputValidator = inputValidator;
 
-		_positionX.onValueChanged.AddListener(SendPositionX);
-        _positionY.onValueChanged.AddListener(SendPositionY);
-        _scaleW.onValueChanged.AddListener(SendScaleW);
-        _scaleH.onValueChanged.AddListener(SendScaleH);
-        _roll.onValueChanged.AddListener(SendRollAngles);
+		_positionX.onSubmit.AddListener(SendPositionX);
+        _positionY.onSubmit.AddListener(SendPositionY);
+        _scaleW.onSubmit.AddListener(SendScaleW);
+        _scaleH.onSubmit.AddListener(SendScaleH);
+        _roll.onSubmit.AddListener(SendRollAngles);
 
-		_saveKeyframe.onClick.AddListener(() => transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData()));
+		_addKeyframe.onClick.AddListener(() => transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData()));
 	}
 
 	private ((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) GetTransformData() {
@@ -36,6 +39,8 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
 	private void SendPositionX(string value) {
+        value = _inputValidator.ValidateInput(value);
+        print(value);
 		_transformComponentViewModel.PositionX.Execute(value);
 	}
 
@@ -56,13 +61,14 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
-        _positionX.text = transformData.pos.x.ToString("0.0");
-        _positionY.text = transformData.pos.y.ToString("0.0");
+        _positionX.text = transformData.pos.x.ToString("G");
+        _positionY.text = transformData.pos.y.ToString("G");
 
-        _scaleW.text = transformData.scale.w.ToString("0.0");
-        _scaleH.text = transformData.scale.h.ToString("0.0");
+        _scaleW.text = transformData.scale.w.ToString("G");
+        _scaleH.text = transformData.scale.h.ToString("G");
 
-        _roll.text = transformData.rollAngleDegrees.ToString("0.0" + DEGREES_SYMBOL);
+        var rollText = transformData.rollAngleDegrees.ToString("G");
+        _roll.text = rollText + DEGREES_SYMBOL;
     }
 
     public void RefreshUI() {

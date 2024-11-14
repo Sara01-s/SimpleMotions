@@ -1,5 +1,6 @@
 using SimpleMotions.Internal;
 using System;
+using Unity.VisualScripting;
 
 namespace SimpleMotions {
 
@@ -100,6 +101,8 @@ namespace SimpleMotions {
 		}
 
 		private void ModifyEntityRollAngleDegrees(string angleDegrees) {
+			UnityEngine.Debug.Log(angleDegrees);
+
 			GetSelectedEntityTransform().Roll.AngleDegrees = float.Parse(angleDegrees);
 			UpdateSelectedEntityDisplay();
 		}
