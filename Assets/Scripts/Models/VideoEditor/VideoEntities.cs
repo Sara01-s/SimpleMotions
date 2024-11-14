@@ -6,6 +6,10 @@ namespace SimpleMotions {
 
 		void CreateTestEntity();
 		void CreateEntity();
+		void TryCreateEntity();
+		void DeleteEntity(int entityId);
+
+		ReactiveCommand ShowMaxEntitiesWarning { get; }
 
 	}
 
@@ -16,8 +20,13 @@ namespace SimpleMotions {
 		private readonly IEntityStorage _entityStorage;
 		private readonly IEntitySelector _entitySelector;
 		private readonly IVideoCanvas _videoCanvas;
+		
+		// DEMO 1
+		private byte _createdEntities;
+        public ReactiveCommand ShowMaxEntitiesWarning { get; } = new();
+		private const byte MAX_ENTITIES = 3;
 
-		public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
+        public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
 							 IEntityStorage entityStorage, IEntitySelector entitySelector, IVideoCanvas videoCanvas) {
 			_keyframeStorage = keyframeStorage;
 			_componentStorage = componentStorage;
@@ -25,6 +34,16 @@ namespace SimpleMotions {
 			_entitySelector = entitySelector;
 			_videoCanvas = videoCanvas;
 		}
+
+		public void TryCreateEntity() {
+			if (_createdEntities >= MAX_ENTITIES) {
+				ShowMaxEntitiesWarning.Execute();
+			}
+
+			CreateEntity();
+			_createdEntities++;
+		}
+
 
 		public void CreateEntity() {
 			var entity = _entityStorage.CreateEntity();
@@ -34,12 +53,24 @@ namespace SimpleMotions {
 
 			var shape = _componentStorage.AddComponent<Shape>(entity);
 			shape.PrimitiveShape = Shape.Primitive.Circle;
-			shape.Color = Color.Magenta;
+
+			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 100, new Transform(position: new(3.0f, 2.0f))));
+			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 200, new Transform(position: new(-3.0f, -4.0f))));
+
 			
 			_componentStorage.AddComponent<Transform>(entity);
 			_keyframeStorage.AddDefaultKeyframes(entity.Id);
 			_entitySelector.SelectEntity(entity.Id);
 			_videoCanvas.DisplayEntity(entity.Id);
+		}
+		
+		public void DeleteEntity(int entityId) {
+			if (_createdEntities <= 0) {
+				return;
+			}
+
+			_entityStorage.DeleteEntity(entityId);
+			_createdEntities--;
 		}
 
 		public void CreateTestEntity() {
