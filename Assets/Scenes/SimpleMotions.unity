@@ -18218,6 +18218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840541d3ac7d563cba53a05b4360077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cursorHandle: {fileID: 315715043}
+  _keyframePrefab: {fileID: 4010176895635531034, guid: a8fe67b5e1b675248afcace9d916e474, type: 3}
   _sliderArea: {fileID: 1688799830}
   _framesHolder: {fileID: 774283772}
   _cursor: {fileID: 1283388019}
@@ -22161,7 +22163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d11c39a69181945ed85d9441cf52d53c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxEntitiesWarning: {fileID: 0}
+  _maxEntitiesWarning: {fileID: 2051110197}
   _createEntity: {fileID: 633751235}
 --- !u!114 &1517567839
 MonoBehaviour:
@@ -24910,7 +24912,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683209938}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

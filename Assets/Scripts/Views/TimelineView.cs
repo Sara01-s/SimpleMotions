@@ -53,4 +53,8 @@ public sealed class TimelineView : MonoBehaviour {
 		_cursorView.UpdateSliderArea(_content.anchoredPosition.x);
 	}
 
+	private void SetKeyframePosition() {
+
+	}
+
 }

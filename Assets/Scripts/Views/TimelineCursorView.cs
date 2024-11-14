@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TimelineCursorView : MonoBehaviour {
 
+    [SerializeField] private Transform _cursorHandle;
+    [SerializeField] private GameObject _keyframePrefab;
     [SerializeField] private RectTransform _sliderArea;
     [SerializeField] private GridLayoutGroup _framesHolder;
     [SerializeField] private Slider _cursor;
@@ -18,6 +20,15 @@ public class TimelineCursorView : MonoBehaviour {
         _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);;
 
         RefreshUI();
+
+        //XD
+        videoTimelineViewModel.ShowKeyframe.Subscribe(() => {
+            var keyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
+            var rect = keyframe.GetComponent<RectTransform>();
+
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 55.0f);
+            rect.transform.SetParent(_cursor.transform);
+        });
     }
 
     public void RefreshUI() {

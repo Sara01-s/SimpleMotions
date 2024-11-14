@@ -88,7 +88,7 @@ public class TransformComponentView : MonoBehaviour {
 
         firstInput = transformData.rollAngleDegrees.ToString("G");
         _previousRInput = firstInput;
-        _roll.text = firstInput + DEGREES_SYMBOL;
+        _roll.text = firstInput;
     }
 
     public void RefreshUI() {

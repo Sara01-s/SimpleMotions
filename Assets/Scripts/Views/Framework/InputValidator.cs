@@ -28,15 +28,19 @@ namespace SimpleMotions {
         private bool ContainsInvalidCharacters(string newInput) {
             bool lastWasSeparator = false;
 
-            foreach (char c in newInput) {
-                if (char.IsDigit(c)) {
+            for (int i = 0; i < newInput.Length; i++) {
+                char c = newInput[i];
+
+                if (i == 0 && c == '-') {
+                    continue;
+                }
+                else if (char.IsDigit(c)) {
                     lastWasSeparator = false;
                 }
                 else if (c == '.' || c == ',') {
                     if (lastWasSeparator) {
                         return true;
                     }
-                    
                     lastWasSeparator = true;
                 }
                 else {

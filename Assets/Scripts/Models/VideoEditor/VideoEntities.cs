@@ -38,6 +38,7 @@ namespace SimpleMotions {
 		public void TryCreateEntity() {
 			if (_createdEntities >= MAX_ENTITIES) {
 				ShowMaxEntitiesWarning.Execute();
+				return;
 			}
 
 			CreateEntity();

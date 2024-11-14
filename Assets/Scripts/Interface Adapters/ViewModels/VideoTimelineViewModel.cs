@@ -6,6 +6,7 @@ namespace SimpleMotions {
 		int TotalFrameCount { get; } 
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveCommand<int> OnFrameChanged { get; }
+		ReactiveCommand ShowKeyframe { get; }
 
 		void RefreshData();
 		
@@ -16,11 +17,14 @@ namespace SimpleMotions {
         public int TotalFrameCount => _videoTimeline.TotalFrames;
 		public ReactiveValue<int> CurrentFrame { get; } = new();
 		public ReactiveCommand<int> OnFrameChanged { get; } = new();
+        public ReactiveCommand ShowKeyframe { get; } = new();
 
-		private readonly IVideoTimeline _videoTimeline;
+        private readonly IVideoTimeline _videoTimeline;
 		private readonly IVideoPlayerData _videoPlayerData;
 
-        public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoPlayerData videoPlayerData) {
+        public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoPlayerData videoPlayerData, ITransformComponentViewModel transformComponentViewModel) {
+			// XD
+			transformComponentViewModel.SaveTransformKeyframe.Subscribe(ShowKeyframeXD);
 			_videoTimeline = videoTimeline;
 			_videoPlayerData = videoPlayerData;
 
@@ -38,6 +42,10 @@ namespace SimpleMotions {
 
 		public void RefreshData() {
 			_videoPlayerData.SetReactiveValues();
+		}
+
+		public void ShowKeyframeXD(((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) xd) {
+			ShowKeyframe.Execute();
 		}
 
     }
