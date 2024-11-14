@@ -6,12 +6,13 @@ public interface IServices {
 	void RegisterService<TInterface, TImplementation>() where TImplementation : TInterface;
 	void RegisterInstance<TInterface>(TInterface instance);
 	TInterface GetService<TInterface>();
-	
+
 }
 
 public sealed class Services : IServices {
 	private readonly Dictionary<Type, Type> _serviceTypes = new();
 	private readonly Dictionary<Type, object> _serviceInstances = new();
+	private readonly Dictionary<Type, object> _implementationInstances = new();
 
 	public void RegisterService<TInterface, TImplementation>() where TImplementation : TInterface {
 		_serviceTypes[typeof(TInterface)] = typeof(TImplementation);
@@ -34,6 +35,11 @@ public sealed class Services : IServices {
 			throw new Exception($"Service of type {serviceType} not registered.");
 		}
 
+		if (_implementationInstances.TryGetValue(implementationType, out instance)) {
+			_serviceInstances[serviceType] = instance;
+			return instance;
+		}
+
 		var serviceConstructor = implementationType.GetConstructors()[0];
 		var constructorParameters = serviceConstructor.GetParameters();
 		var parameterInstances = new List<object>();
@@ -44,6 +50,8 @@ public sealed class Services : IServices {
 		}
 
 		instance = serviceConstructor.Invoke(parameterInstances.ToArray());
+
+		_implementationInstances[implementationType] = instance;
 		_serviceInstances[serviceType] = instance;
 
 		return instance;

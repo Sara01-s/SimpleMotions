@@ -17418,7 +17418,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258378849}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -17974,8 +17974,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840541d3ac7d563cba53a05b4360077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _framesHolder: {fileID: 774283771}
   _sliderArea: {fileID: 1688799830}
+  _framesHolder: {fileID: 774283772}
   _cursor: {fileID: 1283388019}
 --- !u!1 &1287091896
 GameObject:
@@ -28775,7 +28775,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 1.0000001
   m_Size: 0.46
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -29678,7 +29678,7 @@ MonoBehaviour:
   _scaleW: {fileID: 344469429}
   _scaleH: {fileID: 122386699}
   _roll: {fileID: 516072835}
-  _saveKeyframe: {fileID: 1407660050}
+  _saveKeyframe: {fileID: 1415863729}
 --- !u!114 &2065154768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30971,8 +30971,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1502532503}
   m_HandleRect: {fileID: 1502532502}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9279661
+  m_Value: 1.000001
+  m_Size: 0.927966
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

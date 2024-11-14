@@ -35,7 +35,7 @@ public interface IFlexibleColorPicker {
 /// <summary>
 /// Main controller script for the flexible color picker system
 /// </summary>
-public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
+public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker, IDragHandler {
 
     /*----------------------------------------------------------
     * ----------------------- PARAMETERS -----------------------
@@ -1056,19 +1056,24 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
         return new Vector3(h, s, v);
     }
 
-    /*----------------------------------------------------------
+	// TODO - Mover a script individual y remover interfaz de esta clase !!! (Y RESTRINGIR AREA)
+	public void OnDrag(PointerEventData eventData) {
+		GetComponent<RectTransform>().anchoredPosition += eventData.delta / GameObject.Find("Canvas - Editor").GetComponent<Canvas>().scaleFactor;
+	}
+
+	/*----------------------------------------------------------
     * --------------------- HELPER CLASSES ---------------------
     * ----------------------------------------------------------
     */
 
 
-    /// <summary>
-    /// Encodes a color while buffering hue and saturation values.
-    /// This is necessary since these values are singular for some 
-    /// colors like unsaturated grays and would lead to undesirable 
-    /// behaviour when moving sliders towards such colors.
-    /// </summary>
-    [Serializable]
+	/// <summary>
+	/// Encodes a color while buffering hue and saturation values.
+	/// This is necessary since these values are singular for some 
+	/// colors like unsaturated grays and would lead to undesirable 
+	/// behaviour when moving sliders towards such colors.
+	/// </summary>
+	[Serializable]
     private class BufferedColor {
         public Color color;
         private float bufferedHue;

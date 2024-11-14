@@ -2,6 +2,7 @@ using SimpleMotions;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class ColorPickerView : MonoBehaviour {
 
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
@@ -45,6 +46,6 @@ public class ColorPickerView : MonoBehaviour {
         _flexibleColorPicker.gameObject.SetActive(false);
     }
 
-    // DRAGGABLE
+	// DRAGGABLE
 
 }

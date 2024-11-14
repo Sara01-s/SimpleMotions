@@ -61,6 +61,7 @@ namespace SimpleMotions {
 		}
 
 		private int GetCurrentFrame() {
+			UnityEngine.Debug.Log(_videoPlayerData.CurrentFrame.Value);
 			return _videoPlayerData.CurrentFrame.Value;
 		}
 
