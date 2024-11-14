@@ -3,6 +3,33 @@ using System;
 
 namespace SimpleMotions {
 
+    public sealed class ReactiveCommand : IDisposable {
+
+        private Action _onExecute;
+        private readonly List<Action> _callbacks = new();
+
+        public void Subscribe(Action callback) {
+            if (callback != null) {
+                _onExecute += callback;
+                _callbacks.Add(callback);
+            }
+        }
+
+        public void Execute() {
+            _onExecute?.Invoke();
+        }
+
+        public void Dispose() {
+            foreach (var action in _callbacks) {
+                _onExecute -= action;
+            }
+
+            _callbacks.Clear();
+            _onExecute = null;
+        }
+        
+    }
+
     public sealed class ReactiveCommand<T> : IDisposable {
 
         private Action<T> _onExecute;
