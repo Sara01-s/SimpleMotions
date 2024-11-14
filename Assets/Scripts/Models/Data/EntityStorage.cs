@@ -8,7 +8,7 @@ namespace SimpleMotions {
 		Entity CreateEntity();
 		Entity CreateEntity(string name);
 		
-		void DestroyEntity(int entityId);
+		void DeleteEntity(int entityId);
 		void SetActive(int entityId, bool active);
 
 		bool IsAlive(int entityId);
@@ -91,7 +91,7 @@ namespace SimpleMotions {
 			}
 		}
 
-		public void DestroyEntity(int entityId) {
+		public void DeleteEntity(int entityId) {
 			if (_aliveEntities.Contains(entityId)) {
 				_activeEntities.Remove(entityId);
 				_aliveEntities.Remove(entityId);

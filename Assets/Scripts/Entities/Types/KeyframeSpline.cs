@@ -14,6 +14,8 @@ namespace SimpleMotions.Internal {
 		
 		void Add(int frame, IKeyframe<Component> keyframe);
 		void AddRange(IKeyframeSpline keyframeSpline);
+		void Remove(int frame);
+		void RemoveRange(IKeyframeSpline keyframeSpline);
 		bool TryGetValue(int frame, out IKeyframe<Component> keyframe);
 		IKeyframe<Component> GetLastKeyframe(int frame);
 		IKeyframe<Component> GetNextKeyframe(int frame);
@@ -97,6 +99,10 @@ namespace SimpleMotions.Internal {
 			_keyframes[frame] = keyframe;
 		}
 
+		public void Remove(int frame) {
+			_keyframes[frame] = null;
+		}
+
 		public void AddRange(IKeyframeSpline keyframeSpline) {
 			if (keyframeSpline.KeyframeIndices.Length != keyframeSpline.Keyframes.Length) {
 				throw new Exception("Keyframe Spline with different number of indices and keyframes.");
@@ -107,6 +113,17 @@ namespace SimpleMotions.Internal {
 				int frame = keyframeSpline.KeyframeIndices[i];
 
 				Add(frame, keyframe);
+			}
+		}
+
+		public void RemoveRange(IKeyframeSpline keyframeSpline) {
+			if (keyframeSpline.KeyframeIndices.Length != keyframeSpline.Keyframes.Length) {
+				throw new Exception("Keyframe Spline with different number of indices and keyframes.");
+			}
+
+			for (int i = 0; i < keyframeSpline.Count; i++) {
+				int frame = keyframeSpline.KeyframeIndices[i];
+				Remove(frame);
 			}
 		}
 

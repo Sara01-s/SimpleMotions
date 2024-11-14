@@ -18,6 +18,7 @@ namespace SimpleMotions {
 		void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component;
 		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component;
 		void AddDefaultKeyframes(int entityId);
+		void ClearEntityKeyframes(int entityId);
 		IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId);
 
 		IEnumerable<Type> GetKeyframeTypes();
@@ -99,6 +100,14 @@ namespace SimpleMotions {
 			AddKeyframe(entityId, new Keyframe<Transform>(entityId));
 			AddKeyframe(entityId, new Keyframe<Shape>(entityId));
 			AddKeyframe(entityId, new Keyframe<Text>(entityId));
+		}
+
+		public void ClearEntityKeyframes(int entityId) {
+			foreach (var keyframeSpline in GetEntityKeyframes(entityId)) {
+				foreach (var type in GetKeyframeTypes()) {
+					_allKeyframes[type].RemoveRange(keyframeSpline);
+				}
+			}
 		}
 
 		public IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component {
