@@ -5,34 +5,24 @@ using TMPro;
 
 public class TimelineHeaderView : MonoBehaviour {
 
-    [SerializeField] private RectTransform _headerContent;
+    [SerializeField] private Scrollbar _scrollbar;
+    [SerializeField] private RectTransform _content;
 	[SerializeField] private RectTransform _headerHolder;
-    [SerializeField] private Scrollbar _headerScrollbar;
     [SerializeField] private GameObject _headerPrefab;
-
     [SerializeField] private TimelineCursorView _timelineCursorView;
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
-    private RectTransform _scrollbarPosition;
 
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
-        _scrollbarPosition = _headerScrollbar.GetComponent<RectTransform>();
-
-        _headerScrollbar.onValueChanged.AddListener(OnScrollbarValueChanged);
+        _scrollbar.onValueChanged.AddListener(OnScrollbarValueChanged);
 
         RefreshUI();
     }
 
     public void RefreshUI() {
         DrawHeader();
-    }
-
-    public void UpdateHeaderPositions(float scrollbarValue, float contentXPos) {
-        _headerContent.anchoredPosition = new Vector2(contentXPos, _headerContent.anchoredPosition.y);
-        _scrollbarPosition.anchoredPosition = new Vector2(contentXPos, _scrollbarPosition.anchoredPosition.y);
-        _headerScrollbar.value = scrollbarValue;
     }
 
     private void DrawHeader() {
@@ -50,31 +40,32 @@ public class TimelineHeaderView : MonoBehaviour {
     private void ConfigureTimelineHeaderSize() {
         var gridLayout = _headerHolder.GetComponent<GridLayoutGroup>();
 
-		float totalWidth = gridLayout.cellSize.x * _videoTimelineViewModel.TotalFrameCount + (gridLayout.cellSize.x * 2);
+		float totalWidth = gridLayout.cellSize.x * _videoTimelineViewModel.TotalFrameCount + (gridLayout.cellSize.x * 2.0f);
 
-		_headerContent.sizeDelta = new Vector2(totalWidth, _headerContent.sizeDelta.y);
+		_content.sizeDelta = new Vector2(totalWidth, _content.sizeDelta.y);
         _headerHolder.sizeDelta = new Vector2(totalWidth, _headerHolder.sizeDelta.y);
+        _scrollbar.GetComponent<RectTransform>().sizeDelta = new Vector2(totalWidth - gridLayout.cellSize.x, _scrollbar.GetComponent<RectTransform>().sizeDelta.y);
+    }
 
-        _scrollbarPosition.sizeDelta = new Vector2(totalWidth - 42, _scrollbarPosition.sizeDelta.y);
+    public void UpdateHeaderPositions(float scrollbarValue, float contentXPos) {
+        _content.anchoredPosition = new Vector2(contentXPos, _content.anchoredPosition.y);
+        _scrollbar.GetComponent<RectTransform>().anchoredPosition = new Vector2(contentXPos, _scrollbar.GetComponent<RectTransform>().anchoredPosition.y);
+        _scrollbar.value = scrollbarValue;
     }
 
     public void OnScrollbarValueChanged(float normalizedValue) {
-        if (RectTransformUtility.RectangleContainsScreenPoint(_scrollbarPosition, Input.mousePosition, Camera.main)) {
+        if (RectTransformUtility.RectangleContainsScreenPoint(_scrollbar.GetComponent<RectTransform>(), Input.mousePosition, Camera.main)) {
             float normalizedPosition = GetCursorNormalizedPosition();
-            _headerScrollbar.value = normalizedPosition;
+            _scrollbar.value = normalizedPosition;
         }
 
-        var desnormalizedValue = normalizedValue * _videoTimelineViewModel.TotalFrameCount;
-        var value = (int)Mathf.Floor(desnormalizedValue);
-        _timelineCursorView.SetCursorValue(value);
+        var value = normalizedValue * _videoTimelineViewModel.TotalFrameCount;
+        _timelineCursorView.SetCursorValue((int)Mathf.Floor(value));
     }
 
     private float GetCursorNormalizedPosition() {
-        // Convierte la posición del cursor a un valor entre 0 y 1
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(_scrollbarPosition, Input.mousePosition, Camera.main, out Vector2 localPoint);
-
-        // Normaliza el valor para que esté entre 0 (inicio) y 1 (fin)
-        float normalizedPosition = Mathf.Clamp01(localPoint.x / _scrollbarPosition.rect.width);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_scrollbar.GetComponent<RectTransform>(), Input.mousePosition, Camera.main, out Vector2 localPoint);
+        float normalizedPosition = Mathf.Clamp01(localPoint.x / _scrollbar.GetComponent<RectTransform>().rect.width);
         
         return normalizedPosition;
     }

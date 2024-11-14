@@ -7951,12 +7951,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1832806777}
-  m_Father: {fileID: 1058359414}
+  m_Father: {fileID: 923342998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -1}
-  m_SizeDelta: {x: -17, y: 20}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 20}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &572687639
 MonoBehaviour:
@@ -10596,9 +10596,9 @@ RectTransform:
   m_Father: {fileID: 923342998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: -17}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &742081949
 CanvasRenderer:
@@ -13687,6 +13687,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 742081946}
+  - {fileID: 2131713330}
+  - {fileID: 572687638}
   m_Father: {fileID: 975421501}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -13717,8 +13719,8 @@ MonoBehaviour:
   m_Viewport: {fileID: 742081946}
   m_HorizontalScrollbar: {fileID: 572687639}
   m_VerticalScrollbar: {fileID: 2131713331}
-  m_HorizontalScrollbarVisibility: 0
-  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarVisibility: 2
+  m_VerticalScrollbarVisibility: 2
   m_HorizontalScrollbarSpacing: -3
   m_VerticalScrollbarSpacing: -3
   m_OnValueChanged:
@@ -13990,12 +13992,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33922308fe08b004da909600a7eca91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _horizontalTimelineScrollbar: {fileID: 572687639}
-  _timelineContent: {fileID: 956124294}
+  _horizontalScrollbar: {fileID: 572687639}
+  _content: {fileID: 956124294}
   _framesHolder: {fileID: 774283771}
   _framePrefab: {fileID: 6172985303513405951, guid: e59e605ac560bc686b0b36fdfb7ba4b0, type: 3}
-  _timelineHeaderView: {fileID: 1672038235}
-  _timelineCursorView: {fileID: 1283388020}
+  _headerView: {fileID: 1672038235}
+  _cursorView: {fileID: 1283388020}
 --- !u!222 &975421504
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14997,8 +14999,6 @@ RectTransform:
   - {fileID: 1217633943}
   - {fileID: 1070117112}
   - {fileID: 1707269643}
-  - {fileID: 2131713330}
-  - {fileID: 572687638}
   m_Father: {fileID: 788551478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -17418,7 +17418,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258378849}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -24015,9 +24015,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b2eb20ebc91a0a458aae8e70cfcc9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _headerContent: {fileID: 1293725298}
+  _scrollbar: {fileID: 1503146932}
+  _content: {fileID: 1293725298}
   _headerHolder: {fileID: 600922451}
-  _headerScrollbar: {fileID: 572687639}
   _headerPrefab: {fileID: 6172985303513405951, guid: 49a55835592ba19909b170db9eed11eb, type: 3}
   _timelineCursorView: {fileID: 1283388020}
 --- !u!1 &1672921625
@@ -28776,7 +28776,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.46000004
+  m_Size: 0.46
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -30921,12 +30921,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 535729261}
-  m_Father: {fileID: 1058359414}
+  m_Father: {fileID: 923342998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00024414062, y: -30.5}
-  m_SizeDelta: {x: 20, y: -76}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0.00024414062, y: 0}
+  m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &2131713331
 MonoBehaviour:
@@ -30972,7 +30972,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1502532502}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.9279662
+  m_Size: 0.9279661
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
