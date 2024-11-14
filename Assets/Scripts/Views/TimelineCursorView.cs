@@ -27,7 +27,7 @@ public class TimelineCursorView : MonoBehaviour {
     }
 
     private void ConfigureCursorAreaSize() {
-		float totalWidth = _framesHolder.cellSize.x * _videoTimelineViewModel.TotalFrameCount + _framesHolder.cellSize.x;
+		float totalWidth = _framesHolder.cellSize.x * _videoTimelineViewModel.TotalFrameCount;
 		_sliderArea.sizeDelta = new Vector2(totalWidth, _cursor.GetComponent<RectTransform>().sizeDelta.y);
 	}
 
