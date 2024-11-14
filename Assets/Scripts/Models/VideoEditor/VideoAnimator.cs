@@ -111,7 +111,7 @@ namespace SimpleMotions {
 
 		private void InterpolateComponent<T>(T component, IKeyframe<Component> start, IKeyframe<Component> target, float t) {
 			switch (component) {
-				case Transform transform: {
+				case Transform transform:
 					var startTransform = start.Value as Transform;
 					var targetTransform = target.Value as Transform;
 
@@ -123,8 +123,8 @@ namespace SimpleMotions {
 					transform.Scale = deltaScale;
 					transform.Roll.AngleDegrees = deltaRoll;
 					break;
-				}
-				case Shape shape: {
+					
+				case Shape shape:
 					var startShape = start.Value as Shape;
 					var targetShape = target.Value as Shape;
 
@@ -132,7 +132,6 @@ namespace SimpleMotions {
 
 					shape.Color = deltaColor;
 					break;
-				}
 			}
 		}
 
