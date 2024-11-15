@@ -115,7 +115,10 @@ namespace SimpleMotions {
 		}
 
 		private void SetDurationSeconds(int seconds) {
-			DurationSeconds.Value = (float)TotalFrames.Value / TargetFrameRate.Value;
+			if (TotalFrames.Value > 0 && TargetFrameRate.Value > 0) {
+				DurationSeconds.Value = (float)TotalFrames.Value / TargetFrameRate.Value;
+				UnityEngine.Debug.Log(DurationSeconds.Value);
+			}
 		}
 
 		public VideoData GetVideoData() {

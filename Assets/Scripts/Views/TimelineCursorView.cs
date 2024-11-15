@@ -19,8 +19,6 @@ public class TimelineCursorView : MonoBehaviour {
 
         _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);;
 
-        RefreshUI();
-
         //XD
         videoTimelineViewModel.ShowKeyframe.Subscribe(() => {
             var keyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
@@ -31,8 +29,15 @@ public class TimelineCursorView : MonoBehaviour {
         });
     }
 
+    public void UpdateSliderArea(float contentXPos) {
+        _sliderArea.anchoredPosition = new Vector2(contentXPos - _framesHolder.cellSize.x, _sliderArea.anchoredPosition.y);
+    }
+
+    public void SetCursorNewFrame(int currentFrame) {
+        _cursor.value = currentFrame;
+    }
+
     public void RefreshUI() {
-        _videoTimelineViewModel.RefreshData();
         ConfigureCursorAreaSize();
         ConfigureCursor();
     }
@@ -45,14 +50,6 @@ public class TimelineCursorView : MonoBehaviour {
     private void ConfigureCursor() {
         _cursor.value = 0;
         _cursor.maxValue = _videoTimelineViewModel.TotalFrameCount;
-    }
-
-    public void UpdateSliderArea(float contentXPos) {
-        _sliderArea.anchoredPosition = new Vector2(contentXPos - _framesHolder.cellSize.x, _sliderArea.anchoredPosition.y);
-    }
-
-    public void SetCursorNewFrame(int currentFrame) {
-        _cursor.value = currentFrame;
     }
 
 }

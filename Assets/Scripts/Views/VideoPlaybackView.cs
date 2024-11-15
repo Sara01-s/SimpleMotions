@@ -2,6 +2,7 @@ using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting.Dependencies.NCalc;
 
 public sealed class VideoPlaybackView : MonoBehaviour {
 
@@ -22,6 +23,8 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	[SerializeField] private GameObject _play;
 	[SerializeField] private GameObject _pause;
 
+	[SerializeField] private TimelineView _timelineView;
+
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private IInputValidator _inputValidator;
 
@@ -35,6 +38,8 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		InitReactiveCommands();
 		InitReactiveValues();
 		RefreshUI();
+
+		_currentTime.text = "00:00:00";
 	}
 
 	private void InitReactiveCommands() {
@@ -61,7 +66,10 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 			totalFrames = _inputValidator.ValidateInput(totalFrames, _previousTotalFrames);
 			int.TryParse(totalFrames, out var newFrame);
 
-			_videoPlaybackViewModel.OnSetTotalFrames.Execute(newFrame);
+			if (newFrame >= 10) {
+				_videoPlaybackViewModel.OnSetTotalFrames.Execute(newFrame);
+				_timelineView.RefreshUI();
+			}
 		});
 	}
 
@@ -81,8 +89,17 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 			_previousTotalFrames = totalFrames.ToString();
 		});
 
-		_videoPlaybackViewModel.CurrentTime.Subscribe(currentTime => _currentTime.text = $"{currentTime:00:00:00}");
-		_videoPlaybackViewModel.DurationSeconds.Subscribe(durationSeconds => _duration.text = $"{durationSeconds:00:00:00}");
+		_videoPlaybackViewModel.CurrentTime.Subscribe(currentTime => _currentTime.text = FormatTime(currentTime));
+		_videoPlaybackViewModel.DurationSeconds.Subscribe(durationSeconds => _duration.text = FormatTime(durationSeconds));
+	}
+
+	private string FormatTime(float value) {
+		int totalSeconds = Mathf.FloorToInt(value);
+		int minutes = totalSeconds / 60; 
+		int seconds = totalSeconds % 60;
+		int milliseconds = Mathf.FloorToInt((value - totalSeconds) * 100);
+
+		return $"{minutes:00}:{seconds:00}:{milliseconds:00}";
 	}
 
 	private void RefreshUI() {

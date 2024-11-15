@@ -2,6 +2,7 @@ using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class TimelineHeaderView : MonoBehaviour {
 
@@ -13,12 +14,13 @@ public class TimelineHeaderView : MonoBehaviour {
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
 
+    private List<GameObject> _header = new();
+    private bool _alreadyPainted;
+
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
         _scrollbar.onValueChanged.AddListener(OnScrollbarValueChanged);
-
-        RefreshUI();
     }
 
     public void RefreshUI() {
@@ -32,20 +34,37 @@ public class TimelineHeaderView : MonoBehaviour {
 			var header = Instantiate(_headerPrefab, parent: _headerHolder.transform);
             header.name = $"Header_{i}";
 
+            _header.Add(header);
+
             var headerNumber = header.GetComponentInChildren<TextMeshProUGUI>();
 			headerNumber.text = i.ToString();
 		}
     }
 
     private void ConfigureTimelineHeaderSize() {
+        if (_alreadyPainted) {
+			DeleteTimeline();
+		}
+
         var gridLayout = _headerHolder.GetComponent<GridLayoutGroup>();
 
-		float totalWidth = gridLayout.cellSize.x * _videoTimelineViewModel.TotalFrameCount + (gridLayout.cellSize.x * 2.0f);
+		float totalWidth = gridLayout.cellSize.x * _videoTimelineViewModel.TotalFrameCount + (gridLayout.cellSize.x * 2);
 
 		_content.sizeDelta = new Vector2(totalWidth, _content.sizeDelta.y);
         _headerHolder.sizeDelta = new Vector2(totalWidth, _headerHolder.sizeDelta.y);
         _scrollbar.GetComponent<RectTransform>().sizeDelta = new Vector2(totalWidth - gridLayout.cellSize.x, _scrollbar.GetComponent<RectTransform>().sizeDelta.y);
+
+        _alreadyPainted = true;
     }
+
+    private void DeleteTimeline() {
+		foreach (var frame in _header) {
+			Destroy(frame);
+		}
+
+		_header.Clear();
+		_alreadyPainted = false;
+	}
 
     public void UpdateHeaderPositions(float contentXPos) {
         _content.anchoredPosition = new Vector2(contentXPos, _content.anchoredPosition.y);

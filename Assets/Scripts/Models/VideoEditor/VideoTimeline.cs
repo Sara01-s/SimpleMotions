@@ -1,4 +1,3 @@
-using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -11,14 +10,14 @@ namespace SimpleMotions {
 
 	public sealed class VideoTimeline : IVideoTimeline {
 
-		private readonly VideoData _videoData;
 		private readonly IVideoPlayer _videoPlayer;
+		private readonly IVideoPlayerData _videoPlayerData;
 
-		public int TotalFrames => _videoData.TotalFrames;
+		public int TotalFrames => _videoPlayerData.TotalFrames.Value;
 
-		public VideoTimeline(VideoData videoData, IVideoPlayer videoPlayer) {
-			_videoData = videoData;
+		public VideoTimeline(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData) {
 			_videoPlayer = videoPlayer;
+			_videoPlayerData = videoPlayerData;
 		}
 
 		public void SetCurrentFrame(int frame) {

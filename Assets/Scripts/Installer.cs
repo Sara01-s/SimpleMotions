@@ -150,10 +150,10 @@ namespace SimpleMotions {
 		private void BuildGUI() {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
 			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
-			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
+			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
 			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());
