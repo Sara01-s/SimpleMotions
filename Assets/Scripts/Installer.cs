@@ -58,11 +58,13 @@ namespace SimpleMotions {
 		private EditorData _editorData;
 
 		private IServices _services;
+		private IInputValidator _inputValidator;
 
         private void Start() {
 			Application.targetFrameRate = _targetFrameRate;
 
 			_services = new Services();
+			_inputValidator = new InputValidator();
 			_services.RegisterService<ISerializer, NewtonJsonSerializer>();
 			_services.RegisterService<IEditorPainterParser, EditorPainterParser>();
 
@@ -148,14 +150,14 @@ namespace SimpleMotions {
 		private void BuildGUI() {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
 			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
-			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>());
+			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
 			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());
-			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), new InputValidator());
+			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>());
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
 			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);

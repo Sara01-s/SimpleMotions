@@ -10,9 +10,11 @@ public class Mover : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerU
     private bool _isDragging;
 
     public void OnDrag(PointerEventData eventData) {
-        if (!_isDragging) return;
+        if (!_isDragging) {
+            return;
+        }
 
-        RectTransform canvasRect = _editorCanvas.GetComponent<RectTransform>();
+        var canvasRect = _editorCanvas.GetComponent<RectTransform>();
 
         Vector2 localDelta = eventData.delta / _editorCanvas.scaleFactor;
         Vector2 newPosition = _mover.anchoredPosition + localDelta;

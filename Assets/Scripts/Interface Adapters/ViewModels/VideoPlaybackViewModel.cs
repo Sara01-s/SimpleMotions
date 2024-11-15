@@ -3,11 +3,15 @@ namespace SimpleMotions {
 
 	public interface IVideoPlaybackViewModel {
         
-        ReactiveCommand<Void> OnTogglePlay { get; }
-        ReactiveCommand<Void> OnFirstFrame { get; }
-        ReactiveCommand<Void> OnLastFrame { get; }
-        ReactiveCommand<Void> OnBackwardFrame { get; }
-        ReactiveCommand<Void> OnForwardFrame { get; }
+        ReactiveCommand OnTogglePlay { get; }
+        ReactiveCommand OnFirstFrame { get; }
+        ReactiveCommand OnLastFrame { get; }
+        ReactiveCommand OnBackwardFrame { get; }
+        ReactiveCommand OnForwardFrame { get; }
+
+        ReactiveCommand<bool> IsLooping { get; }
+        ReactiveCommand<int> OnSetCurrentFrame { get; }
+        ReactiveCommand<int> OnSetTotalFrames { get; }
 
         ReactiveValue<bool> IsPlaying { get; }
         ReactiveValue<float> CurrentTime { get; }
@@ -21,11 +25,15 @@ namespace SimpleMotions {
 
     public sealed class VideoPlaybackViewModel : IVideoPlaybackViewModel {
 
-        public ReactiveCommand<Void> OnTogglePlay { get; } = new();
-        public ReactiveCommand<Void> OnFirstFrame { get; } = new();
-        public ReactiveCommand<Void> OnLastFrame { get; } = new();
-        public ReactiveCommand<Void> OnBackwardFrame { get; } = new();
-        public ReactiveCommand<Void> OnForwardFrame { get; } = new();
+        public ReactiveCommand OnTogglePlay { get; } = new();
+        public ReactiveCommand OnFirstFrame { get; } = new();
+        public ReactiveCommand OnLastFrame { get; } = new();
+        public ReactiveCommand OnBackwardFrame { get; } = new();
+        public ReactiveCommand OnForwardFrame { get; } = new();
+
+        public ReactiveCommand<bool> IsLooping { get; } = new();
+        public ReactiveCommand<int> OnSetCurrentFrame { get; } = new();
+        public ReactiveCommand<int> OnSetTotalFrames { get; } = new();
 
         public ReactiveValue<bool> IsPlaying { get; } = new();
         public ReactiveValue<float> CurrentTime { get; } = new();
@@ -44,64 +52,28 @@ namespace SimpleMotions {
             InitReactiveValues();
         }
 
-        private void UpdateTogglePlay() {
-            _videoPlayback.TogglePlay();
-        }
-
-        private void UpdateFirstFrame() {
-            _videoPlayback.SetFirstFrame();
-        }
-
-        private void UpdateLastFrame() {
-            _videoPlayback.SetLastFrame();
-        }
-
-        private void UpdateBackward() {
-            _videoPlayback.DecreaseFrame();
-        }
-
-        private void UpdateForward() {
-            _videoPlayback.IncreaseFrame();
-        }
-
-        private void UpdateTogglePlayIcon(bool isPlaying) {
-            IsPlaying.Value = isPlaying;
-        }
-
-        private void UpdateCurrentTime(float time) {
-            CurrentTime.Value = time;
-        }
-
-        private void UpdateDurationSeconds(float time) {
-            DurationSeconds.Value = time;
-        }
-
-        private void UpdateCurrentFrame(int frame) {
-            CurrentFrame.Value = frame;
-        }
-
-        private void UpdateTotalFrames(int frame) {
-            TotalFrames.Value = frame;
-        }
-
         public void RefreshData() {
             _videoPlayerData.SetReactiveValues();
         }
 
         private void InitReactiveCommands() {
-            OnTogglePlay.Subscribe(value => UpdateTogglePlay());
-            OnFirstFrame.Subscribe(value => UpdateFirstFrame());
-            OnLastFrame.Subscribe(value => UpdateLastFrame());
-            OnBackwardFrame.Subscribe(value => UpdateBackward());
-            OnForwardFrame.Subscribe(value => UpdateForward());
+            OnTogglePlay.   Subscribe(() => _videoPlayback.TogglePlay());
+            OnFirstFrame.   Subscribe(() => _videoPlayback.SetFirstFrame());
+            OnLastFrame.    Subscribe(() => _videoPlayback.SetLastFrame());
+            OnBackwardFrame.Subscribe(() => _videoPlayback.DecreaseFrame());
+            OnForwardFrame. Subscribe(() => _videoPlayback.IncreaseFrame());
+            
+            IsLooping.          Subscribe(isLooping => _videoPlayerData.IsLooping.Value = isLooping);
+            OnSetCurrentFrame.  Subscribe(currentFrame => _videoPlayerData.CurrentFrame.Value = currentFrame);
+            OnSetTotalFrames.   Subscribe(totalFrames => _videoPlayerData.TotalFrames.Value = totalFrames);
         }
 
         private void InitReactiveValues() {
-            _videoPlayerData.IsPlaying.Subscribe(UpdateTogglePlayIcon);
-            _videoPlayerData.CurrentTime.Subscribe(UpdateCurrentTime);
-            _videoPlayerData.DurationSeconds.Subscribe(UpdateDurationSeconds);
-            _videoPlayerData.CurrentFrame.Subscribe(UpdateCurrentFrame);
-            _videoPlayerData.TotalFrames.Subscribe(UpdateTotalFrames);
+            _videoPlayerData.IsPlaying.         Subscribe(isPlaying => IsPlaying.Value = isPlaying);
+            _videoPlayerData.CurrentTime.       Subscribe(currentTime => CurrentTime.Value = currentTime);
+            _videoPlayerData.DurationSeconds.   Subscribe(durationsSeconds => DurationSeconds.Value = durationsSeconds);
+            _videoPlayerData.CurrentFrame.      Subscribe(currentFrame => CurrentFrame.Value = currentFrame);
+            _videoPlayerData.TotalFrames.       Subscribe(totalFrames => TotalFrames.Value = totalFrames);
         }
 
     }

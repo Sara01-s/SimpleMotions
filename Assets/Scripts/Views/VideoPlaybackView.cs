@@ -5,65 +5,84 @@ using TMPro;
 
 public sealed class VideoPlaybackView : MonoBehaviour {
 
+	[SerializeField] private TextMeshProUGUI _currentTime;
+	[SerializeField] private TextMeshProUGUI _duration;
+
 	[SerializeField] private Button _firstFrame;
 	[SerializeField] private Button _backward;
 	[SerializeField] private Button _togglePlay;
 	[SerializeField] private Button _forward;
 	[SerializeField] private Button _lastFrame;
 
-	[SerializeField] private TextMeshProUGUI _currentTime;
-	[SerializeField] private TextMeshProUGUI _currentFrame;
-	[SerializeField] private TextMeshProUGUI _totalFrames;
-	[SerializeField] private TextMeshProUGUI _duration;
+	[SerializeField] private TMP_InputField _currentFrame;
+	[SerializeField] private TMP_InputField _totalFrames;
+
+	[SerializeField] private Toggle _loopToggle;
 
 	[SerializeField] private GameObject _play;
 	[SerializeField] private GameObject _pause;
 
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
+	private IInputValidator _inputValidator;
 
-	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel) {
+	private string _previousCurrentFrame;
+	private string _previousTotalFrames;
+
+	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel, IInputValidator inputValidator) {
 		_videoPlaybackViewModel = videoPlaybackViewModel;
+		_inputValidator = inputValidator;
 
 		InitReactiveCommands();
 		InitReactiveValues();
 		RefreshUI();
 	}
 
-	private void SetCurrentTime(float currentTime) {
-		_currentTime.text = $"{currentTime:00:00:00}";
-	}
-
-	private void SetCurrentFrame(int currentFrame) {
-		_currentFrame.text = currentFrame.ToString();
-	}
-
-	private void SetCurrentIcon(bool isPlaying) {
-		_play.SetActive(!isPlaying);
-		_pause.SetActive(isPlaying);
-	}
-
-	private void SetTotalFrames(int totalFrames) {
-		_totalFrames.text = totalFrames.ToString();
-	}
-
-	private void SetDuration(float durationSeconds) {
-		_duration.text = $"{durationSeconds:00:00:00}";
-	}
-
 	private void InitReactiveCommands() {
-		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrame.Execute(value: null));
-		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardFrame.Execute(value: null));
-		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlay.Execute(value: null));
-		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardFrame.Execute(value: null));
-		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrame.Execute(value: null));
+		_firstFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnFirstFrame.Execute());
+		_backward.onClick.AddListener(() => _videoPlaybackViewModel.OnBackwardFrame.Execute());
+		_togglePlay.onClick.AddListener(() => _videoPlaybackViewModel.OnTogglePlay.Execute());
+		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardFrame.Execute());
+		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrame.Execute());
+
+		_loopToggle.onValueChanged.AddListener(isLooping => _videoPlaybackViewModel.IsLooping.Execute(isLooping));
+
+		_currentFrame.onValueChanged.AddListener(currentFrame => {
+			currentFrame = _inputValidator.ValidateInput(currentFrame, _previousCurrentFrame);
+			int.TryParse(currentFrame, out var newFrame);
+
+			if (newFrame > _videoPlaybackViewModel.TotalFrames.Value) {
+				newFrame = _videoPlaybackViewModel.TotalFrames.Value;
+			}
+
+			_videoPlaybackViewModel.OnSetCurrentFrame.Execute(newFrame);
+		});
+
+		_totalFrames.onValueChanged.AddListener(totalFrames => {
+			totalFrames = _inputValidator.ValidateInput(totalFrames, _previousTotalFrames);
+			int.TryParse(totalFrames, out var newFrame);
+
+			_videoPlaybackViewModel.OnSetTotalFrames.Execute(newFrame);
+		});
 	}
 
 	private void InitReactiveValues() {
-		_videoPlaybackViewModel.IsPlaying.Subscribe(SetCurrentIcon);
-		_videoPlaybackViewModel.CurrentTime.Subscribe(SetCurrentTime);
-		_videoPlaybackViewModel.DurationSeconds.Subscribe(SetDuration);
-		_videoPlaybackViewModel.CurrentFrame.Subscribe(SetCurrentFrame);
-		_videoPlaybackViewModel.TotalFrames.Subscribe(SetTotalFrames);
+		_videoPlaybackViewModel.IsPlaying.Subscribe(isPlaying => {
+			_play.SetActive(!isPlaying);
+			_pause.SetActive(isPlaying);
+		});
+
+		_videoPlaybackViewModel.CurrentFrame.Subscribe(currentFrame => {
+			_currentFrame.text = currentFrame.ToString();
+			_previousCurrentFrame = currentFrame.ToString();
+		});
+
+		_videoPlaybackViewModel.TotalFrames.Subscribe(totalFrames => {
+			_totalFrames.text = totalFrames.ToString();
+			_previousTotalFrames = totalFrames.ToString();
+		});
+
+		_videoPlaybackViewModel.CurrentTime.Subscribe(currentTime => _currentTime.text = $"{currentTime:00:00:00}");
+		_videoPlaybackViewModel.DurationSeconds.Subscribe(durationSeconds => _duration.text = $"{durationSeconds:00:00:00}");
 	}
 
 	private void RefreshUI() {

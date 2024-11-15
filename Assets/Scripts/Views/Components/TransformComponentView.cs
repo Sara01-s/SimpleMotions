@@ -47,7 +47,7 @@ public class TransformComponentView : MonoBehaviour {
 	private void SendPositionX(string newInput) {
         newInput = _inputValidator.ValidateInput(newInput, _previousXInput);
 
-        if (newInput[^1] != ',') {
+        if (newInput[^1] != ',' && newInput != string.Empty) {
 		    _transformComponentViewModel.PositionX.Execute(newInput);
         }
 	}

@@ -5,6 +5,8 @@ namespace SimpleMotions {
         string ValidateInput(string newInput, string previousInput);
     }
 
+    // TODO - VER CASO DE DOS PUNTOS EN DIFERENTES POSICIONES: 'O.123.123'
+
     public class InputValidator : IInputValidator {
 
         public string ValidateInput(string newInput, string previousInput) {
@@ -52,5 +54,4 @@ namespace SimpleMotions {
         }
 
     }
-
 }

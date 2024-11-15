@@ -29,6 +29,7 @@ namespace SimpleMotions {
 		ReactiveValue<float> DurationSeconds { get; }
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveValue<int> TotalFrames { get; }
+		ReactiveValue<bool> IsLooping { get ; }
 
 		void SetReactiveValues();
 	}
@@ -54,6 +55,8 @@ namespace SimpleMotions {
         public VideoPlayer(IVideoAnimator videoAnimator, VideoData videoData) {
 			_videoAnimator = videoAnimator;
 			_videoData = videoData;
+
+			TotalFrames.Subscribe(SetDurationSeconds);
 		}
 
 		public void SetReactiveValues() {
@@ -111,6 +114,10 @@ namespace SimpleMotions {
 			CurrentTime.Value = (float)frame / TargetFrameRate.Value;
 		}
 
+		private void SetDurationSeconds(int seconds) {
+			DurationSeconds.Value = (float)TotalFrames.Value / TargetFrameRate.Value;
+		}
+
 		public VideoData GetVideoData() {
 			return new VideoData {
 				IsPlaying = IsPlaying.Value,
@@ -161,6 +168,5 @@ namespace SimpleMotions {
 			CurrentFrame.Value = max(CurrentFrame.Value - 1, TimelineData.FIRST_FRAME);
 		}
 
-        
     }
 }
