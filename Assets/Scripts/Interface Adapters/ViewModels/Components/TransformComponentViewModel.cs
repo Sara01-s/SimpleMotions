@@ -62,7 +62,6 @@ namespace SimpleMotions {
 		}
 
 		private int GetCurrentFrame() {
-			UnityEngine.Debug.Log(_videoPlayerData.CurrentFrame.Value);
 			return _videoPlayerData.CurrentFrame.Value;
 		}
 
@@ -101,8 +100,6 @@ namespace SimpleMotions {
 		}
 
 		private void ModifyEntityRollAngleDegrees(string angleDegrees) {
-			UnityEngine.Debug.Log(angleDegrees);
-
 			GetSelectedEntityTransform().Roll.AngleDegrees = float.Parse(angleDegrees);
 			UpdateSelectedEntityDisplay();
 		}

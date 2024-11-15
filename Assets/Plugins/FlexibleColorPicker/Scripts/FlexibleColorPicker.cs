@@ -35,7 +35,7 @@ public interface IFlexibleColorPicker {
 /// <summary>
 /// Main controller script for the flexible color picker system
 /// </summary>
-public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker, IDragHandler {
+public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
     /*----------------------------------------------------------
     * ----------------------- PARAMETERS -----------------------
@@ -382,8 +382,8 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker, IDragHan
     public void ShiftColor(int type, float delta){
         PickerType pt = (PickerType)type;
 
-        float value = GetValue1D(pt) + delta;                           // ORIGINAL
-        this.bufferedColor = PickColor1D(bufferedColor, pt, value);     // ORIGINAL
+        float value = GetValue1D(pt) + delta;                           
+        this.bufferedColor = PickColor1D(bufferedColor, pt, value);     
 
         UpdateMarkers();
         UpdateTextures();
@@ -1055,11 +1055,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker, IDragHan
         float v = cMax;
         return new Vector3(h, s, v);
     }
-
-	// TODO - Mover a script individual y remover interfaz de esta clase !!! (Y RESTRINGIR AREA)
-	public void OnDrag(PointerEventData eventData) {
-		GetComponent<RectTransform>().anchoredPosition += eventData.delta / GameObject.Find("Canvas - Editor").GetComponent<Canvas>().scaleFactor;
-	}
 
 	/*----------------------------------------------------------
     * --------------------- HELPER CLASSES ---------------------
