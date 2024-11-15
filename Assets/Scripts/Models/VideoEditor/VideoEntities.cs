@@ -66,6 +66,7 @@ namespace SimpleMotions {
 				return;
 			}
 
+			_keyframeStorage.ClearEntityKeyframes(entityId);
 			_entityStorage.DeleteEntity(entityId);
 			_createdEntities--;
 		}

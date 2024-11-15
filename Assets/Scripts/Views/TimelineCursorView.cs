@@ -17,8 +17,10 @@ public class TimelineCursorView : MonoBehaviour {
 
         _cursor.onValueChanged.AddListener(value => _videoTimelineViewModel.OnFrameChanged.Execute((int)value));
 
-        _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);;
+        _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);
 
+        RefreshUI();
+		
         //XD
         videoTimelineViewModel.ShowKeyframe.Subscribe(() => {
             var keyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);

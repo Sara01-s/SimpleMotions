@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.IO;
 using SimpleMotions.Internal;
-using Unity.VisualScripting;
 
 namespace SimpleMotions {
 
@@ -149,7 +148,8 @@ namespace SimpleMotions {
 
 		private void BuildGUI() {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
-			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
+			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>(), _services.GetService<IEntitySelector>());
+			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());

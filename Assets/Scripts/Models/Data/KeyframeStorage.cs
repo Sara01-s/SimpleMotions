@@ -6,6 +6,9 @@ namespace SimpleMotions {
 
 	public interface IKeyframeStorage {
 
+		IEnumerable<Type> KeyframeTypes { get; }
+		int TotalFrames { get; }
+
 #nullable enable
 		IKeyframeSpline? GetKeyframeSplineOfType<T>() where T : Component;
 		IKeyframeSpline? GetEntityKeyframesOfType<T>(int entityId) where T : Component;
@@ -20,16 +23,13 @@ namespace SimpleMotions {
 		void AddDefaultKeyframes(int entityId);
 		void ClearEntityKeyframes(int entityId);
 		IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId);
-
-		IEnumerable<Type> GetKeyframeTypes();
+		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
+	
 
 		bool FrameHasKeyframe(int frame);
 		bool EntityHasKeyframesOfType<T>(int entityId) where T : Component;
 		bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline keyframeSpline) where T : Component;
 		bool EntityHasKeyframesOfAnyType(int entityId);
-
-		int GetTotalFrames();
-		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
 	}
 	
 
@@ -37,6 +37,9 @@ namespace SimpleMotions {
 
 		private readonly Dictionary<Type, IKeyframeSpline> _allKeyframes;
 		private readonly VideoData _videoData;
+
+		public IEnumerable<Type> KeyframeTypes => _allKeyframes.Keys;
+		public int TotalFrames => _videoData.TotalFrames;
 
 		public KeyframeStorage(KeyframesData keyframesData, VideoData videoData) {
 			_allKeyframes = keyframesData.AllKeyframes;
@@ -64,10 +67,6 @@ namespace SimpleMotions {
 			}
 
 			return keyframesAtFrame;
-		}
-
-		public IEnumerable<Type> GetKeyframeTypes() {
-			return _allKeyframes.Keys;
 		}
 
 #nullable enable
@@ -103,11 +102,17 @@ namespace SimpleMotions {
 		}
 
 		public void ClearEntityKeyframes(int entityId) {
+			if (!EntityHasKeyframesOfAnyType(entityId)) {
+				return;
+			}
+
+			UnityEngine.Debug.Log(GetEntityKeyframes(entityId));
 			foreach (var keyframeSpline in GetEntityKeyframes(entityId)) {
-				foreach (var type in GetKeyframeTypes()) {
+				foreach (var type in KeyframeTypes) {
 					_allKeyframes[type].RemoveRange(keyframeSpline);
 				}
 			}
+			UnityEngine.Debug.Log(GetEntityKeyframes(entityId));
 		}
 
 		public IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component {
@@ -179,7 +184,7 @@ namespace SimpleMotions {
 		}
 
 		public bool EntityHasKeyframesOfAnyType(int entityId) {
-			foreach (var componentType in _allKeyframes.Keys) {
+			foreach (var componentType in KeyframeTypes) {
 				var componentKeyframes = _allKeyframes[componentType];
 
 				if (componentKeyframes is null || componentKeyframes.Count <= 0) {
@@ -202,10 +207,6 @@ namespace SimpleMotions {
 			}
 
 			return componentKeyframes[0].EntityId == entityId;
-		}
-
-		public int GetTotalFrames() {
-			return _videoData.TotalFrames;
 		}
 
         public KeyframesData GetKeyframesData() {

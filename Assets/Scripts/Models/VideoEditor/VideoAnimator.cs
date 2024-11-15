@@ -36,7 +36,7 @@ namespace SimpleMotions {
 			_componentStorage = componentStorage;
 			_entityStorage = entityStorage;
 
-			_componentTypes = _keyframeStorage.GetKeyframeTypes();
+			_componentTypes = _keyframeStorage.KeyframeTypes;
 		}
 
 		public void GenerateVideoCache() {

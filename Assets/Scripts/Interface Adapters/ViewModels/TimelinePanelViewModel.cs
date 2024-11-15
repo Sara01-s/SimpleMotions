@@ -27,5 +27,6 @@ namespace SimpleMotions {
         public void TryCreateEntity() {
 			_videoEntities.TryCreateEntity();
         }
+
     }
 }
