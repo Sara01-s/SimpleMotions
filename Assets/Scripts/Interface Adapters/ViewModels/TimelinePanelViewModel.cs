@@ -1,10 +1,13 @@
 namespace SimpleMotions {
 
 	public interface ITimelinePanelViewModel {
+
 		public ReactiveCommand ShowMaxEntitiesWarning { get; }
 		public ReactiveCommand<int> DeleteEntity { get; }
+		void EntityToggleActive(int entityId, bool active);
 		void TryCreateEntity();
 		void CreateEntity();
+
 	}
 
 	public class TimelinePanelViewModel : ITimelinePanelViewModel {
@@ -28,5 +31,8 @@ namespace SimpleMotions {
 			_videoEntities.TryCreateEntity();
         }
 
-    }
+		public void EntityToggleActive(int entityId, bool active) {
+			_videoEntities.EntityToggleActive(entityId, active);
+		}
+	}
 }

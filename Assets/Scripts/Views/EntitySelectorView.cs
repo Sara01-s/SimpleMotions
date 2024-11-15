@@ -16,7 +16,7 @@ public class EntitySelectorView : MonoBehaviour {
 		_selectionGizmo.GetComponent<UnityEngine.UI.Image>().color = _editorPainter.Theme.AccentColor;
 	}
 
-	private void HideSelectionGizmo(Void _) {
+	private void HideSelectionGizmo() {
 		_selectionGizmo.gameObject.SetActive(false);
 	}
 

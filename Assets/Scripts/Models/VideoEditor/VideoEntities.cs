@@ -8,6 +8,7 @@ namespace SimpleMotions {
 		void CreateEntity();
 		void TryCreateEntity();
 		void DeleteEntity(int entityId);
+		void EntityToggleActive(int entityId, bool active);
 
 		ReactiveCommand ShowMaxEntitiesWarning { get; }
 
@@ -45,6 +46,9 @@ namespace SimpleMotions {
 			_createdEntities++;
 		}
 
+		public void EntityToggleActive(int entityId, bool active) {
+			_entityStorage.SetActive(entityId, active);
+		}
 
 		public void CreateEntity() {
 			var entity = _entityStorage.CreateEntity();

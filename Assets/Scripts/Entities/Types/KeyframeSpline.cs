@@ -100,7 +100,7 @@ namespace SimpleMotions.Internal {
 		}
 
 		public void Remove(int frame) {
-			_keyframes[frame] = null;
+			_keyframes[frame] = Keyframe<Component>.Invalid;
 		}
 
 		public void AddRange(IKeyframeSpline keyframeSpline) {

@@ -11,7 +11,7 @@ namespace SimpleMotions {
 		bool HasSelectedEntity();
 
 		ReactiveCommand<Entity> OnEntitySelected { get; }
-		ReactiveCommand<Void> OnEntityDeselected { get; }
+		ReactiveCommand OnEntityDeselected { get; }
 		
     }
 
@@ -21,7 +21,7 @@ namespace SimpleMotions {
 		private readonly IEntityStorage _entityStorage;
 
 		public ReactiveCommand<Entity> OnEntitySelected { get; } = new();
-		public ReactiveCommand<Void> OnEntityDeselected { get; } = new();
+		public ReactiveCommand OnEntityDeselected { get; } = new();
 
 		public EntitySelector(EntitiesData entitiesData, IEntityStorage entityStorage) {
 			_entityStorage = entityStorage;
@@ -36,7 +36,7 @@ namespace SimpleMotions {
 
 		public void DeselectEntity() {
 			SelectedEntity = Entity.Invalid;
-			OnEntityDeselected.Execute(value: null);
+			OnEntityDeselected.Execute();
 		}
 
 		public bool HasSelectedEntity() {

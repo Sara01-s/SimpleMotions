@@ -6,14 +6,14 @@ namespace SimpleMotions {
 	public interface IEntitySelectorViewModel : IEntityViewModel {
 
 		ReactiveCommand<(int, string)> OnShowSelectionGizmo { get; }
-		ReactiveCommand<Void> OnHideSelectionGizmo { get; }
+		ReactiveCommand OnHideSelectionGizmo { get; }
 
 	}
 
 	public class EntitySelectorViewModel : EntityViewModel, IEntitySelectorViewModel {
 
 		public ReactiveCommand<(int, string)> OnShowSelectionGizmo { get; } = new();
-		public ReactiveCommand<Void> OnHideSelectionGizmo { get; } = new();
+		public ReactiveCommand OnHideSelectionGizmo { get; } = new();
 
 		public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
 			entitySelector.OnEntitySelected.Subscribe(ShowSelectionGizmo);
@@ -24,8 +24,8 @@ namespace SimpleMotions {
             OnShowSelectionGizmo.Execute((entity.Id, entity.Name));
         }
 
-		private void HideSelectionGizmo(Void _) {
-			OnHideSelectionGizmo.Execute(value: null);
+		private void HideSelectionGizmo() {
+			OnHideSelectionGizmo.Execute();
 		}
 
 	}

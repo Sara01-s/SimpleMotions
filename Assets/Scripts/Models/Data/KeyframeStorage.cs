@@ -17,14 +17,17 @@ namespace SimpleMotions {
 		IKeyframe<Component> GetKeyframeAt<T>(int frame) where T : Component;
 		IKeyframe<Component> GetKeyframeAt(int frame);
 		KeyframesData GetKeyframesData();
+
 		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component;
 		void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component;
 		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component;
 		void AddDefaultKeyframes(int entityId);
+
+		void RemoveKeyframe<T>(int entityId, int frame) where T : Component;
 		void ClearEntityKeyframes(int entityId);
+	
 		IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId);
 		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
-	
 
 		bool FrameHasKeyframe(int frame);
 		bool EntityHasKeyframesOfType<T>(int entityId) where T : Component;
@@ -75,15 +78,15 @@ namespace SimpleMotions {
 		}
 #nullable disable
 
-		public bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline componentKeyframes) where T : Component {
+		public bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline componentKeyframeSpline) where T : Component {
 			var componentType = typeof(T);
 
 			if (_allKeyframes.TryGetValue(componentType, out var keyframeSpline)) {
-				componentKeyframes = keyframeSpline;
+				componentKeyframeSpline = keyframeSpline;
 				return true;
 			}
 
-			componentKeyframes = null;
+			componentKeyframeSpline = null;
 			return false;
 		}
 
@@ -101,30 +104,34 @@ namespace SimpleMotions {
 			AddKeyframe(entityId, new Keyframe<Text>(entityId));
 		}
 
-		public void ClearEntityKeyframes(int entityId) {
-			if (!EntityHasKeyframesOfAnyType(entityId)) {
+		public void ClearEntityKeyframes(int entityId) { // TODO - Measure a faster way to do this?
+			for (int frame = TimelineData.FIRST_FRAME; frame <= TotalFrames; frame++) {
+				UnityEngine.Debug.Log(GetKeyframeAt(frame));
+				RemoveKeyframe<Transform>(entityId, frame);
+				UnityEngine.Debug.Log(GetKeyframeAt(frame));
+			}
+		}
+
+		public void RemoveKeyframe<T>(int entityId, int frame) where T : Component {
+			if (!FrameHasKeyframe(frame)) {
 				return;
 			}
 
-			UnityEngine.Debug.Log(GetEntityKeyframes(entityId));
-			foreach (var keyframeSpline in GetEntityKeyframes(entityId)) {
-				foreach (var type in KeyframeTypes) {
-					_allKeyframes[type].RemoveRange(keyframeSpline);
-				}
+			if (GetKeyframeAt(frame).EntityId == entityId) {
+				_allKeyframes[typeof(T)].Remove(frame);
 			}
-			UnityEngine.Debug.Log(GetEntityKeyframes(entityId));
 		}
 
 		public IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component {
 			IKeyframe<Component> keyframe = new Keyframe<Component>(entityId, frame, value);
 
-			if (TryGetAllKeyframesOfType<T>(out var componentKeyframes)) {
-				componentKeyframes.Add(frame, keyframe);
+			if (TryGetAllKeyframesOfType<T>(out var componentKeyframeSpline)) {
+				componentKeyframeSpline.Add(frame, keyframe);
 				return keyframe;
 			}
 
-			componentKeyframes = RegisterComponentKeyframes<T>();
-			componentKeyframes.Add(frame, keyframe);
+			componentKeyframeSpline = RegisterComponentKeyframes<T>();
+			componentKeyframeSpline.Add(frame, keyframe);
 
 			return keyframe;
 		}
