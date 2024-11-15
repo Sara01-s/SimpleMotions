@@ -1,5 +1,4 @@
 
-
 namespace SimpleMotions {
 
     public interface IInputValidator {
@@ -34,13 +33,14 @@ namespace SimpleMotions {
                 if (i == 0 && c == '-') {
                     continue;
                 }
-                else if (char.IsDigit(c)) {
+                else if (char.IsDigit(c) || c == 'º') {
                     lastWasSeparator = false;
                 }
                 else if (c == '.' || c == ',') {
                     if (lastWasSeparator) {
                         return true;
                     }
+
                     lastWasSeparator = true;
                 }
                 else {
