@@ -5,11 +5,10 @@ namespace SimpleMotions {
 	public interface IVideoEntities {
 
 		void CreateTestEntity();
-		void CreateEntity();
-		void TryCreateEntity();
+		int CreateEntity();
+		int TryCreateEntity();
 		void DeleteEntity(int entityId);
-		void EntityToggleActive(int entityId, bool active);
-
+		
 		ReactiveCommand ShowMaxEntitiesWarning { get; }
 
 	}
@@ -36,25 +35,21 @@ namespace SimpleMotions {
 			_videoCanvas = videoCanvas;
 		}
 
-		public void TryCreateEntity() {
+		public int TryCreateEntity() {
 			if (_createdEntities >= MAX_ENTITIES) {
 				ShowMaxEntitiesWarning.Execute();
-				return;
+				return Entity.Invalid.Id;
 			}
 
-			CreateEntity();
-			_createdEntities++;
+			return CreateEntity();
 		}
 
-		public void EntityToggleActive(int entityId, bool active) {
-			_entityStorage.SetActive(entityId, active);
-		}
-
-		public void CreateEntity() {
+		public int CreateEntity() {
 			var entity = _entityStorage.CreateEntity();
+			_createdEntities++;
+			UnityEngine.Debug.Log($"Entidad Creada: {entity}, Total: {_createdEntities}");
 
 			entity.Name = $"Entity ({entity.Id})";
-			UnityEngine.Debug.Log($"Entidad Creada: {entity}");
 
 			var shape = _componentStorage.AddComponent<Shape>(entity);
 			shape.PrimitiveShape = Shape.Primitive.Circle;
@@ -63,6 +58,8 @@ namespace SimpleMotions {
 			_keyframeStorage.AddDefaultKeyframes(entity.Id);
 			_entitySelector.SelectEntity(entity.Id);
 			_videoCanvas.DisplayEntity(entity.Id);
+
+			return entity.Id;
 		}
 		
 		public void DeleteEntity(int entityId) {
@@ -72,7 +69,9 @@ namespace SimpleMotions {
 
 			_keyframeStorage.ClearEntityKeyframes(entityId);
 			_entityStorage.DeleteEntity(entityId);
+
 			_createdEntities--;
+			UnityEngine.Debug.Log($"Entidad Eliminada: {entityId}, Total: {_createdEntities}");
 		}
 
 		public void CreateTestEntity() {
@@ -102,5 +101,4 @@ namespace SimpleMotions {
 		}
 
 	}
-	
 }

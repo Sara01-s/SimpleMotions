@@ -98,6 +98,7 @@ namespace SimpleMotions {
 			_services.RegisterService<ITextComponentViewModel, 		TextComponentViewModel>();
 			_services.RegisterService<IColorPickerViewModel, 		ColorPickerViewModel>();
 			_services.RegisterService<IInputValidator, 				InputValidator>();
+			_services.RegisterService<IEntityViewModel,				EntityViewModel>();
 
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -148,7 +149,7 @@ namespace SimpleMotions {
 
 		private void BuildGUI() {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
-			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>());
+			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>(), _services.GetService<IEntitySelectorViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());

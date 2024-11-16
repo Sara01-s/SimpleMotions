@@ -1,22 +1,22 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace SimpleMotions {
 
-    public sealed class ReactiveCommand : IDisposable {
+	public class ReactiveCommand<T1, T2> : IDisposable {
 
-        private Action _onExecute;
-        private readonly List<Action> _callbacks = new();
+        private Action<T1, T2> _onExecute;
+        private readonly List<Action<T1, T2>> _callbacks = new();
 
-        public void Subscribe(Action callback) {
+        public void Subscribe(Action<T1, T2> callback) {
             if (callback != null) {
                 _onExecute += callback;
                 _callbacks.Add(callback);
             }
         }
 
-        public void Execute() {
-            _onExecute?.Invoke();
+        public void Execute(T1 value1, T2 value2) {
+            _onExecute?.Invoke(value1, value2);
         }
 
         public void Dispose() {
@@ -27,10 +27,9 @@ namespace SimpleMotions {
             _callbacks.Clear();
             _onExecute = null;
         }
-        
     }
 
-    public sealed class ReactiveCommand<T> : IDisposable {
+    public class ReactiveCommand<T> : IDisposable {
 
         private Action<T> _onExecute;
         private readonly List<Action<T>> _callbacks = new();
@@ -54,6 +53,18 @@ namespace SimpleMotions {
             _callbacks.Clear();
             _onExecute = null;
         }
-        
     }
+
+    public class ReactiveCommand : ReactiveCommand<Void> {
+
+        public void Execute() => base.Execute(Void.Nothing);
+
+        public void Subscribe(Action callback) {
+            base.Subscribe(_ => callback?.Invoke());
+        }
+    }
+
+    public readonly struct Void {
+		public static readonly Void Nothing = new();
+	}
 }

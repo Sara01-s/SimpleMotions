@@ -9,10 +9,10 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
 	[SerializeField] private Canvas _editorCanvas;
 
 	private RectTransform _rectTransform;
-    private IEntityViewModel _entityViewModel;
+    private IComponentViewModel _entityViewModel;
     private IEntitySelector _entitySelector;
 
-    public void Configure(IEntityViewModel entityViewModel, IEntitySelector entitySelector) {
+    public void Configure(IComponentViewModel entityViewModel, IEntitySelector entitySelector) {
 		_rectTransform = GetComponent<RectTransform>();
         _entityViewModel = entityViewModel;
         _entitySelector = entitySelector;

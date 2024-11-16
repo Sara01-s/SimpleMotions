@@ -9,8 +9,8 @@ public class EntitySelectorView : MonoBehaviour {
 	private IEntitySelectorViewModel _entitySelectorViewModel;
 
 	public void Configure(IEntitySelectorViewModel entitySelectorViewModel) {
-		entitySelectorViewModel.OnShowSelectionGizmo.Subscribe(DrawSelectionGizmoOverEntity);
-		entitySelectorViewModel.OnHideSelectionGizmo.Subscribe(HideSelectionGizmo);
+		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
+		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 		_entitySelectorViewModel = entitySelectorViewModel;
 
 		_selectionGizmo.GetComponent<UnityEngine.UI.Image>().color = _editorPainter.Theme.AccentColor;

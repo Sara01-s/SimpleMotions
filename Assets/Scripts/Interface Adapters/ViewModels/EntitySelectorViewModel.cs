@@ -3,30 +3,26 @@ using SimpleMotions.Internal;
 namespace SimpleMotions {
 
 
-	public interface IEntitySelectorViewModel : IEntityViewModel {
-
-		ReactiveCommand<(int, string)> OnShowSelectionGizmo { get; }
-		ReactiveCommand OnHideSelectionGizmo { get; }
+	public interface IEntitySelectorViewModel : IComponentViewModel {
+		
+		ReactiveCommand<int> SelectEntity { get; }
+		ReactiveCommand<(int entityId, string entityName)> OnEntitySelected { get; }
+		ReactiveCommand OnEntityDeselected { get; }
 
 	}
 
-	public class EntitySelectorViewModel : EntityViewModel, IEntitySelectorViewModel {
+	public class EntitySelectorViewModel : ComponentViewModel, IEntitySelectorViewModel {
 
-		public ReactiveCommand<(int, string)> OnShowSelectionGizmo { get; } = new();
-		public ReactiveCommand OnHideSelectionGizmo { get; } = new();
+		public ReactiveCommand<(int, string)> OnEntitySelected { get; } = new();
+		public ReactiveCommand OnEntityDeselected { get; } = new();
+		public ReactiveCommand<int> SelectEntity { get; } = new();
 
 		public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
-			entitySelector.OnEntitySelected.Subscribe(ShowSelectionGizmo);
-			entitySelector.OnEntityDeselected.Subscribe(HideSelectionGizmo);
-        }
+			entitySelector.OnEntitySelected.Subscribe(entity => OnEntitySelected.Execute((entity.Id, entity.Name)));
+			entitySelector.OnEntityDeselected.Subscribe(OnEntityDeselected.Execute);
 
-        private void ShowSelectionGizmo(Entity entity) {
-            OnShowSelectionGizmo.Execute((entity.Id, entity.Name));
+			SelectEntity.Subscribe(entitySelector.SelectEntity);
         }
-
-		private void HideSelectionGizmo() {
-			OnHideSelectionGizmo.Execute();
-		}
 
 	}
 }

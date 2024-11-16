@@ -1,6 +1,6 @@
 namespace SimpleMotions {
 
-	public interface IVideoCanvasViewModel : IEntityViewModel {
+	public interface IVideoCanvasViewModel : IComponentViewModel {
 
 		ReactiveCommand<(int, string)> OnCanvasUpdate { get; }
 		ReactiveCommand<int> OnEntitySelected { get; }
@@ -9,7 +9,7 @@ namespace SimpleMotions {
 
 	}
 
-    public sealed class VideoCanvasViewModel : EntityViewModel, IVideoCanvasViewModel {
+    public sealed class VideoCanvasViewModel : ComponentViewModel, IVideoCanvasViewModel {
 
 		public ReactiveCommand<(int, string)> OnCanvasUpdate { get; } = new();
 		public ReactiveCommand<int> OnEntitySelected { get; } = new();

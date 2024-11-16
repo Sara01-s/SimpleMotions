@@ -5,11 +5,11 @@ using TMPro;
 
 public class TransformComponentView : MonoBehaviour {
 
-    [SerializeField] private TMP_InputField _positionX; 
-    [SerializeField] private TMP_InputField _positionY; 
-    [SerializeField] private TMP_InputField _scaleW; 
-    [SerializeField] private TMP_InputField _scaleH; 
-    [SerializeField] private TMP_InputField _roll; 
+    [SerializeField] private TMP_InputField _positionX;
+    [SerializeField] private TMP_InputField _positionY;
+    [SerializeField] private TMP_InputField _scaleW;
+    [SerializeField] private TMP_InputField _scaleH;
+    [SerializeField] private TMP_InputField _roll;
 
     [SerializeField] private Button _addOrRemoveKeyframe;
     [SerializeField] private Image _keyframeImage;

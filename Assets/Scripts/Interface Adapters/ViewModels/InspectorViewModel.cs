@@ -1,14 +1,14 @@
 
 namespace SimpleMotions {
 
-    public interface IInspectorViewModel : IEntityViewModel {
+    public interface IInspectorViewModel : IComponentViewModel {
 
 		string SelectedEntityName { get; set; }
         ReactiveCommand<(int id, string name)> OnEntitySelected { get; }
 
     }
 
-    public class InspectorViewModel : EntityViewModel, IInspectorViewModel {
+    public class InspectorViewModel : ComponentViewModel, IInspectorViewModel {
 
         public ReactiveCommand<(int id, string name)> OnEntitySelected { get; } = new();
 		public string SelectedEntityName {
@@ -17,17 +17,26 @@ namespace SimpleMotions {
 		}
 
 		private readonly ReactiveValue<string> _selectedEntityName = new();
+		private readonly IEntitySelector _entitySelector;
+		private readonly IEntityViewModel _entityViewModel;
 
         public InspectorViewModel(IVideoCanvas videoCanvas, IVideoAnimator videoAnimator,
-								  IEntitySelector entitySelector) : base(videoCanvas) 
+								  IEntitySelector entitySelector, IEntityViewModel entityViewModel) : base(videoCanvas) 
 		{
-            videoCanvas.EntityDisplayInfo.Subscribe(UpdateEntityId);
-            videoAnimator.EntityDisplayInfo.Subscribe(UpdateEntityId);
+            videoCanvas.EntityDisplayInfo.Subscribe(UpdateEntityInfo);
+            videoAnimator.EntityDisplayInfo.Subscribe(UpdateEntityInfo);
+			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => UpdateEntityInfo((id, name)));
 
-			_selectedEntityName.Subscribe(name => entitySelector.SelectedEntity.Name = name);
+			_entitySelector = entitySelector;
+			_entityViewModel = entityViewModel;
+			_selectedEntityName.Subscribe(ChangeSelectedEntityName);
         }
 
-        private void UpdateEntityId((int id, string name) entity) {
+		private void ChangeSelectedEntityName(string newName) {
+			_entityViewModel.ChangeEntityName(_entitySelector.SelectedEntity.Id, newName);
+		}
+
+        private void UpdateEntityInfo((int id, string name) entity) {
             OnEntitySelected.Execute(entity);
         }
 

@@ -18,18 +18,18 @@ namespace SimpleMotions {
 	public class EntitySelector : IEntitySelector {
 		public Entity SelectedEntity { get; private set; }
 
-		private readonly IEntityStorage _entityStorage;
+		private readonly IEntityViewModel _entityViewModel;
 
 		public ReactiveCommand<Entity> OnEntitySelected { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
 
-		public EntitySelector(EntitiesData entitiesData, IEntityStorage entityStorage) {
-			_entityStorage = entityStorage;
+		public EntitySelector(EntitiesData entitiesData, IEntityViewModel entityViewModel) {
+			_entityViewModel = entityViewModel;
 			SelectedEntity = entitiesData.SelectedEntity;
 		}
 
 		public void SelectEntity(int entityId) {
-			SelectedEntity = _entityStorage.GetEntity(entityId);
+			SelectedEntity = _entityViewModel.GetEntity(entityId);
 			UnityEngine.Debug.Log($"Entidad {entityId} seleccionada.");
 			OnEntitySelected.Execute(SelectedEntity);
 		}
