@@ -1,40 +1,48 @@
 using UnityEngine.UI;
-using SimpleMotions;
 using UnityEngine;
-
 
 public class ColorPickerView : MonoBehaviour {
 
-    [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
+    [SerializeField] private GameObject _colorPicker;
     [SerializeField] private Button[] _openers;
     [SerializeField] private Button _closer;
 
-    private IShapeComponentViewModel _shapeComponentViewModel;
-    private IEditorPainterParser _editorPainterParser;
+    [SerializeField] private ShapeComponentView _shapeComponentView;
+    [SerializeField] private EditorSettingsView _editorSettingsView;
 
-    public void Configure(IShapeComponentViewModel shapeComponentViewModel, FlexibleColorPicker flexibleColorPicker, IEditorPainterParser editorPainterParser) {
-        _shapeComponentViewModel = shapeComponentViewModel;
-        _flexibleColorPicker = flexibleColorPicker;
-        _editorPainterParser = editorPainterParser;
-
-        _flexibleColorPicker.OnColorChange.AddListener(SetColor);
+    public void Configure() {
         _closer.onClick.AddListener(CloseColorPicker);
 
-        foreach (var opener in _openers) {
-            opener.onClick.AddListener(OpenColorPicker);
+        for (int i = 0; i < _openers.Length; i++) {
+            if (i == 0){
+                _openers[i].onClick.AddListener(OpenShapeColorPicker);
+            }
+            else if (i == 1) {
+                _openers[i].onClick.AddListener(OpenEditorColorPicker);
+            }
+            else if (i == 2) {
+                _openers[i].onClick.AddListener(OpenVideoColorPicker);
+            }
         }
     }
 
-    private void SetColor(Color color) {
-        _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
+    private void OpenShapeColorPicker() {
+        _shapeComponentView.SubscribeToColorPicker();
+        _colorPicker.gameObject.SetActive(true);
     }
 
-    private void OpenColorPicker() {
-        _flexibleColorPicker.gameObject.SetActive(true);
+    private void OpenEditorColorPicker() {
+        _editorSettingsView.SubscribeToColorPicker();
+        _colorPicker.gameObject.SetActive(true);
+    }
+
+    private void OpenVideoColorPicker() {
+        //_shapeComponentView.SubscribeToColorPicker();
+        //_colorPicker.gameObject.SetActive(true);
     }
 
     private void CloseColorPicker() {
-        _flexibleColorPicker.gameObject.SetActive(false);
+        _colorPicker.gameObject.SetActive(false);
     }
 
 }

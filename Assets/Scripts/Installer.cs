@@ -23,6 +23,7 @@ namespace SimpleMotions {
 
 		[SerializeField] private FlexibleColorPicker _flexibleColorPicker;
 		[SerializeField] private ColorPickerView _colorPickerView;
+		[SerializeField] private EditorSettingsView _editorSettingsView;
 
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
@@ -156,10 +157,11 @@ namespace SimpleMotions {
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
 			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
-			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>());
-			_colorPickerView		.Configure(_services.GetService<IShapeComponentViewModel>(), _flexibleColorPicker, _editorPainterParser);
+			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
 			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
+			_colorPickerView		.Configure();
+			_editorSettingsView		.Configure();
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);

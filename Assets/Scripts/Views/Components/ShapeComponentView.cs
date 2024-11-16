@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class ShapeComponentView : MonoBehaviour {
 
+    [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private GameObject[] _entitiesUI;
 
+    private IEditorPainterParser _editorPainterParser;
+    private IShapeComponentViewModel _shapeComponentViewModel;
     private EditorPainter _editorPainter;
 
-    public void Configure(IShapeComponentViewModel shapeComponentViewModel) { }
+    public void Configure(IShapeComponentViewModel shapeComponentViewModel, IEditorPainterParser editorPainterParser) {
+        _shapeComponentViewModel = shapeComponentViewModel;
+        _editorPainterParser = editorPainterParser;
+    }
+
+    public void SubscribeToColorPicker() {
+        _flexibleColorPicker.SubscribeToColorChange(SetEntityColor);
+    }
 
     public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData, EditorPainter editorPainter) {
         _editorPainter = editorPainter;
@@ -24,6 +34,10 @@ public class ShapeComponentView : MonoBehaviour {
                 entityUI.GetComponent<Image>().color = _editorPainter.Theme.AccentColor;
             }
         }
+    }
+
+    private void SetEntityColor(Color color) {
+        _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
     }
 
 }

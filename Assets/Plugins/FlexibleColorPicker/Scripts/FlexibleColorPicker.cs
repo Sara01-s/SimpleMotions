@@ -116,8 +116,11 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
     public ColorUpdateEvent OnColorChange;
 
+
     [Serializable]
     public class ColorUpdateEvent : UnityEvent<Color> { }
+
+    
 
     //constants
     private const float HUE_LOOP = 5.9999f;
@@ -489,6 +492,11 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         _isAUpdating = false;
     }
+
+    public void SubscribeToColorChange(UnityAction<Color> newMethod) {
+        OnColorChange.RemoveAllListeners(); 
+        OnColorChange.AddListener(newMethod);
+    }
     // MODIFICACIÓN
 
     private void OnEnable() {
@@ -556,7 +564,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
-        print("entre II");
         OnColorChange.Invoke(bufferedColor.color);
     }
 
