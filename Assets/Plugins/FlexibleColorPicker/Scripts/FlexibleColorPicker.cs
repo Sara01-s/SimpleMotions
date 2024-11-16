@@ -21,6 +21,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+
 #if TMPro
 using TMPro;
 #endif
@@ -168,6 +169,21 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     
     private AdvancedSettings Avs => advancedSettings;
 
+    // MODIFICACIÓN
+    [SerializeField] private TMP_InputField _hInputField;
+    [SerializeField] private TMP_InputField _sInputField;
+    [SerializeField] private TMP_InputField _vInputField;
+    [SerializeField] private TMP_InputField _aInputField;
+
+    [SerializeField] private RectTransform _hMarker;
+    [SerializeField] private RectTransform _sMarker;
+    [SerializeField] private RectTransform _vMarker;
+    [SerializeField] private RectTransform _aMarker;
+
+    //private Color _colorToSet;
+    private bool _updatedWithInputFields;
+    // MODIFICACIÓN
+
     /*----------------------------------------------------------
     * ------------------- MAIN COLOR GET/SET -------------------
     * ----------------------------------------------------------
@@ -240,7 +256,121 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
     private void Awake() {
         canvas = GetComponentInParent<Canvas>();
+
+        // MODIFICACIÓN
+        InitInputFieldSetters();
+        // MODIFICACIÓN
     }
+
+    // MODIFICACIÓN
+    private void InitInputFieldSetters() {
+        _hInputField.onValueChanged.AddListener((hString) => {
+            int.TryParse(hString, out var hValue);
+            hValue = ValidateInput(hValue, 0, 360);
+
+            float s = ParseInputField(_sInputField, 100.0f); 
+            float v = ParseInputField(_vInputField, 100.0f); 
+
+            this.Color = Color.HSVToRGB(hValue / 360.0f, s, v);
+
+            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
+
+            SetColor(this.Color);
+
+            _updatedWithInputFields = true;
+
+            print(hValue);
+            _hInputField.text = hValue.ToString();
+        });
+
+        _sInputField.onValueChanged.AddListener((sString) => {
+            int.TryParse(sString, out var sValue);
+            sValue = ValidateInput(sValue, 0, 100);
+
+            float s = ParseInputField(_sInputField, 100.0f);
+            s = Mathf.Clamp01(s);
+
+            float h = ParseInputField(_hInputField, 360.0f); 
+            float v = ParseInputField(_vInputField, 100.0f); 
+
+            this.Color = Color.HSVToRGB(h / 360.0f, s, v);
+
+            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
+
+            SetColor(this.Color);
+
+            _updatedWithInputFields = true;
+
+            _sInputField.text = sValue.ToString();
+        });
+
+        _vInputField.onValueChanged.AddListener((vString) => {
+            int.TryParse(vString, out var vValue);
+            vValue = ValidateInput(vValue, 0, 100);
+
+            float v = ParseInputField(_vInputField, 100.0f);
+            v = Mathf.Clamp01(v);
+
+            float h = ParseInputField(_hInputField, 360.0f); 
+            float s = ParseInputField(_sInputField, 100.0f);
+
+            this.Color = Color.HSVToRGB(h / 360.0f, s, v);
+
+            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
+
+            SetColor(this.Color);
+
+            _updatedWithInputFields = true;
+
+            _vInputField.text = vValue.ToString();
+        });
+
+        _aInputField.onValueChanged.AddListener((alphaString) => {
+            int.TryParse(alphaString, out var aValue);
+            aValue = ValidateInput(aValue, 0, 100);
+
+            float alpha = ParseInputField(_aInputField, 100.0f);
+            alpha = Mathf.Clamp01(alpha);
+
+            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, alpha);
+
+            SetColor(this.Color);
+
+            _updatedWithInputFields = true;
+
+            _aInputField.text = aValue.ToString();
+        });
+    }
+
+    private int ValidateInput(int input, int min, int max) {
+        return Mathf.Clamp(input, min, max);
+    }
+
+    private float ParseInputField(TMP_InputField inputField, float maxValue) {
+        float.TryParse(inputField.text, out var value);
+        return Mathf.Clamp01(value / maxValue);
+    }
+
+    public void UpdateHText() {
+        float hValue = _hMarker.anchoredPosition.y / 150.0f * 360.0f;
+        _hInputField.text = hValue.ToString("0");
+    }
+
+    public void UpdateSText() {
+        float sValue = _sMarker.anchoredPosition.y / 150.0f * 100.0f;
+        _sInputField.text = sValue.ToString("0");
+    }
+
+    public void UpdateVText() {
+        float vValue = _vMarker.anchoredPosition.y / 150.0f * 100.0f;
+        _vInputField.text = vValue.ToString("0");
+    }
+
+    public void UpdateAText() {
+        float aValue = _aMarker.anchoredPosition.x / 150.0f * 100.0f;
+        _aInputField.text = aValue.ToString("0");
+    }
+    // MODIFICACIÓN
 
     private void OnEnable() {
         this.bufferedColor ??= new BufferedColor(startingColor);
@@ -757,8 +887,28 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
             return;
         }
 
-        hexInput.SetTextWithoutNotify("#" + ColorUtility.ToHtmlStringRGB(this.Color));
+        // MODIFICACIÓN
+        if (_updatedWithInputFields) {
+            float h, s, v;
+            Color.RGBToHSV(this.Color, out h, out s, out v);
+
+            Color rgbColor = Color.HSVToRGB(h, s, v);
+
+            rgbColor.r *= 255.0f;
+            rgbColor.g *= 255.0f;
+            rgbColor.b *= 255.0f;
+            rgbColor.a *= 255.0f;
+
+            hexInput.SetTextWithoutNotify("#" + ColorUtility.ToHtmlStringRGB(rgbColor));
+
+            _updatedWithInputFields = false;
+        }
+        else {
+            hexInput.SetTextWithoutNotify("#" + ColorUtility.ToHtmlStringRGB(this.Color)); // ORIGINAL
+        }
+        // MODIFICACIÓN
     }
+        
 
     private void TypeHex(string input, bool finish) {
         if (typeUpdate) {
