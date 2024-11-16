@@ -2,7 +2,6 @@ using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting.Dependencies.NCalc;
 
 public sealed class VideoPlaybackView : MonoBehaviour {
 
@@ -19,6 +18,11 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	[SerializeField] private TMP_InputField _totalFrames;
 
 	[SerializeField] private Toggle _loopToggle;
+	[SerializeField] private Image _loopImage;
+	[SerializeField] private Sprite _loopOnSprite;
+	[SerializeField] private Sprite _loopOffSprite;
+	[SerializeField] private Color _loopOnColor;
+	[SerializeField] private Color _loopOffColor;
 
 	[SerializeField] private GameObject _play;
 	[SerializeField] private GameObject _pause;
@@ -49,7 +53,18 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardFrame.Execute());
 		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrame.Execute());
 
-		_loopToggle.onValueChanged.AddListener(isLooping => _videoPlaybackViewModel.IsLooping.Execute(isLooping));
+		_loopToggle.onValueChanged.AddListener(isLooping => {
+			_videoPlaybackViewModel.IsLooping.Execute(isLooping);
+
+			if (isLooping) {
+				_loopImage.sprite = _loopOnSprite;
+				_loopImage.color = _loopOnColor;
+			}
+			else {
+				_loopImage.sprite = _loopOffSprite;
+				_loopImage.color = _loopOffColor;
+			}
+		});
 
 		_currentFrame.onValueChanged.AddListener(currentFrame => {
 			currentFrame = _inputValidator.ValidateInput(currentFrame, _previousCurrentFrame);

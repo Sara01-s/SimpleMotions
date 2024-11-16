@@ -10,7 +10,11 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _scaleW; 
     [SerializeField] private TMP_InputField _scaleH; 
     [SerializeField] private TMP_InputField _roll; 
-    [SerializeField] private Button _addKeyframe;
+
+    [SerializeField] private Button _addOrRemoveKeyframe;
+    [SerializeField] private Image _keyframeImage;
+    [SerializeField] private Sprite _addKeyframe;
+    [SerializeField] private Sprite _removeKeyframe;
 
     private IInputValidator _inputValidator;
 
@@ -33,7 +37,23 @@ public class TransformComponentView : MonoBehaviour {
         _scaleH.onValueChanged.AddListener(SendScaleH);
         _roll.onValueChanged.AddListener(SendRollAngles);
 
-		_addKeyframe.onClick.AddListener(() => transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData()));
+        transformComponentViewModel.AddOrRemoveKeyframe.Subscribe(addKeyframe => {
+            if (addKeyframe) {
+                _keyframeImage.sprite = _addKeyframe;
+            }
+            else {
+                _keyframeImage.sprite = _removeKeyframe;
+            }
+        });
+
+		_addOrRemoveKeyframe.onClick.AddListener(() => {
+            if (_keyframeImage.sprite == _addKeyframe) {
+                transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData());
+            }
+            else {
+                transformComponentViewModel.DeleteKeyFrame.Execute();
+            }
+        });
 	}
 
 	private ((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) GetTransformData() {
@@ -104,10 +124,6 @@ public class TransformComponentView : MonoBehaviour {
         firstInput = transformData.rollAngleDegrees.ToString("G") + DEGREES_SYMBOL;
         _previousRInput = firstInput;
         _roll.text = firstInput;
-    }
-
-    public void RefreshUI() {
-        
     }
 
 }

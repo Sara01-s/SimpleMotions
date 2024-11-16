@@ -1,6 +1,6 @@
+using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class ColorPickerView : MonoBehaviour {
@@ -11,15 +11,6 @@ public class ColorPickerView : MonoBehaviour {
 
     private IColorPickerViewModel _colorPickerViewModel;
     private IEditorPainterParser _editorPainterParser;
-
-    private void OnDisable() {
-        _flexibleColorPicker.OnColorChange.RemoveAllListeners();
-        _closer.onClick.RemoveAllListeners();
-
-        foreach (var opener in _openers) {
-            opener.onClick.RemoveAllListeners();
-        }
-    }
 
     public void Configure(IColorPickerViewModel colorPickerViewModel, FlexibleColorPicker flexibleColorPicker, IEditorPainterParser editorPainterParser) {
         _colorPickerViewModel = colorPickerViewModel;
@@ -45,7 +36,5 @@ public class ColorPickerView : MonoBehaviour {
     private void CloseColorPicker() {
         _flexibleColorPicker.gameObject.SetActive(false);
     }
-
-	// DRAGGABLE
 
 }

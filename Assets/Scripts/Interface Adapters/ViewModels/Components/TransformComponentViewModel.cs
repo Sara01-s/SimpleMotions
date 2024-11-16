@@ -1,30 +1,34 @@
 using SimpleMotions.Internal;
-using System;
-using Unity.VisualScripting;
 
 namespace SimpleMotions {
 
 	public interface ITransformComponentViewModel {
 
 		ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; }
+		ReactiveCommand DeleteKeyFrame { get; }
 		ReactiveCommand<string> PositionX { get; }
 		ReactiveCommand<string> PositionY { get; }
 		ReactiveCommand<string> ScaleW { get; }
 		ReactiveCommand<string> ScaleH { get; }
 		ReactiveCommand<string> Roll { get; }
 
+		ReactiveValue<bool> AddOrRemoveKeyframe { get; }
+
 	}
 
     public class TransformComponentViewModel : ITransformComponentViewModel {
 
 		public ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; } = new();
+        public ReactiveCommand DeleteKeyFrame { get; } = new();
 		public ReactiveCommand<string> PositionX { get; } = new();
 		public ReactiveCommand<string> PositionY { get; } = new();
 		public ReactiveCommand<string> ScaleW { get; } = new();
 		public ReactiveCommand<string> ScaleH { get; } = new();
 		public ReactiveCommand<string> Roll { get; } = new();
 
-		private readonly IEntitySelector _entitySelector;
+		public ReactiveValue<bool> AddOrRemoveKeyframe { get; } = new();
+
+        private readonly IEntitySelector _entitySelector;
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IVideoCanvas _videoCanvas;
