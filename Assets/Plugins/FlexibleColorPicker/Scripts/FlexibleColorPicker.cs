@@ -22,6 +22,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 
+
 #if TMPro
 using TMPro;
 #endif
@@ -180,8 +181,8 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     [SerializeField] private RectTransform _vMarker;
     [SerializeField] private RectTransform _aMarker;
 
-    //private Color _colorToSet;
     private bool _updatedWithInputFields;
+    private string _previousHexInput;
     // MODIFICACIÓN
 
     /*----------------------------------------------------------
@@ -279,7 +280,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
             _updatedWithInputFields = true;
 
-            print(hValue);
             _hInputField.text = hValue.ToString();
         });
 
@@ -340,10 +340,48 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
             _aInputField.text = aValue.ToString();
         });
+
+        hexInput.onValueChanged.AddListener((hexString) => {
+            hexString = ValidateInput(hexString);
+
+            hexInput.SetTextWithoutNotify(hexString);
+
+            if (hexString.Length >= 7) {
+                ColorUtility.TryParseHtmlString(hexString, out var newColor);
+                this.Color = newColor;
+            }
+        });
+        
+        _previousHexInput = hexInput.text;
     }
 
     private int ValidateInput(int input, int min, int max) {
         return Mathf.Clamp(input, min, max);
+    }
+
+    public string ValidateInput(string input) {
+        string validInput = "";
+
+        if (input.StartsWith("#")) {
+            input = input.Substring(1);
+        }
+
+        foreach (char c in input) {
+            if (char.IsDigit(c) || "ABCDEFabcdef".Contains(c)) {
+                validInput += c;
+            }
+
+            if (validInput.Length >= 6) {
+                break;
+            }
+
+        }
+
+        if (validInput.Length == 6) {
+            validInput = "#" + validInput;
+        }
+
+        return validInput;
     }
 
     private float ParseInputField(TMP_InputField inputField, float maxValue) {
@@ -352,7 +390,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     }
 
     public void UpdateHText() {
-        float hValue = _hMarker.anchoredPosition.y / 150.0f * 360.0f;
+        float hValue = _hMarker.anchoredPosition.y / 150.0f * 100.0f;
         _hInputField.text = hValue.ToString("0");
     }
 
