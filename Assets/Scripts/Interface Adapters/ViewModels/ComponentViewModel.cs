@@ -11,6 +11,7 @@ namespace SimpleMotions {
 
 		void IncrementEntityPosition(int entityId, (float x, float y) position);
 		void IncrementEntityScale(int entityId, (float w, float h) scale);
+		void ChangeEntityColor(int entityId, Color color);
 		
 	}
 
@@ -68,5 +69,12 @@ namespace SimpleMotions {
 			return true;
 		}
 
-	}
+		public void ChangeEntityColor(int entityId, Color newColor) {
+            if (_videoCanvas.EntityHasComponent<Shape>(entityId)) {
+                _videoCanvas.GetEntityComponent<Shape>(entityId).Color = newColor;
+                _videoCanvas.DisplayEntity(entityId);
+            }
+        }
+
+    }
 }

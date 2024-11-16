@@ -2579,6 +2579,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Color Picker
       objectReference: {fileID: 0}
+    - target: {fileID: 8005168506341389013, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10703,8 +10707,6 @@ MonoBehaviour:
   - {fileID: 489449455}
   - {fileID: 1852148342}
   - {fileID: 1544264207}
-  _hex: {fileID: 581575185}
-  _alpha: {fileID: 308658753}
 --- !u!114 &718388303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28799,8 +28801,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.46000004
+  m_Value: 0.9999999
+  m_Size: 0.46
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

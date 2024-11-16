@@ -265,12 +265,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         // MODIFICACIÓN
         InitInputFieldSetters();
-
-        // TODO - Conectar con la data real
-        _hInputField.text = "100";
-        _sInputField.text = "100";
-        _vInputField.text = "100";
-        _aInputField.text = "100";
         // MODIFICACIÓN
     }
 
@@ -317,9 +311,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         _hInputField.text = newString;
         _updatedWithInputFields = true;
-
-        _hMarker.anchoredPosition = new Vector2(Mathf.Floor((int)_hMarker.anchoredPosition.x), _hMarker.anchoredPosition.y);
-        print(Mathf.Floor((int)_hMarker.anchoredPosition.x));
+        
         _isHUpdating = false;
     }
 
@@ -512,7 +504,9 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
         MakeModeOptions();
         UpdateMarkers();
         UpdateHex();
-        OnColorChange.Invoke(startingColor);
+        // MODIFICACIÓN
+        //OnColorChange.Invoke(startingColor);
+        // MODIFICACIÓN
     }
 
     private void Update() {
@@ -562,6 +556,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
+        print("entre II");
         OnColorChange.Invoke(bufferedColor.color);
     }
 
@@ -647,6 +642,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
+        print("entre III");
         OnColorChange.Invoke(bufferedColor.color);
     }
     
@@ -664,6 +660,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
+        print("entre IV");
         OnColorChange.Invoke(bufferedColor.color);
     }
 
@@ -1073,6 +1070,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
                 bufferedColor.Set(newColor);
                 UpdateMarkers();
                 UpdateTextures();
+                print("entre V");
                 OnColorChange.Invoke(newColor);
             }
             else {

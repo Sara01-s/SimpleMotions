@@ -134,5 +134,9 @@ public class EditorPainter : MonoBehaviour {
 		FindUI();
 		ApplyTheme(Theme);
 	}
+
+	public void ChangeEditorAccentColor(Color accentColor) {
+        PaintImages(_imagesWithAccentColor, accentColor);
+    }
 	
 }

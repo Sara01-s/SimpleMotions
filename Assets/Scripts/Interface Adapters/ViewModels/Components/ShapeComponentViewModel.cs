@@ -1,22 +1,27 @@
-using UnityEngine;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
-
-        ReactiveCommand<string> Hex { get; }
-        ReactiveCommand<string> Alpha { get; }
-
+        void SetColor(Color color);
     }
 
-    public class ShapeComponentViewModel : IShapeComponentViewModel {
+    public class ShapeComponentViewModel : ComponentViewModel, IShapeComponentViewModel {
 
-        public ReactiveCommand<string> Hex { get; } = new();
-        public ReactiveCommand<string> Alpha { get; } = new();
+        private readonly IEntitySelector _entitySelector;
 
+        public ShapeComponentViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
+            _entitySelector = entitySelector;
+        }
 
-        public ShapeComponentViewModel() {
+        public void SetColor(Color color) {
+            var selectedEntity = _entitySelector.SelectedEntity;
 
+            if (selectedEntity.Id == Entity.Invalid.Id) {
+                return;
+            }
+            
+            ChangeEntityColor(selectedEntity.Id, color);
         }
 
     }

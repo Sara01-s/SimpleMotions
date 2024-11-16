@@ -9,11 +9,11 @@ public class ColorPickerView : MonoBehaviour {
     [SerializeField] private Button[] _openers;
     [SerializeField] private Button _closer;
 
-    private IColorPickerViewModel _colorPickerViewModel;
+    private IShapeComponentViewModel _shapeComponentViewModel;
     private IEditorPainterParser _editorPainterParser;
 
-    public void Configure(IColorPickerViewModel colorPickerViewModel, FlexibleColorPicker flexibleColorPicker, IEditorPainterParser editorPainterParser) {
-        _colorPickerViewModel = colorPickerViewModel;
+    public void Configure(IShapeComponentViewModel shapeComponentViewModel, FlexibleColorPicker flexibleColorPicker, IEditorPainterParser editorPainterParser) {
+        _shapeComponentViewModel = shapeComponentViewModel;
         _flexibleColorPicker = flexibleColorPicker;
         _editorPainterParser = editorPainterParser;
 
@@ -26,7 +26,7 @@ public class ColorPickerView : MonoBehaviour {
     }
 
     private void SetColor(Color color) {
-        _colorPickerViewModel.SetColorToEntity(_editorPainterParser.UnityColorToSm(color));
+        _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
     }
 
     private void OpenColorPicker() {
