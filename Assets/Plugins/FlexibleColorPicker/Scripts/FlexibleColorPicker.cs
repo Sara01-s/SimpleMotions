@@ -23,6 +23,8 @@ using UnityEngine;
 using System;
 
 
+
+
 #if TMPro
 using TMPro;
 #endif
@@ -182,7 +184,10 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     [SerializeField] private RectTransform _aMarker;
 
     private bool _updatedWithInputFields;
-    private string _previousHexInput;
+    private bool _isHUpdating;
+    private bool _isSUpdating;
+    private bool _isVUpdating;
+    private bool _isAUpdating;
     // MODIFICACIÓN
 
     /*----------------------------------------------------------
@@ -260,99 +265,151 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         // MODIFICACIÓN
         InitInputFieldSetters();
+
+        // TODO - Conectar con la data real
+        _hInputField.text = "100";
+        _sInputField.text = "100";
+        _vInputField.text = "100";
+        _aInputField.text = "100";
         // MODIFICACIÓN
     }
 
     // MODIFICACIÓN
     private void InitInputFieldSetters() {
-        _hInputField.onValueChanged.AddListener((hString) => {
-            int.TryParse(hString, out var hValue);
-            hValue = ValidateInput(hValue, 0, 360);
+        _hInputField.onValueChanged.AddListener(hString => UpdateHInputField(hString));
+        _sInputField.onValueChanged.AddListener(sString => UpdateSInputField(sString));
+        _vInputField.onValueChanged.AddListener(vString => UpdateVInputField(vString));
+        _aInputField.onValueChanged.AddListener(aString => UpdateAInputField(aString));
 
-            float s = ParseInputField(_sInputField, 100.0f); 
-            float v = ParseInputField(_vInputField, 100.0f); 
-
-            this.Color = Color.HSVToRGB(hValue / 360.0f, s, v);
-
-            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
-
-            SetColor(this.Color);
-
-            _updatedWithInputFields = true;
-
-            _hInputField.text = hValue.ToString();
-        });
-
-        _sInputField.onValueChanged.AddListener((sString) => {
-            int.TryParse(sString, out var sValue);
-            sValue = ValidateInput(sValue, 0, 100);
-
-            float s = ParseInputField(_sInputField, 100.0f);
-            s = Mathf.Clamp01(s);
-
-            float h = ParseInputField(_hInputField, 360.0f); 
-            float v = ParseInputField(_vInputField, 100.0f); 
-
-            this.Color = Color.HSVToRGB(h / 360.0f, s, v);
-
-            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
-
-            SetColor(this.Color);
-
-            _updatedWithInputFields = true;
-
-            _sInputField.text = sValue.ToString();
-        });
-
-        _vInputField.onValueChanged.AddListener((vString) => {
-            int.TryParse(vString, out var vValue);
-            vValue = ValidateInput(vValue, 0, 100);
-
-            float v = ParseInputField(_vInputField, 100.0f);
-            v = Mathf.Clamp01(v);
-
-            float h = ParseInputField(_hInputField, 360.0f); 
-            float s = ParseInputField(_sInputField, 100.0f);
-
-            this.Color = Color.HSVToRGB(h / 360.0f, s, v);
-
-            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
-
-            SetColor(this.Color);
-
-            _updatedWithInputFields = true;
-
-            _vInputField.text = vValue.ToString();
-        });
-
-        _aInputField.onValueChanged.AddListener((alphaString) => {
-            int.TryParse(alphaString, out var aValue);
-            aValue = ValidateInput(aValue, 0, 100);
-
-            float alpha = ParseInputField(_aInputField, 100.0f);
-            alpha = Mathf.Clamp01(alpha);
-
-            this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, alpha);
-
-            SetColor(this.Color);
-
-            _updatedWithInputFields = true;
-
-            _aInputField.text = aValue.ToString();
-        });
-
-        hexInput.onValueChanged.AddListener((hexString) => {
+        hexInput.onValueChanged.AddListener(hexString => {
             hexString = ValidateInput(hexString);
 
             hexInput.SetTextWithoutNotify(hexString);
 
             if (hexString.Length >= 7) {
                 ColorUtility.TryParseHtmlString(hexString, out var newColor);
-                this.Color = newColor;
+                SetColor(newColor);
             }
         });
-        
-        _previousHexInput = hexInput.text;
+    }
+
+    private void UpdateHInputField(string hString) {
+        if (_isHUpdating) {
+            return;
+        }
+
+        _isHUpdating = true;   
+
+        int.TryParse(hString, out var hValue);
+        hValue = ValidateInput(hValue, 0, 100);
+
+        float s = ParseInputField(_sInputField, 100.0f); 
+        float v = ParseInputField(_vInputField, 100.0f); 
+
+        this.Color = Color.HSVToRGB(hValue / 100.0f, s, v);
+        this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
+
+        var newString = hValue.ToString("0");
+
+        if (newString == "0") {
+            newString = "";
+        }
+
+        _hInputField.text = newString;
+        _updatedWithInputFields = true;
+
+        _hMarker.anchoredPosition = new Vector2(Mathf.Floor((int)_hMarker.anchoredPosition.x), _hMarker.anchoredPosition.y);
+        print(Mathf.Floor((int)_hMarker.anchoredPosition.x));
+        _isHUpdating = false;
+    }
+
+    private void UpdateSInputField(string sString) {
+        if (_isSUpdating) {
+            return;
+        }
+
+        _isSUpdating = true;
+
+        int.TryParse(sString, out var sValue);
+        sValue = ValidateInput(sValue, 0, 100);
+
+        float s = ParseInputField(_sInputField, 100.0f);
+        s = Mathf.Clamp01(s);
+
+        float h = ParseInputField(_hInputField, 100.0f); 
+        float v = ParseInputField(_vInputField, 100.0f); 
+
+        this.Color = Color.HSVToRGB(h / 100.0f, s, v);
+        this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
+
+        var newString = sValue.ToString("0");
+
+        if (newString == "0") {
+            newString = "";
+        }
+
+        _sInputField.text = newString;
+        _updatedWithInputFields = true;
+
+        _isSUpdating = false;
+    }
+
+    private void UpdateVInputField(string vString) {
+        if (_isVUpdating) {
+            return;
+        }
+
+        _isVUpdating = true;
+
+        int.TryParse(vString, out var vValue);
+        vValue = ValidateInput(vValue, 0, 100);
+
+        float v = ParseInputField(_vInputField, 100.0f);
+        v = Mathf.Clamp01(v);
+
+        float h = ParseInputField(_hInputField, 100.0f); 
+        float s = ParseInputField(_sInputField, 100.0f);
+
+        this.Color = Color.HSVToRGB(h / 100.0f, s, v);
+        this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
+
+        var newString = vValue.ToString("0");
+
+        if (newString == "0") {
+            newString = "";
+        }
+
+        _vInputField.text = newString;
+        _updatedWithInputFields = true;
+
+        _isVUpdating = false;
+    }
+
+    private void UpdateAInputField(string aString) {
+        if (_isAUpdating) {
+            return;
+        }
+
+        _isAUpdating = true;
+
+        int.TryParse(aString, out var aValue);
+        aValue = ValidateInput(aValue, 0, 100);
+
+        float alpha = ParseInputField(_aInputField, 100.0f);
+        alpha = Mathf.Clamp01(alpha);
+
+        this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, alpha);
+
+        var newString = aValue.ToString("0");
+
+        if (newString == "0") {
+            newString = "";
+        }
+
+        _aInputField.text = newString;
+        _updatedWithInputFields = true;
+
+        _isAUpdating = false;
     }
 
     private int ValidateInput(int input, int min, int max) {
@@ -390,23 +447,55 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     }
 
     public void UpdateHText() {
+        if (_isHUpdating) {
+            return;
+        }
+
+        _isHUpdating = true;
+
         float hValue = _hMarker.anchoredPosition.y / 150.0f * 100.0f;
         _hInputField.text = hValue.ToString("0");
+
+        _isHUpdating = false;
     }
 
     public void UpdateSText() {
+        if (_isSUpdating) {
+            return;
+        }
+
+        _isSUpdating = true;
+
         float sValue = _sMarker.anchoredPosition.y / 150.0f * 100.0f;
         _sInputField.text = sValue.ToString("0");
+
+        _isSUpdating = false;
     }
 
     public void UpdateVText() {
+        if (_isVUpdating) {
+            return;
+        }
+
+        _isVUpdating = true;
+
         float vValue = _vMarker.anchoredPosition.y / 150.0f * 100.0f;
         _vInputField.text = vValue.ToString("0");
+
+        _isVUpdating = false;
     }
 
     public void UpdateAText() {
+        if (_isAUpdating) {
+            return;
+        }
+
+        _isAUpdating = true;
+
         float aValue = _aMarker.anchoredPosition.x / 150.0f * 100.0f;
         _aInputField.text = aValue.ToString("0");
+
+        _isAUpdating = false;
     }
     // MODIFICACIÓN
 
@@ -653,6 +742,13 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
                 UpdateMarker(pickers[i], type, v);
             }
         }
+
+        // MODIFICACIÓN
+        UpdateHText();
+        UpdateSText();
+        UpdateVText();
+        UpdateAText();
+        // MODIFICACIÓN
     }
 
     private void UpdateMarker(Picker picker, PickerType type, Vector2 v) {
