@@ -9,8 +9,8 @@ namespace SimpleMotions {
 		bool EntityHasShape(int entityId, out ((float r, float g, float b, float a) color, string primitiveShape) shapeData);
 		bool EntityHasText(int entityId, out string text);
 
-		void IncrementEntityPosition(int entityId, (float x, float y) position);
-		void IncrementEntityScale(int entityId, (float w, float h) scale);
+		void SetEntityPosition(int entityId, (float x, float y) position);
+		void SetEntityScale(int entityId, (float w, float h) scale);
 		void ChangeEntityColor(int entityId, Color color);
 		
 	}
@@ -23,13 +23,14 @@ namespace SimpleMotions {
 			_videoCanvas = videoCanvas;
 		}
 
-		public void IncrementEntityPosition(int entityId, (float x, float y) position) {
-			_videoCanvas.GetEntityComponent<Transform>(entityId).Position += new Position(position.x, position.y);
+		public void SetEntityPosition(int entityId, (float x, float y) position) {
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Position = new Position(position.x, position.y);
+			UnityEngine.Debug.Log(position);
 			_videoCanvas.DisplayEntity(entityId);
 		}
 
-		public void IncrementEntityScale(int entityId, (float w, float h) scale) {
-			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale += new Scale(scale.w, scale.h);
+		public void SetEntityScale(int entityId, (float w, float h) scale) {
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale = new Scale(scale.w, scale.h);
 			_videoCanvas.DisplayEntity(entityId);
 		}
 

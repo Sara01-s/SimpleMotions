@@ -10,10 +10,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[SerializeField] private Sprite _triangleSprite;
 
 	[Header("Render")]
-	[SerializeField] private UnityEngine.UI.RawImage _canvasImage;
-	[SerializeField] private Camera _canvasCamera;
-
-	private RenderTexture _canvasTexture;
+	[SerializeField] private Transform _canvasOrigin;
 
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
@@ -27,16 +24,6 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		_videoCanvasViewModel = videoCanvasViewModel;
 
 		PopulateSpriteDictionary();
-		RenderCanvas();
-	}
-
-	private void RenderCanvas() {
-		_canvasTexture = new RenderTexture(Screen.width, Screen.height, depth: 0);
-		_canvasCamera.targetTexture = _canvasTexture;
-
-		_canvasCamera.Render();
-
-		_canvasImage.texture = _canvasTexture;
 	}
 
 	private void PopulateSpriteDictionary() {
@@ -54,8 +41,8 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	private void RemoveEntity(int entityId) {
 		if (_displayedEntites.TryGetValue(entityId, out var entityDisplay)) {
-			Destroy(entityDisplay);
 			_displayedEntites.Remove(entityId);
+			Destroy(entityDisplay);
 			print($"Entidad {entityId} removida del canvas.");
 		}
 	}
@@ -74,7 +61,10 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		string entity = $"Entity {entityId}: \"{entityName}\"";
 		var displayedEntity = new GameObject(entityName);
 
+		displayedEntity.transform.SetParent(_canvasOrigin);
+		displayedEntity.transform.localPosition = Vector2.zero;
 		displayedEntity.transform.name = entity;
+
 		_displayedEntites.Add(entityId, displayedEntity);
 
 		Debug.Log("Mostrando entidad: " + entity);
@@ -88,7 +78,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		if (_videoCanvasViewModel.EntityHasTransform(entityId, out var transform)) {
 			var entityTransform = displayedEntity.GetComponent<Transform>();
 
-			entityTransform.position = new Vector2(transform.pos.x, transform.pos.y);
+			entityTransform.localPosition = new Vector3(transform.pos.x, transform.pos.y, 0.0f);
 			entityTransform.localScale = new Vector2(transform.scale.w, transform.scale.h);
 			entityTransform.rotation = Quaternion.AngleAxis(transform.rollAngleDegrees, Vector3.forward);
 		}

@@ -39,9 +39,15 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 		
 		_entitySelectorViewModel = entitySelectorViewModel;
 		_ownerEntityId = ownerEntityId;
+
+		SelectOwnerEntity();
 	}
 
 	public void OnPointerClick(PointerEventData _) {
+		SelectOwnerEntity();
+	}
+
+	private void SelectOwnerEntity() {
 		_entitySelectorViewModel.SelectEntity.Execute(_ownerEntityId);
 	}
 }

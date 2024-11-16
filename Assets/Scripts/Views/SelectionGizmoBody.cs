@@ -4,8 +4,8 @@ using SimpleMotions;
 
 public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
     
-	[SerializeField] RectTransform _canvasArea;
-	[SerializeField] private Camera _canvasCamera;
+	[SerializeField] private Transform _canvasOrigin;
+	[SerializeField] private RectTransform _canvasArea;
 	[SerializeField] private Canvas _editorCanvas;
 
 	private RectTransform _rectTransform;
@@ -22,21 +22,17 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
 		int selectedEntityId = _entitySelector.SelectedEntity.Id;
 
 		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var t)) {
+			var deltaMovement = eventData.delta / _editorCanvas.scaleFactor;
+
 			// Drag gizmo
-			_rectTransform.anchoredPosition += eventData.delta / _editorCanvas.scaleFactor;
+			_rectTransform.anchoredPosition += deltaMovement;
 
-			// Drag entity
-			var entityScreenPos = _editorCanvas.worldCamera.WorldToScreenPoint(new Vector2(t.pos.x, t.pos.y));
+			var camera = _editorCanvas.worldCamera;
 
-			RectTransformUtility.ScreenPointToLocalPointInRectangle (
-				_canvasArea,
-				Input.mousePosition,
-				_editorCanvas.worldCamera,
-				out var localPoint
-			);
+			var pointerWorldPosition = camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, camera.nearClipPlane));
+			var pointerInCanvasSpace = _canvasOrigin.transform.InverseTransformPoint(pointerWorldPosition);
 
-			print(localPoint);
-			return;
+			_entityViewModel.SetEntityPosition(_entitySelector.SelectedEntity.Id, (pointerInCanvasSpace.x, pointerInCanvasSpace.y));
 		}
 	}
 
