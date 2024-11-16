@@ -15,10 +15,18 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 	private int _ownerEntityId;
 
     public void Configure(ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel, int ownerEntityId) {
-        _deleteEntity.onClick.AddListener(() => timelinePanelViewModel.DeleteEntity.Execute(ownerEntityId));
 		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
 		_entityName.onValueChanged.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
 		_entityName.text = timelinePanelViewModel.GetEntityName(ownerEntityId);
+
+        _deleteEntity.onClick.AddListener(() => {
+			timelinePanelViewModel.DeleteEntity.Execute(ownerEntityId);
+			entitySelectorViewModel.OnEntitySelected.Dispose();
+			entitySelectorViewModel.OnEntityDeselected.Dispose();
+			_toggleActive.onValueChanged.RemoveAllListeners();
+			_entityName.onValueChanged.RemoveAllListeners();
+			Destroy(gameObject);
+		});
 
 		timelinePanelViewModel.OnEntityNameChanged.Subscribe((id, name) => {
 			if (ownerEntityId == id) {

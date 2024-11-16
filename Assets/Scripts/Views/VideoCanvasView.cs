@@ -20,9 +20,10 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	private IVideoCanvasViewModel _videoCanvasViewModel;
 
 	public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
-		_videoCanvasViewModel = videoCanvasViewModel;
-
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
+		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
+
+		_videoCanvasViewModel = videoCanvasViewModel;
 
 		PopulateSpriteDictionary();
 		RenderCanvas();
@@ -47,6 +48,14 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	private void OnUpdateCanvas((int id, string name) entity) {
 		UpdateEntityDisplay(entity);
+	}
+
+	private void RemoveEntity(int entityId) {
+		if (_displayedEntites.TryGetValue(entityId, out var entityDisplay)) {
+			Destroy(entityDisplay);
+			_displayedEntites.Remove(entityId);
+			print($"Entidad {entityId} removida del canvas.");
+		}
 	}
 
 	private void UpdateEntityDisplay((int id, string name) entity) {

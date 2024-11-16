@@ -4,8 +4,8 @@ namespace SimpleMotions {
 
 		ReactiveCommand<(int, string)> OnCanvasUpdate { get; }
 		ReactiveCommand<int> OnEntitySelected { get; }
+		ReactiveCommand<int> OnEntityRemoved { get; }
 		ReactiveCommand OnEntityDeselected { get; }
-		ReactiveCommand OnEntityRemoved { get; }
 
 	}
 
@@ -13,12 +13,12 @@ namespace SimpleMotions {
 
 		public ReactiveCommand<(int, string)> OnCanvasUpdate { get; } = new();
 		public ReactiveCommand<int> OnEntitySelected { get; } = new();
+		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
-		public ReactiveCommand OnEntityRemoved { get; } = new();
 
 		public VideoCanvasViewModel(IVideoCanvas videoCanvas, IVideoAnimator videoAnimator, IEntitySelector entitySelector) : base(videoCanvas) {
 			videoCanvas.EntityDisplayInfo.Subscribe(UpdateCanvas);
-			videoCanvas.OnEntityRemoved.Subscribe(() => OnEntityRemoved.Execute());
+			videoCanvas.OnEntityRemoved.Subscribe(entityId => OnEntityRemoved.Execute(entityId));
 			videoAnimator.EntityDisplayInfo.Subscribe(UpdateCanvas);
 			
 			entitySelector.OnEntitySelected.Subscribe(entity => OnEntitySelected.Execute(entity.Id));

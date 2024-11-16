@@ -24,10 +24,13 @@ namespace SimpleMotions {
 		private readonly IEntityViewModel _entityViewModel;
 		private readonly IEntitySelector _entitySelector;
 
-		public TimelinePanelViewModel(IVideoEntities videoEntities, IEntityViewModel entityViewModel, IEntitySelector entitySelector) {
+		public TimelinePanelViewModel(IVideoEntities videoEntities, IEntityViewModel entityViewModel, 
+									  IEntitySelector entitySelector, IInspectorViewModel inspectorViewModel) {
 			videoEntities.ShowMaxEntitiesWarning.Subscribe(ShowMaxEntitiesWarning.Execute);
-			DeleteEntity.Subscribe(videoEntities.DeleteEntity);
 			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => OnEntityNameChanged.Execute(id, name));
+
+			DeleteEntity.Subscribe(videoEntities.DeleteEntity);
+			DeleteEntity.Subscribe(_ => inspectorViewModel.OnClearInspector.Execute());
 
 			_entityViewModel = entityViewModel;
 			_videoEntities = videoEntities;

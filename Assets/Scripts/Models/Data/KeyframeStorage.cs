@@ -106,9 +106,7 @@ namespace SimpleMotions {
 
 		public void ClearEntityKeyframes(int entityId) { // TODO - Measure a faster way to do this?
 			for (int frame = TimelineData.FIRST_FRAME; frame <= TotalFrames; frame++) {
-				UnityEngine.Debug.Log(GetKeyframeAt(frame));
 				RemoveKeyframe<Transform>(entityId, frame);
-				UnityEngine.Debug.Log(GetKeyframeAt(frame));
 			}
 		}
 

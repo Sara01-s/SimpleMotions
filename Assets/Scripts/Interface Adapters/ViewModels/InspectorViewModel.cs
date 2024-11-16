@@ -5,12 +5,14 @@ namespace SimpleMotions {
 
 		string SelectedEntityName { get; set; }
         ReactiveCommand<(int id, string name)> OnEntitySelected { get; }
+		ReactiveCommand OnClearInspector { get; }
 
     }
 
     public class InspectorViewModel : ComponentViewModel, IInspectorViewModel {
 
         public ReactiveCommand<(int id, string name)> OnEntitySelected { get; } = new();
+		public ReactiveCommand OnClearInspector { get; } = new();
 		public string SelectedEntityName {
 			get => _selectedEntityName.Value;
 			set => _selectedEntityName.Value = value;
@@ -24,6 +26,7 @@ namespace SimpleMotions {
 								  IEntitySelector entitySelector, IEntityViewModel entityViewModel) : base(videoCanvas) 
 		{
             videoCanvas.EntityDisplayInfo.Subscribe(UpdateEntityInfo);
+			videoCanvas.OnEntityRemoved.Subscribe(_ => OnClearInspector.Execute());
             videoAnimator.EntityDisplayInfo.Subscribe(UpdateEntityInfo);
 			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => UpdateEntityInfo((id, name)));
 

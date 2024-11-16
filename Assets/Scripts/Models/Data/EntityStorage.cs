@@ -119,7 +119,11 @@ namespace SimpleMotions {
 				return Entity.Invalid;
 			}
 
-			return _entities[entityId];
+			if (!_entities.TryGetValue(entityId, out var entity)) {
+				throw new System.ArgumentException($"Entity with id [{entityId}] not found.");
+			}
+
+			return entity;
 		}
 
 	}

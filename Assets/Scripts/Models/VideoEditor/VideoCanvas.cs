@@ -9,7 +9,7 @@ namespace SimpleMotions {
 		bool EntityHasComponent<T>(int entityId) where T : Component;
 		T GetEntityComponent<T>(int entityId) where T : Component;
 		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
-		ReactiveCommand OnEntityRemoved { get; }
+		ReactiveCommand<int> OnEntityRemoved { get; }
 
 	}
 
@@ -19,7 +19,7 @@ namespace SimpleMotions {
 		private readonly IEntityStorage _entityStorage;
 
         public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
-		public ReactiveCommand OnEntityRemoved { get; } = new();
+		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 
         public VideoCanvas(IComponentStorage componentStorage, IEntityStorage entityStorage) {
 			_componentStorage = componentStorage;
@@ -32,10 +32,6 @@ namespace SimpleMotions {
 
 		public T GetEntityComponent<T>(int entityId) where T : Component {
 			return _componentStorage.GetComponent<T>(entityId);
-		}
-
-		public void RemoveEntity(int entityId) {
-			
 		}
 
 		public void DisplayEntity(int entityId) {

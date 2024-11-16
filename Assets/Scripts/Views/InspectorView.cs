@@ -18,6 +18,7 @@ public class InspectorView : MonoBehaviour {
 
 		_selectedEntityName.onValueChanged.AddListener(name => inspectorViewModel.SelectedEntityName = name);
 		inspectorViewModel.OnEntitySelected.Subscribe(UpdateInspector);
+		inspectorViewModel.OnClearInspector.Subscribe(ClearInspector);
 
 		InitializeUI();
     }
@@ -26,6 +27,11 @@ public class InspectorView : MonoBehaviour {
 		_transformComponent.SetActive(false);
 		_shapeComponent.SetActive(false);
 		_textComponent.SetActive(false);
+	}
+
+	private void ClearInspector() {
+		InitializeUI();
+		_selectedEntityName.text = string.Empty;
 	}
 
     private void UpdateInspector((int id, string name) entity) {
