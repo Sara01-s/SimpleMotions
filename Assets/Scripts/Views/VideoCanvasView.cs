@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	[Header("Render")]
 	[SerializeField] private Transform _canvasOrigin;
+	[SerializeField] private Image _canvasBackground;
 
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
@@ -35,7 +37,6 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	}
 
 	private void OnUpdateCanvas((int id, string name) entity) {
-		print("entre");
 		UpdateEntityDisplay(entity);
 	}
 
@@ -94,7 +95,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	}
 
 	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
-		_canvasCamera.backgroundColor = new Color(color.r, color.g, color.b, color.a);
+		_canvasBackground.color = new Color(color.r, color.g, color.b, color.a);
 	}
 
 }
