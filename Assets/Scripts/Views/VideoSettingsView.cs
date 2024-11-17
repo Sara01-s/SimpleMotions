@@ -31,7 +31,8 @@ public class VideoSettingsView : MonoBehaviour {
     }
 
     private void SetFramerate(string newFramerate) {
-        //_videoSettingsViewModel.OnFramerateUpdate.Execute(newFramerate);
+        int.TryParse(newFramerate, out var framerate);
+        _videoSettingsViewModel.OnFramerateUpdate.Execute(framerate);
     }
 
     private void UpdateFramerate(int currentFramerate) {

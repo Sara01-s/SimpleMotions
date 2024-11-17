@@ -1,3 +1,4 @@
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -9,7 +10,12 @@ namespace SimpleMotions {
 
         public ReactiveCommand<int> OnFramerateUpdate { get; } = new();
 
-        public VideoSettingsViewModel() {
+        public VideoSettingsViewModel(VideoData videoData) {
+
+            OnFramerateUpdate.Subscribe(UpdateFramerate);
+        }
+
+        private void UpdateFramerate(int framerate) {
 
         }
 
