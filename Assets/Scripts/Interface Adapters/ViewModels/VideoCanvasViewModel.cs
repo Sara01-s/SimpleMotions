@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
