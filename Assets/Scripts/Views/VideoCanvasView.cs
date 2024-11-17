@@ -22,6 +22,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
+		videoCanvasViewModel.OnBackgroundColorUpdated.Subscribe(UpdateCanvasColor);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
 
@@ -47,6 +48,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	}
 
 	private void OnUpdateCanvas((int id, string name) entity) {
+		print("entre");
 		UpdateEntityDisplay(entity);
 	}
 
@@ -99,6 +101,10 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
 			spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
 		}
+	}
+
+	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
+		_canvasCamera.backgroundColor = new Color(color.r, color.g, color.b, color.a);
 	}
 
 }

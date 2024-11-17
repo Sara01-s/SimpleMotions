@@ -18,12 +18,11 @@ namespace SimpleMotions {
 		[SerializeField] private EntitySelectorView _entitySelectorView;
 
 		[SerializeField] private TransformComponentView _transformComponentView;
-		[SerializeField] private ShapeComponentView _shapeComponentView;
 		[SerializeField] private TextComponentView _textComponentView;
-
-		[SerializeField] private FlexibleColorPicker _flexibleColorPicker;
-		[SerializeField] private ColorPickerView _colorPickerView;
+		[SerializeField] private ShapeComponentView _shapeComponentView;
 		[SerializeField] private EditorSettingsView _editorSettingsView;
+		[SerializeField] private VideoSettingsView _videoSettingsView;
+		[SerializeField] private ColorPickerView _colorPickerView;
 
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
@@ -162,6 +161,7 @@ namespace SimpleMotions {
 			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
 			_colorPickerView		.Configure();
 			_editorSettingsView		.Configure();
+			_videoSettingsView		.Configure(_services.GetService<IVideoCanvasViewModel>(), _editorPainterParser);
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);

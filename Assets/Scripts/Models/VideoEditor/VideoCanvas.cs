@@ -6,6 +6,7 @@ namespace SimpleMotions {
 
 		void DisplayEntity(Entity entity);
 		void DisplayEntity(int entityId);
+		void SetBackgroundColor(Color color);
 		bool EntityHasComponent<T>(int entityId) where T : Component;
 		T GetEntityComponent<T>(int entityId) where T : Component;
 		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
@@ -21,9 +22,12 @@ namespace SimpleMotions {
         public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 
-        public VideoCanvas(IComponentStorage componentStorage, IEntityStorage entityStorage) {
+		private VideoData _videoData;
+
+        public VideoCanvas(IComponentStorage componentStorage, IEntityStorage entityStorage, VideoData videoData) {
 			_componentStorage = componentStorage;
 			_entityStorage = entityStorage;
+			_videoData = videoData;
 		}
 
 		public bool EntityHasComponent<T>(int entityId) where T : Component {
@@ -43,5 +47,9 @@ namespace SimpleMotions {
 			EntityDisplayInfo.Value = (entity.Id, entity.Name);
 		}
 
-	}
+        public void SetBackgroundColor(Color color) {
+			_videoData.CanvasBackgroundColor = color;
+        }
+
+    }
 }

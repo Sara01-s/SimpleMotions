@@ -9,6 +9,7 @@ public class ColorPickerView : MonoBehaviour {
 
     [SerializeField] private ShapeComponentView _shapeComponentView;
     [SerializeField] private EditorSettingsView _editorSettingsView;
+    [SerializeField] private VideoSettingsView _videoSettingsView;
 
     public void Configure() {
         _closer.onClick.AddListener(CloseColorPicker);
@@ -37,8 +38,8 @@ public class ColorPickerView : MonoBehaviour {
     }
 
     private void OpenVideoColorPicker() {
-        //_shapeComponentView.SubscribeToColorPicker();
-        //_colorPicker.gameObject.SetActive(true);
+        _videoSettingsView.SubscribeToColorPicker();
+        _colorPicker.gameObject.SetActive(true);
     }
 
     private void CloseColorPicker() {

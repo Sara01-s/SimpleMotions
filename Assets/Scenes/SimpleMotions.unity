@@ -4085,9 +4085,10 @@ MonoBehaviour:
   _inspectorView: {fileID: 627787355}
   _entitySelectorView: {fileID: 1490453992}
   _transformComponentView: {fileID: 2065154767}
-  _shapeComponentView: {fileID: 718388302}
   _textComponentView: {fileID: 1482041813}
-  _flexibleColorPicker: {fileID: 1308438909}
+  _shapeComponentView: {fileID: 718388302}
+  _editorSettingsView: {fileID: 553886973}
+  _videoSettingsView: {fileID: 1997927949}
   _colorPickerView: {fileID: 759356684}
   _selectionGizmoBody: {fileID: 1683209940}
   _projectName: test_project
@@ -8002,6 +8003,7 @@ GameObject:
   - component: {fileID: 553886970}
   - component: {fileID: 553886972}
   - component: {fileID: 553886971}
+  - component: {fileID: 553886973}
   m_Layer: 5
   m_Name: Editor Settings
   m_TagString: PrimaryColor
@@ -8069,6 +8071,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 553886969}
   m_CullTransparentMesh: 1
+--- !u!114 &553886973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553886969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 834e0b3272b9617898bde60c26934d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flexibleColorPicker: {fileID: 1308438909}
+  _editorPainter: {fileID: 524110107}
 --- !u!1 &555728090
 GameObject:
   m_ObjectHideFlags: 0
@@ -10698,6 +10714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636cef4ec22b77d9896f00547c2507fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flexibleColorPicker: {fileID: 1308438909}
   _entitiesUI:
   - {fileID: 1839929485}
   - {fileID: 1343755794}
@@ -10870,12 +10887,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0cb64c875e9ecbbdb2732636b614f42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flexibleColorPicker: {fileID: 1308438909}
+  _colorPicker: {fileID: 857933248}
   _openers:
-  - {fileID: 1621827046}
-  - {fileID: 20878277}
   - {fileID: 1072974922}
+  - {fileID: 20878277}
+  - {fileID: 1621827046}
   _closer: {fileID: 1483094762}
+  _shapeComponentView: {fileID: 718388302}
+  _editorSettingsView: {fileID: 553886973}
+  _videoSettingsView: {fileID: 1997927949}
 --- !u!1 &759370410
 GameObject:
   m_ObjectHideFlags: 0
@@ -12687,6 +12707,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857771208}
   m_CullTransparentMesh: 1
+--- !u!1 &857933248 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8005168506341389013, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+  m_PrefabInstance: {fileID: 224399200}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &858497051
 GameObject:
   m_ObjectHideFlags: 0
@@ -18400,7 +18425,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2876983168310166813, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
   m_PrefabInstance: {fileID: 224399200}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 857933248}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31629c56f6f83234a90f6296f902f9c0, type: 3}
@@ -28416,6 +28441,7 @@ GameObject:
   - component: {fileID: 1997927946}
   - component: {fileID: 1997927948}
   - component: {fileID: 1997927947}
+  - component: {fileID: 1997927949}
   m_Layer: 5
   m_Name: Video Settings
   m_TagString: PrimaryColor
@@ -28489,6 +28515,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1997927945}
   m_CullTransparentMesh: 1
+--- !u!114 &1997927949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997927945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43765d58ae4779478b1b570715f30ba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flexibleColorPicker: {fileID: 1308438909}
 --- !u!1 &1998876820
 GameObject:
   m_ObjectHideFlags: 0
