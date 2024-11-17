@@ -30,6 +30,7 @@ namespace SimpleMotions {
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveValue<int> TotalFrames { get; }
 		ReactiveValue<bool> IsLooping { get ; }
+		ReactiveValue<int> TargetFrameRate { get; }
 
 		void SetReactiveValues();
 	}
@@ -117,7 +118,6 @@ namespace SimpleMotions {
 		private void SetDurationSeconds(int seconds) {
 			if (TotalFrames.Value > 0 && TargetFrameRate.Value > 0) {
 				DurationSeconds.Value = (float)TotalFrames.Value / TargetFrameRate.Value;
-				UnityEngine.Debug.Log(DurationSeconds.Value);
 			}
 		}
 

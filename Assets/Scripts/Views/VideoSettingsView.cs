@@ -11,14 +11,13 @@ public class VideoSettingsView : MonoBehaviour {
 
     private IVideoSettingsViewModel _videoSettingsViewModel;
     private IVideoCanvasViewModel _videoCanvasViewModel;
-    private IEditorPainterParser _editorPainterParser;
 
-    public void Configure(IVideoSettingsViewModel videoSettingsViewModel, IVideoCanvasViewModel videoCanvasViewModel, IEditorPainterParser editorPainterParser) { 
+    public void Configure(IVideoSettingsViewModel videoSettingsViewModel, IVideoCanvasViewModel videoCanvasViewModel) { 
         _videoSettingsViewModel = videoSettingsViewModel;
         _videoCanvasViewModel = videoCanvasViewModel;
-        _editorPainterParser = editorPainterParser;
 
-        _framerate.onValueChanged.AddListener(SetFramerate);
+        _framerate.onValueChanged.AddListener(_videoSettingsViewModel.OnFramerateUpdate.Execute);
+        _framerate.text = _videoSettingsViewModel.Framerate;
     }
 
     public void SubscribeToColorPicker() {
@@ -26,17 +25,8 @@ public class VideoSettingsView : MonoBehaviour {
     }
 
     private void UpdateBackgroundColor(Color color) {
-        _videoCanvasViewModel.ChangeBackgroundColor(_editorPainterParser.UnityColorToSm(color));
+        _videoCanvasViewModel.BackgroundColor.Value = (color.r, color.g, color.b, color.a); 
         _currentColor.color = color;
-    }
-
-    private void SetFramerate(string newFramerate) {
-        int.TryParse(newFramerate, out var framerate);
-        _videoSettingsViewModel.OnFramerateUpdate.Execute(framerate);
-    }
-
-    private void UpdateFramerate(int currentFramerate) {
-        _framerate.text = currentFramerate.ToString("0");
     }
 
 }

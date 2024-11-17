@@ -8,9 +8,8 @@ namespace SimpleMotions {
 		ReactiveCommand<int> OnEntitySelected { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }
 		ReactiveCommand OnEntityDeselected { get; }
-		ReactiveCommand<(float r, float g, float b, float a)> BackgroundColorUpdated { get; }
 
-		void ChangeBackgroundColor(Color color);
+		ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; }
 
 	}
 
@@ -20,7 +19,8 @@ namespace SimpleMotions {
 		public ReactiveCommand<int> OnEntitySelected { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
-		public ReactiveCommand<(float r, float g, float b, float a)> BackgroundColorUpdated { get; } = new();
+
+		public ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; } = new();
 
 		private IVideoCanvas _videoCanvas;
 
@@ -33,17 +33,18 @@ namespace SimpleMotions {
 			
 			entitySelector.OnEntitySelected.Subscribe(entity => OnEntitySelected.Execute(entity.Id));
 			entitySelector.OnEntityDeselected.Subscribe(() => OnEntityDeselected.Execute());
+
+			BackgroundColor.Subscribe(SetBackgroundColor);
         }
 
 		private void UpdateCanvas((int id, string name) entity) {
 			OnCanvasUpdate.Execute(entity);
 		}
 
-        public void ChangeBackgroundColor(Color color) {
-			_videoCanvas.SetBackgroundColor(color);
-			BackgroundColorUpdated.Execute((color.R, color.G, color.B, color.A));
+        private void SetBackgroundColor((float r, float g, float b, float a) color) {
+			var newColor = new Color(color.r, color.g, color.b, color.a);
+			_videoCanvas.SetBackgroundColor(newColor);
         }
-
 
     }
 }

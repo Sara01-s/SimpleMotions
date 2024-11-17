@@ -1,24 +1,30 @@
-using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
     public interface IVideoSettingsViewModel {
-        ReactiveCommand<int> OnFramerateUpdate { get; }
+        ReactiveCommand<string> OnFramerateUpdate { get; }
+        string Framerate { get; }
     }
 
     public class VideoSettingsViewModel : IVideoSettingsViewModel {
 
-        public ReactiveCommand<int> OnFramerateUpdate { get; } = new();
+        public ReactiveCommand<string> OnFramerateUpdate { get; } = new();
+        public string Framerate { get; }
 
-        public VideoSettingsViewModel(VideoData videoData) {
+        private readonly IVideoPlayerData _videoPlayer;
 
+        public VideoSettingsViewModel(IVideoPlayerData videoPlayer) {
+            _videoPlayer = videoPlayer;
+
+            Framerate = _videoPlayer.TargetFrameRate.Value.ToString();
             OnFramerateUpdate.Subscribe(UpdateFramerate);
         }
 
-        private void UpdateFramerate(int framerate) {
-
+        private void UpdateFramerate(string framerateText) {
+            if (int.TryParse(framerateText, out var framerate)) {
+                _videoPlayer.TargetFrameRate.Value = framerate;
+            }
         }
 
     }
-
 }

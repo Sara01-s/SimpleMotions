@@ -20,7 +20,8 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
-		videoCanvasViewModel.BackgroundColorUpdated.Subscribe(UpdateCanvasColor);
+
+		videoCanvasViewModel.BackgroundColor.Subscribe(UpdateCanvasColor);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
 
