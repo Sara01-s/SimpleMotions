@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using SimpleMotions;
 
-public class SelectionGizmoBody : MonoBehaviour, IDragHandler {
+public class SelectionGizmoCorner : MonoBehaviour, IDragHandler {
     
 	[SerializeField] private Transform _canvasOrigin;
 	[SerializeField] private Canvas _editorCanvas;

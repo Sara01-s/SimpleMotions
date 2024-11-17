@@ -49,7 +49,7 @@ public class InspectorView : MonoBehaviour {
 
 		if (selectedEntityHasTransform) {
 			if (_transformComponent.TryGetComponent<TransformComponentView>(out var transformComponentView)) {
-				transformComponentView.SetData(transformData);
+				//transformComponentView.SetData(transformData);
 			}
 		}
 	}

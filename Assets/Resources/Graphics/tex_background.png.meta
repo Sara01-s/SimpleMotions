@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 59ca1a822a365ab47a0d75b32bb74c92
+guid: 9d82927e2d2424d749aec0667982be78
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 0
   alignment: 0
@@ -108,91 +108,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: tex_ui_elements_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 218
-        width: 32
-        height: 294
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7cc6e874408efcab3975f057ee225a92
-      internalID: -838318098
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tex_ui_elements_1
-      rect:
-        serializedVersion: 2
-        x: 44
-        y: 442
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 05b99bfcaa85d749a9a6cfb794bc1a3e
-      internalID: 1064237953
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tex_ui_elements_2
-      rect:
-        serializedVersion: 2
-        x: 164
-        y: 446
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 67fa1c0ecc3070e9ca005360068732be
-      internalID: -560286322
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tex_ui_elements_3
-      rect:
-        serializedVersion: 2
-        x: 50
-        y: 301
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 6, y: 6, z: 6, w: 6}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6811bb695b71496789fa95a7b558b0f9
-      internalID: -2068176096
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -203,11 +119,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      tex_ui_elements_0: -838318098
-      tex_ui_elements_1: 1064237953
-      tex_ui_elements_2: -560286322
-      tex_ui_elements_3: -2068176096
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

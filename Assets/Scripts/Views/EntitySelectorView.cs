@@ -1,5 +1,6 @@
 using SimpleMotions;
 using UnityEngine;
+using System.Linq;
 
 public class EntitySelectorView : MonoBehaviour {
 
@@ -13,7 +14,15 @@ public class EntitySelectorView : MonoBehaviour {
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 		_entitySelectorViewModel = entitySelectorViewModel;
 
-		_selectionGizmo.GetComponent<UnityEngine.UI.Image>().color = _editorPainter.Theme.AccentColor;
+		PaintEntitySelectorGizmo();
+	}
+
+	private void PaintEntitySelectorGizmo() {
+		var images = _selectionGizmo.GetComponentsInChildren<UnityEngine.UI.Image>();
+
+		foreach (var image in images) {
+			image.color = _editorPainter.Theme.AccentColor;
+		}
 	}
 
 	private void HideSelectionGizmo() {
