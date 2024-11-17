@@ -6,6 +6,7 @@ public class ShapeComponentView : MonoBehaviour {
 
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private GameObject[] _entitiesUI;
+    [SerializeField] private Image _currentColor;
 
     private IEditorPainterParser _editorPainterParser;
     private IShapeComponentViewModel _shapeComponentViewModel;
@@ -38,6 +39,7 @@ public class ShapeComponentView : MonoBehaviour {
 
     private void SetEntityColor(Color color) {
         _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
+        _currentColor.color = color;
     }
 
 }

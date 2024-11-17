@@ -1,9 +1,11 @@
+using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 
 public class VideoSettingsView : MonoBehaviour {
 
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
+    [SerializeField] private Image _currentColor;
 
     private IVideoCanvasViewModel _videoCanvasViewModel;
     private IEditorPainterParser _editorPainterParser;
@@ -19,6 +21,7 @@ public class VideoSettingsView : MonoBehaviour {
 
     private void UpdateBackgroundColor(Color color) {
         _videoCanvasViewModel.ChangeBackgroundColor(_editorPainterParser.UnityColorToSm(color));
+        _currentColor.color = color;
     }
 
 }

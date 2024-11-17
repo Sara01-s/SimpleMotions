@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
@@ -5,11 +6,10 @@ namespace SimpleMotions {
 	public interface IVideoCanvasViewModel : IComponentViewModel {
 
 		ReactiveCommand<(int, string)> OnCanvasUpdate { get; }
-		ReactiveCommand<Color> OnBackgroundUpdate { get; }
 		ReactiveCommand<int> OnEntitySelected { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }
 		ReactiveCommand OnEntityDeselected { get; }
-		ReactiveCommand<(float r, float g, float b, float a)> OnBackgroundColorUpdated { get; }
+		ReactiveCommand<(float r, float g, float b, float a)> BackgroundColorUpdated { get; }
 
 		void ChangeBackgroundColor(Color color);
 
@@ -18,11 +18,10 @@ namespace SimpleMotions {
     public sealed class VideoCanvasViewModel : ComponentViewModel, IVideoCanvasViewModel {
 
 		public ReactiveCommand<(int, string)> OnCanvasUpdate { get; } = new();
-		public ReactiveCommand<Color> OnBackgroundUpdate { get; } = new();
 		public ReactiveCommand<int> OnEntitySelected { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
-		public ReactiveCommand<(float r, float g, float b, float a)> OnBackgroundColorUpdated { get; } = new();
+		public ReactiveCommand<(float r, float g, float b, float a)> BackgroundColorUpdated { get; } = new();
 
 		private IVideoCanvas _videoCanvas;
 
@@ -43,8 +42,9 @@ namespace SimpleMotions {
 
         public void ChangeBackgroundColor(Color color) {
 			_videoCanvas.SetBackgroundColor(color);
-			OnBackgroundColorUpdated.Execute((color.R, color.G, color.B, color.A));
+			BackgroundColorUpdated.Execute((color.R, color.G, color.B, color.A));
         }
+
 
     }
 }
