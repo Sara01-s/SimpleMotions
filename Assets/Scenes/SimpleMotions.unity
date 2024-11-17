@@ -19289,7 +19289,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvasOrigin: {fileID: 0}
-  _canvasArea: {fileID: 1123448606}
   _editorCanvas: {fileID: 1094580098}
 --- !u!114 &1683209941
 MonoBehaviour:
@@ -22531,6 +22530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _flexibleColorPicker: {fileID: 1308438909}
+  _framerate: {fileID: 251484919}
   _currentColor: {fileID: 288039298}
 --- !u!1 &1998876820
 GameObject:
