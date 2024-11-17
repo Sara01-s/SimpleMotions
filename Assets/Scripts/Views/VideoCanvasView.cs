@@ -10,6 +10,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[SerializeField] private Sprite _triangleSprite;
 
 	[Header("Render")]
+	[SerializeField] private LayerMask _entityLayer;
 	[SerializeField] private Transform _canvasOrigin;
 	[SerializeField] private Camera _editorCamera;
 
@@ -43,6 +44,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	private void RemoveEntity(int entityId) {
 		if (_displayedEntites.TryGetValue(entityId, out var entityDisplay)) {
 			_displayedEntites.Remove(entityId);
+
 			Destroy(entityDisplay);
 			print($"Entidad {entityId} removida del canvas.");
 		}
@@ -60,7 +62,9 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	private void DisplayNewEntity(int entityId, string entityName) {
 		string entity = $"Entity {entityId}: \"{entityName}\"";
-		var displayedEntity = new GameObject(entityName);
+		var displayedEntity = new GameObject(entityName) {
+			layer = LayerMask.NameToLayer("Entities")
+		};
 
 		displayedEntity.transform.SetParent(_canvasOrigin);
 		displayedEntity.transform.localPosition = Vector2.zero;
