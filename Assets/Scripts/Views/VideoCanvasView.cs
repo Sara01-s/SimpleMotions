@@ -12,7 +12,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	[Header("Render")]
 	[SerializeField] private Transform _canvasOrigin;
-	[SerializeField] private Image _background;
+	[SerializeField] private Camera _editorCamera;
 
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
@@ -95,7 +95,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	}
 
 	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
-		_background.color = new Color(color.r, color.g, color.b, color.a);
+		_editorCamera.backgroundColor = new Color(color.r, color.g, color.b, color.a);
 	}
 
 }
