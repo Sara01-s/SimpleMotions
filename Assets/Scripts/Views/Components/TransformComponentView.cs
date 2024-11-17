@@ -25,17 +25,22 @@ public class TransformComponentView : MonoBehaviour {
     private string _previousRInput;
 
     private ITransformComponentViewModel _transformComponentViewModel;
-	private const char DEGREES_SYMBOL = 'º';
 
 	public void Configure(ITransformComponentViewModel transformComponentViewModel, IInputValidator inputValidator) {
         _transformComponentViewModel = transformComponentViewModel;
         _inputValidator = inputValidator;
 
-		_positionX.onValueChanged.AddListener(SendPositionX);
-        _positionY.onValueChanged.AddListener(SendPositionY);
-        _scaleW.onValueChanged.AddListener(SendScaleW);
-        _scaleH.onValueChanged.AddListener(SendScaleH);
-        _roll.onValueChanged.AddListener(SendRollAngles);
+		_positionX.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.PositionX));
+        _positionY.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.PositionY));
+        _scaleW.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.ScaleW));
+        _scaleH.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.ScaleH));
+        _roll.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.Roll));
+
+        _positionX.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionX, _previousXInput));
+        _positionY.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionY, _previousYInput));
+        _scaleW.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleW, _previousWInput));
+        _scaleH.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleH, _previousHInput));
+        _roll.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.Roll, _previousRInput));
 
         transformComponentViewModel.AddOrRemoveKeyframe.Subscribe(addKeyframe => {
             if (addKeyframe) {
@@ -59,48 +64,18 @@ public class TransformComponentView : MonoBehaviour {
 	private ((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) GetTransformData() {
 		var position = (_positionX.text, _positionY.text);
 		var scale = (_scaleW.text, _scaleH.text);
-		string rollAngleDegrees = _roll.text.Replace(DEGREES_SYMBOL, ' ');
+		string rollAngleDegrees = _roll.text;
 
 		return (position, scale, rollAngleDegrees);
 	}
 
-	private void SendPositionX(string newInput) {
-        newInput = _inputValidator.ValidateInput(newInput, _previousXInput);
+	private void SendPosition(string input, ReactiveCommand<string> reactiveCommand) {
+        bool hasInvalidCharacters;
 
-        if (newInput[^1] != ',' && newInput != string.Empty) {
-		    _transformComponentViewModel.PositionX.Execute(newInput);
-        }
-	}
+        (input, hasInvalidCharacters) = _inputValidator.ValidateInput(input);
 
-    private void SendPositionY(string newInput) {
-        newInput = _inputValidator.ValidateInput(newInput, _previousYInput);
-
-        if (newInput[^1] != ',') {
-		    _transformComponentViewModel.PositionY.Execute(newInput);
-        }
-	}
-
-    private void SendScaleW(string newInput) {
-        newInput = _inputValidator.ValidateInput(newInput, _previousWInput);
-
-        if (newInput[^1] != ',') {
-		    _transformComponentViewModel.ScaleW.Execute(newInput);
-        }
-	}
-
-    private void SendScaleH(string newInput) {
-        newInput = _inputValidator.ValidateInput(newInput, _previousHInput);
-
-        if (newInput[^1] != ',') {
-		    _transformComponentViewModel.ScaleH.Execute(newInput);
-        }
-	}
-
-    private void SendRollAngles(string newInput) {
-        newInput = _inputValidator.ValidateInput(newInput, _previousRInput);
-
-        if (newInput[^1] != ',') {
-		    _transformComponentViewModel.Roll.Execute(newInput.Replace(DEGREES_SYMBOL, ' '));
+        if (CanSendInput(input) && !hasInvalidCharacters) {
+		    reactiveCommand.Execute(input);
         }
 	}
 
@@ -121,9 +96,21 @@ public class TransformComponentView : MonoBehaviour {
         _previousHInput = firstInput;
         _scaleH.text = firstInput;
 
-        firstInput = transformData.rollAngleDegrees.ToString("G") + DEGREES_SYMBOL;
+        firstInput = transformData.rollAngleDegrees.ToString("G");
         _previousRInput = firstInput;
         _roll.text = firstInput;
+    }
+
+    private bool CanSendInput(string input) {
+        return input == "0" || !input.EndsWith("0") && !input.EndsWith(",") && input != string.Empty;
+    }
+
+    private void CorrectInput(string input, ReactiveCommand<string> reactiveCommand, string previousInput) {
+        bool hasInvalidCharacters = _inputValidator.ContainsInvalidCharacters(input);
+
+        if (hasInvalidCharacters) {
+            reactiveCommand.Execute(previousInput);
+        }
     }
 
 }

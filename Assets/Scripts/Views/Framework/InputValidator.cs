@@ -2,32 +2,37 @@
 namespace SimpleMotions {
 
     public interface IInputValidator {
-        string ValidateInput(string newInput, string previousInput);
+        (string, bool) ValidateInput(string input);
+        bool ContainsInvalidCharacters(string input);
     }
 
     // TODO - VER CASO DE DOS PUNTOS EN DIFERENTES POSICIONES: 'O.123.123'
 
     public class InputValidator : IInputValidator {
 
-        public string ValidateInput(string newInput, string previousInput) {
+        private bool _hasInvalidCharacters;
 
-            if (ContainsInvalidCharacters(newInput)) {
-                return previousInput;
+        public (string, bool) ValidateInput(string input) {
+            input = input.Replace('.', ',');
+
+            _hasInvalidCharacters = ContainsInvalidCharacters(input);
+            
+            if (_hasInvalidCharacters) {
+                return (input, _hasInvalidCharacters);
             }
 
-            newInput = newInput.Replace('.', ',');
-
-            int decimalIndex = newInput.IndexOf('.');
+            int decimalIndex = input.IndexOf('.');
 
             if (decimalIndex != -1) {
-                newInput = newInput.Substring(0, decimalIndex + 1) + newInput.Substring(decimalIndex + 1).Replace(",", "");
+                input = input.Substring(0, decimalIndex + 1) + input.Substring(decimalIndex + 1).Replace(",", "");
             }
 
-            return newInput;
+            return (input, _hasInvalidCharacters);
         }
 
-        private bool ContainsInvalidCharacters(string newInput) {
+        public bool ContainsInvalidCharacters(string newInput) {
             bool lastWasSeparator = false;
+            int separatorCount = 0;
 
             for (int i = 0; i < newInput.Length; i++) {
                 char c = newInput[i];
@@ -35,18 +40,18 @@ namespace SimpleMotions {
                 if (i == 0 && c == '-') {
                     continue;
                 }
-                else if (char.IsDigit(c) || c == 'º') {
-                    lastWasSeparator = false;
-                }
-                else if (c == '.' || c == ',') {
+                else if (c == ',' || c == '.') {
+                    separatorCount++;
+
                     if (lastWasSeparator) {
                         return true;
                     }
 
+                    if (separatorCount > 1) {
+                        return true;
+                    }
+
                     lastWasSeparator = true;
-                }
-                else {
-                    return true;
                 }
             }
 
