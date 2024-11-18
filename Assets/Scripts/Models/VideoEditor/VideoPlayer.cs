@@ -1,6 +1,7 @@
 using static SimpleMotions.SmMath;
 using System.Threading.Tasks;
 using SimpleMotions.Internal;
+using UnityEngine;
 
 namespace SimpleMotions {
 
@@ -32,7 +33,7 @@ namespace SimpleMotions {
 		ReactiveValue<bool> IsLooping { get ; }
 		ReactiveValue<int> TargetFrameRate { get; }
 
-		void SetReactiveValues();
+		void InitReactiveValues();
 	}
 
 	public sealed class VideoPlayer : IVideoPlayer, IVideoPlayerData {
@@ -41,12 +42,12 @@ namespace SimpleMotions {
 		public int LastFrame => TotalFrames.Value;
 
 		public ReactiveValue<bool> IsPlaying { get; } = new();
-        public ReactiveValue<float> CurrentTime { get; } = new();
-        public ReactiveValue<float> DurationSeconds { get; } = new();
-        public ReactiveValue<int> CurrentFrame { get; } = new();
-        public ReactiveValue<int> TotalFrames { get; } = new();
 		public ReactiveValue<bool> IsLooping { get; } = new();
+        public ReactiveValue<int> TotalFrames { get; } = new();
+        public ReactiveValue<int> CurrentFrame { get; } = new();
+        public ReactiveValue<float> CurrentTime { get; } = new();
 		public ReactiveValue<int> TargetFrameRate { get; } = new();
+        public ReactiveValue<float> DurationSeconds { get; } = new();
 
 		private readonly IVideoAnimator _videoAnimator;
 		private readonly VideoData _videoData;
@@ -57,10 +58,20 @@ namespace SimpleMotions {
 			_videoAnimator = videoAnimator;
 			_videoData = videoData;
 
+			IsPlaying.Subscribe(isPlaying => _videoData.IsPlaying = isPlaying);
+			IsLooping.Subscribe(IsLooping => _videoData.IsLooping = IsLooping);
+			TotalFrames.Subscribe(totalFrames => _videoData.TotalFrames = totalFrames);
+			CurrentTime.Subscribe(currentTime => _videoData.CurrentTime = currentTime);
+			CurrentFrame.Subscribe(currentFrame => _videoData.CurrentFrame = currentFrame);
+			TargetFrameRate.Subscribe(framerate =>  { 
+				_videoData.TargetFrameRate = framerate;
+				Application.targetFrameRate = framerate;
+			});	
+			
 			TotalFrames.Subscribe(SetDurationSeconds);
 		}
 
-		public void SetReactiveValues() {
+		public void InitReactiveValues() {
 			IsPlaying.Value = _videoData.IsPlaying;
 			CurrentTime.Value = _videoData.CurrentTime;
 			DurationSeconds.Value = _videoData.DurationSeconds;

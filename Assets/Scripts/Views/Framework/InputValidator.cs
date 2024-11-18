@@ -2,7 +2,7 @@
 namespace SimpleMotions {
 
     public interface IInputValidator {
-        (string, bool) ValidateInput(string input);
+        string ValidateInput(string input);
         bool ContainsInvalidCharacters(string input);
     }
 
@@ -10,16 +10,8 @@ namespace SimpleMotions {
 
     public class InputValidator : IInputValidator {
 
-        private bool _hasInvalidCharacters;
-
-        public (string, bool) ValidateInput(string input) {
+        public string ValidateInput(string input) {
             input = input.Replace('.', ',');
-
-            _hasInvalidCharacters = ContainsInvalidCharacters(input);
-            
-            if (_hasInvalidCharacters) {
-                return (input, _hasInvalidCharacters);
-            }
 
             int decimalIndex = input.IndexOf('.');
 
@@ -27,7 +19,7 @@ namespace SimpleMotions {
                 input = input.Substring(0, decimalIndex + 1) + input.Substring(decimalIndex + 1).Replace(",", "");
             }
 
-            return (input, _hasInvalidCharacters);
+            return input;
         }
 
         public bool ContainsInvalidCharacters(string newInput) {

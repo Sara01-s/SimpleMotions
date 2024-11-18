@@ -31,12 +31,12 @@ public class TimelineCursorView : MonoBehaviour {
         });
     }
 
-    public void UpdateSliderArea(float contentXPos) {
-        _sliderArea.anchoredPosition = new Vector2(contentXPos - _framesHolder.cellSize.x, _sliderArea.anchoredPosition.y);
-    }
-
     public void SetCursorNewFrame(int currentFrame) {
         _cursor.value = currentFrame;
+    }
+
+    public void UpdateSliderArea(float contentXPos) {
+        _sliderArea.anchoredPosition = new Vector2(contentXPos - _framesHolder.cellSize.x, _sliderArea.anchoredPosition.y);
     }
 
     public void RefreshUI() {

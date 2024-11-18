@@ -32,9 +32,6 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private IInputValidator _inputValidator;
 
-	private string _previousCurrentFrame;
-	private string _previousTotalFrames;
-
 	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel, IInputValidator inputValidator) {
 		_videoPlaybackViewModel = videoPlaybackViewModel;
 		_inputValidator = inputValidator;
@@ -67,8 +64,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		});
 
 		_currentFrame.onValueChanged.AddListener(currentFrame => {
-			bool hasInvalidCharacters;
-			(currentFrame, hasInvalidCharacters) = _inputValidator.ValidateInput(currentFrame);
+			currentFrame = _inputValidator.ValidateInput(currentFrame);
 			int.TryParse(currentFrame, out var newFrame);
 
 			if (newFrame > _videoPlaybackViewModel.TotalFrames.Value) {
@@ -79,8 +75,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		});
 
 		_totalFrames.onValueChanged.AddListener(totalFrames => {
-			bool hasInvalidCharacters;
-			(totalFrames, hasInvalidCharacters) = _inputValidator.ValidateInput(totalFrames);
+			totalFrames = _inputValidator.ValidateInput(totalFrames);
 			int.TryParse(totalFrames, out var newFrame);
 
 			if (newFrame >= 10) {
@@ -98,16 +93,23 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 		_videoPlaybackViewModel.CurrentFrame.Subscribe(currentFrame => {
 			_currentFrame.text = currentFrame.ToString();
-			_previousCurrentFrame = currentFrame.ToString();
 		});
 
 		_videoPlaybackViewModel.TotalFrames.Subscribe(totalFrames => {
 			_totalFrames.text = totalFrames.ToString();
-			_previousTotalFrames = totalFrames.ToString();
 		});
 
 		_videoPlaybackViewModel.CurrentTime.Subscribe(currentTime => _currentTime.text = FormatTime(currentTime));
 		_videoPlaybackViewModel.DurationSeconds.Subscribe(durationSeconds => _duration.text = FormatTime(durationSeconds));
+
+		_videoPlaybackViewModel.OnTargetFramerate.Subscribe(targetFramerate => {
+			if (float.TryParse(_totalFrames.text, out var totalFrames)) {
+				float durationSeconds = totalFrames / targetFramerate;
+				_duration.text = FormatTime(durationSeconds);
+			}
+
+			_timelineView.RefreshUI();
+		});
 	}
 
 	private string FormatTime(float value) {
@@ -120,7 +122,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	}
 
 	private void RefreshUI() {
-		_videoPlaybackViewModel.RefreshData();
+		_videoPlaybackViewModel.InitVideoData();
 	}
 
 }

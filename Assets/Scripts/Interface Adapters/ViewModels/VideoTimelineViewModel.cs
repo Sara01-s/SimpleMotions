@@ -8,8 +8,6 @@ namespace SimpleMotions {
 		ReactiveCommand<int> OnFrameChanged { get; }
 		ReactiveCommand ShowKeyframe { get; }
 
-		void RefreshData();
-		
 	}
 
     public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
@@ -25,6 +23,7 @@ namespace SimpleMotions {
         public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoPlayerData videoPlayerData, ITransformComponentViewModel transformComponentViewModel) {
 			// XD
 			transformComponentViewModel.SaveTransformKeyframe.Subscribe(ShowKeyframeXD);
+			
 			_videoTimeline = videoTimeline;
 			_videoPlayerData = videoPlayerData;
 
@@ -38,10 +37,6 @@ namespace SimpleMotions {
 
 		private void SetCurrentFrame(int frame) {
 			_videoTimeline.SetCurrentFrame(frame);
-		}
-
-		public void RefreshData() {
-			_videoPlayerData.SetReactiveValues();
 		}
 
 		public void ShowKeyframeXD(((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) xd) {

@@ -16,8 +16,18 @@ public class VideoSettingsView : MonoBehaviour {
         _videoSettingsViewModel = videoSettingsViewModel;
         _videoCanvasViewModel = videoCanvasViewModel;
 
-        _framerate.onValueChanged.AddListener(_videoSettingsViewModel.OnFramerateUpdate.Execute);
         _framerate.text = _videoSettingsViewModel.Framerate;
+
+        _framerate.onValueChanged.AddListener(input => {
+            if (int.TryParse(input, out var value)) {
+                if (value >= 12 && value <= 144) {
+                    _videoSettingsViewModel.OnFramerateUpdate.Execute(input);
+                }
+                else {
+                    // TODO - Feedback de error (sonido, etc)
+                }
+            }
+        });
     }
 
     public void SubscribeToColorPicker() {
