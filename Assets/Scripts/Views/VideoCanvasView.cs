@@ -91,6 +91,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
 			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
 				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
+				spriteRenderer.sortingLayerName = "UI - Mid";
 			}
 
 			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);

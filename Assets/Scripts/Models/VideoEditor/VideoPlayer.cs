@@ -75,10 +75,7 @@ namespace SimpleMotions {
 			DurationSeconds.Value = _videoData.DurationSeconds;
 			CurrentFrame.Value = _videoData.CurrentFrame;
 			TotalFrames.Value = _videoData.TotalFrames;
-
-			UnityEngine.Debug.Log($"VideoPlayer: {IsLooping.Value}");
 			IsLooping.Value = _videoData.IsLooping;
-			UnityEngine.Debug.Log($"VideoPlayer: {IsLooping.Value}");
 
 			TargetFrameRate.Value = _videoData.TargetFrameRate;
 		}
