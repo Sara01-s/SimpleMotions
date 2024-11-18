@@ -1,7 +1,6 @@
 using static SimpleMotions.SmMath;
 using System.Threading.Tasks;
 using SimpleMotions.Internal;
-using UnityEngine;
 
 namespace SimpleMotions {
 
@@ -33,7 +32,7 @@ namespace SimpleMotions {
 		ReactiveValue<bool> IsLooping { get ; }
 		ReactiveValue<int> TargetFrameRate { get; }
 
-		void InitReactiveValues();
+		void InitReactiveData();
 	}
 
 	public sealed class VideoPlayer : IVideoPlayer, IVideoPlayerData {
@@ -60,24 +59,27 @@ namespace SimpleMotions {
 
 			IsPlaying.Subscribe(isPlaying => _videoData.IsPlaying = isPlaying);
 			IsLooping.Subscribe(IsLooping => _videoData.IsLooping = IsLooping);
-			TotalFrames.Subscribe(totalFrames => _videoData.TotalFrames = totalFrames);
 			CurrentTime.Subscribe(currentTime => _videoData.CurrentTime = currentTime);
 			CurrentFrame.Subscribe(currentFrame => _videoData.CurrentFrame = currentFrame);
-			TargetFrameRate.Subscribe(framerate =>  { 
-				_videoData.TargetFrameRate = framerate;
-				Application.targetFrameRate = framerate;
-			});	
-			
-			TotalFrames.Subscribe(SetDurationSeconds);
+			TargetFrameRate.Subscribe(framerate => _videoData.TargetFrameRate = framerate);	// No se puede usar Unity aqui.
+
+			TotalFrames.Subscribe(totalFrames =>  {
+				_videoData.TotalFrames = totalFrames;
+				SetDurationSeconds(totalFrames);
+			});
 		}
 
-		public void InitReactiveValues() {
+		public void InitReactiveData() {
 			IsPlaying.Value = _videoData.IsPlaying;
 			CurrentTime.Value = _videoData.CurrentTime;
 			DurationSeconds.Value = _videoData.DurationSeconds;
 			CurrentFrame.Value = _videoData.CurrentFrame;
 			TotalFrames.Value = _videoData.TotalFrames;
+
+			UnityEngine.Debug.Log($"VideoPlayer: {IsLooping.Value}");
 			IsLooping.Value = _videoData.IsLooping;
+			UnityEngine.Debug.Log($"VideoPlayer: {IsLooping.Value}");
+
 			TargetFrameRate.Value = _videoData.TargetFrameRate;
 		}
 

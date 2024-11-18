@@ -138,5 +138,5 @@ public class EditorPainter : MonoBehaviour {
 	public void ChangeEditorAccentColor(Color accentColor) {
         PaintImages(_imagesWithAccentColor, accentColor);
     }
-	
+
 }

@@ -9,17 +9,17 @@ namespace SimpleMotions {
         ReactiveCommand OnForwardFrame { get; }
         ReactiveCommand OnBackwardFrame { get; }
         
-
-        ReactiveCommand<bool> IsLooping { get; }
+        ReactiveCommand<bool> OnSetLoop { get; }
         ReactiveCommand<int> OnSetTotalFrames { get; }
         ReactiveCommand<int> OnSetCurrentFrame { get; }
 
         ReactiveValue<bool> IsPlaying { get; }
+        ReactiveValue<bool> IsLooping { get; }
         ReactiveValue<int> TotalFrames { get; }
         ReactiveValue<int> CurrentFrame { get; }
         ReactiveValue<float> CurrentTime { get; }
         ReactiveValue<float> DurationSeconds { get; }
-        ReactiveValue<int> OnTargetFramerate { get; }
+        ReactiveValue<int> TargetFramerate { get; }
 
         void InitVideoData();
 
@@ -32,18 +32,19 @@ namespace SimpleMotions {
         public ReactiveCommand OnFirstFrame { get; } = new();
         public ReactiveCommand OnForwardFrame { get; } = new();
         public ReactiveCommand OnBackwardFrame { get; } = new();
-        
 
-        public ReactiveCommand<bool> IsLooping { get; } = new();
+        public ReactiveCommand<bool> OnSetLoop { get; } = new();
         public ReactiveCommand<int> OnSetTotalFrames { get; } = new();
         public ReactiveCommand<int> OnSetCurrentFrame { get; } = new();
 
         public ReactiveValue<bool> IsPlaying { get; } = new();
+        public ReactiveValue<bool> IsLooping { get; } = new();
         public ReactiveValue<int> TotalFrames { get; } = new();
         public ReactiveValue<int> CurrentFrame { get; } = new();
         public ReactiveValue<float> CurrentTime { get; } = new();
+        public ReactiveValue<int> TargetFramerate { get; } = new();
         public ReactiveValue<float> DurationSeconds { get; } = new();
-        public ReactiveValue<int> OnTargetFramerate { get; } = new();
+
 
         private readonly IVideoPlayerData _videoPlayerData;
         private readonly IVideoPlayback _videoPlayback;
@@ -57,7 +58,7 @@ namespace SimpleMotions {
         }
 
         public void InitVideoData() {
-            _videoPlayerData.InitReactiveValues();
+            _videoPlayerData.InitReactiveData();
         }
 
         private void InitReactiveCommands() {
@@ -67,15 +68,16 @@ namespace SimpleMotions {
             OnBackwardFrame.Subscribe(() => _videoPlayback.DecreaseFrame());
             OnForwardFrame. Subscribe(() => _videoPlayback.IncreaseFrame());
             
-            IsLooping.          Subscribe(isLooping => _videoPlayerData.IsLooping.Value = isLooping);
+            OnSetLoop.          Subscribe(isLooping => _videoPlayerData.IsLooping.Value = isLooping);
             OnSetTotalFrames.   Subscribe(totalFrames => _videoPlayerData.TotalFrames.Value = totalFrames);
             OnSetCurrentFrame.  Subscribe(currentFrame => _videoPlayerData.CurrentFrame.Value = currentFrame);
             
-            _videoPlayerData.TargetFrameRate.Subscribe(targetFramerate => OnTargetFramerate.Value = targetFramerate);
+            _videoPlayerData.TargetFrameRate.Subscribe(targetFramerate => TargetFramerate.Value = targetFramerate);
         }
 
         private void InitReactiveValues() {
             _videoPlayerData.IsPlaying.         Subscribe(isPlaying => IsPlaying.Value = isPlaying);
+            _videoPlayerData.IsLooping.         Subscribe(isLooping => IsLooping.Value = isLooping);
             _videoPlayerData.CurrentTime.       Subscribe(currentTime => CurrentTime.Value = currentTime);
             _videoPlayerData.TotalFrames.       Subscribe(totalFrames => TotalFrames.Value = totalFrames);
             _videoPlayerData.CurrentFrame.      Subscribe(currentFrame => CurrentFrame.Value = currentFrame);

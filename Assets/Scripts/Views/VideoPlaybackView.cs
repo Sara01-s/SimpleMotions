@@ -19,15 +19,13 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	[SerializeField] private Toggle _loopToggle;
 	[SerializeField] private Image _loopImage;
-	[SerializeField] private Sprite _loopOnSprite;
-	[SerializeField] private Sprite _loopOffSprite;
-	[SerializeField] private Color _loopOnColor;
-	[SerializeField] private Color _loopOffColor;
 
-	[SerializeField] private GameObject _play;
-	[SerializeField] private GameObject _pause;
+	[SerializeField] private Image _togglePlayStopImage;
+	[SerializeField] private Sprite _play;
+	[SerializeField] private Sprite _stop;
 
 	[SerializeField] private TimelineView _timelineView;
+	[SerializeField] private EditorPainter _editorPainter;
 
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private IInputValidator _inputValidator;
@@ -51,16 +49,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrame.Execute());
 
 		_loopToggle.onValueChanged.AddListener(isLooping => {
-			_videoPlaybackViewModel.IsLooping.Execute(isLooping);
-
-			if (isLooping) {
-				_loopImage.sprite = _loopOnSprite;
-				_loopImage.color = _loopOnColor;
-			}
-			else {
-				_loopImage.sprite = _loopOffSprite;
-				_loopImage.color = _loopOffColor;
-			}
+			_videoPlaybackViewModel.OnSetLoop.Execute(isLooping);
 		});
 
 		_currentFrame.onValueChanged.AddListener(currentFrame => {
@@ -87,8 +76,23 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private void InitReactiveValues() {
 		_videoPlaybackViewModel.IsPlaying.Subscribe(isPlaying => {
-			_play.SetActive(!isPlaying);
-			_pause.SetActive(isPlaying);
+			if (isPlaying) {
+				_togglePlayStopImage.sprite = _stop;
+			}
+			else {
+				_togglePlayStopImage.sprite = _play;
+			}
+		});
+
+		_videoPlaybackViewModel.IsLooping.Subscribe(isLooping => {
+			_loopToggle.isOn = isLooping;
+
+			if (isLooping) {
+				_loopImage.color = _editorPainter.Theme.AccentColor;
+			}
+			else {
+				_loopImage.color = Color.white;
+			}
 		});
 
 		_videoPlaybackViewModel.CurrentFrame.Subscribe(currentFrame => {
@@ -102,7 +106,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		_videoPlaybackViewModel.CurrentTime.Subscribe(currentTime => _currentTime.text = FormatTime(currentTime));
 		_videoPlaybackViewModel.DurationSeconds.Subscribe(durationSeconds => _duration.text = FormatTime(durationSeconds));
 
-		_videoPlaybackViewModel.OnTargetFramerate.Subscribe(targetFramerate => {
+		_videoPlaybackViewModel.TargetFramerate.Subscribe(targetFramerate => {
 			if (float.TryParse(_totalFrames.text, out var totalFrames)) {
 				float durationSeconds = totalFrames / targetFramerate;
 				_duration.text = FormatTime(durationSeconds);
