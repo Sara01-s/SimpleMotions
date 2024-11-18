@@ -24,6 +24,7 @@ namespace SimpleMotions {
 		[SerializeField] private VideoSettingsView _videoSettingsView;
 		[SerializeField] private ColorPickerView _colorPickerView;
 		[SerializeField] private FullscreenView _fullscreenView;
+		[SerializeField] private FullscreenPlaybackView _fullscreenPlaybackView;
 
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
@@ -165,6 +166,7 @@ namespace SimpleMotions {
 			_editorSettingsView		.Configure();
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_fullscreenView			.Configure();
+			_fullscreenPlaybackView	.Configure();
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);

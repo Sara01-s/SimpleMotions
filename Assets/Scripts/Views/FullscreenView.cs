@@ -10,7 +10,8 @@ public class FullscreenView : MonoBehaviour {
     [SerializeField] private Canvas _editorCanvas;
     [SerializeField] private GameObject _defaultCanvasParent;
     [SerializeField] private GameObject _defaultPlaybackParent;
-    [SerializeField] private GameObject _fullscreenCanvas;
+    [SerializeField] private GameObject _fullscreenCanvasParent;
+    [SerializeField] private GameObject _fullscreenPlaybackParent;
 
     [SerializeField] private GameObject _blocker;
 
@@ -31,14 +32,18 @@ public class FullscreenView : MonoBehaviour {
                 _blocker.SetActive(false);
             }
         });
+
     }
 
     private void SetFullscreen() {
-        _videoCanvas.SetParent(_fullscreenCanvas.transform);
-        _videoPlayback.SetParent(_fullscreenCanvas.transform);
+        _fullscreenPlaybackParent.SetActive(true);
+        _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = true;
+
+        _videoCanvas.SetParent(_fullscreenCanvasParent.transform);
+        _videoPlayback.SetParent(_fullscreenPlaybackParent.transform);
 
         _videoCanvas.anchoredPosition = Vector2.zero;
-        _videoCanvas.sizeDelta = new Vector2(1920, 1030);
+        _videoCanvas.sizeDelta = new Vector2(1920, 1080);
         _videoCanvas.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, _videoCanvas.rect.height);
 
         _videoPlayback.anchoredPosition = Vector2.zero;
@@ -49,6 +54,9 @@ public class FullscreenView : MonoBehaviour {
     }
 
     private void SetDefaultScreen() {
+        _fullscreenPlaybackParent.SetActive(false);
+        _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = false;
+
         _videoCanvas.SetParent(_defaultCanvasParent.transform);
         _videoPlayback.SetParent(_defaultPlaybackParent.transform);
 
