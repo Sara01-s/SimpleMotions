@@ -7,44 +7,39 @@ using System.IO;
 public class ExportView : MonoBehaviour {
 
     [SerializeField] private Camera _cameraToCapture;
-    [SerializeField] private int _captureWidth;
-    [SerializeField] private int _captureHeight;
+	[SerializeField] private Vector2Int _videoResolution;
 
     [SerializeField] private FullscreenView _fullscreen;
     [SerializeField] private FFMPEGExporter _ffmpegExporter;
 
     private IExportViewModel _exportViewModel;
-    private List<byte[]> _images = new();
+    private readonly List<byte[]> _frameImages = new();
 
     public void Configure(IExportViewModel exportViewModel) {
+        exportViewModel.OnExport.Subscribe(StartExport);
         _exportViewModel = exportViewModel;
-
-        _exportViewModel.OnExport.Subscribe(StartExport);
     }
 
     private void StartExport((int totalFrames, int targetFrameRate, string outputFilePath) data) {
-        _fullscreen.SetFullscreen(false);
-
+        _fullscreen.SetFullscreen(withPlayback: false);
         StartCoroutine(CO_ExportFrames(data.totalFrames, data.outputFilePath, data.targetFrameRate));
-
     }
 
     private IEnumerator CO_ExportFrames(int totalFrames, string outputFilePath, int targetFrameRate) {
-        for (int i = 0; i <= totalFrames; i++) {
-            _exportViewModel.CurrentFrame.Value = i;
-            _images.Add(SaveFrame(i));
+        for (int frame = 0; frame <= totalFrames; frame++) {
+            _exportViewModel.CurrentFrame.Value = frame;
+            _frameImages.Add(GetFrameAsPng());
 
-            if (i % 5 == 0) {
-                yield return null;
-            }
+			yield return null;
         }
 
-        string temporaryFilePath = SaveImagesToDisk();
+        string tempFrameImagesFilePath = GetFramesTempDirectory();
 
-        _ffmpegExporter.GenerateVideo(temporaryFilePath, outputFilePath, targetFrameRate);
+		SaveFrameImagesToDisk(tempFrameImagesFilePath);
+        _ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, targetFrameRate);
 
-        if (Directory.Exists(temporaryFilePath)) {
-            Directory.Delete(temporaryFilePath, true);
+        if (Directory.Exists(tempFrameImagesFilePath)) {
+            Directory.Delete(tempFrameImagesFilePath, recursive: true);
         }
 
         Debug.Log("Exportación completada.");
@@ -53,41 +48,38 @@ public class ExportView : MonoBehaviour {
         _fullscreen.SetDefaultScreen();
     }
 
-    private byte[] SaveFrame(int i) {
-        RenderTexture renderTexture = new RenderTexture(_captureWidth, _captureHeight, 24);
-        _cameraToCapture.targetTexture = renderTexture; 
-
-        Texture2D highQualityTexture = new Texture2D(_captureWidth, _captureHeight, TextureFormat.RGB24, false);
-
+    private byte[] GetFrameAsPng() {
+        _cameraToCapture.targetTexture = new RenderTexture(_videoResolution.x, _videoResolution.y, depth: 24);
         _cameraToCapture.Render(); // Renderiza la escena a la textura
-        RenderTexture.active = renderTexture; // Establecer el RenderTexture como activo
-        highQualityTexture.ReadPixels(new Rect(0, 0, _captureWidth, _captureHeight), 0, 0); // Lee los píxeles
-        highQualityTexture.Apply(); // Aplica los cambios
+        RenderTexture.active = _cameraToCapture.targetTexture; // Establecer el RenderTexture como activo
 
-        // Limpiar
+        var highQualityTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.RGB24, false);
+        highQualityTexture.ReadPixels(new Rect(0.0f, 0.0f, _videoResolution.x, _videoResolution.y), 0, 0); // Lee los píxeles
+        highQualityTexture.Apply();
+
         _cameraToCapture.targetTexture = null; 
         RenderTexture.active = null; 
 
-        byte[] imageBytes = highQualityTexture.EncodeToPNG();
-
-        return imageBytes;
+        return highQualityTexture.EncodeToPNG();
     }
 
-    private string SaveImagesToDisk() {
-        var temporaryFolderPath = Path.Combine(Application.persistentDataPath, "TempFrames");
+	private string GetFramesTempDirectory() {
+        var tempDirectoryPath = Path.Combine(Application.persistentDataPath, ".TempFrames");
 
-        if (!Directory.Exists(temporaryFolderPath)) {
-            Directory.CreateDirectory(temporaryFolderPath);
+        if (!Directory.Exists(tempDirectoryPath)) {
+            Directory.CreateDirectory(tempDirectoryPath);
         }
 
-        for (int i = 0; i < _images.Count; i++) {
-            string filePath = Path.Combine(temporaryFolderPath, $"frame_{i:D5}.png"); 
-            File.WriteAllBytes(filePath, _images[i]);
+		return tempDirectoryPath;
+	}
+
+    private void SaveFrameImagesToDisk(string filePath) {
+        for (int i = 0; i < _frameImages.Count; i++) {
+            string frameAbsoluteFilepath = Path.Combine(filePath, $"frame_{i:D5}.png");
+            File.WriteAllBytes(frameAbsoluteFilepath, _frameImages[i]);
         }
 
-        Debug.Log($"Imágenes guardadas en {temporaryFolderPath}");
-
-        return temporaryFolderPath;
+        Debug.Log($"Imágenes guardadas en {filePath}");
     }
 
 }

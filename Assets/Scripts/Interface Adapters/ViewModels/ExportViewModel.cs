@@ -2,19 +2,19 @@
 namespace SimpleMotions {
 
     public interface IExportViewModel {
-        ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath)> OnExport { get; }
 
+        ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath)> OnExport { get; }
         ReactiveValue<int> CurrentFrame { get; }
+		
     }
 
     public class ExportViewModel : IExportViewModel {
 
         public ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath)> OnExport { get; } = new();
-
         public ReactiveValue<int> CurrentFrame { get; } = new();
 
-        private IExportModel _exportModel;
-        private IVideoPlayerData _videoPlayerData;
+        private readonly IExportModel _exportModel;
+        private readonly IVideoPlayerData _videoPlayerData;
 
         public ExportViewModel(IExportModel exportModel, IVideoPlayerData videoPlayerData) {
             _exportModel = exportModel;

@@ -21,19 +21,13 @@ namespace SimpleMotions {
         public ReactiveCommand Export { get; } = new();
         public ReactiveCommand Present { get; } = new();
 
-        private IVideoPlayerData _videoPlayerData;
-        
         private int _totalFrames;
 
         public ExportModel(IVideoPlayerData videoPlayerData) {
-            _videoPlayerData = videoPlayerData;
+            TargetFrameRate.Value = videoPlayerData.TargetFrameRate.Value;
+            _totalFrames = videoPlayerData.TotalFrames.Value;
+            videoPlayerData.TotalFrames.Subscribe(totalFrames => _totalFrames = totalFrames);
 
-            TargetFrameRate.Value = _videoPlayerData.TargetFrameRate.Value;
-
-            _totalFrames = _videoPlayerData.TotalFrames.Value;
-
-            _videoPlayerData.TotalFrames.Subscribe(totalFrames => _totalFrames = totalFrames);
-            
             Export.Subscribe(value => OnExport.Execute((_totalFrames, TargetFrameRate.Value, OutputFilePath.Value)));
         }
 

@@ -13,20 +13,19 @@ public class FFMPEGExporter : MonoBehaviour {
         string inputPattern = $"{inputFolder}/frame_%05d.png";
         string arguments = $"-y -framerate {frameRate} -i \"{inputPattern}\" -c:v libx264 -pix_fmt yuv420p -b:v 5000k -preset medium \"{outputFilePath}\"";
 
-        var ffmpegProcess = new Process();
-        ffmpegProcess.StartInfo.FileName = _ffmpegPath;
-        ffmpegProcess.StartInfo.Arguments = arguments;
-        ffmpegProcess.StartInfo.UseShellExecute = false;
-        ffmpegProcess.StartInfo.RedirectStandardError = true;
-        ffmpegProcess.StartInfo.RedirectStandardOutput = true;  
+        var ffmpegCommand = new Process();
+        ffmpegCommand.StartInfo.FileName = _ffmpegPath;
+        ffmpegCommand.StartInfo.Arguments = arguments;
+        ffmpegCommand.StartInfo.UseShellExecute = false;
+        ffmpegCommand.StartInfo.RedirectStandardError = true;
+        ffmpegCommand.StartInfo.RedirectStandardOutput = true;  
+        ffmpegCommand.Start();
 
-        ffmpegProcess.Start();
+        string errorOutput = ffmpegCommand.StandardError.ReadToEnd();
 
-        string errorOutput = ffmpegProcess.StandardError.ReadToEnd();
+        ffmpegCommand.WaitForExit();
 
-        ffmpegProcess.WaitForExit();
-
-        if (ffmpegProcess.ExitCode != 0) {
+        if (ffmpegCommand.ExitCode != 0) {
             UnityEngine.Debug.LogError($"FFMPEG Error: {errorOutput}");
         }
         else {
