@@ -3213,11 +3213,13 @@ MonoBehaviour:
   _transformComponentView: {fileID: 2065154767}
   _textComponentView: {fileID: 1482041813}
   _shapeComponentView: {fileID: 718388302}
-  _editorSettingsView: {fileID: 553886973}
   _videoSettingsView: {fileID: 1997927949}
+  _editorSettingsView: {fileID: 553886973}
+  _exportSettingsView: {fileID: 1967954486}
   _colorPickerView: {fileID: 759356684}
   _fullscreenView: {fileID: 1013891431}
   _fullscreenPlaybackView: {fileID: 1439722697}
+  _exportView: {fileID: 2036753166}
   _selectionGizmoBody: {fileID: 1008918770}
   _selectionGizmoCorners:
   - {fileID: 2143280888}
@@ -11417,10 +11419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126bb1779afa2b4c79d025c672fc9e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _editorCamera: {fileID: 519420031}
   _fullscreenToggle: {fileID: 1256097152}
   _videoCanvas: {fileID: 1403847089}
-  _videoCanvasOrigin: {fileID: 1961741125}
   _videoPlayback: {fileID: 1804444934}
   _uiBlocker: {fileID: 1310168493}
   _defaultCanvasParent: {fileID: 1123448605}
@@ -13385,7 +13385,7 @@ GameObject:
   - component: {fileID: 1234551827}
   - component: {fileID: 1234551826}
   m_Layer: 5
-  m_Name: InputField - Frame range Min
+  m_Name: InputField - Output Directory
   m_TagString: PrimaryColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22544,7 +22544,7 @@ GameObject:
   - component: {fileID: 1945399109}
   - component: {fileID: 1945399108}
   m_Layer: 5
-  m_Name: InputField - Color HEX
+  m_Name: InputField - FrameRate
   m_TagString: PrimaryColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22800,6 +22800,7 @@ GameObject:
   - component: {fileID: 1967954483}
   - component: {fileID: 1967954485}
   - component: {fileID: 1967954484}
+  - component: {fileID: 1967954486}
   m_Layer: 5
   m_Name: Export
   m_TagString: PrimaryColor
@@ -22871,6 +22872,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1967954482}
   m_CullTransparentMesh: 1
+--- !u!114 &1967954486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967954482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c785421c4af32f8289bdf425f5c0811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _framerate: {fileID: 1945399108}
+  _outputFilePath: {fileID: 1234551826}
+  _export: {fileID: 1165064952}
+  _present: {fileID: 995122668}
 --- !u!114 &1987544416 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 658165502484557246, guid: 9c7953e42ba65ed339a486fbf98ca2e2, type: 3}
@@ -23256,8 +23273,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.46000004
+  m_Value: 0.99999994
+  m_Size: 0.616
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -23555,6 +23572,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026869703}
   m_CullTransparentMesh: 1
+--- !u!1 &2036753164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2036753167}
+  - component: {fileID: 2036753166}
+  - component: {fileID: 2036753165}
+  m_Layer: 0
+  m_Name: Export
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2036753165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036753164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6706e92406c711d469e5bbc9f4e76a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ffmpegPath: /usr/bin/ffmpeg
+--- !u!114 &2036753166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036753164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f6d9db3cc4bdfd3699e79fc5a21b7eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraToCapture: {fileID: 519420031}
+  _captureWidth: 1920
+  _captureHeight: 1080
+  _fullscreen: {fileID: 1013891431}
+  _ffmpegExporter: {fileID: 2036753165}
+--- !u!4 &2036753167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036753164}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.9332256, y: -0.63081855, z: -17.709356}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2046517166 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8353154412895032771, guid: 9c7953e42ba65ed339a486fbf98ca2e2, type: 3}
@@ -25004,6 +25084,7 @@ SceneRoots:
   - {fileID: 1490453993}
   - {fileID: 759356683}
   - {fileID: 1013891432}
+  - {fileID: 2036753167}
   - {fileID: 2144207049}
   - {fileID: 1910267728}
   - {fileID: 1961741125}
