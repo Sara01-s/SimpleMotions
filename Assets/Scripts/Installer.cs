@@ -181,6 +181,7 @@ namespace SimpleMotions {
 			}
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
+			_editorPainter.Configure();
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);
 		}
 

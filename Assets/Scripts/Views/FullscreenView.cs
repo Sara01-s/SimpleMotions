@@ -39,7 +39,7 @@ public class FullscreenView : MonoBehaviour {
 
         _fullscreenToggle.onValueChanged.AddListener(isFullscreen => {
             if (isFullscreen) {
-                SetFullscreen(true);
+                SetFullscreen(withPlayback: true);
             }
             else {
                 SetDefaultScreen();

@@ -116,7 +116,6 @@ namespace SimpleMotions {
 			CurrentFrame.Value = frame;
 			SetCurrentTime(frame);
 
-			// TODO - Ver caso en el que está reproduciéndose el video y se llama esta función.
 			_videoAnimator.GenerateVideoCache();
 			_videoAnimator.InterpolateAllEntities(frame);
 		}

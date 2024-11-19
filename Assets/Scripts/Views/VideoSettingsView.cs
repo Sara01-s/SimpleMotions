@@ -8,6 +8,8 @@ public class VideoSettingsView : MonoBehaviour {
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private TMP_InputField _framerate;
     [SerializeField] private Image _currentColor;
+	[SerializeField] private AudioPlayer _audioPlayer;
+	[SerializeField] private int _minFrameRate, _maxFrameRate;
 
     private IVideoSettingsViewModel _videoSettingsViewModel;
     private IVideoCanvasViewModel _videoCanvasViewModel;
@@ -19,12 +21,13 @@ public class VideoSettingsView : MonoBehaviour {
         _framerate.text = _videoSettingsViewModel.Framerate;
 
         _framerate.onValueChanged.AddListener(input => {
+			// TODO - Ver cuando reproducir sonido de error.
             if (int.TryParse(input, out var value)) {
-                if (value >= 12 && value <= 144) {
+                if (value >= _minFrameRate && value <= _maxFrameRate) {
                     _videoSettingsViewModel.OnFramerateUpdate.Execute(input);
                 }
-                else {
-                    // TODO - Feedback de error (sonido, etc)
+                else if (value > _maxFrameRate) {
+					_audioPlayer.PlayErrorSound();
                 }
             }
         });

@@ -24,11 +24,13 @@ public class EditorPainter : MonoBehaviour {
 	[SerializeField] private TMP_InputField[] _inputFields;
 
 	[Space(20.0f)]
-	[SerializeField] private bool _findUIOnAwake;
+	[SerializeField] private bool _findUIOnConfigure;
 
-	private void Awake() {
-		if (_findUIOnAwake) {
-			FindUI();
+	private Image[] _previousImagesWithAccentColor;
+
+	public void Configure() {
+		if (_findUIOnConfigure) {
+			FindNewUI();
 		}
 	}
 
@@ -36,7 +38,7 @@ public class EditorPainter : MonoBehaviour {
 		ClearCache();
 	}
 
-	public void FindUI() {
+	public void FindNewUI() {
 		_imagesWithPrimaryColor = GetImagesWithTag(_primaryColorTag);
 		_imagesWithSecondaryColor = GetImagesWithTag(_secondaryColorTag);
 		_imagesWithBackgroundColor = GetImagesWithTag(_backgroundColorTag);
@@ -47,7 +49,7 @@ public class EditorPainter : MonoBehaviour {
 
 	public void ApplyThemeIfNotEmpty(EditorThemeUnity newTheme, bool checkForNewUI = false) {
 		if (checkForNewUI) {
-			FindUI();
+			FindNewUI();
 		}
 		
 		var themeColors = new Color[] {
@@ -66,7 +68,7 @@ public class EditorPainter : MonoBehaviour {
 
 	public void ApplyTheme(EditorThemeUnity theme, bool checkForNewUI = false) {
 		if (checkForNewUI) {
-			FindUI();
+			FindNewUI();
 		}
 
 		PaintImages(_imagesWithPrimaryColor, theme.PrimaryColor);
@@ -131,12 +133,18 @@ public class EditorPainter : MonoBehaviour {
 
 	[ContextMenu("Apply Editor Theme")]
 	private void ApplyEditorTheme() {
-		FindUI();
+		FindNewUI();
 		ApplyTheme(Theme);
 	}
 
 	public void ChangeEditorAccentColor(Color accentColor) {
-        PaintImages(_imagesWithAccentColor, accentColor);
+		if (_previousImagesWithAccentColor == null || _imagesWithAccentColor != _previousImagesWithAccentColor) {
+			// Different arrays.
+			_imagesWithAccentColor = GetImagesWithTag(_accentColorTag);
+		}
+
+		PaintImages(_imagesWithAccentColor, accentColor);
+		_previousImagesWithAccentColor = _imagesWithAccentColor;
     }
 
 }
