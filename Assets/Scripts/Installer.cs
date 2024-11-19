@@ -20,11 +20,13 @@ namespace SimpleMotions {
 		[SerializeField] private TransformComponentView _transformComponentView;
 		[SerializeField] private TextComponentView _textComponentView;
 		[SerializeField] private ShapeComponentView _shapeComponentView;
-		[SerializeField] private EditorSettingsView _editorSettingsView;
 		[SerializeField] private VideoSettingsView _videoSettingsView;
+		[SerializeField] private EditorSettingsView _editorSettingsView;
+		[SerializeField] private ExportSettingsView _exportSettingsView;
 		[SerializeField] private ColorPickerView _colorPickerView;
 		[SerializeField] private FullscreenView _fullscreenView;
 		[SerializeField] private FullscreenPlaybackView _fullscreenPlaybackView;
+		[SerializeField] private ExportView _exportView;
 
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
@@ -87,6 +89,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IVideoPlayback, 	 VideoPlayback>();
 			_services.RegisterService<IVideoCanvas, 	 VideoCanvas>();
 			_services.RegisterService<IVideoEntities, 	 VideoEntities>();
+			_services.RegisterService<IExportModel, ExportModel>();
 
 			// ViewModels
 			_services.RegisterService<IVideoPlaybackViewModel, 		VideoPlaybackViewModel>();
@@ -101,6 +104,8 @@ namespace SimpleMotions {
 			_services.RegisterService<IInputValidator, 				InputValidator>();
 			_services.RegisterService<IEntityViewModel,				EntityViewModel>();
 			_services.RegisterService<IVideoSettingsViewModel, 	VideoSettingsViewModel>();
+			_services.RegisterService<IExportSettingsViewModel, ExportSettingsViewModel>();
+			_services.RegisterService<IExportViewModel, ExportViewModel>();
 
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -164,10 +169,12 @@ namespace SimpleMotions {
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
 			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
 			_colorPickerView		.Configure();
-			_editorSettingsView		.Configure();
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
+			_editorSettingsView		.Configure();
+			_exportSettingsView		.Configure(_services.GetService<IExportSettingsViewModel>());
 			_fullscreenView			.Configure();
 			_fullscreenPlaybackView	.Configure();
+			_exportView				.Configure(_services.GetService<IExportViewModel>());
 
 			foreach (var corner in _selectionGizmoCorners) {
 				corner.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);

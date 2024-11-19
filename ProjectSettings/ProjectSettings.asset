@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: "Juli\xE1n&Sara"
+  companyName: JulianSara
   productName: Simple Motions
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}

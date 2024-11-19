@@ -39,12 +39,10 @@ public class FullscreenView : MonoBehaviour {
 
         _fullscreenToggle.onValueChanged.AddListener(isFullscreen => {
             if (isFullscreen) {
-                SetFullscreen();
-                _uiBlocker.SetActive(true);
+                SetFullscreen(true);
             }
             else {
                 SetDefaultScreen();
-                _uiBlocker.SetActive(false);
             }
         });
 
@@ -58,7 +56,12 @@ public class FullscreenView : MonoBehaviour {
 		_videoCanvasOrigin.SetParent(null);
 	}
 
-    private void SetFullscreen() {
+    public void SetFullscreen(bool withPlayback) {
+        if (!withPlayback) {
+            _videoPlayback.gameObject.SetActive(false);
+        }
+
+        _uiBlocker.SetActive(true);
         _fullscreenPlaybackParent.SetActive(true);
         _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = true;
 
@@ -78,7 +81,9 @@ public class FullscreenView : MonoBehaviour {
         _editorCanvas.sortingLayerName = _backgroundLayerName;
     }
 
-    private void SetDefaultScreen() {
+    public void SetDefaultScreen() {
+        _uiBlocker.SetActive(false);
+        _videoPlayback.gameObject.SetActive(true);
         _fullscreenPlaybackParent.SetActive(false);
         _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = false;
 
