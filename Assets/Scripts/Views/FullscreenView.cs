@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class FullscreenView : MonoBehaviour {
 
+	[SerializeField] private Camera _editorCamera;
     [SerializeField] private Toggle _fullscreenToggle;
     [SerializeField] private RectTransform _videoCanvas;
+	[SerializeField] private Transform _videoCanvasOrigin;
     [SerializeField] private RectTransform _videoPlayback;
 
     [SerializeField] private Canvas _editorCanvas;
@@ -17,6 +19,8 @@ public class FullscreenView : MonoBehaviour {
 
     private Vector2 _defaultCanvasSize;
     private Vector2 _defaultPlaybackSize;
+
+	private Vector3 _initCanvasOrigin;
 
     public void Configure() {
         _defaultCanvasSize = _videoCanvas.sizeDelta;
@@ -33,7 +37,15 @@ public class FullscreenView : MonoBehaviour {
             }
         });
 
+		CenterVideoCanvasOrigin();
+		_initCanvasOrigin = _videoCanvasOrigin.transform.position;
     }
+
+	private void CenterVideoCanvasOrigin() {
+		_videoCanvasOrigin.SetParent(_videoCanvas);
+		_videoCanvasOrigin.localPosition = Vector2.zero; // _videoCanvas.rect.center (in world space)
+		_videoCanvasOrigin.SetParent(null);
+	}
 
     private void SetFullscreen() {
         _fullscreenPlaybackParent.SetActive(true);
@@ -44,7 +56,9 @@ public class FullscreenView : MonoBehaviour {
 
         _videoCanvas.anchoredPosition = Vector2.zero;
         _videoCanvas.sizeDelta = new Vector2(1920, 1080);
-        _videoCanvas.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, _videoCanvas.rect.height);
+
+		CenterVideoCanvasOrigin();
+		_editorCamera.orthographicSize = 3.0f;
 
         _videoPlayback.anchoredPosition = Vector2.zero;
         _videoPlayback.sizeDelta = new Vector2(1920, 50);
@@ -64,6 +78,9 @@ public class FullscreenView : MonoBehaviour {
         _videoCanvas.anchorMax = new Vector2(0.5f, 0.5f);
         _videoCanvas.anchoredPosition = Vector2.zero;
         _videoCanvas.sizeDelta = _defaultCanvasSize;
+
+		_videoCanvasOrigin.transform.position = _initCanvasOrigin;
+		_editorCamera.orthographicSize = 5.0f;
 
         _videoPlayback.anchorMin = new Vector2(0.5f, 0.5f);
         _videoPlayback.anchorMax = new Vector2(0.5f, 0.5f);
