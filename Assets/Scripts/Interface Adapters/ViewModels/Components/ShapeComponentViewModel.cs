@@ -4,6 +4,7 @@ namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
         void SetColor(Color color);
+		void SetShape(string shapeName);
     }
 
     public class ShapeComponentViewModel : ComponentViewModel, IShapeComponentViewModel {
@@ -14,14 +15,16 @@ namespace SimpleMotions {
             _entitySelector = entitySelector;
         }
 
-        public void SetColor(Color color) {
-            var selectedEntity = _entitySelector.SelectedEntity;
+		public void SetShape(string shapeName) {
+			if (_entitySelector.TryGetSelectedEntityId(out int selectedEntity)) {
+				SetEntityShape(selectedEntity, shapeName);
+			}
+		}
 
-            if (selectedEntity.Id == Entity.Invalid.Id) {
-                return;
-            }
-            
-            ChangeEntityColor(selectedEntity.Id, color);
+        public void SetColor(Color color) {
+			if (_entitySelector.TryGetSelectedEntityId(out int selectedEntity)) {
+            	SetEntityColor(selectedEntity, color);
+			}
         }
 
     }

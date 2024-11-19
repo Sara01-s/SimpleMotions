@@ -16,6 +16,7 @@ namespace SimpleMotions {
 
 	}
 
+	// TODO - Ojo sara
     public class TransformComponentViewModel : ITransformComponentViewModel {
 
 		public ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; } = new();

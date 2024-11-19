@@ -176,9 +176,15 @@ namespace SimpleMotions.Internal {
 	public sealed class Shape : Component {
 
 		public enum Primitive {
-			Triangle,
-			Circle,
 			Rect,
+			Circle,
+			Line,
+			Triangle,
+			Star,
+			Hexagon,
+			Octagon,
+			Heart,
+			Image
 		}
 
 		public Primitive PrimitiveShape = Primitive.Circle;

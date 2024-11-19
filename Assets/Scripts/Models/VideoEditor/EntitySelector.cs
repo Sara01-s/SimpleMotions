@@ -9,6 +9,7 @@ namespace SimpleMotions {
 		void SelectEntity(int entityId);
 		void DeselectEntity();
 		bool HasSelectedEntity();
+		bool TryGetSelectedEntityId(out int selectedEntityId);
 
 		ReactiveCommand<Entity> OnEntitySelected { get; }
 		ReactiveCommand OnEntityDeselected { get; }
@@ -37,6 +38,19 @@ namespace SimpleMotions {
 		public void DeselectEntity() {
 			SelectedEntity = Entity.Invalid;
 			OnEntityDeselected.Execute();
+		}
+
+		public bool TryGetSelectedEntityId(out int selectedEntityId) {
+			int entityId = SelectedEntity.Id;
+			int invalidId = Entity.Invalid.Id;
+
+			if (entityId == invalidId) {
+				selectedEntityId = invalidId;
+				return false;
+			}
+
+			selectedEntityId = entityId;
+			return true;
 		}
 
 		public bool HasSelectedEntity() {

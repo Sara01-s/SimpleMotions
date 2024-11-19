@@ -11,7 +11,8 @@ namespace SimpleMotions {
 
 		void SetEntityPosition(int entityId, (float x, float y) position);
 		void SetEntityScale(int entityId, (float w, float h) scale);
-		void ChangeEntityColor(int entityId, Color color);
+		void SetEntityShape(int entityId, string shapeName);
+		void SetEntityColor(int entityId, Color color);
 		
 	}
 
@@ -31,6 +32,23 @@ namespace SimpleMotions {
 		public void SetEntityScale(int entityId, (float w, float h) scale) {
 			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale = new Scale(scale.w, scale.h);
 			_videoCanvas.DisplayEntity(entityId);
+		}
+
+		public void SetEntityColor(int entityId, Color newColor) {
+            if (_videoCanvas.EntityHasComponent<Shape>(entityId)) {
+                _videoCanvas.GetEntityComponent<Shape>(entityId).Color = newColor;
+                _videoCanvas.DisplayEntity(entityId);
+            }
+        }
+
+		public void SetEntityShape(int entityId, string shapeName) {
+			if (System.Enum.TryParse(typeof(Shape.Primitive), shapeName, out var primitiveShape)) {
+				_videoCanvas.GetEntityComponent<Shape>(entityId).PrimitiveShape = (Shape.Primitive)primitiveShape;
+				_videoCanvas.DisplayEntity(entityId);
+			}
+			else {
+				throw new System.ArgumentException($"\"{shapeName}\" primitive shape does not exist.");
+			}
 		}
 
 		public bool EntityHasTransform(int entityId) {
@@ -68,13 +86,6 @@ namespace SimpleMotions {
 			text = _videoCanvas.GetEntityComponent<Text>(entityId).Content;
 			return true;
 		}
-
-		public void ChangeEntityColor(int entityId, Color newColor) {
-            if (_videoCanvas.EntityHasComponent<Shape>(entityId)) {
-                _videoCanvas.GetEntityComponent<Shape>(entityId).Color = newColor;
-                _videoCanvas.DisplayEntity(entityId);
-            }
-        }
 
     }
 }
