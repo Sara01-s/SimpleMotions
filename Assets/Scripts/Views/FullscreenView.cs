@@ -3,42 +3,53 @@ using UnityEngine;
 
 public class FullscreenView : MonoBehaviour {
 
-	[SerializeField] private Camera _editorCamera;
     [SerializeField] private Toggle _fullscreenToggle;
-    [SerializeField] private RectTransform _videoCanvas;
-	[SerializeField] private Transform _videoCanvasOrigin;
-    [SerializeField] private RectTransform _videoPlayback;
 
-    [SerializeField] private Canvas _editorCanvas;
+    [SerializeField] private RectTransform _videoCanvas;
+    [SerializeField] private RectTransform _videoPlayback;
+    [SerializeField] private GameObject _uiBlocker;
+
     [SerializeField] private GameObject _defaultCanvasParent;
     [SerializeField] private GameObject _defaultPlaybackParent;
+
+	[SerializeField] private Camera _editorCamera;
+    [SerializeField] private Canvas _editorCanvas;
+
     [SerializeField] private GameObject _fullscreenCanvasParent;
     [SerializeField] private GameObject _fullscreenPlaybackParent;
 
-    [SerializeField] private GameObject _blocker;
+	[SerializeField] private Transform _videoCanvasOrigin;
+
+    [SerializeField] private float _fullscreenWidth = 1920.0f;
+    [SerializeField] private float _fullscreenHeight = 1080.0f;
+
+    [SerializeField] private string _backgroundLayerName = "UI - BG";
+    [SerializeField] private string _frontLayerName = "UI - Front";
 
     private Vector2 _defaultCanvasSize;
     private Vector2 _defaultPlaybackSize;
+	private Vector3 _defaultCanvasOrigin;
 
-	private Vector3 _initCanvasOrigin;
+    private float _defaultOrtographicSize;
 
     public void Configure() {
         _defaultCanvasSize = _videoCanvas.sizeDelta;
         _defaultPlaybackSize = _videoPlayback.sizeDelta;
+        _defaultOrtographicSize = _editorCamera.orthographicSize;
 
         _fullscreenToggle.onValueChanged.AddListener(isFullscreen => {
             if (isFullscreen) {
                 SetFullscreen();
-                _blocker.SetActive(true);
+                _uiBlocker.SetActive(true);
             }
             else {
                 SetDefaultScreen();
-                _blocker.SetActive(false);
+                _uiBlocker.SetActive(false);
             }
         });
 
 		CenterVideoCanvasOrigin();
-		_initCanvasOrigin = _videoCanvasOrigin.transform.position;
+		_defaultCanvasOrigin = _videoCanvasOrigin.transform.position;
     }
 
 	private void CenterVideoCanvasOrigin() {
@@ -55,16 +66,16 @@ public class FullscreenView : MonoBehaviour {
         _videoPlayback.SetParent(_fullscreenPlaybackParent.transform);
 
         _videoCanvas.anchoredPosition = Vector2.zero;
-        _videoCanvas.sizeDelta = new Vector2(1920, 1080);
+        _videoCanvas.sizeDelta = new Vector2(_fullscreenWidth, _fullscreenHeight);
 
 		CenterVideoCanvasOrigin();
-		_editorCamera.orthographicSize = 3.0f;
+		_editorCamera.orthographicSize = TranslateCameraToWorldPosition();
 
         _videoPlayback.anchoredPosition = Vector2.zero;
-        _videoPlayback.sizeDelta = new Vector2(1920, 50);
-        _videoPlayback.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 0, _videoPlayback.rect.height);
+        _videoPlayback.sizeDelta = new Vector2(_fullscreenWidth, _videoPlayback.sizeDelta.y);
+        _videoPlayback.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 0.0f, _videoPlayback.rect.height);
 
-        _editorCanvas.sortingLayerName = "UI - BG";
+        _editorCanvas.sortingLayerName = _backgroundLayerName;
     }
 
     private void SetDefaultScreen() {
@@ -79,15 +90,20 @@ public class FullscreenView : MonoBehaviour {
         _videoCanvas.anchoredPosition = Vector2.zero;
         _videoCanvas.sizeDelta = _defaultCanvasSize;
 
-		_videoCanvasOrigin.transform.position = _initCanvasOrigin;
-		_editorCamera.orthographicSize = 5.0f;
+		_videoCanvasOrigin.transform.position = _defaultCanvasOrigin;
+		_editorCamera.orthographicSize = _defaultOrtographicSize;
 
         _videoPlayback.anchorMin = new Vector2(0.5f, 0.5f);
         _videoPlayback.anchorMax = new Vector2(0.5f, 0.5f);
         _videoPlayback.anchoredPosition = Vector2.zero;
         _videoPlayback.sizeDelta = _defaultPlaybackSize;
 
-        _editorCanvas.sortingLayerName = "UI - Front";
+        _editorCanvas.sortingLayerName = _frontLayerName;
+    }
+
+    private float TranslateCameraToWorldPosition() {
+        var newOrtographicSize = _defaultCanvasSize.x / _fullscreenWidth;
+        return newOrtographicSize * _defaultOrtographicSize;
     }
 
 }

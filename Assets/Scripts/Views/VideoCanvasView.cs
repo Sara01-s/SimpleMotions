@@ -14,6 +14,9 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[SerializeField] private Transform _canvasOrigin;
 	[SerializeField] private Camera _editorCamera;
 
+	[Header("Fullscreen")]
+	[SerializeField] private string _midLayerName = "UI - Mid";
+
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
 	private IVideoCanvasViewModel _videoCanvasViewModel;
@@ -91,7 +94,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
 			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
 				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
-				spriteRenderer.sortingLayerName = "UI - Mid";
+				spriteRenderer.sortingLayerName = _midLayerName;
 			}
 
 			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
