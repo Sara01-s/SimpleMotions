@@ -5,8 +5,6 @@ using TMPro;
 
 public class ExportSettingsView : MonoBehaviour {
 
-    // Volver a poner en el installer esto
-
     [SerializeField] private TMP_InputField _framerate;
     [SerializeField] private TMP_InputField _outputFilePath;
     [SerializeField] private Button _export;
@@ -26,6 +24,8 @@ public class ExportSettingsView : MonoBehaviour {
 
         _export.onClick.AddListener(_exportSettingsViewModel.OnExport.Execute);
         _present.onClick.AddListener(_exportSettingsViewModel.OnPresent.Execute);
+        
+        _outputFilePath.onSubmit.AddListener(value => _exportSettingsViewModel.OnExport.Execute());
     }
 
     private void SetFramerate(string newFramerate) {

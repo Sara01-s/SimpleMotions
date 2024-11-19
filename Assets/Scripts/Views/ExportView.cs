@@ -22,7 +22,6 @@ public class ExportView : MonoBehaviour {
         _exportViewModel.OnExport.Subscribe(StartExport);
     }
 
-                                 // 300            // 60 fps           / 5 segundos
     private void StartExport((int totalFrames, int targetFrameRate, string outputFilePath) data) {
         _fullscreen.SetFullscreen(false);
 
@@ -43,6 +42,10 @@ public class ExportView : MonoBehaviour {
         string temporaryFilePath = SaveImagesToDisk();
 
         _ffmpegExporter.GenerateVideo(temporaryFilePath, outputFilePath, targetFrameRate);
+
+        if (Directory.Exists(temporaryFilePath)) {
+            Directory.Delete(temporaryFilePath, true);
+        }
 
         Debug.Log("Exportación completada.");
 
