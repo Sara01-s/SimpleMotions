@@ -80,23 +80,26 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
-        var firstInput = transformData.pos.x.ToString("G");
+		// General numeric formatting, see https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
+		const string floatFormat = "G";
+
+        var firstInput = transformData.pos.x.ToString(floatFormat);
         _previousXInput = firstInput;
         _positionX.text = firstInput;
 
-        firstInput = transformData.pos.y.ToString("G");
+        firstInput = transformData.pos.y.ToString(floatFormat);
         _previousYInput = firstInput;
         _positionY.text = firstInput;
 
-        firstInput = transformData.scale.w.ToString("G");
+        firstInput = transformData.scale.w.ToString(floatFormat);
         _previousWInput = firstInput;
         _scaleW.text = firstInput;
 
-        firstInput = transformData.scale.h.ToString("G");
+        firstInput = transformData.scale.h.ToString(floatFormat);
         _previousHInput = firstInput;
         _scaleH.text = firstInput;
 
-        firstInput = transformData.rollAngleDegrees.ToString("G");
+        firstInput = transformData.rollAngleDegrees.ToString(floatFormat);
         _previousRInput = firstInput;
         _roll.text = firstInput;
     }

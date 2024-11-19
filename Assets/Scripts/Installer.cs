@@ -28,6 +28,7 @@ namespace SimpleMotions {
 
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
+		[SerializeField] private SelectionGizmoCorner[] _selectionGizmoCorners;
 
 		[Header("Data")]
 		[SerializeField] private string _projectName;
@@ -167,6 +168,10 @@ namespace SimpleMotions {
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_fullscreenView			.Configure();
 			_fullscreenPlaybackView	.Configure();
+
+			foreach (var corner in _selectionGizmoCorners) {
+				corner.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
+			}
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);

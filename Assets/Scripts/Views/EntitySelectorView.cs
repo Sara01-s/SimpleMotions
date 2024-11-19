@@ -33,7 +33,7 @@ public class EntitySelectorView : MonoBehaviour {
 		if (_entitySelectorViewModel.EntityHasTransform(entity.id, out var t)) {
 			_selectionGizmo.anchoredPosition = new Vector2(t.pos.x, t.pos.y);
 			_selectionGizmo.localScale = new Vector2(t.scale.w, t.scale.h);
-			_selectionGizmo.rotation = Quaternion.AngleAxis(t.rollAngleDegrees, Vector3.forward);
+			_selectionGizmo.localRotation = Quaternion.AngleAxis(t.rollAngleDegrees, Vector3.forward);
 			_selectionGizmo.gameObject.SetActive(true);
 		}
 	}

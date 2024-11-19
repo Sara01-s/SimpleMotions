@@ -25,7 +25,6 @@ namespace SimpleMotions {
 
 		public void SetEntityPosition(int entityId, (float x, float y) position) {
 			_videoCanvas.GetEntityComponent<Transform>(entityId).Position = new Position(position.x, position.y);
-			UnityEngine.Debug.Log(position);
 			_videoCanvas.DisplayEntity(entityId);
 		}
 
