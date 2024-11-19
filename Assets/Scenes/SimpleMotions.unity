@@ -11428,8 +11428,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126bb1779afa2b4c79d025c672fc9e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _editorCamera: {fileID: 0}
   _fullscreenToggle: {fileID: 1256097152}
   _videoCanvas: {fileID: 1403847089}
+  _videoCanvasOrigin: {fileID: 0}
   _videoPlayback: {fileID: 1804444934}
   _editorCanvas: {fileID: 1094580098}
   _defaultCanvasParent: {fileID: 1123448605}
@@ -23243,8 +23245,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.46000007
+  m_Value: 0.9999999
+  m_Size: 0.46
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

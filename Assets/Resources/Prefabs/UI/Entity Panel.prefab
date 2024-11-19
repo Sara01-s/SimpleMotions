@@ -109,8 +109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetToggle: {fileID: 4389265148017078075}
   _targetImage: {fileID: 188436046214870090}
-  _onSprite: {fileID: 1272572363, guid: 00a265d51dc833046abe821a14170432, type: 3}
-  _offSprite: {fileID: -548494785, guid: 00a265d51dc833046abe821a14170432, type: 3}
+  _onSprite: {fileID: 2056391189, guid: 00a265d51dc833046abe821a14170432, type: 3}
+  _offSprite: {fileID: 1274833513, guid: 00a265d51dc833046abe821a14170432, type: 3}
 --- !u!114 &188436046214870090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1272572363, guid: 00a265d51dc833046abe821a14170432, type: 3}
+  m_Sprite: {fileID: 2056391189, guid: 00a265d51dc833046abe821a14170432, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -563,7 +563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2041453222, guid: 00a265d51dc833046abe821a14170432, type: 3}
+  m_Sprite: {fileID: 2098520280, guid: 00a265d51dc833046abe821a14170432, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

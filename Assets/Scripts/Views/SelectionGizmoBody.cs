@@ -20,27 +20,37 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler
     }
 
 	public void OnBeginDrag(PointerEventData eventData) {
-		_dragOffset = eventData.position - _rectTransform.rect.center;
+		var camera = _editorCanvas.worldCamera;
+		var pointerWorldPosition = camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, camera.nearClipPlane));
+
+		int selectedEntityId = _entitySelector.SelectedEntity.Id;
+
+		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var transform)) {
+			var objectWorldPosition = new Vector2(transform.pos.x, transform.pos.y);
+
+			_dragOffset = objectWorldPosition - (Vector2)pointerWorldPosition;
+		}
 	}
 
 	public void OnDrag(PointerEventData eventData) {
+		DragGizmo(eventData.delta);
+		DragEntity(eventData.position);
+	}
+
+	private void DragEntity(Vector2 pointerPosition) {
+		var camera = _editorCanvas.worldCamera;
+		var pointerWorldPosition = camera.ScreenToWorldPoint(new Vector3(pointerPosition.x, pointerPosition.y, camera.nearClipPlane));
+
+		var newWorldPosition = (Vector2)pointerWorldPosition + _dragOffset;
+
 		int selectedEntityId = _entitySelector.SelectedEntity.Id;
 
-		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var t)) {
-			var deltaMovement = eventData.delta / _editorCanvas.scaleFactor;
+		_entityViewModel.SetEntityPosition(selectedEntityId, (newWorldPosition.x, newWorldPosition.y));
+		_rectTransform.localPosition = camera.WorldToScreenPoint(newWorldPosition);
+	}
 
-			// Drag gizmo
-			_rectTransform.anchoredPosition += deltaMovement;
-
-			var camera = _editorCanvas.worldCamera;
-
-			
-			var pointerPosWithOffset = eventData.position + _dragOffset;
-			var pointerWorldPosition = camera.ScreenToWorldPoint(new Vector3(pointerPosWithOffset.x, pointerPosWithOffset.y, camera.nearClipPlane));
-			var pointerInCanvasSpace = _canvasOrigin.transform.InverseTransformPoint(pointerWorldPosition);
-
-			_entityViewModel.SetEntityPosition(_entitySelector.SelectedEntity.Id, (pointerInCanvasSpace.x, pointerInCanvasSpace.y));
-		}
+	private void DragGizmo(Vector2 pointerDelta) {
+		//_rectTransform.anchoredPosition += pointerDelta / _editorCanvas.scaleFactor;
 	}
 
 }
