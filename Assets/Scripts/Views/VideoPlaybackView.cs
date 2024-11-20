@@ -17,7 +17,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	[SerializeField] private TMP_InputField _currentFrame;
 	[SerializeField] private TMP_InputField _totalFrames;
 
-	[SerializeField] private Toggle _loopToggle;
+	[SerializeField] private Toggle _toggleLoop;
 	[SerializeField] private Image _loopImage;
 
 	[SerializeField] private Image _togglePlayStopImage;
@@ -30,6 +30,15 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private IInputValidator _inputValidator;
 
+	private bool _isLoopOn;
+
+	// TODO - Quitar
+	private void Update() {
+		if (!_isLoopOn) {
+			_loopImage.color = Color.white;
+		}
+	}
+
 	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel, IInputValidator inputValidator) {
 		_videoPlaybackViewModel = videoPlaybackViewModel;
 		_inputValidator = inputValidator;
@@ -39,6 +48,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		RefreshUI();
 
 		_currentTime.text = "00:00:00";
+		_loopImage.color = _editorPainter.Theme.AccentColor;
 	}
 
 	private void InitReactiveCommands() {
@@ -48,7 +58,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		_forward.onClick.AddListener(() => _videoPlaybackViewModel.OnForwardFrame.Execute());
 		_lastFrame.onClick.AddListener(() => _videoPlaybackViewModel.OnLastFrame.Execute());
 
-		_loopToggle.onValueChanged.AddListener(isLooping => {
+		_toggleLoop.onValueChanged.AddListener(isLooping => {
 			_videoPlaybackViewModel.OnSetLoop.Execute(isLooping);
 		});
 
@@ -85,12 +95,14 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		});
 
 		_videoPlaybackViewModel.IsLooping.Subscribe(isLooping => {
-			_loopToggle.isOn = isLooping;
+			_toggleLoop.isOn = isLooping;
 
 			if (isLooping) {
-				_loopImage.color = _editorPainter.Theme.AccentColor;
+				_isLoopOn = true;
+				_loopImage.color = _editorPainter.CurrentAccentColor;
 			}
 			else {
+				_isLoopOn = false;
 				_loopImage.color = Color.white;
 			}
 		});

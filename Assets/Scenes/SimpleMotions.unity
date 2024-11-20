@@ -5920,7 +5920,7 @@ GameObject:
   - component: {fileID: 551530451}
   m_Layer: 5
   m_Name: Image - Loop
-  m_TagString: Untagged
+  m_TagString: AccentColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21099,7 +21099,7 @@ MonoBehaviour:
   _lastFrame: {fileID: 1991490260}
   _currentFrame: {fileID: 2102140934}
   _totalFrames: {fileID: 594021586}
-  _loopToggle: {fileID: 164404298}
+  _toggleLoop: {fileID: 164404298}
   _loopImage: {fileID: 551530451}
   _togglePlayStopImage: {fileID: 586442848}
   _play: {fileID: -536626802, guid: 00a265d51dc833046abe821a14170432, type: 3}

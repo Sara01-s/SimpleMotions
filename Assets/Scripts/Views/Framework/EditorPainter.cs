@@ -6,6 +6,8 @@ using TMPro;
 
 public class EditorPainter : MonoBehaviour {
 
+	// TODO - Dejar chance a sus victimas
+
 	[field:SerializeField] public EditorThemeUnity Theme { get; private set; }
 	[SerializeField] private TMP_FontAsset _font;
 
