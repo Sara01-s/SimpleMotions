@@ -49,7 +49,7 @@ public class InspectorView : MonoBehaviour {
 
 		if (selectedEntityHasTransform) {
 			if (_transformComponent.TryGetComponent<TransformComponentView>(out var transformComponentView)) {
-				print("me voy a matar"); // TODO - Julián arreglará esto.
+				// TODO - Julián arreglará esto.
 				//transformComponentView.SetData(transformData); // FIXME - PQ CHUCHA SE CONVIERTEN EN ENTEROS A VECES.
 			}
 		}

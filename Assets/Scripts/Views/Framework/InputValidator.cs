@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.IO;
 using System;
 
@@ -9,11 +8,15 @@ namespace SimpleMotions {
         string ValidateOutputFilePathInput(string input);
         bool ContainsInvalidCharacters(string input);
         bool IsValidOutputFilePath(string input);
+		bool ValidateDirectory(string filePath);
     }
 
     // TODO - VER CASO DE DOS PUNTOS EN DIFERENTES POSICIONES: 'O.123.123'
 
     public class InputValidator : IInputValidator {
+		public bool ValidateDirectory(string filePath) {
+			return Directory.Exists(filePath);
+		} 
 
         public string ValidateTransformComponentInput(string input) {
             input = input.Replace('.', ',');
