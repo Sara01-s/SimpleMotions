@@ -14,6 +14,9 @@ public class VideoSettingsView : MonoBehaviour {
     private IVideoSettingsViewModel _videoSettingsViewModel;
     private IVideoCanvasViewModel _videoCanvasViewModel;
 
+    private bool _isSubmited;
+    private bool _justOpened;
+
     public void Configure(IVideoSettingsViewModel videoSettingsViewModel, IVideoCanvasViewModel videoCanvasViewModel) { 
         _videoSettingsViewModel = videoSettingsViewModel;
         _videoCanvasViewModel = videoCanvasViewModel;
@@ -30,16 +33,45 @@ public class VideoSettingsView : MonoBehaviour {
 					_audioPlayer.PlayErrorSound();
                 }
             }
+
+            _isSubmited = false;
+        });
+
+        _framerate.onDeselect.AddListener(input => {
+            if (int.TryParse(input, out var value)) {
+                if (value < 12 && !_isSubmited) {
+                    _audioPlayer.PlayErrorSound();
+                }
+            }
+        });
+
+        _framerate.onSubmit.AddListener(input => {
+            if (int.TryParse(input, out var value)) {
+                if (value < 12) {
+                    _audioPlayer.PlayErrorSound();
+                    _isSubmited = true;
+                }
+            }
         });
     }
 
     public void SubscribeToColorPicker() {
+        SetColor();
         _flexibleColorPicker.SubscribeToColorChange(UpdateBackgroundColor);
     }
 
     private void UpdateBackgroundColor(Color color) {
         _videoCanvasViewModel.BackgroundColor.Value = (color.r, color.g, color.b, color.a); 
         _currentColor.color = color;
+    }
+
+    private void SetColor() {
+        var colorValues = _videoCanvasViewModel.BackgroundColor.Value;
+        colorValues.a = 100.0f;
+
+        var color = new Color(colorValues.r, colorValues.g, colorValues.b, colorValues.a);
+        _flexibleColorPicker.SetColorWithoutNotification(color);
+        _currentColor.color = _flexibleColorPicker.Color;
     }
 
 }

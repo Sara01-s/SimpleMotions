@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[Header("Render")]
 	[SerializeField] private LayerMask _entityLayer;
 	[SerializeField] private Transform _canvasOrigin;
-	[SerializeField] private Camera _editorCamera;
+	[SerializeField] private Image _background;
 
 	[Header("Fullscreen")]
 	[SerializeField] private string _midLayerName = "UI - Mid";
@@ -103,7 +104,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	}
 
 	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
-		_editorCamera.backgroundColor = new Color(color.r, color.g, color.b, color.a);
+		_background.color = new Color(color.r, color.g, color.b, color.a);
 	}
 
 }

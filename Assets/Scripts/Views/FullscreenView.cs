@@ -7,7 +7,7 @@ public class FullscreenView : MonoBehaviour {
 
     [SerializeField] private RectTransform _videoCanvas;
     [SerializeField] private RectTransform _videoPlayback;
-    [SerializeField] private GameObject _uiBlocker;
+    [SerializeField] private RectTransform _background;
 
     [SerializeField] private GameObject _defaultCanvasParent;
     [SerializeField] private GameObject _defaultPlaybackParent;
@@ -29,6 +29,8 @@ public class FullscreenView : MonoBehaviour {
     private Vector2 _defaultCanvasSize;
     private Vector2 _defaultPlaybackSize;
 	private Vector3 _defaultCanvasOrigin;
+    private Vector3 _defaultBackgroundSize;
+    private Vector3 _defaultBackgroundPosition;
 
     private float _defaultOrtographicSize;
 
@@ -36,6 +38,8 @@ public class FullscreenView : MonoBehaviour {
         _defaultCanvasSize = _videoCanvas.sizeDelta;
         _defaultPlaybackSize = _videoPlayback.sizeDelta;
         _defaultOrtographicSize = _editorCamera.orthographicSize;
+        _defaultBackgroundSize = _background.sizeDelta;
+        _defaultBackgroundPosition = _background.anchoredPosition;
 
         _fullscreenToggle.onValueChanged.AddListener(isFullscreen => {
             if (isFullscreen) {
@@ -61,7 +65,6 @@ public class FullscreenView : MonoBehaviour {
             _videoPlayback.gameObject.SetActive(false);
         }
 
-        _uiBlocker.SetActive(true);
         _fullscreenPlaybackParent.SetActive(true);
         _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = true;
 
@@ -78,11 +81,13 @@ public class FullscreenView : MonoBehaviour {
         _videoPlayback.sizeDelta = new Vector2(_fullscreenWidth, _videoPlayback.sizeDelta.y);
         _videoPlayback.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 0.0f, _videoPlayback.rect.height);
 
+        _background.anchoredPosition = Vector2.zero;
+        _background.sizeDelta = new Vector2(_fullscreenWidth, _fullscreenHeight);
+
         _editorCanvas.sortingLayerName = _backgroundLayerName;
     }
 
     public void SetDefaultScreen() {
-        _uiBlocker.SetActive(false);
         _videoPlayback.gameObject.SetActive(true);
         _fullscreenPlaybackParent.SetActive(false);
         _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = false;
@@ -102,6 +107,9 @@ public class FullscreenView : MonoBehaviour {
         _videoPlayback.anchorMax = new Vector2(0.5f, 0.5f);
         _videoPlayback.anchoredPosition = Vector2.zero;
         _videoPlayback.sizeDelta = _defaultPlaybackSize;
+
+        _background.sizeDelta = _defaultBackgroundSize;
+        _background.anchoredPosition = _defaultBackgroundPosition;
 
         _editorCanvas.sortingLayerName = _frontLayerName;
     }

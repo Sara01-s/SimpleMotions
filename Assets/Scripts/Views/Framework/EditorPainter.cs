@@ -28,10 +28,14 @@ public class EditorPainter : MonoBehaviour {
 
 	private Image[] _previousImagesWithAccentColor;
 
+	public Color CurrentAccentColor { get; private set; }
+
 	public void Configure() {
 		if (_findUIOnConfigure) {
 			FindNewUI();
 		}
+
+		CurrentAccentColor = Theme.AccentColor;
 	}
 
 	private void OnDisable() {
@@ -145,6 +149,7 @@ public class EditorPainter : MonoBehaviour {
 
 		PaintImages(_imagesWithAccentColor, accentColor);
 		_previousImagesWithAccentColor = _imagesWithAccentColor;
+		CurrentAccentColor = accentColor;
     }
 
 }

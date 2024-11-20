@@ -1838,6 +1838,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1381988276}
     m_Modifications:
+    - target: {fileID: 39309310999671115, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 101.60156
+      objectReference: {fileID: 0}
+    - target: {fileID: 807991005718275426, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 807991005718275426, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -450
+      objectReference: {fileID: 0}
+    - target: {fileID: 3556209571592943671, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 59.398438
+      objectReference: {fileID: 0}
     - target: {fileID: 5144944451806322197, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1921,6 +1937,10 @@ PrefabInstance:
     - target: {fileID: 6919907351646122299, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947203841814566906, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 25.199219
       objectReference: {fileID: 0}
     - target: {fileID: 8005168506341389013, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_Name
@@ -7749,17 +7769,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636cef4ec22b77d9896f00547c2507fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shapeButtons: []
   _flexibleColorPicker: {fileID: 1308438909}
-  _entitiesUI:
-  - {fileID: 513754128}
-  - {fileID: 783997552}
-  - {fileID: 290241056}
-  - {fileID: 1066496579}
-  - {fileID: 1927395275}
-  - {fileID: 644195306}
-  - {fileID: 14494956}
-  - {fileID: 780957234}
-  - {fileID: 729928891}
   _currentColor: {fileID: 1061413862}
 --- !u!114 &718388303
 MonoBehaviour:
@@ -8052,11 +8063,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _colorPicker: {fileID: 1381988275}
+  _alphaPicker: {fileID: 1383536547}
   _openers:
   - {fileID: 1072974922}
   - {fileID: 20878277}
   - {fileID: 1621827046}
   _closer: {fileID: 1483094762}
+  _colorPickerPanel: {fileID: 224399201}
   _shapeComponentView: {fileID: 718388302}
   _editorSettingsView: {fileID: 553886973}
   _videoSettingsView: {fileID: 1997927949}
@@ -11513,7 +11526,7 @@ MonoBehaviour:
   _fullscreenToggle: {fileID: 1256097152}
   _videoCanvas: {fileID: 1403847089}
   _videoPlayback: {fileID: 1804444934}
-  _uiBlocker: {fileID: 1310168493}
+  _background: {fileID: 1310168494}
   _defaultCanvasParent: {fileID: 1123448605}
   _defaultPlaybackParent: {fileID: 196928258}
   _editorCamera: {fileID: 519420031}
@@ -15337,12 +15350,12 @@ GameObject:
   - component: {fileID: 1310168496}
   - component: {fileID: 1310168495}
   m_Layer: 5
-  m_Name: Image - UI Blocker
+  m_Name: Image - Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1310168494
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15350,17 +15363,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1310168493}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 807522096}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 185.50897}
+  m_SizeDelta: {x: 1152, y: 648}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1310168495
 MonoBehaviour:
@@ -16037,6 +16050,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mover: {fileID: 1381988276}
   _editorCanvas: {fileID: 1094580098}
+--- !u!1 &1383536547 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4230495114185638791, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+  m_PrefabInstance: {fileID: 224399200}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1395115697
 GameObject:
   m_ObjectHideFlags: 0
@@ -16440,7 +16458,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _canvasOrigin: {fileID: 1961741125}
-  _editorCamera: {fileID: 519420031}
+  _background: {fileID: 1310168495}
   _midLayerName: UI - Mid
 --- !u!114 &1403847092
 MonoBehaviour:

@@ -191,6 +191,8 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     private bool _isSUpdating;
     private bool _isVUpdating;
     private bool _isAUpdating;
+
+    private bool _doNotNotificate;
     // MODIFICACIÓN
 
     /*----------------------------------------------------------
@@ -220,7 +222,12 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
             UpdateTextures();
             UpdateHex();
             typeUpdate = true;
-            OnColorChange.Invoke(value);
+
+            // MODIFICACIÓN
+            if (!_doNotNotificate) {
+                OnColorChange.Invoke(value); // ORIGINAL
+            }
+            // MODIFICACIÓN
         }
     }
 
@@ -240,6 +247,16 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
     public void SetColor(Color color) {
         this.Color = color;
     }
+
+    // MODIFICACIÓN
+    public void SetColorWithoutNotification(Color color) {
+        _doNotNotificate = true;
+
+        this.Color = color;
+
+        _doNotNotificate = false;
+    }
+    // MODIFICACIÓN
 
     /// <summary>
     /// Returns current fcp color, but with its alpha channel value set to max.
