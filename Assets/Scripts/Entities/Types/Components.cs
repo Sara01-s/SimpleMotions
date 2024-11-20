@@ -178,11 +178,9 @@ namespace SimpleMotions.Internal {
 		public enum Primitive {
 			Rect,
 			Circle,
-			Line,
+			Arrow,
 			Triangle,
 			Star,
-			Hexagon,
-			Octagon,
 			Heart,
 			Image
 		}

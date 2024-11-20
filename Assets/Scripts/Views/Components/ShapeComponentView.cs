@@ -18,6 +18,10 @@ public class ShapeComponentView : MonoBehaviour {
         _editorPainterParser = editorPainterParser;
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
 
+		if (_shapeButtons.Length == 0) {
+			Debug.LogError("Please assign shape buttons in inspector shape component.");
+		}
+
 		for (int i = 0; i < _shapeButtons.Length; i++) {
 			_shapeTypes[i] = _shapeButtons[i].GetComponentInChildren<ShapeType>();
 			MapButtons(_shapeButtons[i], _shapeTypes[i]);

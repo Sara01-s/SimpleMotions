@@ -44,6 +44,7 @@ namespace SimpleMotions {
 		public void SetEntityShape(int entityId, string shapeName) {
 			if (System.Enum.TryParse(typeof(Shape.Primitive), shapeName, out var primitiveShape)) {
 				_videoCanvas.GetEntityComponent<Shape>(entityId).PrimitiveShape = (Shape.Primitive)primitiveShape;
+				UnityEngine.Debug.Log($"{shapeName}");
 				_videoCanvas.DisplayEntity(entityId);
 			}
 			else {

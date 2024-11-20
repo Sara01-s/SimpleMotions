@@ -9,6 +9,10 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[SerializeField] private Sprite _circleSprite;
 	[SerializeField] private Sprite _rectSprite;
 	[SerializeField] private Sprite _triangleSprite;
+	[SerializeField] private Sprite _arrowSprite;
+	[SerializeField] private Sprite _starSprite;
+	[SerializeField] private Sprite _heartSprite;
+	[SerializeField] private Sprite _imageSprite;
 
 	[Header("Render")]
 	[SerializeField] private LayerMask _entityLayer;
@@ -25,19 +29,21 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
-
 		videoCanvasViewModel.BackgroundColor.Subscribe(UpdateCanvasColor);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
-
 		PopulateSpriteDictionary();
 	}
 
 	private void PopulateSpriteDictionary() {
 		_spriteByPrimitiveShape = new Dictionary<string, Sprite>() {
-			{ "Circle", _circleSprite },
-			{ "Triangle", _triangleSprite },
-			{ "Rect", _rectSprite }
+			{ ShapeTypeUI.Circle.ToString()	  , _circleSprite 	},
+			{ ShapeTypeUI.Rect.ToString()	  , _rectSprite 	},
+			{ ShapeTypeUI.Triangle.ToString() , _triangleSprite },
+			{ ShapeTypeUI.Arrow.ToString()	  , _arrowSprite 	},
+			{ ShapeTypeUI.Star.ToString()	  , _starSprite 	},
+			{ ShapeTypeUI.Heart.ToString()	  , _heartSprite 	},
+			{ ShapeTypeUI.Image.ToString()	  , _imageSprite 	},
 		};
 	}
 

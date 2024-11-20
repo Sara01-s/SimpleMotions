@@ -22,7 +22,7 @@ namespace SimpleMotions {
 
 		public ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; } = new();
 
-		private IVideoCanvas _videoCanvas;
+		private readonly IVideoCanvas _videoCanvas;
 
 		public VideoCanvasViewModel(IVideoCanvas videoCanvas, IVideoAnimator videoAnimator, IEntitySelector entitySelector) : base(videoCanvas) {
 			_videoCanvas = videoCanvas;

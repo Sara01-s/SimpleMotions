@@ -3,11 +3,9 @@ using UnityEngine;
 public enum ShapeTypeUI {
     Rect,
     Circle,
-    Line,
+    Arrow,
     Triangle,
     Star,
-    Hexagon,
-    Octagon,
     Heart,
     Image
 }

@@ -22,7 +22,7 @@ namespace SimpleMotions {
         public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 
-		private VideoData _videoData;
+		private readonly VideoData _videoData;
 
         public VideoCanvas(IComponentStorage componentStorage, IEntityStorage entityStorage, VideoData videoData) {
 			_componentStorage = componentStorage;
