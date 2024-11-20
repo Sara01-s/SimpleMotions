@@ -1,11 +1,14 @@
 using System.Diagnostics;
 using UnityEngine;
+using System.IO;
 
 public class FFMPEGExporter : MonoBehaviour {
 
     [SerializeField] private string _ffmpegPath;
 
-    public void GenerateVideo(string inputFolder, string outputFilePath, int frameRate) {
+    public void GenerateVideo(string inputFolder, string outputFilePath, string fileName, int frameRate) {
+        outputFilePath = Path.Combine(outputFilePath, fileName);
+
         if (!outputFilePath.EndsWith(".mp4")) {
             outputFilePath += ".mp4";
         }

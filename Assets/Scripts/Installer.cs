@@ -171,7 +171,7 @@ namespace SimpleMotions {
 			_colorPickerView		.Configure();
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_editorSettingsView		.Configure();
-			_exportSettingsView		.Configure(_services.GetService<IExportSettingsViewModel>());
+			_exportSettingsView		.Configure(_services.GetService<IExportSettingsViewModel>(), _inputValidator);
 			_fullscreenView			.Configure();
 			_fullscreenPlaybackView	.Configure();
 			_exportView				.Configure(_services.GetService<IExportViewModel>());

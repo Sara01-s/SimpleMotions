@@ -6,6 +6,7 @@ namespace SimpleMotions {
 
         ReactiveCommand<int> OnSetFramerate { get; }
         ReactiveCommand<string> OnSetOutputFilePath { get; }
+        ReactiveCommand<string> OnSetFileName { get; }
 
         ReactiveCommand OnExport { get; }
         ReactiveCommand OnPresent { get; }
@@ -17,6 +18,7 @@ namespace SimpleMotions {
 
         public ReactiveCommand<int> OnSetFramerate { get; private set; } = new();
         public ReactiveCommand<string> OnSetOutputFilePath { get; } = new();
+        public ReactiveCommand<string> OnSetFileName { get; } = new();
         
         public ReactiveCommand OnExport { get; } = new();
         public ReactiveCommand OnPresent { get; } = new();
@@ -31,18 +33,23 @@ namespace SimpleMotions {
 
             _exportModel.TargetFrameRate.Subscribe(framerate => Framerate.Value = framerate);
 
-            OnSetFramerate.Subscribe(UpdateFramerate);
-            OnSetOutputFilePath.Subscribe(UpdateOutputFilePath);
+            OnSetFramerate.Subscribe(SetFramerate);
+            OnSetOutputFilePath.Subscribe(SetOutputFilePath);
+            OnSetFileName.Subscribe(SetFileName);
             OnExport.Subscribe(Export);
             OnPresent.Subscribe(Present);
         }
 
-        private void UpdateFramerate(int frameRate) {
+        private void SetFramerate(int frameRate) {
             _exportModel.TargetFrameRate.Value = frameRate;
         }
 
-        private void UpdateOutputFilePath(string outputFilePath) {
+        private void SetOutputFilePath(string outputFilePath) {
             _exportModel.OutputFilePath.Value = outputFilePath;
+        }
+
+        private void SetFileName(string fileName) {
+            _exportModel.FileName.Value = fileName;
         }
 
         private void Export() {

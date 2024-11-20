@@ -62,7 +62,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		});
 
 		_currentFrame.onValueChanged.AddListener(currentFrame => {
-			currentFrame = _inputValidator.ValidateInput(currentFrame);
+			currentFrame = _inputValidator.ValidateTransformComponentInput(currentFrame);
 			int.TryParse(currentFrame, out var newFrame);
 
 			if (newFrame > _videoPlaybackViewModel.TotalFrames.Value) {
@@ -73,7 +73,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		});
 
 		_totalFrames.onValueChanged.AddListener(totalFrames => {
-			totalFrames = _inputValidator.ValidateInput(totalFrames);
+			totalFrames = _inputValidator.ValidateTransformComponentInput(totalFrames);
 			int.TryParse(totalFrames, out var newFrame);
 
 			if (newFrame >= 10) {

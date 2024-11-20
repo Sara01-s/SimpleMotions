@@ -20,12 +20,12 @@ public class ExportView : MonoBehaviour {
         _exportViewModel = exportViewModel;
     }
 
-    private void StartExport((int totalFrames, int targetFrameRate, string outputFilePath) data) {
+    private void StartExport((int totalFrames, int targetFrameRate, string outputFilePath, string fileName) data) {
         _fullscreen.SetFullscreen(withPlayback: false);
-        StartCoroutine(CO_ExportFrames(data.totalFrames, data.outputFilePath, data.targetFrameRate));
+        StartCoroutine(CO_ExportFrames(data.totalFrames, data.targetFrameRate, data.outputFilePath, data.fileName));
     }
 
-    private IEnumerator CO_ExportFrames(int totalFrames, string outputFilePath, int targetFrameRate) {
+    private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
         for (int frame = 0; frame <= totalFrames; frame++) {
             _exportViewModel.CurrentFrame.Value = frame;
             _frameImages.Add(GetFrameAsPng());
@@ -36,7 +36,7 @@ public class ExportView : MonoBehaviour {
         string tempFrameImagesFilePath = GetFramesTempDirectory();
 
 		SaveFrameImagesToDisk(tempFrameImagesFilePath);
-        _ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, targetFrameRate);
+        _ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, fileName, targetFrameRate);
 
         if (Directory.Exists(tempFrameImagesFilePath)) {
             Directory.Delete(tempFrameImagesFilePath, recursive: true);
