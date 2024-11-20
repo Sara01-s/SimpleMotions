@@ -9,7 +9,6 @@ namespace SimpleMotions {
         ReactiveCommand<string> OnSetFileName { get; }
 
         ReactiveCommand OnExport { get; }
-        ReactiveCommand OnPresent { get; }
     }
 
     public class ExportSettingsViewModel : IExportSettingsViewModel {

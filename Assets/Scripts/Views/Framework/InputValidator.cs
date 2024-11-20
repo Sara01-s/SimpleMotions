@@ -1,24 +1,24 @@
 using System.IO;
-using System;
+using System.Text.RegularExpressions;
 
 namespace SimpleMotions {
 
     public interface IInputValidator {
-        string ValidateTransformComponentInput(string input);
-        string ValidateOutputFilePathInput(string input);
-        bool ContainsInvalidCharacters(string input);
-        bool IsValidOutputFilePath(string input);
+        string ValidateComponentInput(string input);
+        bool ComponentInputIsInvalid(string input);
 		bool ValidateDirectory(string filePath);
+        bool ValidateFileName(string fileName);
     }
 
     // TODO - VER CASO DE DOS PUNTOS EN DIFERENTES POSICIONES: 'O.123.123'
 
     public class InputValidator : IInputValidator {
+
 		public bool ValidateDirectory(string filePath) {
 			return Directory.Exists(filePath);
 		} 
 
-        public string ValidateTransformComponentInput(string input) {
+        public string ValidateComponentInput(string input) {
             input = input.Replace('.', ',');
 
             int decimalIndex = input.IndexOf('.');
@@ -30,7 +30,7 @@ namespace SimpleMotions {
             return input;
         }
 
-        public bool ContainsInvalidCharacters(string newInput) {
+        public bool ComponentInputIsInvalid(string newInput) {
             bool lastWasSeparator = false;
             int separatorCount = 0;
 
@@ -58,33 +58,14 @@ namespace SimpleMotions {
             return false;
         }
 
-        public string ValidateOutputFilePathInput(string input) {
-            if (!IsValidOutputFilePath(input)) {
-                throw new ArgumentException("La ruta proporcionada no es válida.");
-            }
-
-            if (input.Length > 1 && input.EndsWith("/")) {
-                input = input.TrimEnd('/');
-            }
-
-            return input;
-        }
-
-        public bool IsValidOutputFilePath(string input) {
-            if (string.IsNullOrWhiteSpace(input)) {
+        public bool ValidateFileName(string fileName) {
+             if (string.IsNullOrWhiteSpace(fileName)) {
                 return false;
-            }
+             }
 
-            if (!input.StartsWith("/")) {
-                return false;
-            }
+            string pattern = @"^[a-zA-Z0-9]+$";
 
-            char[] invalidChars = Path.GetInvalidPathChars();
-            if (input.IndexOfAny(invalidChars) >= 0) {
-                return false;
-            }
-
-            return true;
+            return Regex.IsMatch(fileName, pattern);
         }
 
     }

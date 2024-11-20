@@ -70,9 +70,9 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
 	private void SendPosition(string input, ReactiveCommand<string> reactiveCommand) {
-        bool hasInvalidCharacters = _inputValidator.ContainsInvalidCharacters(input);
+        bool hasInvalidCharacters = _inputValidator.ComponentInputIsInvalid(input);
 
-        input = _inputValidator.ValidateTransformComponentInput(input);
+        input = _inputValidator.ValidateComponentInput(input);
 
         if (CanSendInput(input) && !hasInvalidCharacters) {
 		    reactiveCommand.Execute(input);
@@ -109,7 +109,7 @@ public class TransformComponentView : MonoBehaviour {
     }
 
     private void CorrectInput(string input, ReactiveCommand<string> reactiveCommand, string previousInput) {
-        bool hasInvalidCharacters = _inputValidator.ContainsInvalidCharacters(input);
+        bool hasInvalidCharacters = _inputValidator.ComponentInputIsInvalid(input);
 
         if (hasInvalidCharacters) {
             reactiveCommand.Execute(previousInput);

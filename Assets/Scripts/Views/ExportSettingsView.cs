@@ -11,11 +11,13 @@ public class ExportSettingsView : MonoBehaviour {
     [SerializeField] private TMP_InputField _fileName;
 	[SerializeField] private Button _openFileExplorer;
     [SerializeField] private Button _export;
-    [SerializeField] private Button _present;
+    [SerializeField] private AudioPlayer _audioPlayer;
 
     private IExportSettingsViewModel _exportSettingsViewModel;
-
     private IInputValidator _inputValidator;
+
+    private bool _isOutputValid;
+    private bool _isNameValid;
 
     public void Configure(IExportSettingsViewModel exportSettingsViewModel, IInputValidator inputValidator) {
         _exportSettingsViewModel = exportSettingsViewModel;
@@ -29,8 +31,15 @@ public class ExportSettingsView : MonoBehaviour {
         _fileName.onValueChanged.AddListener(SetFileName);
 
 		_openFileExplorer.onClick.AddListener(SetOutputDirectory);
-        _export.onClick.AddListener(_exportSettingsViewModel.OnExport.Execute);
-        _present.onClick.AddListener(_exportSettingsViewModel.OnPresent.Execute);
+
+        _export.onClick.AddListener(() => {
+            if (_isNameValid && _isOutputValid) {
+                _exportSettingsViewModel.OnExport.Execute();
+            }
+            else {
+                _audioPlayer.PlayErrorSound();
+            }
+        });
     }
 
 	private void SetOutputDirectory() {
@@ -43,6 +52,10 @@ public class ExportSettingsView : MonoBehaviour {
 		if (_inputValidator.ValidateDirectory(outputDirectory[0])) {
 			SetOutputFilePath(outputDirectory[0]);
 		}
+        else {
+            _audioPlayer.PlayErrorSound();
+            _isOutputValid = false;
+        }
 	}
 
     private void SetFramerate(string input) {
@@ -52,12 +65,19 @@ public class ExportSettingsView : MonoBehaviour {
     }
 
     private void SetOutputFilePath(string filePath) {
-		print(filePath);
         _exportSettingsViewModel.OnSetOutputFilePath.Execute(filePath);
+        _outputFilePath.text = filePath;
+        _isOutputValid = true;
     }
 
-    private void SetFileName(string input) {
-        _exportSettingsViewModel.OnSetFileName.Execute(input);
+    private void SetFileName(string fileName) {
+        if (_inputValidator.ValidateFileName(fileName)) {
+            _exportSettingsViewModel.OnSetFileName.Execute(fileName);
+            _isNameValid = true;
+        }
+        else {
+            _isNameValid = false;
+        }
     }
 
 }
