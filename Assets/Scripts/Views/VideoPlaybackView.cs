@@ -32,16 +32,15 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private bool _isLoopOn;
 
-	// TODO - Quitar
-	private void Update() {
-		if (!_isLoopOn) {
-			_loopImage.color = Color.white;
-		}
+	private void OnDisable() {
+		_editorPainter.OnAccentColorUpdate -= UpdateLoopColor;
 	}
 
 	public void Configure(IVideoPlaybackViewModel videoPlaybackViewModel, IInputValidator inputValidator) {
 		_videoPlaybackViewModel = videoPlaybackViewModel;
 		_inputValidator = inputValidator;
+
+		_editorPainter.OnAccentColorUpdate += UpdateLoopColor;
 
 		InitReactiveCommands();
 		InitReactiveValues();
@@ -135,6 +134,12 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		int milliseconds = Mathf.FloorToInt((value - totalSeconds) * 100);
 
 		return $"{minutes:00}:{seconds:00}:{milliseconds:00}";
+	}
+
+	private void UpdateLoopColor(Color color) {
+		if (_isLoopOn) {
+			_loopImage.color = color;
+		}
 	}
 
 	private void RefreshUI() {

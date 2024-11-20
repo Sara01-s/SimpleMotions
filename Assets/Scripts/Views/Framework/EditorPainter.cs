@@ -3,10 +3,13 @@ using SimpleMotions;
 using UnityEngine;
 using System.Linq;
 using TMPro;
+using System;
 
 public class EditorPainter : MonoBehaviour {
 
 	// TODO - Dejar chance a sus victimas
+
+	public Action<Color> OnAccentColorUpdate;
 
 	[field:SerializeField] public EditorThemeUnity Theme { get; private set; }
 	[SerializeField] private TMP_FontAsset _font;
@@ -38,6 +41,7 @@ public class EditorPainter : MonoBehaviour {
 		}
 
 		CurrentAccentColor = Theme.AccentColor;
+		OnAccentColorUpdate?.Invoke(CurrentAccentColor);
 	}
 
 	private void OnDisable() {
@@ -144,14 +148,17 @@ public class EditorPainter : MonoBehaviour {
 	}
 
 	public void ChangeEditorAccentColor(Color accentColor) {
+		_imagesWithAccentColor = GetImagesWithTag(_accentColorTag);
+
 		if (_previousImagesWithAccentColor == null || _imagesWithAccentColor != _previousImagesWithAccentColor) {
 			// Different arrays.
 			_imagesWithAccentColor = GetImagesWithTag(_accentColorTag);
+			_previousImagesWithAccentColor = _imagesWithAccentColor;
 		}
 
 		PaintImages(_imagesWithAccentColor, accentColor);
-		_previousImagesWithAccentColor = _imagesWithAccentColor;
 		CurrentAccentColor = accentColor;
+		OnAccentColorUpdate?.Invoke(CurrentAccentColor);
     }
 
 }
