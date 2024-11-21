@@ -6,7 +6,7 @@ namespace SimpleMotions {
 		int TotalFrameCount { get; } 
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveCommand<int> OnFrameChanged { get; }
-		ReactiveCommand ShowKeyframe { get; }
+		ReactiveCommand DrawTrasnformKeyframe { get; }
 
 	}
 
@@ -15,20 +15,19 @@ namespace SimpleMotions {
         public int TotalFrameCount => _videoTimeline.TotalFrames;
 		public ReactiveValue<int> CurrentFrame { get; } = new();
 		public ReactiveCommand<int> OnFrameChanged { get; } = new();
-        public ReactiveCommand ShowKeyframe { get; } = new();
+        public ReactiveCommand DrawTrasnformKeyframe { get; } = new();
 
         private readonly IVideoTimeline _videoTimeline;
 		private readonly IVideoPlayerData _videoPlayerData;
 
         public VideoTimelineViewModel(IVideoTimeline videoTimeline, IVideoPlayerData videoPlayerData, ITransformComponentViewModel transformComponentViewModel) {
-			// XD
-			transformComponentViewModel.SaveTransformKeyframe.Subscribe(ShowKeyframeXD);
-			
+			videoPlayerData.CurrentFrame.Subscribe(UpdateCursorPosition);
+			OnFrameChanged.Subscribe(value => SetCurrentFrame(value));
+
 			_videoTimeline = videoTimeline;
 			_videoPlayerData = videoPlayerData;
-
-			_videoPlayerData.CurrentFrame.Subscribe(UpdateCursorPosition);
-			OnFrameChanged.Subscribe(value => SetCurrentFrame(value));
+			
+			transformComponentViewModel.DrawTransfromKeyframe.Subscribe(DrawTransfromKeyFrame);
         }
 
 		private void UpdateCursorPosition(int currentFrame) {
@@ -39,8 +38,8 @@ namespace SimpleMotions {
 			_videoTimeline.SetCurrentFrame(frame);
 		}
 
-		public void ShowKeyframeXD(((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) xd) {
-			ShowKeyframe.Execute();
+		public void DrawTransfromKeyFrame() {
+			DrawTrasnformKeyframe.Execute();
 		}
 
     }

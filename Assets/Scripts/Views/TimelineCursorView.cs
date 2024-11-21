@@ -9,6 +9,11 @@ public class TimelineCursorView : MonoBehaviour {
     [SerializeField] private RectTransform _sliderArea;
     [SerializeField] private GridLayoutGroup _framesHolder;
     [SerializeField] private Slider _cursor;
+    [SerializeField] private GameObject _keyframesHolder;
+
+    [SerializeField] private float _transformKeyframeYPosition = 41.125f;
+    [SerializeField] private float _shapeKeyframeYPosition = -24.25f;
+    [SerializeField] private float _textKeyframeYPosition = -89.625f;
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
 
@@ -19,15 +24,17 @@ public class TimelineCursorView : MonoBehaviour {
 
         _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);
 
-        RefreshUI();
+        RefreshUI();                                                        
 		
-        //XD
-        videoTimelineViewModel.ShowKeyframe.Subscribe(() => {
+        videoTimelineViewModel.DrawTrasnformKeyframe.Subscribe(() => {
             var keyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
+            keyframe.GetComponent<Image>().color = Color.blue;
+
             var rect = keyframe.GetComponent<RectTransform>();
 
-            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 55.0f);
-            rect.transform.SetParent(_cursor.transform);
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _transformKeyframeYPosition);
+
+            rect.transform.SetParent(_keyframesHolder.transform);
         });
     }
 

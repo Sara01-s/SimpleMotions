@@ -5,6 +5,7 @@ namespace SimpleMotions {
 	public interface ITransformComponentViewModel {
 
 		ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; }
+		ReactiveCommand DrawTransfromKeyframe { get; }
 		ReactiveCommand DeleteKeyFrame { get; }
 		ReactiveCommand<string> PositionX { get; }
 		ReactiveCommand<string> PositionY { get; }
@@ -20,6 +21,7 @@ namespace SimpleMotions {
     public class TransformComponentViewModel : ITransformComponentViewModel {
 
 		public ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; } = new();
+		public ReactiveCommand DrawTransfromKeyframe { get; } = new();
         public ReactiveCommand DeleteKeyFrame { get; } = new();
 		public ReactiveCommand<string> PositionX { get; } = new();
 		public ReactiveCommand<string> PositionY { get; } = new();

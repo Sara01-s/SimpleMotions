@@ -50,6 +50,7 @@ public class TransformComponentView : MonoBehaviour {
 		_addOrRemoveKeyframe.onClick.AddListener(() => {
             if (_keyframeImage.sprite == _addKeyframe) {
                 transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData());
+                transformComponentViewModel.DrawTransfromKeyframe.Execute();
             }
             else {
                 transformComponentViewModel.DeleteKeyFrame.Execute();

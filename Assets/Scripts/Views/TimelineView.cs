@@ -75,5 +75,5 @@ public sealed class TimelineView : MonoBehaviour {
 		_timeline.Clear();
 		_alreadyPainted = false;
 	}
-	
+
 }
