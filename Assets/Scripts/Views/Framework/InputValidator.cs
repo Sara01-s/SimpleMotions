@@ -1,11 +1,11 @@
-using System.IO;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace SimpleMotions {
 
     public interface IInputValidator {
         string ValidateComponentInput(string input);
-        bool ComponentInputIsInvalid(string input);
+        bool IsComponentNewInputInvalid(string input);
 		bool ValidateDirectory(string filePath);
         bool ValidateFileName(string fileName);
     }
@@ -30,7 +30,13 @@ namespace SimpleMotions {
             return input;
         }
 
-        public bool ComponentInputIsInvalid(string newInput) {
+        public bool IsComponentNewInputInvalid(string newInput) {
+            Regex numberRegex = new Regex(@"^-?\d+([.,]\d+)?$");
+
+            if (!numberRegex.IsMatch(newInput)) {
+                return true;
+            }
+
             bool lastWasSeparator = false;
             int separatorCount = 0;
 

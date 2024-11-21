@@ -18,11 +18,7 @@ public class TransformComponentView : MonoBehaviour {
 
     private IInputValidator _inputValidator;
 
-    private string _previousXInput;
-    private string _previousYInput;
-    private string _previousWInput;
-    private string _previousHInput;
-    private string _previousRInput;
+    private string _previousValue;
 
     private ITransformComponentViewModel _transformComponentViewModel;
 
@@ -30,17 +26,17 @@ public class TransformComponentView : MonoBehaviour {
         _transformComponentViewModel = transformComponentViewModel;
         _inputValidator = inputValidator;
 
-		_positionX.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.PositionX));
-        _positionY.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.PositionY));
-        _scaleW.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.ScaleW));
-        _scaleH.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.ScaleH));
-        _roll.onValueChanged.AddListener(input => SendPosition(input, _transformComponentViewModel.Roll));
+		_positionX.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.PositionX));
+        _positionY.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.PositionY));
+        _scaleW.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.ScaleW));
+        _scaleH.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.ScaleH));
+        _roll.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.Roll));
 
-        _positionX.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionX, _previousXInput));
-        _positionY.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionY, _previousYInput));
-        _scaleW.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleW, _previousWInput));
-        _scaleH.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleH, _previousHInput));
-        _roll.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.Roll, _previousRInput));
+        _positionX.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionX));
+        _positionY.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionY));
+        _scaleW.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleW));
+        _scaleH.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleH));
+        _roll.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.Roll));
 
         transformComponentViewModel.AddOrRemoveKeyframe.Subscribe(addKeyframe => {
             if (addKeyframe) {
@@ -61,6 +57,17 @@ public class TransformComponentView : MonoBehaviour {
         });
 	}
 
+    private void TrySendNewComponentValue(string newValue, ReactiveCommand<string> reactiveCommand) {
+        bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
+
+        newValue = _inputValidator.ValidateComponentInput(newValue);
+
+        if (CanSendInput(newValue) && !hasInvalidCharacters) {
+		    reactiveCommand.Execute(newValue);
+            _previousValue = newValue;
+        }
+	}
+
 	private ((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) GetTransformData() {
 		var position = (_positionX.text, _positionY.text);
 		var scale = (_scaleW.text, _scaleH.text);
@@ -69,50 +76,35 @@ public class TransformComponentView : MonoBehaviour {
 		return (position, scale, rollAngleDegrees);
 	}
 
-	private void SendPosition(string input, ReactiveCommand<string> reactiveCommand) {
-        bool hasInvalidCharacters = _inputValidator.ComponentInputIsInvalid(input);
-
-        input = _inputValidator.ValidateComponentInput(input);
-
-        if (CanSendInput(input) && !hasInvalidCharacters) {
-		    reactiveCommand.Execute(input);
-        }
-	}
-
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
 		// General numeric formatting, see https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
 		const string floatFormat = "G";
 
         var firstInput = transformData.pos.x.ToString(floatFormat);
-        _previousXInput = firstInput;
         _positionX.text = firstInput;
 
         firstInput = transformData.pos.y.ToString(floatFormat);
-        _previousYInput = firstInput;
         _positionY.text = firstInput;
 
         firstInput = transformData.scale.w.ToString(floatFormat);
-        _previousWInput = firstInput;
         _scaleW.text = firstInput;
 
         firstInput = transformData.scale.h.ToString(floatFormat);
-        _previousHInput = firstInput;
         _scaleH.text = firstInput;
 
         firstInput = transformData.rollAngleDegrees.ToString(floatFormat);
-        _previousRInput = firstInput;
         _roll.text = firstInput;
     }
 
-    private bool CanSendInput(string input) {
-        return input == "0" || !input.EndsWith("0") && !input.EndsWith(",") && input != string.Empty;
+    private bool CanSendInput(string newValue) {
+        return newValue == "0" || !newValue.EndsWith("0") && !newValue.EndsWith(",") && newValue != string.Empty;
     }
 
-    private void CorrectInput(string input, ReactiveCommand<string> reactiveCommand, string previousInput) {
-        bool hasInvalidCharacters = _inputValidator.ComponentInputIsInvalid(input);
+    private void CorrectInput(string newValue, ReactiveCommand<string> reactiveCommand) {
+        bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
 
-        if (hasInvalidCharacters) {
-            reactiveCommand.Execute(previousInput);
+        if (hasInvalidCharacters && CanSendInput(newValue)) {
+            reactiveCommand.Execute(_previousValue);
         }
     }
 

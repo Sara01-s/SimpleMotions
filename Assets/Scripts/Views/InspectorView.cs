@@ -49,8 +49,7 @@ public class InspectorView : MonoBehaviour {
 
 		if (selectedEntityHasTransform) {
 			if (_transformComponent.TryGetComponent<TransformComponentView>(out var transformComponentView)) {
-				// TODO - Julián arreglará esto.
-				//transformComponentView.SetData(transformData); // FIXME - PQ CHUCHA SE CONVIERTEN EN ENTEROS A VECES.
+				transformComponentView.SetData(transformData); // FIXME - PQ CHUCHA SE CONVIERTEN EN ENTEROS A VECES.
 			}
 		}
 	}
