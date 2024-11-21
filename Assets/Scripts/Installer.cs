@@ -73,6 +73,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IEditorPainterParser, EditorPainterParser>();
 
 			// Data
+			
 			_services.RegisterService<VideoData, 		 VideoData>();
 			_services.RegisterService<ComponentsData, 	 ComponentsData>();
 			_services.RegisterService<EntitiesData, 	 EntitiesData>();
@@ -88,7 +89,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IVideoPlayback, 	 VideoPlayback>();
 			_services.RegisterService<IVideoCanvas, 	 VideoCanvas>();
 			_services.RegisterService<IVideoEntities, 	 VideoEntities>();
-			_services.RegisterService<IExportModel, ExportModel>();
+			_services.RegisterService<IExportModel, 	 ExportModel>();
 
 			// ViewModels
 			_services.RegisterService<IVideoPlaybackViewModel, 		VideoPlaybackViewModel>();
@@ -176,7 +177,7 @@ namespace SimpleMotions {
 			_exportView				.Configure(_services.GetService<IExportViewModel>());
 
 			foreach (var corner in _selectionGizmoCorners) {
-				corner.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
+				corner.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
 			}
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
