@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd7377c6a27a24541ab38f70a40829a9
-      internalID: -488687874
+      spriteID: ec05418c3a9112b4fb983ed1c223fb40
+      internalID: -460673990
       vertices: []
       indices: 
       edges: []
@@ -145,8 +145,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6bcb42b53112fcf4e9be7af1d48a9eda
-      internalID: 1385856422
+      spriteID: b4531d25b2721134dbc130fb465748f3
+      internalID: -422318479
       vertices: []
       indices: 
       edges: []
@@ -166,8 +166,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7aa25c02f9f5cd540bdcece184a64aaf
-      internalID: 888357660
+      spriteID: bb8639a0771df81469dcc99cbdedcffb
+      internalID: 1534730429
       vertices: []
       indices: 
       edges: []
@@ -187,8 +187,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d205b8c46c344ba4894c1d56a88ad26e
-      internalID: 1527166997
+      spriteID: b8bef8c38f530c442b7f5fc01fe7c5b8
+      internalID: 1237487252
       vertices: []
       indices: 
       edges: []
@@ -208,8 +208,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b727a4015f8174b4ab7b0511e3619e80
-      internalID: -956023514
+      spriteID: f684b1919fa08744cab089547354047e
+      internalID: 1592580241
       vertices: []
       indices: 
       edges: []
@@ -229,8 +229,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 68f977573c0d00347800cf372bcb7e75
-      internalID: 750661476
+      spriteID: 7e12c53f95c5dd74f8f5d70795d072ed
+      internalID: 118111016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_primitive_shapes_6
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe437dcf4450b2e41b3d99ef8d6a7353
+      internalID: 926952154
       vertices: []
       indices: 
       edges: []
@@ -246,12 +267,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      tex_primitive_shapes_0: -488687874
-      tex_primitive_shapes_1: 1385856422
-      tex_primitive_shapes_2: 888357660
-      tex_primitive_shapes_3: 1527166997
-      tex_primitive_shapes_4: -956023514
-      tex_primitive_shapes_5: 750661476
+      tex_primitive_shapes_0: -460673990
+      tex_primitive_shapes_1: -422318479
+      tex_primitive_shapes_2: 1534730429
+      tex_primitive_shapes_3: 1237487252
+      tex_primitive_shapes_4: 1592580241
+      tex_primitive_shapes_5: 118111016
+      tex_primitive_shapes_6: 926952154
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -8,8 +8,8 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[Header("Primitive Sprites")]
 	[SerializeField] private Sprite _circleSprite;
 	[SerializeField] private Sprite _rectSprite;
-	[SerializeField] private Sprite _triangleSprite;
 	[SerializeField] private Sprite _arrowSprite;
+	[SerializeField] private Sprite _triangleSprite;
 	[SerializeField] private Sprite _starSprite;
 	[SerializeField] private Sprite _heartSprite;
 	[SerializeField] private Sprite _imageSprite;

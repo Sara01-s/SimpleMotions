@@ -41,15 +41,20 @@ public class ShapeComponentView : MonoBehaviour {
 		button.onClick.AddListener(() => {
 			string shapeName = shapeType.ShapeTypeUI.ToString();
 			_shapeComponentViewModel.SetShape(shapeName);
+            UpdateShape(shapeName);
 		});
 	}
 
-    private void UpdateShape(string primitiveShape) {
+    private void UpdateShape(string shapeName) {
         foreach (var shapeImage in _shapeTypes) {
             var shapeType = shapeImage.ShapeTypeUI;
+            var image = shapeImage.GetComponent<Image>();
 
-            if (shapeType.ToString() == primitiveShape) {
-                shapeImage.GetComponent<Image>().color = _editorPainter.Theme.AccentColor;
+            if (shapeType.ToString().CompareTo(shapeName) == 0) {
+                image.color = _editorPainter.Theme.AccentColor;
+            }
+            else {
+                image.color = _editorPainter.Theme.TextColor;
             }
         }
     }
