@@ -17,12 +17,12 @@ namespace SimpleMotions {
     }
 
 	public class EntitySelector : IEntitySelector {
+		
 		public Entity SelectedEntity { get; private set; }
-
-		private readonly IEntityViewModel _entityViewModel;
-
 		public ReactiveCommand<Entity> OnEntitySelected { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
+
+		private readonly IEntityViewModel _entityViewModel;
 
 		public EntitySelector(EntitiesData entitiesData, IEntityViewModel entityViewModel) {
 			_entityViewModel = entityViewModel;

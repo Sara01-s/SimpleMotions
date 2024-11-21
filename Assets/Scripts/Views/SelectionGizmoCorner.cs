@@ -19,10 +19,9 @@ public class SelectionGizmoCorner : MonoBehaviour, IDragHandler, IBeginDragHandl
         { Corner.UpLeft,    new Vector2(-1.0f,  1.0f) }
     };
 
-    private RectTransform _rectTransform;
     private RectTransform _parentRectTransform;
     private IComponentViewModel _entityViewModel;
-    private IEntitySelector _entitySelector;
+    private IEntitySelectorViewModel _entitySelectorViewModel;
 
     private Vector2 _startPointerWorldPos;
     private Vector2 _startParentSize;
@@ -31,11 +30,10 @@ public class SelectionGizmoCorner : MonoBehaviour, IDragHandler, IBeginDragHandl
     private Vector2 _startEntityPosition;
 
 
-    public void Configure(IComponentViewModel entityViewModel, IEntitySelector entitySelector) {
-        _rectTransform = GetComponent<RectTransform>();
-        _parentRectTransform = (RectTransform)transform.parent;
+    public void Configure(IComponentViewModel entityViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
+        _parentRectTransform = transform.parent as RectTransform;
         _entityViewModel = entityViewModel;
-        _entitySelector = entitySelector;
+        _entitySelectorViewModel = entitySelectorViewModel;
     }
 
     private Vector2 GetPointerWorldPos(Vector2 pointerScreenPos) {
@@ -44,7 +42,7 @@ public class SelectionGizmoCorner : MonoBehaviour, IDragHandler, IBeginDragHandl
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
-        int selectedEntityId = _entitySelector.SelectedEntity.Id;
+        int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
 
         if (_entityViewModel.EntityHasTransform(selectedEntityId, out var transform)) {
             _startEntityScale = new Vector2(transform.scale.w, transform.scale.h);
@@ -71,7 +69,7 @@ public class SelectionGizmoCorner : MonoBehaviour, IDragHandler, IBeginDragHandl
         var newEntityScale = _startEntityScale + deltaScale;
 
         var newEntityPosition = _startEntityPosition + pointerDeltaWorld * 0.5f;
-        int selectedEntityId = _entitySelector.SelectedEntity.Id;
+        int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
 
         _entityViewModel.SetEntityScale(selectedEntityId, (newEntityScale.x, newEntityScale.y));
         _entityViewModel.SetEntityPosition(selectedEntityId, (newEntityPosition.x, newEntityPosition.y));

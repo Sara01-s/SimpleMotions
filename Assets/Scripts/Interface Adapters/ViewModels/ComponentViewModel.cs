@@ -11,6 +11,7 @@ namespace SimpleMotions {
 
 		void SetEntityPosition(int entityId, (float x, float y) position);
 		void SetEntityScale(int entityId, (float w, float h) scale);
+		void SetEntityRoll(int entityId, float angleDegrees);
 		void SetEntityShape(int entityId, string shapeName);
 		void SetEntityColor(int entityId, Color color);
 		
@@ -31,6 +32,11 @@ namespace SimpleMotions {
 
 		public void SetEntityScale(int entityId, (float w, float h) scale) {
 			_videoCanvas.GetEntityComponent<Transform>(entityId).Scale = new Scale(scale.w, scale.h);
+			_videoCanvas.DisplayEntity(entityId);
+		}
+
+		public void SetEntityRoll(int entityId, float angleDegrees) {
+			_videoCanvas.GetEntityComponent<Transform>(entityId).Roll.AngleDegrees = angleDegrees;
 			_videoCanvas.DisplayEntity(entityId);
 		}
 

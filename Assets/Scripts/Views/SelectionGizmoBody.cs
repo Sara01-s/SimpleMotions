@@ -1,3 +1,4 @@
+using static UnityEngine.Mathf;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using SimpleMotions;
@@ -9,14 +10,14 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler
 
 	private RectTransform _rectTransform;
     private IComponentViewModel _entityViewModel;
-    private IEntitySelector _entitySelector;
+    private IEntitySelectorViewModel _entitySelectorViewModel;
 
 	private Vector2 _dragOffset;
 
-    public void Configure(IComponentViewModel entityViewModel, IEntitySelector entitySelector) {
+    public void Configure(IComponentViewModel entityViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
 		_rectTransform = GetComponent<RectTransform>();
         _entityViewModel = entityViewModel;
-        _entitySelector = entitySelector;
+        _entitySelectorViewModel = entitySelectorViewModel;
     }
 
 	private Vector2 GetPointerWorldPos(Vector2 pointerScreenPos) {
@@ -25,7 +26,7 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler
 	}
 
 	public void OnBeginDrag(PointerEventData eventData) {
-		int selectedEntityId = _entitySelector.SelectedEntity.Id;
+		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
 
 		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var transform)) {
 			var entityWorldPos = new Vector2(transform.pos.x, transform.pos.y);
@@ -42,7 +43,7 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler
 	private void DragEntity(Vector2 pointerScreenPos) {
 		var pointerWorldPosition = GetPointerWorldPos(pointerScreenPos);
 		var newEntityWorldPosition = pointerWorldPosition + _dragOffset;
-		int selectedEntityId = _entitySelector.SelectedEntity.Id;
+		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
 
 		_entityViewModel.SetEntityPosition(selectedEntityId, (newEntityWorldPosition.x, newEntityWorldPosition.y));
 
@@ -50,7 +51,7 @@ public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler
 	}
 
 	private void SyncGizmoWithEntity() {
-		int selectedEntityId = _entitySelector.SelectedEntity.Id;
+		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
 
 		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var transform)) {
 			var entityWorldPos = new Vector2(transform.pos.x, transform.pos.y);

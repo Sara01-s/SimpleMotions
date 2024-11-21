@@ -52,7 +52,7 @@ namespace SimpleMotions {
 			entity.Name = $"Entity ({entity.Id})";
 
 			var shape = _componentStorage.AddComponent<Shape>(entity);
-			shape.PrimitiveShape = Shape.Primitive.Circle;
+			shape.PrimitiveShape = Shape.Primitive.Rect;
 
 			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 0, new Transform() { Position = new (0.0f, 0.0f ), Roll = new(0.0f) }));
 			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 100, new Transform() { Position = new (3.0f, 1.0f ), Roll = new(720.0f), Scale = new (3.0f, 1.0f) }));

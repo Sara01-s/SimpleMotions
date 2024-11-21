@@ -31,13 +31,13 @@ namespace SimpleMotions {
 
 		public ReactiveValue<bool> AddOrRemoveKeyframe { get; } = new();
 
-        private readonly IEntitySelector _entitySelector;
+        private readonly IEntitySelectorViewModel _entitySelector;
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IVideoCanvas _videoCanvas;
 		private readonly IComponentStorage _componentStorage;
 
-		public TransformComponentViewModel(IComponentStorage componentStorage, IEntitySelector entitySelector, IVideoCanvas videoCanvas, 
+		public TransformComponentViewModel(IComponentStorage componentStorage, IEntitySelectorViewModel entitySelector, IVideoCanvas videoCanvas, 
 										   IKeyframeStorage keyframeStorage, IVideoPlayerData videoPlayerData)
 		{
 			SaveTransformKeyframe.Subscribe(transformView => SaveKeyframe(ParseTransformView(transformView)));
@@ -73,7 +73,7 @@ namespace SimpleMotions {
 		}
 
 		private int GetSelectedEntityId() {
-			return _entitySelector.SelectedEntity.Id;
+			return _entitySelector.SelectedEntityId;
 		}
 
 		private Transform ParseTransformView(((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) transformView) {

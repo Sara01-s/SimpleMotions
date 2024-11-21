@@ -30,6 +30,7 @@ namespace SimpleMotions {
 
 		[Header("Gizmos")]
 		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
+		[SerializeField] private SelectionGizmoRotate _selectionGizmoRotate;
 		[SerializeField] private SelectionGizmoCorner[] _selectionGizmoCorners;
 
 		[Header("Data")]
@@ -49,7 +50,7 @@ namespace SimpleMotions {
 		private IVideoAnimator _videoAnimator;
 		private IVideoPlayer _videoPlayer;
 
-		private IEntitySelector _entitySelector;
+		private IEntitySelectorViewModel _entitySelector;
 
 		// APP DATA //
 		private IKeyframeStorage _keyframeStorage;
@@ -145,7 +146,7 @@ namespace SimpleMotions {
 		}
 
 		private void BuildVideoEditor() {
-			_entitySelector = _services.GetService<IEntitySelector>();
+			_entitySelector = _services.GetService<IEntitySelectorViewModel>();
 			_videoAnimator  = _services.GetService<IVideoAnimator>();
 			_videoPlayer 	= _services.GetService<IVideoPlayer>();
 			_videoTimeline 	= _services.GetService<IVideoTimeline>();
@@ -167,7 +168,8 @@ namespace SimpleMotions {
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
-			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _entitySelector);
+			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
+			_selectionGizmoRotate	.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
 			_colorPickerView		.Configure();
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_editorSettingsView		.Configure();
