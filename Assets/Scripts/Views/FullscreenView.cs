@@ -26,18 +26,17 @@ public class FullscreenView : MonoBehaviour {
     [SerializeField] private string _backgroundLayerName = "UI - BG";
     [SerializeField] private string _frontLayerName = "UI - Front";
 
+    [SerializeField] private float _defaultOrtographicSize = 10.0f;
+
     private Vector2 _defaultCanvasSize;
     private Vector2 _defaultPlaybackSize;
 	private Vector3 _defaultCanvasOrigin;
     private Vector3 _defaultBackgroundSize;
     private Vector3 _defaultBackgroundPosition;
 
-    private float _defaultOrtographicSize;
-
     public void Configure() {
         _defaultCanvasSize = _videoCanvas.sizeDelta;
         _defaultPlaybackSize = _videoPlayback.sizeDelta;
-        _defaultOrtographicSize = _editorCamera.orthographicSize;
         _defaultBackgroundSize = _background.sizeDelta;
         _defaultBackgroundPosition = _background.anchoredPosition;
 

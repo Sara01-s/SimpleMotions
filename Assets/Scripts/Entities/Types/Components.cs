@@ -188,10 +188,17 @@ namespace SimpleMotions.Internal {
 		public Primitive PrimitiveShape = Primitive.Circle;
 		public Color Color = new();
 
-		public Shape() {}
-		
+        public object V { get; }
+
+        public Shape() {}
+
+        public Shape(Primitive primitiveShape, Color color) {
+			PrimitiveShape = primitiveShape;
+            Color = color;
+        }
+
 #if DEBUG
-		public override string ToString() {
+        public override string ToString() {
 			return $"Shape: (Primitive: {PrimitiveShape}, Color: {Color})";
 		}
 #endif

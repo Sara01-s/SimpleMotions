@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class TimelineCursorView : MonoBehaviour {
 
@@ -14,7 +14,7 @@ public class TimelineCursorView : MonoBehaviour {
 
     [SerializeField] private float _transformKeyframeYPosition = 41.125f;
     [SerializeField] private float _shapeKeyframeYPosition = -24.25f;
-    [SerializeField] private float _textKeyframeYPosition = -89.625f;
+    //[SerializeField] private float _textKeyframeYPosition = -89.625f;
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
 
@@ -48,7 +48,7 @@ public class TimelineCursorView : MonoBehaviour {
                 Destroy(keyframe);
             }
             
-            print($"Entidad {(int)_cursor.value} eliminada del diccionario.");
+            Debug.Log($"Entidad {(int)_cursor.value} eliminada del diccionario.");
         });
     }
 

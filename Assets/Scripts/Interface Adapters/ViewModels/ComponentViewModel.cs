@@ -20,8 +20,14 @@ namespace SimpleMotions {
 	public abstract class ComponentViewModel : IComponentViewModel {
 
 		private readonly IVideoCanvas _videoCanvas;
+		private readonly IVideoPlayerData _videoPlayerData;
+		private readonly IComponentStorage _componentStorage;
+		private readonly IEntitySelectorViewModel _entitySelectorViewModel;
 
-		public ComponentViewModel(IVideoCanvas videoCanvas) {
+		public ComponentViewModel(IEntitySelectorViewModel entitySelectorViewModel, IComponentStorage componentStorage, IVideoPlayerData videoPlayerData, IVideoCanvas videoCanvas) {
+			_entitySelectorViewModel = entitySelectorViewModel;
+			_componentStorage = componentStorage;
+			_videoPlayerData = videoPlayerData;
 			_videoCanvas = videoCanvas;
 		}
 
@@ -92,6 +98,18 @@ namespace SimpleMotions {
 
 			text = _videoCanvas.GetEntityComponent<Text>(entityId).Content;
 			return true;
+		}
+
+		public T GetSelectedSEntityComponent<T>() where T : Component {
+			return _componentStorage.GetComponent<T>(GetSelectedEntityId());
+		}
+
+		public int GetSelectedEntityId() {
+			return _entitySelectorViewModel.SelectedEntityId;
+		}
+
+		public int GetCurrentFrame() {
+			return _videoPlayerData.CurrentFrame.Value;
 		}
 
     }

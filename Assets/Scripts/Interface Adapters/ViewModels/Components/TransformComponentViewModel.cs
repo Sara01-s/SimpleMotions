@@ -18,7 +18,7 @@ namespace SimpleMotions {
 	}
 
 	// TODO - Ojo sara
-    public class TransformComponentViewModel : ITransformComponentViewModel {
+    public class TransformComponentViewModel : ComponentViewModel, ITransformComponentViewModel {
 
 		public ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; } = new();
 		public ReactiveCommand<bool> OnFrameHasKeyframe { get; } = new();
@@ -30,14 +30,14 @@ namespace SimpleMotions {
 		public ReactiveCommand<string> ScaleH { get; } = new();
 		public ReactiveCommand<string> Roll { get; } = new();
 
-        private readonly IEntitySelectorViewModel _entitySelector;
+        private readonly IEntitySelectorViewModel _entitySelectorViewModel;
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IVideoCanvas _videoCanvas;
 		private readonly IComponentStorage _componentStorage;
 
-		public TransformComponentViewModel(IComponentStorage componentStorage, IEntitySelectorViewModel entitySelector, IVideoCanvas videoCanvas, 
-										   IKeyframeStorage keyframeStorage, IVideoPlayerData videoPlayerData)
+		public TransformComponentViewModel(IComponentStorage componentStorage, IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvas videoCanvas, 
+										   IKeyframeStorage keyframeStorage, IVideoPlayerData videoPlayerData) : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas)
 		{
 			SaveTransformKeyframe.Subscribe(transformView => SaveKeyframe(ParseTransformView(transformView)));
 			PositionX.Subscribe(ModifyEntityPositionX);
@@ -51,15 +51,11 @@ namespace SimpleMotions {
 				// TODO - Hacer que se actualice su posición en pantalla.
 			});
 
-			_entitySelector = entitySelector;
+			_entitySelectorViewModel = entitySelectorViewModel;
 			_videoPlayerData = videoPlayerData;
 			_keyframeStorage = keyframeStorage;
 			_videoCanvas = videoCanvas;
 			_componentStorage = componentStorage;
-		}
-
-		private Transform GetSelectedEntityTransform() {
-			return _componentStorage.GetComponent<Transform>(GetSelectedEntityId());
 		}
 
 		private void UpdateSelectedEntityDisplay() {
@@ -72,14 +68,6 @@ namespace SimpleMotions {
 			UnityEngine.Debug.Log($"Keyframe guardado: {keyframe}");
 		}
 
-		private int GetCurrentFrame() {
-			return _videoPlayerData.CurrentFrame.Value;
-		}
-
-		private int GetSelectedEntityId() {
-			return _entitySelector.SelectedEntityId;
-		}
-
 		private Transform ParseTransformView(((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) transformView) {
 			return new Transform (
 				position: new Position(float.Parse(transformView.pos.x), float.Parse(transformView.pos.y)),
@@ -90,28 +78,28 @@ namespace SimpleMotions {
 
 		private void ModifyEntityPositionX(string positionX) {
 			if (float.TryParse(positionX, out float x)) {
-				GetSelectedEntityTransform().Position.X = x;
+				GetSelectedSEntityComponent<Transform>().Position.X = x;
 				UpdateSelectedEntityDisplay();
 			}
 		}
 
 		private void ModifyEntityPositionY(string positionY) {
-			GetSelectedEntityTransform().Position.Y = float.Parse(positionY);
+			GetSelectedSEntityComponent<Transform>().Position.Y = float.Parse(positionY);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityScaleWidth(string scaleWidth) {
-			GetSelectedEntityTransform().Scale.Width = float.Parse(scaleWidth);
+			GetSelectedSEntityComponent<Transform>().Scale.Width = float.Parse(scaleWidth);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityScaleHeight(string scaleHeight) {
-			GetSelectedEntityTransform().Scale.Height = float.Parse(scaleHeight);
+			GetSelectedSEntityComponent<Transform>().Scale.Height = float.Parse(scaleHeight);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityRollAngleDegrees(string angleDegrees) {
-			GetSelectedEntityTransform().Roll.AngleDegrees = float.Parse(angleDegrees);
+			GetSelectedSEntityComponent<Transform>().Roll.AngleDegrees = float.Parse(angleDegrees);
 			UpdateSelectedEntityDisplay();
 		}
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ShapeComponentView : MonoBehaviour {
 
+    [SerializeField] private Button _addOrRemoveKeyframe;
+    [SerializeField] private Image _keyframeImage;
+    [SerializeField] private Sprite _addKeyframe, _removeKeyframe;
 	[SerializeField] private Button[] _shapeButtons;
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private Image _currentColor;
@@ -17,6 +20,18 @@ public class ShapeComponentView : MonoBehaviour {
         _shapeComponentViewModel = shapeComponentViewModel;
         _editorPainterParser = editorPainterParser;
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
+
+        _addOrRemoveKeyframe.onClick.AddListener(() => {
+           /* if (_keyframeImage.sprite == _addKeyframe) {
+                shapeComponentViewModel.SaveTransformKeyframe.Execute(GetShapeData());
+                shapeComponentViewModel.OnDrawTransfromKeyframe.Execute();
+                _keyframeImage.sprite = _removeKeyframe;
+            }
+            else {
+                transformComponentViewModel.OnKeyframeDeleted.Execute();
+                _keyframeImage.sprite = _addKeyframe;
+            }*/
+        });
 
 		if (_shapeButtons.Length == 0) {
 			Debug.LogError("Please assign shape buttons in inspector shape component.");
