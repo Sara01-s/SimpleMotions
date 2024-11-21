@@ -30,7 +30,7 @@ namespace SimpleMotions {
 		public ReactiveCommand<string> ScaleH { get; } = new();
 		public ReactiveCommand<string> Roll { get; } = new();
 
-        private readonly IEntitySelector _entitySelector;
+        private readonly IEntitySelectorViewModel _entitySelector;
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IVideoCanvas _videoCanvas;

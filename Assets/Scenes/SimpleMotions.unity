@@ -3702,7 +3702,6 @@ MonoBehaviour:
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 3,148198
-  m_Text: 0,9780995
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -5094,7 +5093,6 @@ MonoBehaviour:
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 773,3511
-  m_Text: 177,9912
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -7113,7 +7111,6 @@ MonoBehaviour:
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 1,074099
-  m_Text: 0,2886882
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -20189,7 +20186,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "1,074099\u200B"
-  m_text: "0,2886882\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20548,7 +20544,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "3,148198\u200B"
-  m_text: "0,9780995\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20991,7 +20986,6 @@ MonoBehaviour:
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 3,222296
-  m_Text: 0,7436212
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -21233,7 +21227,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "3,222296\u200B"
-  m_text: "0,7436212\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -21368,7 +21361,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "773,3511\u200B"
-  m_text: "177,9912\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -24115,8 +24107,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1.0000001
-  m_Size: 0.61600006
+  m_Value: 1
+  m_Size: 0.616
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
