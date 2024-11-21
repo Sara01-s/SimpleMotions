@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TimelineCursorView : MonoBehaviour {
 
@@ -17,6 +18,8 @@ public class TimelineCursorView : MonoBehaviour {
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
 
+    private Dictionary<int, GameObject> _transformKeyframes = new();
+
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
@@ -26,7 +29,7 @@ public class TimelineCursorView : MonoBehaviour {
 
         RefreshUI();                                                        
 		
-        videoTimelineViewModel.DrawTrasnformKeyframe.Subscribe(() => {
+        videoTimelineViewModel.DrawTransformKeyframe.Subscribe((keyframeId) => {
             var keyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
             keyframe.GetComponent<Image>().color = Color.blue;
 
@@ -35,6 +38,17 @@ public class TimelineCursorView : MonoBehaviour {
             rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _transformKeyframeYPosition);
 
             rect.transform.SetParent(_keyframesHolder.transform);
+
+            _transformKeyframes.Add((int)_cursor.value, keyframe);
+        });
+
+        videoTimelineViewModel.OnKeyframeDeleted.Subscribe(() => {
+            if (_transformKeyframes.TryGetValue((int)_cursor.value, out var keyframe)) {
+                _transformKeyframes.Remove((int)_cursor.value);
+                Destroy(keyframe);
+            }
+            
+            print($"Entidad {(int)_cursor.value} eliminada del diccionario.");
         });
     }
 

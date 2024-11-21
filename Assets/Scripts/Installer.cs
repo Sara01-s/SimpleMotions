@@ -44,7 +44,6 @@ namespace SimpleMotions {
 		private IEditorPainterParser _editorPainterParser;
 
 		private IVideoPlayback _videoPlayback;
-		private IVideoTimeline _videoTimeline;
 		private IVideoCanvas _videoCanvas;
 		private IVideoEntities _videoEntities;
 		private IVideoAnimator _videoAnimator;
@@ -86,7 +85,6 @@ namespace SimpleMotions {
 			_services.RegisterService<IEntitySelector, 	 EntitySelector>();
 			_services.RegisterService<IVideoAnimator, 	 VideoAnimator>();
 			_services.RegisterService<IVideoPlayer, 	 VideoPlayer>();
-			_services.RegisterService<IVideoTimeline, 	 VideoTimeline>();
 			_services.RegisterService<IVideoPlayback, 	 VideoPlayback>();
 			_services.RegisterService<IVideoCanvas, 	 VideoCanvas>();
 			_services.RegisterService<IVideoEntities, 	 VideoEntities>();
@@ -149,7 +147,6 @@ namespace SimpleMotions {
 			_entitySelector = _services.GetService<IEntitySelectorViewModel>();
 			_videoAnimator  = _services.GetService<IVideoAnimator>();
 			_videoPlayer 	= _services.GetService<IVideoPlayer>();
-			_videoTimeline 	= _services.GetService<IVideoTimeline>();
 			_videoPlayback 	= _services.GetService<IVideoPlayback>();
             _videoCanvas 	= _services.GetService<IVideoCanvas>();
 			_videoEntities 	= _services.GetService<IVideoEntities>();

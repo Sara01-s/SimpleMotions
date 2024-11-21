@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
@@ -5,15 +6,14 @@ namespace SimpleMotions {
 	public interface ITransformComponentViewModel {
 
 		ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; }
-		ReactiveCommand DrawTransfromKeyframe { get; }
-		ReactiveCommand DeleteKeyFrame { get; }
+		ReactiveCommand<bool> OnFrameHasKeyframe { get; }
+		ReactiveCommand OnDrawTransfromKeyframe { get; }
+		ReactiveCommand OnKeyframeDeleted { get; }
 		ReactiveCommand<string> PositionX { get; }
 		ReactiveCommand<string> PositionY { get; }
 		ReactiveCommand<string> ScaleW { get; }
 		ReactiveCommand<string> ScaleH { get; }
 		ReactiveCommand<string> Roll { get; }
-
-		ReactiveValue<bool> AddOrRemoveKeyframe { get; }
 
 	}
 
@@ -21,17 +21,16 @@ namespace SimpleMotions {
     public class TransformComponentViewModel : ITransformComponentViewModel {
 
 		public ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; } = new();
-		public ReactiveCommand DrawTransfromKeyframe { get; } = new();
-        public ReactiveCommand DeleteKeyFrame { get; } = new();
+		public ReactiveCommand<bool> OnFrameHasKeyframe { get; } = new();
+		public ReactiveCommand OnDrawTransfromKeyframe { get; } = new();
+        public ReactiveCommand OnKeyframeDeleted { get; } = new();
 		public ReactiveCommand<string> PositionX { get; } = new();
 		public ReactiveCommand<string> PositionY { get; } = new();
 		public ReactiveCommand<string> ScaleW { get; } = new();
 		public ReactiveCommand<string> ScaleH { get; } = new();
 		public ReactiveCommand<string> Roll { get; } = new();
 
-		public ReactiveValue<bool> AddOrRemoveKeyframe { get; } = new();
-
-        private readonly IEntitySelectorViewModel _entitySelector;
+        private readonly IEntitySelector _entitySelector;
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IVideoCanvas _videoCanvas;
@@ -46,6 +45,11 @@ namespace SimpleMotions {
 			ScaleW.Subscribe(ModifyEntityScaleWidth);
 			ScaleH.Subscribe(ModifyEntityScaleHeight);
 			Roll.Subscribe(ModifyEntityRollAngleDegrees);
+
+			OnKeyframeDeleted.Subscribe(() => {
+				keyframeStorage.RemoveKeyframe<Transform>(GetSelectedEntityId(), GetCurrentFrame());
+				// TODO - Hacer que se actualice su posición en pantalla.
+			});
 
 			_entitySelector = entitySelector;
 			_videoPlayerData = videoPlayerData;

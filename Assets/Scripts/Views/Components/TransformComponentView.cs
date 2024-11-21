@@ -11,7 +11,7 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _scaleH;
     [SerializeField] private TMP_InputField _roll;
 
-    [SerializeField] private Button _addOrRemoveKeyframe;
+    [SerializeField] private Button _updateKeyframe;
     [SerializeField] private Image _keyframeImage;
     [SerializeField] private Sprite _addKeyframe;
     [SerializeField] private Sprite _removeKeyframe;
@@ -38,22 +38,24 @@ public class TransformComponentView : MonoBehaviour {
         _scaleH.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleH));
         _roll.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.Roll));
 
-        transformComponentViewModel.AddOrRemoveKeyframe.Subscribe(addKeyframe => {
-            if (addKeyframe) {
-                _keyframeImage.sprite = _addKeyframe;
+        transformComponentViewModel.OnFrameHasKeyframe.Subscribe(hasKeyframe => {
+            if (hasKeyframe) {
+                _keyframeImage.sprite = _removeKeyframe;
             }
             else {
-                _keyframeImage.sprite = _removeKeyframe;
+                _keyframeImage.sprite = _addKeyframe;
             }
         });
 
-		_addOrRemoveKeyframe.onClick.AddListener(() => {
+		_updateKeyframe.onClick.AddListener(() => {
             if (_keyframeImage.sprite == _addKeyframe) {
                 transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData());
-                transformComponentViewModel.DrawTransfromKeyframe.Execute();
+                transformComponentViewModel.OnDrawTransfromKeyframe.Execute();
+                _keyframeImage.sprite = _removeKeyframe;
             }
             else {
-                transformComponentViewModel.DeleteKeyFrame.Execute();
+                transformComponentViewModel.OnKeyframeDeleted.Execute();
+                _keyframeImage.sprite = _addKeyframe;
             }
         });
 	}

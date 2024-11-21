@@ -54,11 +54,6 @@ namespace SimpleMotions {
 			var shape = _componentStorage.AddComponent<Shape>(entity);
 			shape.PrimitiveShape = Shape.Primitive.Rect;
 
-			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 0, new Transform() { Position = new (0.0f, 0.0f ), Roll = new(0.0f) }));
-			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 100, new Transform() { Position = new (3.0f, 1.0f ), Roll = new(720.0f), Scale = new (3.0f, 1.0f) }));
-			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 200, new Transform() { Position = new (-3.0f, 2.0f ), Roll = new(0.0f), Scale = new (3.0f, 1.0f) }));
-			_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, 300, new Transform() { Position = new (3.0f, -1.0f ), Roll = new(-1360.0f), Scale = new (3.0f, 1.0f) }));
-
 			_componentStorage.AddComponent<Transform>(entity);
 			_keyframeStorage.AddDefaultKeyframes(entity.Id);
 			_entitySelector.SelectEntity(entity.Id);
