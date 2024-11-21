@@ -4,6 +4,8 @@ using SimpleMotions;
 
 public class SelectionGizmoRotate : MonoBehaviour, IDragHandler {
     
+	[SerializeField] private Canvas _editorCanvas;
+	
 	private RectTransform _parentRect;
     private IComponentViewModel _entityViewModel;
     private IEntitySelectorViewModel _entitySelectorViewModel;
@@ -15,16 +17,20 @@ public class SelectionGizmoRotate : MonoBehaviour, IDragHandler {
     }
 
 	public void OnDrag(PointerEventData eventData) {
-		RollEntity(eventData.position);
+		RollEntity(GetPointerWorldPos(eventData.position));
 	}
 
-	private void RollEntity(Vector2 pointerScreenPos) {
-        var angleDirRad = Mathf.Atan2(pointerScreenPos.y, pointerScreenPos.x);
-        var angleDirDeg = 180.0f * angleDirRad / Mathf.PI;
-        float angleDegrees = 360.0f * Mathf.Round(angleDirDeg) % 360.0f;
+	private Vector2 GetPointerWorldPos(Vector2 pointerScreenPos) {
+		var camera = _editorCanvas.worldCamera;
+		return camera.ScreenToWorldPoint(pointerScreenPos);
+	}
+
+	private void RollEntity(Vector2 pointerWorldPos) {
+		// TODO - Roll entity sara...
+        float angleDirRad = Mathf.Atan2(pointerWorldPos.y, pointerWorldPos.x);
 		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
 
-        _entityViewModel.SetEntityRoll(selectedEntityId, angleDegrees);
+        _entityViewModel.SetEntityRoll(selectedEntityId, angleDirRad * Mathf.Rad2Deg);
 		SyncGizmoWithEntity();
 	}
 
