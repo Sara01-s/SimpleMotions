@@ -3613,7 +3613,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 3,100041
+  m_Text: 3,148198
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -5125,7 +5125,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 756,0146
+  m_Text: 773,3511
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -7143,7 +7143,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 1,05002
+  m_Text: 1,074099
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -11759,6 +11759,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: AccentColor
       objectReference: {fileID: 0}
+    - target: {fileID: 3518875454802560605, guid: 9c7953e42ba65ed339a486fbf98ca2e2, type: 3}
+      propertyPath: _videoCanvas
+      value: 
+      objectReference: {fileID: 1123448606}
     - target: {fileID: 3518875454802560605, guid: 9c7953e42ba65ed339a486fbf98ca2e2, type: 3}
       propertyPath: _editorCanvas
       value: 
@@ -16889,12 +16893,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2285ca2cf97439816b204db276cdeeda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _circleSprite: {fileID: 1253529343, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
-  _rectSprite: {fileID: 345303206, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
-  _triangleSprite: {fileID: 931769748, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
-  _arrowSprite: {fileID: 169284114, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
-  _starSprite: {fileID: -1804230422, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
-  _heartSprite: {fileID: 36853230, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
+  _circleSprite: {fileID: -488687874, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
+  _rectSprite: {fileID: 1385856422, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
+  _triangleSprite: {fileID: 888357660, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
+  _arrowSprite: {fileID: 1527166997, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
+  _starSprite: {fileID: -956023514, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
+  _heartSprite: {fileID: 750661476, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
   _imageSprite: {fileID: 0}
   _entityLayer:
     serializedVersion: 2
@@ -20300,7 +20304,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "1,05002\u200B"
+  m_text: "1,074099\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
   m_sharedMaterial: {fileID: -7754682509830571496, guid: bc460b93855d05155905ed06041270a8, type: 2}
@@ -20658,7 +20662,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "3,100041\u200B"
+  m_text: "3,148198\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
   m_sharedMaterial: {fileID: -7754682509830571496, guid: bc460b93855d05155905ed06041270a8, type: 2}
@@ -21100,7 +21104,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 3,150061
+  m_Text: 3,222296
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -21341,7 +21345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "3,150061\u200B"
+  m_text: "3,222296\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
   m_sharedMaterial: {fileID: -7754682509830571496, guid: bc460b93855d05155905ed06041270a8, type: 2}
@@ -21475,7 +21479,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "756,0146\u200B"
+  m_text: "773,3511\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
   m_sharedMaterial: {fileID: -7754682509830571496, guid: bc460b93855d05155905ed06041270a8, type: 2}
@@ -24342,8 +24346,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.616
+  m_Value: 1.0000001
+  m_Size: 0.61600006
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

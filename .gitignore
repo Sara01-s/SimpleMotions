@@ -86,3 +86,6 @@ crashlytics-build.properties
 .plastic/
 ignore.conf
 
+# Annoying file
+"Assets/Resources/Fonts/Roboto-Regular SDF.asset"
+

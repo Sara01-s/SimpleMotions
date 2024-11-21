@@ -49,6 +49,12 @@ public class ExportSettingsView : MonoBehaviour {
 			multiselect: false
 		);
 
+        if (outputDirectory.Length <= 0) {
+            return;
+        }
+
+        print("Output directory updated: " + outputDirectory[0]);
+
 		if (_inputValidator.ValidateDirectory(outputDirectory[0])) {
 			SetOutputFilePath(outputDirectory[0]);
 		}
