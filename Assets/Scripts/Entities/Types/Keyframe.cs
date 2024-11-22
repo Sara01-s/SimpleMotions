@@ -1,20 +1,26 @@
 
 namespace SimpleMotions.Internal {
 
-	public interface IKeyframe<out T> where T : Component {
+    public interface IKeyframe<out T> where T : Component {
 		int EntityId { get; set; }
-		int Frame { get; set; }
-		T Value { get; }
-	}
+        int Frame { get; set; }
+        T Value { get; }
+    }
 
 	[System.Serializable]
 	public class Keyframe<T> : IKeyframe<T>, System.IComparable where T : Component, new() {
 
 		public static Keyframe<T> Invalid = new(Entity.Invalid.Id, TimelineData.INVALID_FRAME, new());
-		
+
 		public int EntityId { get; set; }
 		public int Frame { get; set; }
 		public T Value { get; set; }
+
+		public Keyframe(IKeyframe<Component> keyframe) {
+			EntityId = keyframe.EntityId;
+			Frame = keyframe.Frame;
+			Value = (T)keyframe.Value;
+		}
 
 		public Keyframe(int entityId) {
 			EntityId = entityId;
@@ -41,6 +47,6 @@ namespace SimpleMotions.Internal {
 		public override string ToString() {
 			return $"Keyframe (entity id: {EntityId}, frame: {Frame} value: {Value}";
 		}
-
 	}
+
 }

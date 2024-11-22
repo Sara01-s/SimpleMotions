@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using SimpleMotions.Internal;
 using System;
 
+#nullable enable
+
 namespace SimpleMotions {
 
 	public interface IKeyframeStorage {
@@ -9,12 +11,10 @@ namespace SimpleMotions {
 		IEnumerable<Type> KeyframeTypes { get; }
 		int TotalFrames { get; }
 
-#nullable enable
 		IKeyframeSpline? GetKeyframeSplineOfType<T>() where T : Component;
 		IKeyframeSpline? GetEntityKeyframesOfType<T>(int entityId) where T : Component;
-#nullable disable
 
-		IKeyframe<Component> GetKeyframeAt<T>(int frame) where T : Component;
+		IKeyframe<T>? GetKeyframeOfTypeAt<T>(int frame) where T : Component, new();
 		IKeyframe<Component> GetKeyframeAt(int frame);
 		KeyframesData GetKeyframesData();
 
@@ -30,6 +30,7 @@ namespace SimpleMotions {
 		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
 
 		bool FrameHasKeyframe(int frame);
+		bool FrameHasKeyframeOfTypeAt<T>(int frame) where T : Component, new();
 		bool EntityHasKeyframesOfType<T>(int entityId) where T : Component;
 		bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline keyframeSpline) where T : Component;
 		bool EntityHasKeyframesOfAnyType(int entityId);
@@ -72,11 +73,9 @@ namespace SimpleMotions {
 			return keyframesAtFrame;
 		}
 
-#nullable enable
 		public IKeyframeSpline? GetKeyframeSplineOfType<T>() where T : Component {
 			return _allKeyframes[typeof(T)];
 		}
-#nullable disable
 
 		public bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline componentKeyframeSpline) where T : Component {
 			var componentType = typeof(T);
@@ -86,7 +85,7 @@ namespace SimpleMotions {
 				return true;
 			}
 
-			componentKeyframeSpline = null;
+			componentKeyframeSpline = default!;
 			return false;
 		}
 
@@ -134,7 +133,6 @@ namespace SimpleMotions {
 			return keyframe;
 		}
 
-#nullable enable
 		public IKeyframeSpline? GetEntityKeyframesOfType<T>(int entityId) where T : Component {
 			if (!EntityHasKeyframesOfType<T>(entityId)) {
 				throw new Exception("Entity has no keyframes of type " + typeof(T));
@@ -150,7 +148,6 @@ namespace SimpleMotions {
 
 			return null;
 		}
-#nullable disable
 
 		public IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId) {
 			var allEntityKeyframes = new List<IKeyframeSpline>(_allKeyframes.Keys.Count);
@@ -166,14 +163,28 @@ namespace SimpleMotions {
 			return GetKeyframeAt(frame).EntityId != Entity.Invalid.Id;
 		}
 
-        public IKeyframe<Component> GetKeyframeAt<T>(int frame) where T : Component {
+		public bool FrameHasKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
+			bool frameHasKeyframe = FrameHasKeyframe(frame);
+			bool keyframeIsOfTypeT = GetKeyframeOfTypeAt<T>(frame).Value is T;
+			UnityEngine.Debug.Log($"frame ({frame}) has keyframe: {frameHasKeyframe}, is type {typeof(T)}: {keyframeIsOfTypeT}");
+			return frameHasKeyframe && keyframeIsOfTypeT;
+ 		}
+
+		// FIXME - Find a way to not return a copy.
+		/// <summary>
+		/// Returns a !!!COPY!!! of the keyframe of type `T` at given frame.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="frame"></param>
+		/// <returns>A COPY!!!!!!!</returns>
+        public IKeyframe<T> GetKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
 			if (TryGetAllKeyframesOfType<T>(out var componentKeyframes)) {
 				if (componentKeyframes.TryGetValue(frame, out var keyframe)) {
-					return keyframe;
+					return new Keyframe<T>(keyframe);
 				}
 			}
 
-			return Keyframe<Component>.Invalid;
+			return Keyframe<T>.Invalid;
         }
 
 		public IKeyframe<Component> GetKeyframeAt(int frame) {

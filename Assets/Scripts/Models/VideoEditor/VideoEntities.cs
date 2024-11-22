@@ -51,11 +51,11 @@ namespace SimpleMotions {
 
 			entity.Name = $"Entity ({entity.Id})";
 
-			var shape = _componentStorage.AddComponent<Shape>(entity);
-			shape.PrimitiveShape = Shape.Primitive.Rect;
-
 			_componentStorage.AddComponent<Transform>(entity);
+			_componentStorage.AddComponent<Shape>(entity);
+
 			_keyframeStorage.AddDefaultKeyframes(entity.Id);
+			
 			_entitySelector.SelectEntity(entity.Id);
 			_videoCanvas.DisplayEntity(entity.Id);
 

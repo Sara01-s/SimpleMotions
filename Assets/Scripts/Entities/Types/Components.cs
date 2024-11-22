@@ -185,7 +185,7 @@ namespace SimpleMotions.Internal {
 			Image
 		}
 
-		public Primitive PrimitiveShape = Primitive.Circle;
+		public Primitive PrimitiveShape = Primitive.Rect;
 		public Color Color = new();
 
         public object V { get; }

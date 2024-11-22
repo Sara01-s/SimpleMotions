@@ -55,7 +55,7 @@ public class ShapeComponentView : MonoBehaviour {
 
     public (string shapeName, float r, float g, float b, float a) GetShapeData() {
         var currentColor = _flexibleColorPicker.Color;
-        return (_currentShape.ToString(), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+        return (_currentShape.ShapeTypeUI.ToString(), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
     }
 
     public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData, EditorPainter editorPainter) {

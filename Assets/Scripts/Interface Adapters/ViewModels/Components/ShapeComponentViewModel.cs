@@ -1,6 +1,8 @@
 using SimpleMotions.Internal;
 using System;
 
+#nullable enable
+
 namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
@@ -30,20 +32,36 @@ namespace SimpleMotions {
         {
             SaveShapeKeyframe.Subscribe(shapeView => SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName));
 
-            OnShapeKeyframeDeleted.Subscribe(() => {
+			OnShapeKeyframeDeleted.Subscribe(() => {
+				string previousShapeName = GetPreviousKeyframeShapeName(keyframeStorage);
+				SetShape(previousShapeName);
+
 				keyframeStorage.RemoveKeyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame());
-				// TODO - Hacer que se actualice su posición en pantalla.
+				videoCanvas.DisplayEntity(GetSelectedEntityId());
 			});
 
             _keyframeStorage = keyframeStorage;
             _entitySelector = entitySelector;
         }
 
-        public void SaveKeyframe(Color color, string shapeName) {
-            string formattedName = shapeName.Split('(')[0].Trim(); // Magia oscura.
-            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), formattedName), color);
+		private string GetPreviousKeyframeShapeName(IKeyframeStorage keyframeStorage) {
+			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
+				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(frame)) {
+					var previousShape = keyframeStorage.GetKeyframeOfTypeAt<Shape>(frame);
 
+					if (previousShape is not null) {
+						return previousShape.Value.PrimitiveShape.ToString();
+					}
+				}
+			}
+
+			return string.Empty;
+		}
+
+		public void SaveKeyframe(Color color, string shapeName) {
+            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
             var shapeKeyframe = new Keyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame(), shape);
+
             _keyframeStorage.AddKeyframe(shapeKeyframe);
             UnityEngine.Debug.Log($"Keyframe de Shape guardado: {shapeKeyframe}");
         }

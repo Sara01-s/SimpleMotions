@@ -82,11 +82,6 @@ namespace SimpleMotions {
 			}
 		}
 
-		private void SetCurrentInterpolatedComponent<T>(int entityId) where T : Component {
-			_currentComponentSpline = _keyframeStorage.GetEntityKeyframesOfType<T>(entityId);
-			_currentInterpolatedComponent = _componentStorage.GetComponent<T>(entityId);
-		}
-
 		private void InterpolateKeyframeSpline<T>(IKeyframeSpline keyframeSpline, T component, int currentFrame) where T : Component {
 			var startKeyframe = keyframeSpline.GetLastKeyframe(currentFrame);
 			var targetKeyframe = keyframeSpline.GetNextKeyframe(currentFrame);
@@ -100,13 +95,6 @@ namespace SimpleMotions {
 			}
 
 			InterpolateComponent(component, startKeyframe, targetKeyframe, easeOutBack(t));
-		}
-
-		private void SendInterpolationData(int entityId) {
-			// Send updated data to view.
-			var entity = _entityStorage.GetEntity(entityId);
-
-			EntityDisplayInfo.Value = (entity.Id, entity.Name);
 		}
 
 		private void InterpolateComponent<T>(T component, IKeyframe<Component> start, IKeyframe<Component> target, float t) {
@@ -131,8 +119,20 @@ namespace SimpleMotions {
 					var deltaColor = lerp(startShape.Color, targetShape.Color, t);
 
 					shape.Color = deltaColor;
+					shape.PrimitiveShape = startShape.PrimitiveShape;
 					break;
 			}
+		}
+
+		private void SetCurrentInterpolatedComponent<T>(int entityId) where T : Component {
+			_currentComponentSpline = _keyframeStorage.GetEntityKeyframesOfType<T>(entityId);
+			_currentInterpolatedComponent = _componentStorage.GetComponent<T>(entityId);
+		}
+
+		private void SendInterpolationData(int entityId) {
+			// Send updated data to view.
+			var entity = _entityStorage.GetEntity(entityId);
+			EntityDisplayInfo.Value = (entity.Id, entity.Name);
 		}
 
 	}
