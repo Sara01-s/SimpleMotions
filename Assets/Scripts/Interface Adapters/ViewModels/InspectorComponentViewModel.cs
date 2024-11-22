@@ -15,7 +15,7 @@ namespace SimpleMotions {
             _videoPlayerData = videoPlayerData;
         }
 
-        public T GetSelectedSEntityComponent<T>() where T : Component {
+        public T GetSelectedEntityComponent<T>() where T : Component {
 			return _componentStorage.GetComponent<T>(GetSelectedEntityId());
 		}
 

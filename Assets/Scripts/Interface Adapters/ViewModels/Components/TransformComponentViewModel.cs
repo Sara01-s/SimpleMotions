@@ -73,30 +73,27 @@ namespace SimpleMotions {
 		}
 
 		private void ModifyEntityPositionX(string positionX) {
-			UnityEngine.Debug.Log("Antes: " + positionX);
-			GetSelectedSEntityComponent<Transform>().Position.X = ParseFloat(positionX.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			UnityEngine.Debug.Log("Entre medio: " + positionX);
+			GetSelectedEntityComponent<Transform>().Position.X = ParseFloat(positionX);
 			UpdateSelectedEntityDisplay();
-			UnityEngine.Debug.Log("Después: " + positionX);
 		}
 
 		private void ModifyEntityPositionY(string positionY) {
-			GetSelectedSEntityComponent<Transform>().Position.Y = ParseFloat(positionY);
+			GetSelectedEntityComponent<Transform>().Position.Y = ParseFloat(positionY);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityScaleWidth(string scaleWidth) {
-			GetSelectedSEntityComponent<Transform>().Scale.Width = ParseFloat(scaleWidth);
+			GetSelectedEntityComponent<Transform>().Scale.Width = ParseFloat(scaleWidth);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityScaleHeight(string scaleHeight) {
-			GetSelectedSEntityComponent<Transform>().Scale.Height = ParseFloat(scaleHeight);
+			GetSelectedEntityComponent<Transform>().Scale.Height = ParseFloat(scaleHeight);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityRollAngleDegrees(string angleDegrees) {
-			GetSelectedSEntityComponent<Transform>().Roll.AngleDegrees = ParseFloat(angleDegrees);
+			GetSelectedEntityComponent<Transform>().Roll.AngleDegrees = ParseFloat(angleDegrees);
 			UpdateSelectedEntityDisplay();
 		}
 

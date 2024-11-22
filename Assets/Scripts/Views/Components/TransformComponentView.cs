@@ -19,6 +19,7 @@ public class TransformComponentView : MonoBehaviour {
     private IInputValidator _inputValidator;
 
     private string _previousValue;
+	private bool _isSettingData;
 
     private ITransformComponentViewModel _transformComponentViewModel;
 
@@ -61,6 +62,10 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
     private void TrySendNewComponentValue(string newValue, ReactiveCommand<string> reactiveCommand) {
+		if (_isSettingData) {
+			return;
+		}
+		
         bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
 
         newValue = _inputValidator.ValidateComponentInput(newValue);
@@ -80,6 +85,8 @@ public class TransformComponentView : MonoBehaviour {
 	}
 
     public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
+		_isSettingData = true;
+
 		// General numeric formatting, see https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
 		const string floatFormat = "G";
 
@@ -97,6 +104,8 @@ public class TransformComponentView : MonoBehaviour {
 
         firstInput = transformData.rollAngleDegrees.ToString(floatFormat);
         _roll.text = firstInput;
+
+		_isSettingData = false;
     }
 
     private bool CanSendInput(string newValue) {
