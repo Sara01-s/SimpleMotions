@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8319498238902566722}
   m_Layer: 5
   m_Name: Image - Text BG
-  m_TagString: BackgroundColor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 976856519160233123}
   m_Layer: 5
   m_Name: Text - Number
-  m_TagString: Untagged
+  m_TagString: ExcludeFromTheme
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

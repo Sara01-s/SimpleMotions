@@ -8,6 +8,7 @@ TagManager:
   - SecondaryColor
   - AccentColor
   - BackgroundColor
+  - ExcludeFromTheme
   layers:
   - Default
   - TransparentFX
