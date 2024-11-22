@@ -15,22 +15,32 @@ public class ShapeComponentView : MonoBehaviour {
     private IShapeComponentViewModel _shapeComponentViewModel;
     private EditorPainter _editorPainter;
     private ShapeType[] _shapeTypes;
+    private ShapeType _currentShape;
 
     public void Configure(IShapeComponentViewModel shapeComponentViewModel, IEditorPainterParser editorPainterParser) {
         _shapeComponentViewModel = shapeComponentViewModel;
         _editorPainterParser = editorPainterParser;
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
 
-        _addOrRemoveKeyframe.onClick.AddListener(() => {
-           /* if (_keyframeImage.sprite == _addKeyframe) {
-                shapeComponentViewModel.SaveTransformKeyframe.Execute(GetShapeData());
-                shapeComponentViewModel.OnDrawTransfromKeyframe.Execute();
+        shapeComponentViewModel.OnFrameHasKeyframe.Subscribe(hasKeyframe => {
+            if (hasKeyframe) {
                 _keyframeImage.sprite = _removeKeyframe;
             }
             else {
-                transformComponentViewModel.OnKeyframeDeleted.Execute();
                 _keyframeImage.sprite = _addKeyframe;
-            }*/
+            }
+        });
+
+        _addOrRemoveKeyframe.onClick.AddListener(() => {
+            if (_keyframeImage.sprite == _addKeyframe) {
+                shapeComponentViewModel.SaveShapeKeyframe.Execute(GetShapeData());
+                shapeComponentViewModel.OnDrawShapeKeyframe.Execute();
+                _keyframeImage.sprite = _removeKeyframe;
+            }
+            else {
+                shapeComponentViewModel.OnShapeKeyframeDeleted.Execute();
+                _keyframeImage.sprite = _addKeyframe;
+            }
         });
 
 		if (_shapeButtons.Length == 0) {
@@ -43,8 +53,9 @@ public class ShapeComponentView : MonoBehaviour {
 		}
     }
 
-    public void SubscribeToColorPicker() {
-        _flexibleColorPicker.SubscribeToColorChange(SetEntityColor);
+    public (string shapeName, float r, float g, float b, float a) GetShapeData() {
+        var currentColor = _flexibleColorPicker.Color;
+        return (_currentShape.ToString(), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
     }
 
     public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData, EditorPainter editorPainter) {
@@ -67,11 +78,16 @@ public class ShapeComponentView : MonoBehaviour {
 
             if (shapeType.ToString().CompareTo(shapeName) == 0) {
                 image.color = _editorPainter.Theme.AccentColor;
+                _currentShape = shapeImage;
             }
             else {
                 image.color = _editorPainter.Theme.TextColor;
             }
         }
+    }
+
+    public void SubscribeToColorPicker() {
+        _flexibleColorPicker.SubscribeToColorChange(SetEntityColor);
     }
 
     private void SetEntityColor(Color color) {

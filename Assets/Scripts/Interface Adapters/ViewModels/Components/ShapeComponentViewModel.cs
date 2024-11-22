@@ -5,24 +5,47 @@ namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
         ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; }
+        ReactiveCommand<bool> OnFrameHasKeyframe { get; }
+        ReactiveCommand OnDrawShapeKeyframe { get; }
+        ReactiveCommand OnShapeKeyframeDeleted { get; }
 
         void SetColor(Color color);
 		void SetShape(string shapeName);
     }
 
-    public class ShapeComponentViewModel : ComponentViewModel, IShapeComponentViewModel {
+    public class ShapeComponentViewModel : InspectorComponentViewModel, IShapeComponentViewModel {
 
         public ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; } = new();
+        public ReactiveCommand<bool> OnFrameHasKeyframe { get; } = new();
+        public ReactiveCommand OnDrawShapeKeyframe { get; } = new();
+        public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
 
         private readonly IEntitySelector _entitySelector;
+        private readonly IKeyframeStorage _keyframeStorage;
 
-        public ShapeComponentViewModel(IEntitySelectorViewModel entitySelectorViewModel, IComponentStorage componentStorage, IVideoPlayerData videoPlayerData, IVideoCanvas videoCanvas, IKeyframeStorage keyframeStorage) : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) {
+        public ShapeComponentViewModel(IEntitySelectorViewModel entitySelectorViewModel, IComponentStorage componentStorage, 
+                                       IVideoPlayerData videoPlayerData, IKeyframeStorage keyframeStorage, 
+                                       IVideoCanvas videoCanvas, IEntitySelector entitySelector) 
+                                       : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) 
+        {
             SaveShapeKeyframe.Subscribe(shapeView => SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName));
+
+            OnShapeKeyframeDeleted.Subscribe(() => {
+				keyframeStorage.RemoveKeyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame());
+				// TODO - Hacer que se actualice su posición en pantalla.
+			});
+
+            _keyframeStorage = keyframeStorage;
+            _entitySelector = entitySelector;
         }
 
         public void SaveKeyframe(Color color, string shapeName) {
-            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
-            var keyframe = new Keyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame(), shape);
+            string formattedName = shapeName.Split('(')[0].Trim(); // Magia oscura.
+            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), formattedName), color);
+
+            var shapeKeyframe = new Keyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame(), shape);
+            _keyframeStorage.AddKeyframe(shapeKeyframe);
+            UnityEngine.Debug.Log($"Keyframe de Shape guardado: {shapeKeyframe}");
         }
 
         public Color ParseShapeColorView((string shapeName, float r, float g, float b, float a) shapeView) {

@@ -54,7 +54,7 @@ public class TransformComponentView : MonoBehaviour {
                 _keyframeImage.sprite = _removeKeyframe;
             }
             else {
-                transformComponentViewModel.OnKeyframeDeleted.Execute();
+                transformComponentViewModel.OnTransformKeyframeDeleted.Execute();
                 _keyframeImage.sprite = _addKeyframe;
             }
         });

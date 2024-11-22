@@ -13,13 +13,14 @@ namespace SimpleMotions {
 
 		public ReactiveCommand<(int, string)> OnEntitySelected { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
-		public ReactiveCommand<int> SelectEntity { get; } = new();
+		public ReactiveCommand<int> SelectEntity { get; private set; } = new();
 
         public int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 
-		private readonly IEntitySelector _entitySelector;
+		private IEntitySelector _entitySelector;
 
         public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
+
 			entitySelector.OnEntitySelected.Subscribe(entity => OnEntitySelected.Execute((entity.Id, entity.Name)));
 			entitySelector.OnEntityDeselected.Subscribe(OnEntityDeselected.Execute);
 
