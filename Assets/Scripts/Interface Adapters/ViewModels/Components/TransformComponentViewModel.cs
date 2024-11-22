@@ -1,4 +1,5 @@
 using SimpleMotions.Internal;
+using static StringExtensions;
 
 namespace SimpleMotions {
 
@@ -65,36 +66,37 @@ namespace SimpleMotions {
 
 		private Transform ParseTransformView(((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees) transformView) {
 			return new Transform (
-				position: new Position(float.Parse(transformView.pos.x), float.Parse(transformView.pos.y)),
-				scale: new Scale(float.Parse(transformView.scale.w), float.Parse(transformView.scale.h)),
-				roll: new Roll(float.Parse(transformView.rollAngleDegrees))
+				position: new Position(ParseFloat(transformView.pos.x), ParseFloat(transformView.pos.y)),
+				scale: new Scale(ParseFloat(transformView.scale.w), ParseFloat(transformView.scale.h)),
+				roll: new Roll(ParseFloat(transformView.rollAngleDegrees))
 			);
 		}
 
 		private void ModifyEntityPositionX(string positionX) {
-			if (float.TryParse(positionX, out float x)) {
-				GetSelectedSEntityComponent<Transform>().Position.X = x;
-				UpdateSelectedEntityDisplay();
-			}
+			UnityEngine.Debug.Log("Antes: " + positionX);
+			GetSelectedSEntityComponent<Transform>().Position.X = ParseFloat(positionX.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			UnityEngine.Debug.Log("Entre medio: " + positionX);
+			UpdateSelectedEntityDisplay();
+			UnityEngine.Debug.Log("Después: " + positionX);
 		}
 
 		private void ModifyEntityPositionY(string positionY) {
-			GetSelectedSEntityComponent<Transform>().Position.Y = float.Parse(positionY);
+			GetSelectedSEntityComponent<Transform>().Position.Y = ParseFloat(positionY);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityScaleWidth(string scaleWidth) {
-			GetSelectedSEntityComponent<Transform>().Scale.Width = float.Parse(scaleWidth);
+			GetSelectedSEntityComponent<Transform>().Scale.Width = ParseFloat(scaleWidth);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityScaleHeight(string scaleHeight) {
-			GetSelectedSEntityComponent<Transform>().Scale.Height = float.Parse(scaleHeight);
+			GetSelectedSEntityComponent<Transform>().Scale.Height = ParseFloat(scaleHeight);
 			UpdateSelectedEntityDisplay();
 		}
 
 		private void ModifyEntityRollAngleDegrees(string angleDegrees) {
-			GetSelectedSEntityComponent<Transform>().Roll.AngleDegrees = float.Parse(angleDegrees);
+			GetSelectedSEntityComponent<Transform>().Roll.AngleDegrees = ParseFloat(angleDegrees);
 			UpdateSelectedEntityDisplay();
 		}
 

@@ -31,7 +31,7 @@ namespace SimpleMotions {
         }
 
         public bool IsComponentNewInputInvalid(string newInput) {
-            Regex numberRegex = new Regex(@"^-?\d+([.,]\d+)?$");
+            var numberRegex = new Regex(@"^-?\d+([.,]\d+)?$");
 
             if (!numberRegex.IsMatch(newInput)) {
                 return true;

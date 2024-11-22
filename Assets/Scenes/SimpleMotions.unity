@@ -1153,7 +1153,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -1848,14 +1848,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -450
       objectReference: {fileID: 0}
+    - target: {fileID: 2761838629929243864, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
+    - target: {fileID: 3167684542035299116, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
     - target: {fileID: 3556209571592943671, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 59.398438
       objectReference: {fileID: 0}
+    - target: {fileID: 3666330359268007973, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
     - target: {fileID: 5144944451806322197, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1635351964, guid: 00a265d51dc833046abe821a14170432, type: 3}
+    - target: {fileID: 5770555315108844109, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
+    - target: {fileID: 6279597805858948129, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
     - target: {fileID: 6919907351646122299, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1936,6 +1956,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6965490320816580664, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
+    - target: {fileID: 7586847773284645291, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
+      propertyPath: m_GlobalFontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
     - target: {fileID: 7947203841814566906, guid: df7618a868c2212d9a2e8519a3ff9482, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 25.199219
@@ -2473,7 +2501,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -3706,7 +3734,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -5097,7 +5125,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -6502,7 +6530,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -7115,7 +7143,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -8353,8 +8381,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
+  m_sharedMaterial: {fileID: 2041958388911804042, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11201,7 +11229,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -13664,8 +13692,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "1,18715\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
+  m_sharedMaterial: {fileID: 2041958388911804042, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -13970,7 +13998,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -18102,7 +18130,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -20994,7 +21022,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -22751,7 +22779,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -23245,7 +23273,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 192.00003}
+  m_AnchoredPosition: {x: 0, y: 192.00081}
   m_SizeDelta: {x: 384, y: 500}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1920256404
@@ -23491,7 +23519,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: bc460b93855d05155905ed06041270a8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -24111,8 +24139,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 0.00000007947285
-  m_Size: 0.6120587
+  m_Value: -0.0000042120614
+  m_Size: 0.616
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25539,7 +25567,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: cbc0ca61d55055e8facc0bcd130364b9, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1

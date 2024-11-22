@@ -1,6 +1,4 @@
 
-using System.Windows.Forms;
-
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {
