@@ -1,15 +1,17 @@
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
+using SFB;
 
 public class ShapeComponentView : MonoBehaviour {
 
     [SerializeField] private Button _addOrRemoveKeyframe;
-    [SerializeField] private Image _keyframeImage;
-    [SerializeField] private Sprite _addKeyframe, _removeKeyframe;
 	[SerializeField] private Button[] _shapeButtons;
-    [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
+	[SerializeField] private Button _imageButton;
+    [SerializeField] private Image _keyframeImage;
     [SerializeField] private Image _currentColor;
+    [SerializeField] private Sprite _addKeyframe, _removeKeyframe;
+    [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
 
     private IEditorPainterParser _editorPainterParser;
     private IShapeComponentViewModel _shapeComponentViewModel;
@@ -21,6 +23,26 @@ public class ShapeComponentView : MonoBehaviour {
         _shapeComponentViewModel = shapeComponentViewModel;
         _editorPainterParser = editorPainterParser;
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
+
+		_imageButton.onClick.AddListener(() => {
+			var imageExtensions = new [] {
+                new ExtensionFilter("Image Files", "png", "jpg", "jpeg"),
+            };
+
+			string[] imageFilePath = StandaloneFileBrowser.OpenFilePanel (
+				title: "Open Image",
+				directory: string.Empty,
+				imageExtensions,
+				multiselect: false
+			);
+			
+			// TODO - Validate
+			if (imageFilePath == null) {
+				return;
+			}
+			
+			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
+		});
 
         shapeComponentViewModel.OnFrameHasKeyframe.Subscribe(hasKeyframe => {
             if (hasKeyframe) {

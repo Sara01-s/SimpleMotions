@@ -8,6 +8,7 @@ namespace SimpleMotions {
 		ReactiveCommand<int> OnEntitySelected { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }
 		ReactiveCommand OnEntityDeselected { get; }
+		ReactiveCommand<int, string> OnDisplayEntityImage { get; }
 
 		ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; }
 
@@ -19,7 +20,7 @@ namespace SimpleMotions {
 		public ReactiveCommand<int> OnEntitySelected { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
-
+		public ReactiveCommand<int, string> OnDisplayEntityImage { get; } = new();
 		public ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; } = new();
 
 		private readonly IVideoCanvas _videoCanvas;
@@ -35,6 +36,7 @@ namespace SimpleMotions {
 			entitySelector.OnEntityDeselected.Subscribe(() => OnEntityDeselected.Execute());
 
 			BackgroundColor.Subscribe(SetBackgroundColor);
+			videoCanvas.OnSetEntityImage.Subscribe(OnDisplayEntityImage.Execute);
         }
 
 		private void UpdateCanvas((int id, string name) entity) {

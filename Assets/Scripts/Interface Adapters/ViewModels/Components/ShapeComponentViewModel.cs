@@ -10,6 +10,7 @@ namespace SimpleMotions {
         ReactiveCommand<bool> OnFrameHasKeyframe { get; }
         ReactiveCommand OnDrawShapeKeyframe { get; }
         ReactiveCommand OnShapeKeyframeDeleted { get; }
+		ReactiveCommand<string> OnImageSelected { get; }
 
         void SetColor(Color color);
 		void SetShape(string shapeName);
@@ -21,6 +22,7 @@ namespace SimpleMotions {
         public ReactiveCommand<bool> OnFrameHasKeyframe { get; } = new();
         public ReactiveCommand OnDrawShapeKeyframe { get; } = new();
         public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
+		public ReactiveCommand<string> OnImageSelected { get; } = new();
 
         private readonly IEntitySelector _entitySelector;
         private readonly IKeyframeStorage _keyframeStorage;
@@ -38,6 +40,10 @@ namespace SimpleMotions {
 
 				keyframeStorage.RemoveKeyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame());
 				videoCanvas.DisplayEntity(GetSelectedEntityId());
+			});
+
+			OnImageSelected.Subscribe(imageFilePath => {
+				videoCanvas.OnSetEntityImage.Execute(GetSelectedEntityId(), imageFilePath);
 			});
 
             _keyframeStorage = keyframeStorage;

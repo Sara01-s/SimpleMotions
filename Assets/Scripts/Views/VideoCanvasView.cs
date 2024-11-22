@@ -30,6 +30,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
 		videoCanvasViewModel.BackgroundColor.Subscribe(UpdateCanvasColor);
+		videoCanvasViewModel.OnDisplayEntityImage.Subscribe(DisplayEntityImage);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
 		PopulateSpriteDictionary();
@@ -67,7 +68,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		}
 
 		// entity already registered, update it.
-		UpdateEntity(entity.id);
+		UpdateEntityDisplay(entity.id);
 	}
 
 	private void DisplayNewEntity(int entityId, string entityName) {
@@ -85,7 +86,20 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		Debug.Log("Mostrando entidad: " + entity);
 	}
 
-	private void UpdateEntity(int entityId) {
+	private void DisplayEntityImage(int entityId, string imageFilepath) {
+		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
+			var displayedEntity = _displayedEntites[entityId];
+
+			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
+				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
+				spriteRenderer.sortingLayerName = _midLayerName;
+			}
+
+			spriteRenderer.sprite = FilePathToSprite(imageFilepath);
+		}
+	}
+
+	private void UpdateEntityDisplay(int entityId) {
 		if (!_displayedEntites.TryGetValue(entityId, out var displayedEntity)) {
 			return;
 		}
@@ -105,12 +119,41 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			}
 
 			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
-			spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
+			
+			if (shape.primitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
+				spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
+			}
 		}
 	}
 
 	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
 		_background.color = new Color(color.r, color.g, color.b, color.a);
+	}
+
+	public static Sprite FilePathToSprite(string filePath) {
+		if (!System.IO.File.Exists(filePath)) {
+			Debug.LogError($"El archivo no existe: {filePath}");
+			return null;
+		}
+
+		try {
+			byte[] fileData = System.IO.File.ReadAllBytes(filePath);
+			var texture = new Texture2D(2, 2);
+
+			if (texture.LoadImage(fileData)) {
+				return Sprite.Create(texture, 
+									new Rect(0, 0, texture.width, texture.height), 
+									new Vector2(0.5f, 0.5f));
+			}
+			else {
+				Debug.LogError("No se pudo cargar la imagen en la textura.");
+				return null;
+			}
+		}
+		catch (System.Exception ex) {
+			Debug.LogError($"Error al convertir la imagen a Sprite: {ex.Message}");
+			return null;
+		}
 	}
 
 }

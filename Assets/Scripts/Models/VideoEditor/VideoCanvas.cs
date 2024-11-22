@@ -11,6 +11,7 @@ namespace SimpleMotions {
 		T GetEntityComponent<T>(int entityId) where T : Component;
 		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }
+		ReactiveCommand<int, string> OnSetEntityImage { get; }
 
 	}
 
@@ -21,6 +22,7 @@ namespace SimpleMotions {
 
         public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
+		public ReactiveCommand<int, string> OnSetEntityImage { get; } = new();
 
 		private readonly VideoData _videoData;
 
@@ -28,6 +30,12 @@ namespace SimpleMotions {
 			_componentStorage = componentStorage;
 			_entityStorage = entityStorage;
 			_videoData = videoData;
+
+			OnSetEntityImage.Subscribe(DisplayEntityImage);
+		}
+
+		public void DisplayEntityImage(int entityId, string imageFilepath) {
+			GetEntityComponent<Shape>(entityId).PrimitiveShape = Shape.Primitive.Image;
 		}
 
 		public bool EntityHasComponent<T>(int entityId) where T : Component {

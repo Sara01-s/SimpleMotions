@@ -7959,9 +7959,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _addOrRemoveKeyframe: {fileID: 365266144}
-  _keyframeImage: {fileID: 928588135}
-  _addKeyframe: {fileID: -472584228, guid: 00a265d51dc833046abe821a14170432, type: 3}
-  _removeKeyframe: {fileID: -334825736, guid: 00a265d51dc833046abe821a14170432, type: 3}
   _shapeButtons:
   - {fileID: 1839929488}
   - {fileID: 1343755797}
@@ -7969,9 +7966,12 @@ MonoBehaviour:
   - {fileID: 1820401379}
   - {fileID: 1817848457}
   - {fileID: 1544264210}
-  - {fileID: 1250408123}
-  _flexibleColorPicker: {fileID: 1308438909}
+  _imageButton: {fileID: 1250408123}
+  _keyframeImage: {fileID: 928588135}
   _currentColor: {fileID: 1061413862}
+  _addKeyframe: {fileID: -472584228, guid: 00a265d51dc833046abe821a14170432, type: 3}
+  _removeKeyframe: {fileID: -334825736, guid: 00a265d51dc833046abe821a14170432, type: 3}
+  _flexibleColorPicker: {fileID: 1308438909}
 --- !u!114 &718388303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23245,7 +23245,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 192}
+  m_AnchoredPosition: {x: 0, y: 192.00066}
   m_SizeDelta: {x: 384, y: 500}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1920256404
@@ -24111,8 +24111,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.616
+  m_Value: -0.0000034173324
+  m_Size: 0.61599994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
