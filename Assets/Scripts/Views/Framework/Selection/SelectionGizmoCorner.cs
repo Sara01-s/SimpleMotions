@@ -29,7 +29,6 @@ public class SelectionGizmoCorner : MonoBehaviour, IDragHandler, IBeginDragHandl
     private Vector2 _startEntityScale;
     private Vector2 _startEntityPosition;
 
-
     public void Configure(IComponentViewModel entityViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
         _parentRectTransform = transform.parent as RectTransform;
         _entityViewModel = entityViewModel;

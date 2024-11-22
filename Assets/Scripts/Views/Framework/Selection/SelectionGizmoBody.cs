@@ -1,4 +1,3 @@
-using static UnityEngine.Mathf;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using SimpleMotions;
@@ -6,7 +5,6 @@ using SimpleMotions;
 public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler {
     
 	[SerializeField] private Canvas _editorCanvas;
-	[SerializeField] private RectTransform _videoCanvas;
 
 	private RectTransform _rectTransform;
     private IComponentViewModel _entityViewModel;

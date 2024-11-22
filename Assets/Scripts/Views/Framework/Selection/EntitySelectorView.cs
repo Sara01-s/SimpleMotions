@@ -1,10 +1,9 @@
 using SimpleMotions;
 using UnityEngine;
-using System.Linq;
 
 public class EntitySelectorView : MonoBehaviour {
 
-	[SerializeField] private EditorPainter _editorPainter;
+	[SerializeField] private Camera _editorCamera;
 	[SerializeField] private RectTransform _selectionGizmo;
 
 	private IEntitySelectorViewModel _entitySelectorViewModel;
@@ -13,16 +12,6 @@ public class EntitySelectorView : MonoBehaviour {
 		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 		_entitySelectorViewModel = entitySelectorViewModel;
-
-		PaintEntitySelectorGizmo();
-	}
-
-	private void PaintEntitySelectorGizmo() {
-		var images = _selectionGizmo.GetComponentsInChildren<UnityEngine.UI.Image>();
-
-		foreach (var image in images) {
-			image.color = _editorPainter.Theme.AccentColor;
-		}
 	}
 
 	private void HideSelectionGizmo() {
@@ -31,7 +20,8 @@ public class EntitySelectorView : MonoBehaviour {
 
 	private void DrawSelectionGizmoOverEntity((int id, string _) entity) {
 		if (_entitySelectorViewModel.EntityHasTransform(entity.id, out var t)) {
-			_selectionGizmo.anchoredPosition = new Vector2(t.pos.x, t.pos.y);
+			var entityScreenPos = _editorCamera.WorldToScreenPoint(new Vector2(t.pos.x, t.pos.y));
+			_selectionGizmo.anchoredPosition = entityScreenPos;
 			_selectionGizmo.localScale = new Vector2(t.scale.w, t.scale.h);
 			_selectionGizmo.localRotation = Quaternion.AngleAxis(t.rollAngleDegrees, Vector3.forward);
 			_selectionGizmo.gameObject.SetActive(true);
