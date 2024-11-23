@@ -9,7 +9,16 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 	private Camera _worldCamera;
 	private RectTransform _canvasArea;
     private IEntitySelectorViewModel _entitySelectorViewModel;
-	private int SelectedEntityId => _entitySelectorViewModel.SelectedEntityId;
+	private int SelectedEntityId {
+		get {
+			if (_entitySelectorViewModel.HasSelectedEntity) {
+				return _entitySelectorViewModel.SelectedEntityId;
+			}
+
+			Debug.LogError("Selection Gizmo cannot be used when no entity is selected.");
+			return -1;
+		}
+	}
 
     public void Configure(IEntitySelectorViewModel entitySelectorViewModel, Camera worldCamera, RectTransform canvasArea) {
         _entitySelectorViewModel = entitySelectorViewModel;

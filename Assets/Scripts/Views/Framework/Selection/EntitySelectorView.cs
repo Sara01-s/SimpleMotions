@@ -4,6 +4,8 @@ using UnityEngine;
 public class EntitySelectorView : MonoBehaviour {
 
 	[SerializeField] private Canvas _editorCanvas;
+	[SerializeField] private Transform _canvasOrigin;
+	[SerializeField] private RectTransform _canvasArea;
 	[SerializeField] private RectTransform _selectionGizmo;
 	[SerializeField] private SelectionGizmo[] _selectionGizmoParts;
 
@@ -25,9 +27,15 @@ public class EntitySelectorView : MonoBehaviour {
 
 	private void DrawSelectionGizmoOverEntity((int id, string _) entity) {
 		if (_entitySelectorViewModel.EntityHasTransform(entity.id, out var t)) {
-			var entityScreenPos = _editorCanvas.worldCamera.WorldToScreenPoint(new Vector2(t.pos.x, t.pos.y));
-			_selectionGizmo.anchoredPosition = entityScreenPos;
-			_selectionGizmo.localScale = new Vector2(t.scale.w, t.scale.h);
+			var entityWorldPos = _canvasOrigin.TransformPoint(new Vector2(t.pos.x, t.pos.y));
+			var entityScreenPos = _editorCanvas.worldCamera.WorldToScreenPoint(entityWorldPos);
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasArea, entityScreenPos, _editorCanvas.worldCamera, out var entityRectPos);
+			
+			float widthInRect = _selectionGizmo.rect.width * t.scale.w;
+			float heightInRect = _selectionGizmo.rect.height * t.scale.h;
+			
+			_selectionGizmo.anchoredPosition = entityRectPos;
+			_selectionGizmo.sizeDelta = new Vector2(widthInRect, heightInRect);
 			_selectionGizmo.localRotation = Quaternion.AngleAxis(t.rollAngleDegrees, Vector3.forward);
 			_selectionGizmo.gameObject.SetActive(true);
 		}

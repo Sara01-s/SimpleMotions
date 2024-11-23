@@ -6,6 +6,7 @@ namespace SimpleMotions {
 		ReactiveCommand<int> SelectEntity { get; }
 		ReactiveCommand<(int entityId, string entityName)> OnEntitySelected { get; }
 		ReactiveCommand OnEntityDeselected { get; }
+		bool HasSelectedEntity { get; }
 
 	}
 
@@ -18,11 +19,11 @@ namespace SimpleMotions {
 		public ReactiveCommand<int> SelectEntity { get; private set; } = new();
 
         public int SelectedEntityId => _entitySelector.SelectedEntity.Id;
+		public bool HasSelectedEntity => _entitySelector.HasSelectedEntity;
 
-		private IEntitySelector _entitySelector;
+		private readonly IEntitySelector _entitySelector;
 
         public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
-
 			entitySelector.OnEntitySelected.Subscribe(entity => OnEntitySelected.Execute((entity.Id, entity.Name)));
 			entitySelector.OnEntityDeselected.Subscribe(OnEntityDeselected.Execute);
 

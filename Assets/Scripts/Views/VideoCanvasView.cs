@@ -25,14 +25,16 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
 	private IVideoCanvasViewModel _videoCanvasViewModel;
+	private IEntitySelectorViewModel _entitySelectorViewModel;
 
-	public void Configure(IVideoCanvasViewModel videoCanvasViewModel) {
+	public void Configure(IVideoCanvasViewModel videoCanvasViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
 		videoCanvasViewModel.OnCanvasUpdate.Subscribe(OnUpdateCanvas);
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
 		videoCanvasViewModel.BackgroundColor.Subscribe(UpdateCanvasColor);
 		videoCanvasViewModel.OnDisplayEntityImage.Subscribe(DisplayEntityImage);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
+		_entitySelectorViewModel = entitySelectorViewModel;
 		PopulateSpriteDictionary();
 	}
 
@@ -80,6 +82,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		displayedEntity.transform.SetParent(_canvasOrigin);
 		displayedEntity.transform.localPosition = Vector2.zero;
 		displayedEntity.transform.name = entity;
+		displayedEntity.AddComponent<Selectable>().Configure(entityId, _entitySelectorViewModel);
 
 		_displayedEntites.Add(entityId, displayedEntity);
 
