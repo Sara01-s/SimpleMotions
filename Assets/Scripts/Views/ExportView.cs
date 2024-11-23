@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections;
 using SimpleMotions;
 using UnityEngine;
@@ -13,7 +12,6 @@ public class ExportView : MonoBehaviour {
     [SerializeField] private FFMPEGExporter _ffmpegExporter;
 
     private IExportViewModel _exportViewModel;
-    private readonly List<byte[]> _frameImages = new();
 
     public void Configure(IExportViewModel exportViewModel) {
         exportViewModel.OnExport.Subscribe(StartExport);
@@ -26,16 +24,18 @@ public class ExportView : MonoBehaviour {
     }
 
     private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
+        string tempFrameImagesFilePath = GetFramesTempDirectory();
+
         for (int frame = 0; frame <= totalFrames; frame++) {
             _exportViewModel.CurrentFrame.Value = frame;
-            _frameImages.Add(GetFrameAsPng());
+
+            byte[] frameBytes = GetFrameAsPng();
+            string frameAbsoluteFilepath = Path.Combine(tempFrameImagesFilePath, $"frame_{frame:D5}.png");
+            File.WriteAllBytes(frameAbsoluteFilepath, frameBytes);
 
 			yield return null;
         }
 
-        string tempFrameImagesFilePath = GetFramesTempDirectory();
-
-		SaveFrameImagesToDisk(tempFrameImagesFilePath);
         _ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, fileName, targetFrameRate);
 
         if (Directory.Exists(tempFrameImagesFilePath)) {
@@ -72,14 +72,5 @@ public class ExportView : MonoBehaviour {
 
 		return tempDirectoryPath;
 	}
-
-    private void SaveFrameImagesToDisk(string filePath) {
-        for (int i = 0; i < _frameImages.Count; i++) {
-            string frameAbsoluteFilepath = Path.Combine(filePath, $"frame_{i:D5}.png");
-            File.WriteAllBytes(frameAbsoluteFilepath, _frameImages[i]);
-        }
-
-        Debug.Log($"Imágenes guardadas en {filePath}");
-    }
 
 }
