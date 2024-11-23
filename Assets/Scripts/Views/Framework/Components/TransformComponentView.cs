@@ -66,9 +66,9 @@ public class TransformComponentView : MonoBehaviour {
 			return;
 		}
 		
-        bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
-
         newValue = _inputValidator.ValidateComponentInput(newValue);
+
+        bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
 
         if (CanSendInput(newValue) && !hasInvalidCharacters) {
 		    reactiveCommand.Execute(newValue);

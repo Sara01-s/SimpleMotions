@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Text;
 using System.IO;
 
 namespace SimpleMotions {
@@ -19,13 +20,34 @@ namespace SimpleMotions {
 		} 
 
         public string ValidateComponentInput(string input) {
-            input = input.Replace('.', ',');
+            input = input.Replace(',', '.');
+            input = input.Substring(0).Replace("+", "");
 
-            int decimalIndex = input.IndexOf('.');
+            int decimalIndex = input.IndexOf(',');
 
             if (decimalIndex != -1) {
-                input = input.Substring(0, decimalIndex + 1) + input.Substring(decimalIndex + 1).Replace(",", "");
+                input = input.Substring(0, decimalIndex + 1) + input.Substring(decimalIndex + 1).Replace(".", "");
             }
+
+            if (input.StartsWith("-")) {
+                input = "-" + input.Substring(1).Replace("-", "");
+            }
+
+            if (input.Length > 2) {
+                if (input.StartsWith("-") && input[1] == '.' && Regex.IsMatch(input, @"[1-9]$")) {
+                    var stringBuilder = new StringBuilder(input);
+                    stringBuilder.Insert(1, "0");
+                    input = stringBuilder.ToString();
+                }
+                else if (input.StartsWith(".") && Regex.IsMatch(input, @"[1-9]$")) {
+                    var stringBuilder = new StringBuilder(input);
+                    stringBuilder.Insert(0, "0");
+                    input = stringBuilder.ToString();
+                }
+            }
+
+            UnityEngine.Debug.Log(input);
+
 
             return input;
         }
