@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SimpleMotions.Internal;
 using System;
+using System.Windows.Forms;
 
 #nullable enable
 
@@ -165,8 +166,8 @@ namespace SimpleMotions {
 
 		public bool FrameHasKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
 			bool frameHasKeyframe = FrameHasKeyframe(frame);
-			bool keyframeIsOfTypeT = GetKeyframeOfTypeAt<T>(frame).Value is T;
-			UnityEngine.Debug.Log($"frame ({frame}) has keyframe: {frameHasKeyframe}, is type {typeof(T)}: {keyframeIsOfTypeT}");
+			bool keyframeIsOfTypeT = GetKeyframeOfTypeAt<T>(frame) != null;
+			//UnityEngine.Debug.Log($"frame ({frame}) has keyframe: {frameHasKeyframe}, is type {typeof(T)}: {keyframeIsOfTypeT}");
 			return frameHasKeyframe && keyframeIsOfTypeT;
  		}
 
@@ -177,14 +178,15 @@ namespace SimpleMotions {
 		/// <typeparam name="T"></typeparam>
 		/// <param name="frame"></param>
 		/// <returns>A COPY!!!!!!!</returns>
-        public IKeyframe<T> GetKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
+        public IKeyframe<T>? GetKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
 			if (TryGetAllKeyframesOfType<T>(out var componentKeyframes)) {
 				if (componentKeyframes.TryGetValue(frame, out var keyframe)) {
+					UnityEngine.Debug.Log("entre");
 					return new Keyframe<T>(keyframe);
 				}
 			}
 
-			return Keyframe<T>.Invalid;
+			return null;
         }
 
 		public IKeyframe<Component> GetKeyframeAt(int frame) {

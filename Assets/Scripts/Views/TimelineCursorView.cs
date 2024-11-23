@@ -24,7 +24,9 @@ public class TimelineCursorView : MonoBehaviour {
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
-        _cursor.onValueChanged.AddListener(value => _videoTimelineViewModel.OnFrameChanged.Execute((int)value));
+        _cursor.onValueChanged.AddListener(value => {
+            _videoTimelineViewModel.OnFrameChanged.Execute((int)value);
+        });
 
         _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);
 

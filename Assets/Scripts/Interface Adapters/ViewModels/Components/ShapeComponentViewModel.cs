@@ -7,7 +7,7 @@ namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
         ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; }
-        ReactiveCommand<bool> OnFrameHasKeyframe { get; }
+        ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; }
         ReactiveCommand OnDrawShapeKeyframe { get; }
         ReactiveCommand OnShapeKeyframeDeleted { get; }
 		ReactiveCommand<string> OnImageSelected { get; }
@@ -19,7 +19,7 @@ namespace SimpleMotions {
     public class ShapeComponentViewModel : InspectorComponentViewModel, IShapeComponentViewModel {
 
         public ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; } = new();
-        public ReactiveCommand<bool> OnFrameHasKeyframe { get; } = new();
+        public ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; } = new();
         public ReactiveCommand OnDrawShapeKeyframe { get; } = new();
         public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
 		public ReactiveCommand<string> OnImageSelected { get; } = new();

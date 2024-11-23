@@ -20,7 +20,7 @@ public class TimelineHeaderView : MonoBehaviour {
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
-        _scrollbar.onValueChanged.AddListener(OnScrollbarValueChanged);
+        _scrollbar.onValueChanged.AddListener(value => OnScrollbarValueChanged(value));
     }
 
     public void RefreshUI() {

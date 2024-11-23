@@ -1,9 +1,10 @@
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
 	public interface IVideoTimelineViewModel {
 		int TotalFrameCount { get; } 
-		
+
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveCommand<int> OnFrameChanged { get; }
 
@@ -28,26 +29,30 @@ namespace SimpleMotions {
 		public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
 
 		private readonly IVideoPlayerData _videoPlayerData;
-		private readonly IVideoPlayer _videoPlayer;
 
         public VideoTimelineViewModel(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData, 
 									  ITransformComponentViewModel transformComponentViewModel, IKeyframeStorage keyframeStorage,
 									  IShapeComponentViewModel shapeComponentViewModel) 
 		{
 			videoPlayerData.CurrentFrame.Subscribe(currentFrame => {
-				if  (keyframeStorage.FrameHasKeyframe(currentFrame) && !_videoPlayerData.IsPlaying.Value) {
-					transformComponentViewModel.OnFrameHasKeyframe.Execute(true);
-					shapeComponentViewModel.OnFrameHasKeyframe.Execute(true);
+				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Transform>(currentFrame) && !videoPlayerData.IsPlaying.Value){
+					transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
 				}
 				else {
-					transformComponentViewModel.OnFrameHasKeyframe.Execute(false);
-					shapeComponentViewModel.OnFrameHasKeyframe.Execute(false);
+					transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
 				}
 
-				UpdateCursorPosition(currentFrame);
+				if  (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(currentFrame) && !videoPlayerData.IsPlaying.Value) {
+					shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
+				}
+				else {
+					shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
+				}
+
+				CurrentFrame.Value = currentFrame;
 			});
 
-			OnFrameChanged.Subscribe(newFrame => SetCurrentFrame(newFrame));
+			OnFrameChanged.Subscribe(newFrame => videoPlayer.SetCurrentFrame(newFrame));
 
 			transformComponentViewModel.OnDrawTransfromKeyframe.Subscribe(OnDrawTransformKeyframe.Execute);
 			transformComponentViewModel.OnTransformKeyframeDeleted.Subscribe(OnTransfromKeyframeDeleted.Execute);
@@ -55,17 +60,8 @@ namespace SimpleMotions {
 			shapeComponentViewModel.OnDrawShapeKeyframe.Subscribe(OnDrawShapeKeyframe.Execute);
 			shapeComponentViewModel.OnShapeKeyframeDeleted.Subscribe(OnShapeKeyframeDeleted.Execute);
 
-			_videoPlayer = videoPlayer;
 			_videoPlayerData = videoPlayerData;
         }
-
-		private void UpdateCursorPosition(int currentFrame) {
-			CurrentFrame.Value = currentFrame;
-		}
-
-		private void SetCurrentFrame(int frame) {
-			_videoPlayer.SetCurrentFrame(frame);
-		}
 
     }
 }

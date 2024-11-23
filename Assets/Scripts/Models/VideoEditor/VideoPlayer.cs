@@ -110,6 +110,7 @@ namespace SimpleMotions {
 			UnityEngine.Debug.Log("Reset");
 			CurrentFrame.Value = TimelineData.FIRST_FRAME;
 			CurrentTime.Value = 0.0f;
+
 		}
 
 		public void SetCurrentFrame(int frame) {

@@ -44,7 +44,7 @@ public class ShapeComponentView : MonoBehaviour {
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
 		});
 
-        shapeComponentViewModel.OnFrameHasKeyframe.Subscribe(hasKeyframe => {
+        shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(hasKeyframe => {
             if (hasKeyframe) {
                 _keyframeImage.sprite = _removeKeyframe;
             }
