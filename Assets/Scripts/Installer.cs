@@ -28,11 +28,6 @@ namespace SimpleMotions {
 		[SerializeField] private FullscreenPlaybackView _fullscreenPlaybackView;
 		[SerializeField] private ExportView _exportView;
 
-		[Header("Gizmos")]
-		[SerializeField] private SelectionGizmoBody _selectionGizmoBody;
-		[SerializeField] private SelectionGizmoRotate _selectionGizmoRotate;
-		[SerializeField] private SelectionGizmoCorner[] _selectionGizmoCorners;
-
 		[Header("Data")]
 		[SerializeField] private string _projectName;
 		[SerializeField] private string _projectDataFileName;
@@ -166,8 +161,6 @@ namespace SimpleMotions {
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
-			_selectionGizmoBody		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
-			_selectionGizmoRotate	.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
 			_colorPickerView		.Configure();
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_editorSettingsView		.Configure();
@@ -175,10 +168,6 @@ namespace SimpleMotions {
 			_fullscreenView			.Configure();
 			_fullscreenPlaybackView	.Configure();
 			_exportView				.Configure(_services.GetService<IExportViewModel>());
-
-			foreach (var corner in _selectionGizmoCorners) {
-				corner.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
-			}
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.Configure();

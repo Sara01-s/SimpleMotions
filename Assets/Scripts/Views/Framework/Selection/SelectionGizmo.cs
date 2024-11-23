@@ -4,46 +4,60 @@ using SimpleMotions;
 
 public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHandler {
     
-	protected int SelectedEntityId => _entitySelectorViewModel.SelectedEntityId;
+	protected RectTransform _SelectionGizmoRect => (RectTransform)transform.parent;
 
-    [SerializeField] private Canvas _editorCanvas;
-
-    private IComponentViewModel _entityViewModel;
+	private Camera _worldCamera;
+	private RectTransform _canvasArea;
     private IEntitySelectorViewModel _entitySelectorViewModel;
+	private int SelectedEntityId => _entitySelectorViewModel.SelectedEntityId;
 
-    public virtual void Configure(IComponentViewModel entityViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
-        _entityViewModel = entityViewModel;
+    public void Configure(IEntitySelectorViewModel entitySelectorViewModel, Camera worldCamera, RectTransform canvasArea) {
         _entitySelectorViewModel = entitySelectorViewModel;
+		_worldCamera = worldCamera;
+		_canvasArea = canvasArea;
     }
 
     public abstract void OnBeginDrag(PointerEventData eventData);
 	public abstract void OnDrag(PointerEventData eventData);
-	public abstract void SyncGizmoWithEntity();
+	protected abstract void SyncGizmoWithEntity();
 
-    protected Vector2 GetPointerWorldPos(Vector2 pointerScreenPos) {
-        var camera = _editorCanvas.worldCamera;
-
-        if (camera == null) {
-            Debug.LogError("Canvas camera is not assigned.");
-            return Vector2.zero;
-        }
-
-        return camera.ScreenToWorldPoint(new Vector3(pointerScreenPos.x, pointerScreenPos.y, camera.nearClipPlane));
+    protected Vector2 _GetPointerWorldPos(Vector2 pointerScreenPos) {
+        return _worldCamera.ScreenToWorldPoint(new Vector3(pointerScreenPos.x, pointerScreenPos.y, _worldCamera.nearClipPlane));
     }
 
-	protected void SetSelectedEntityPosition(Vector2 worldPosition) {
-		_entityViewModel.SetEntityPosition(SelectedEntityId, (worldPosition.x, worldPosition.y));
+	protected Vector2 _WorldToScreenPoint(Vector3 worldPoint) {
+		return RectTransformUtility.WorldToScreenPoint(_worldCamera, worldPoint);
+	}
+
+	protected Vector2 _ScreenPointToLocalPointInRectangle(Vector2 screenPoint) {
+		RectTransformUtility.ScreenPointToLocalPointInRectangle (
+			_canvasArea,
+			screenPoint,
+			_worldCamera,
+			out var localPoint
+		);
+
+		return localPoint;
+	}
+
+	protected void _SetSelectedEntityPosition(Vector2 worldPosition) {
+		_entitySelectorViewModel.SetEntityPosition(SelectedEntityId, (worldPosition.x, worldPosition.y));
 		SyncGizmoWithEntity();
 	}
 
-	protected void SetSelectedEntityScale(Vector2 scale) {
-        _entityViewModel.SetEntityScale(SelectedEntityId, (scale.x, scale.y));
+	protected void _SetSelectedEntityScale(Vector2 scale) {
+        _entitySelectorViewModel.SetEntityScale(SelectedEntityId, (scale.x, scale.y));
 		SyncGizmoWithEntity();
 	}
 
-	protected void SetSelectedEntityRoll(float angleDegrees) {
-		_entityViewModel.SetEntityRoll(SelectedEntityId, angleDegrees);
+	protected void _SetSelectedEntityRoll(float angleDegrees) {
+		_entitySelectorViewModel.SetEntityRoll(SelectedEntityId, angleDegrees);
 		SyncGizmoWithEntity();
+	}
+
+	protected ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) _GetSelectedEntityTransformData() {
+		_entitySelectorViewModel.EntityHasTransform(SelectedEntityId, out var t);
+		return t;
 	}
 
 }

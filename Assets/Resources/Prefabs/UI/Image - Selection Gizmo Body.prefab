@@ -30,6 +30,10 @@ RectTransform:
   m_Children:
   - {fileID: 7946048996150278173}
   - {fileID: 964039831815509034}
+  - {fileID: 183909911873679618}
+  - {fileID: 823053834125637850}
+  - {fileID: 2433164514876602762}
+  - {fileID: 1395587799225446333}
   m_Father: {fileID: 2964336177465309984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -68,11 +72,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 964039831815509034}
+  m_Father: {fileID: 6207054630765723380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 14, y: 14.000016}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5226296223912564735
@@ -125,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45ff563030e39587ab4c0a63fcd3f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SelectionGizmoRect: {fileID: 0}
   _editorCanvas: {fileID: 0}
   _corner: 0
 --- !u!1 &3228020222794545247
@@ -157,11 +162,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 183909911873679618}
-  - {fileID: 823053834125637850}
-  - {fileID: 2433164514876602762}
-  - {fileID: 1395587799225446333}
+  m_Children: []
   m_Father: {fileID: 6207054630765723380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -219,8 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9eb95275e075b3999508cb3de41869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SelectionGizmoRect: {fileID: 0}
   _editorCanvas: {fileID: 0}
-  _videoCanvas: {fileID: 0}
 --- !u!1 &4323780189480227496
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,11 +253,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 964039831815509034}
+  m_Father: {fileID: 6207054630765723380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -14, y: -14.000003}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2611739101590509213
@@ -309,6 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45ff563030e39587ab4c0a63fcd3f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SelectionGizmoRect: {fileID: 0}
   _editorCanvas: {fileID: 0}
   _corner: 0
 --- !u!1 &4860124329690889085
@@ -342,11 +344,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 964039831815509034}
+  m_Father: {fileID: 6207054630765723380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 14, y: -14.000003}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8163113612826056531
@@ -399,6 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45ff563030e39587ab4c0a63fcd3f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SelectionGizmoRect: {fileID: 0}
   _editorCanvas: {fileID: 0}
   _corner: 0
 --- !u!1 &6498080049264490607
@@ -489,6 +492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a74284e798b74b4aacc45c766b7043a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SelectionGizmoRect: {fileID: 0}
   _editorCanvas: {fileID: 0}
 --- !u!1 &6748976238783188313
 GameObject:
@@ -572,11 +576,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 964039831815509034}
+  m_Father: {fileID: 6207054630765723380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -14, y: 14.000016}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8061074214863296723
@@ -629,5 +633,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45ff563030e39587ab4c0a63fcd3f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _SelectionGizmoRect: {fileID: 0}
   _editorCanvas: {fileID: 0}
   _corner: 0

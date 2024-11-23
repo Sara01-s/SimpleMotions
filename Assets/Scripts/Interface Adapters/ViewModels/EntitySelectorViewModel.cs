@@ -9,6 +9,8 @@ namespace SimpleMotions {
 
 	}
 
+	// FIXME - Está sus que EntitySelectorViewModel herede de ComponentViewModel (wtf?), 
+	// aunque igualmente sirvió para simplificar las dependencias de EntitySelectorView.
 	public class EntitySelectorViewModel : ComponentViewModel, IEntitySelectorViewModel {
 
 		public ReactiveCommand<(int, string)> OnEntitySelected { get; } = new();

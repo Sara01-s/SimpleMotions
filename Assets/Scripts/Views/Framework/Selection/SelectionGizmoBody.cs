@@ -1,69 +1,35 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using SimpleMotions;
 
-public class SelectionGizmoBody : MonoBehaviour, IDragHandler, IBeginDragHandler {
+public class SelectionGizmoBody : SelectionGizmo {
     
-	[SerializeField] private Canvas _editorCanvas;
+	private Vector2 _startDragOffset;
 
-	private RectTransform _rectTransform;
-    private IComponentViewModel _entityViewModel;
-    private IEntitySelectorViewModel _entitySelectorViewModel;
+	public override void OnBeginDrag(PointerEventData eventData) {
+		var (pos, _, _) = _GetSelectedEntityTransformData();
+		var entityWorldPos = new Vector2(pos.x, pos.y);
+		var pointerWorldPos = _GetPointerWorldPos(eventData.position);
 
-	private Vector2 _dragOffset;
-
-    public void Configure(IComponentViewModel entityViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
-		_rectTransform = GetComponent<RectTransform>();
-        _entityViewModel = entityViewModel;
-        _entitySelectorViewModel = entitySelectorViewModel;
-    }
-
-	private Vector2 GetPointerWorldPos(Vector2 pointerScreenPos) {
-		var camera = _editorCanvas.worldCamera;
-		return camera.ScreenToWorldPoint(pointerScreenPos);
+		_startDragOffset = entityWorldPos - pointerWorldPos;
 	}
 
-	public void OnBeginDrag(PointerEventData eventData) {
-		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
-
-		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var transform)) {
-			var entityWorldPos = new Vector2(transform.pos.x, transform.pos.y);
-			var pointerWorldPos = GetPointerWorldPos(eventData.position);
-
-			_dragOffset = entityWorldPos - pointerWorldPos;
-		}
-	}
-
-	public void OnDrag(PointerEventData eventData) {
+	public override void OnDrag(PointerEventData eventData) {
 		DragEntity(eventData.position);
 	}
 
 	private void DragEntity(Vector2 pointerScreenPos) {
-		var pointerWorldPosition = GetPointerWorldPos(pointerScreenPos);
-		var newEntityWorldPosition = pointerWorldPosition + _dragOffset;
-		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
+		var pointerWorldPosition = _GetPointerWorldPos(pointerScreenPos);
+		var newEntityWorldPosition = pointerWorldPosition + _startDragOffset;
 
-		_entityViewModel.SetEntityPosition(selectedEntityId, (newEntityWorldPosition.x, newEntityWorldPosition.y));
-
-		SyncGizmoWithEntity();
+		_SetSelectedEntityPosition(newEntityWorldPosition);
 	}
 
-	private void SyncGizmoWithEntity() {
-		int selectedEntityId = _entitySelectorViewModel.SelectedEntityId;
+	protected override void SyncGizmoWithEntity() {
+		var (pos, _, _) = _GetSelectedEntityTransformData();
+		var entityWorldPos = new Vector2(pos.x, pos.y);
+		var entityScreenPos = _WorldToScreenPoint(entityWorldPos);
 
-		if (_entityViewModel.EntityHasTransform(selectedEntityId, out var transform)) {
-			var entityWorldPos = new Vector2(transform.pos.x, transform.pos.y);
-			var entityScreenPos = RectTransformUtility.WorldToScreenPoint(_editorCanvas.worldCamera, entityWorldPos);
-
-			RectTransformUtility.ScreenPointToLocalPointInRectangle (
-				(RectTransform)_editorCanvas.transform,
-				entityScreenPos,
-				_editorCanvas.worldCamera,
-				out var entityLocalPositionInRect
-			);
-
-			_rectTransform.localPosition = entityLocalPositionInRect;
-		}
+		_SelectionGizmoRect.localPosition = _ScreenPointToLocalPointInRectangle(entityScreenPos);
 	}
 
 }
