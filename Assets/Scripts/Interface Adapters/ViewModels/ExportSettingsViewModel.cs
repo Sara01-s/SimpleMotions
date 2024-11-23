@@ -3,6 +3,7 @@ namespace SimpleMotions {
 
     public interface IExportSettingsViewModel {
         ReactiveValue<int> Framerate { get; }
+        ReactiveValue<string> InvalidFilePath { get; }
 
         ReactiveCommand<int> OnSetFramerate { get; }
         ReactiveCommand<string> OnSetOutputFilePath { get; }
@@ -14,6 +15,7 @@ namespace SimpleMotions {
     public class ExportSettingsViewModel : IExportSettingsViewModel {
 
         public ReactiveValue<int> Framerate { get; private set; } = new();
+        public ReactiveValue<string> InvalidFilePath { get; private set; } = new();
 
         public ReactiveCommand<int> OnSetFramerate { get; private set; } = new();
         public ReactiveCommand<string> OnSetOutputFilePath { get; } = new();
@@ -21,22 +23,23 @@ namespace SimpleMotions {
         
         public ReactiveCommand OnExport { get; } = new();
         public ReactiveCommand OnPresent { get; } = new();
-
+        
         private IExportModel _exportModel;
 
+
         public ExportSettingsViewModel(IExportModel exportModel) {
-            _exportModel = exportModel;
-
             // ¿Igualar asi todas las variables reactivas en el constructor?
-            Framerate.Value = _exportModel.TargetFrameRate.Value;   
-
-            _exportModel.TargetFrameRate.Subscribe(framerate => Framerate.Value = framerate);
+            Framerate.Value = exportModel.TargetFrameRate.Value;   
 
             OnSetFramerate.Subscribe(SetFramerate);
             OnSetOutputFilePath.Subscribe(SetOutputFilePath);
             OnSetFileName.Subscribe(SetFileName);
-            OnExport.Subscribe(Export);
-            OnPresent.Subscribe(Present);
+            OnExport.Subscribe(() => _exportModel.Export.Execute());
+            
+            exportModel.TargetFrameRate.Subscribe(framerate => Framerate.Value = framerate);
+            exportModel.OnFilePathInvalid.Subscribe(filePath => InvalidFilePath.Value = filePath);
+
+            _exportModel = exportModel;
         }
 
         private void SetFramerate(int frameRate) {
@@ -49,14 +52,6 @@ namespace SimpleMotions {
 
         private void SetFileName(string fileName) {
             _exportModel.FileName.Value = fileName;
-        }
-
-        private void Export() {
-            _exportModel.Export.Execute();
-        }
-
-        private void Present() {
-            _exportModel.Present.Execute();
         }
 
     }

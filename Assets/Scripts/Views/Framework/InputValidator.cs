@@ -46,9 +46,6 @@ namespace SimpleMotions {
                 }
             }
 
-            UnityEngine.Debug.Log(input);
-
-
             return input;
         }
 
@@ -87,11 +84,11 @@ namespace SimpleMotions {
         }
 
         public bool ValidateFileName(string fileName) {
-             if (string.IsNullOrWhiteSpace(fileName)) {
-                return false;
-             }
+            if (string.IsNullOrWhiteSpace(fileName)) {
+               return false;
+            }
 
-            string pattern = @"^[a-zA-Z0-9]+$";
+            string pattern = @"^[a-zA-Z0-9 _]+$";
 
             return Regex.IsMatch(fileName, pattern);
         }

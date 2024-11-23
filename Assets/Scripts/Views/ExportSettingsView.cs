@@ -12,6 +12,8 @@ public class ExportSettingsView : MonoBehaviour {
 	[SerializeField] private Button _openFileExplorer;
     [SerializeField] private Button _export;
     [SerializeField] private AudioPlayer _audioPlayer;
+    [SerializeField] private GameObject _errorPanel;
+    [SerializeField] private TextMeshProUGUI _invalidOutputPath;
 
     private IExportSettingsViewModel _exportSettingsViewModel;
     private IInputValidator _inputValidator;
@@ -31,6 +33,11 @@ public class ExportSettingsView : MonoBehaviour {
         _fileName.onValueChanged.AddListener(SetFileName);
 
 		_openFileExplorer.onClick.AddListener(SetOutputDirectory);
+
+        exportSettingsViewModel.InvalidFilePath.Subscribe(invalidFilePath => {
+            _invalidOutputPath.text = $"The file at the output path:\n'{invalidFilePath}'\nalready exists.";
+            _errorPanel.SetActive(true);
+        });
 
         _export.onClick.AddListener(() => {
             if (_isNameValid && _isOutputValid) {
@@ -82,6 +89,7 @@ public class ExportSettingsView : MonoBehaviour {
             _isNameValid = true;
         }
         else {
+            _audioPlayer.PlayErrorSound();
             _isNameValid = false;
         }
     }
