@@ -166,8 +166,7 @@ namespace SimpleMotions {
 
 		public bool FrameHasKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
 			bool frameHasKeyframe = FrameHasKeyframe(frame);
-			bool keyframeIsOfTypeT = GetKeyframeOfTypeAt<T>(frame) != null;
-			//UnityEngine.Debug.Log($"frame ({frame}) has keyframe: {frameHasKeyframe}, is type {typeof(T)}: {keyframeIsOfTypeT}");
+			bool keyframeIsOfTypeT = GetKeyframeOfTypeAt<T>(frame) is not null;
 			return frameHasKeyframe && keyframeIsOfTypeT;
  		}
 
@@ -181,8 +180,9 @@ namespace SimpleMotions {
         public IKeyframe<T>? GetKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
 			if (TryGetAllKeyframesOfType<T>(out var componentKeyframes)) {
 				if (componentKeyframes.TryGetValue(frame, out var keyframe)) {
-					UnityEngine.Debug.Log("entre");
-					return new Keyframe<T>(keyframe);
+					if (keyframe.Value is T keyframeValue) {
+						return new Keyframe<T>(keyframe.EntityId, keyframe.Frame, keyframeValue);
+					}
 				}
 			}
 

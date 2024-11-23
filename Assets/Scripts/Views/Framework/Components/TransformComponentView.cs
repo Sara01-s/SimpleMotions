@@ -11,7 +11,7 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _scaleH;
     [SerializeField] private TMP_InputField _roll;
 
-    [SerializeField] private Button _addOrrRemoveKeyframe;
+    [SerializeField] private Button _addOrRemoveKeyframe;
     [SerializeField] private Image _keyframeImage;
     [SerializeField] private Sprite _addKeyframe;
     [SerializeField] private Sprite _removeKeyframe;
@@ -48,7 +48,7 @@ public class TransformComponentView : MonoBehaviour {
             }
         });
 
-		_addOrrRemoveKeyframe.onClick.AddListener(() => {
+		_addOrRemoveKeyframe.onClick.AddListener(() => {
             if (_keyframeImage.sprite == _addKeyframe) {
                 transformComponentViewModel.SaveTransformKeyframe.Execute(GetTransformData());
                 transformComponentViewModel.OnDrawTransfromKeyframe.Execute();
