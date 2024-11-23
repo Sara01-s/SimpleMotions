@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections;
 using SimpleMotions;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class ExportView : MonoBehaviour {
     [SerializeField] private FullscreenView _fullscreen;
     [SerializeField] private FFMPEGExporter _ffmpegExporter;
 
+	[SerializeField] private ComputeShader _exportVideo;
+
     private IExportViewModel _exportViewModel;
 
     public void Configure(IExportViewModel exportViewModel) {
@@ -23,45 +26,70 @@ public class ExportView : MonoBehaviour {
         StartCoroutine(CO_ExportFrames(data.totalFrames, data.targetFrameRate, data.outputFilePath, data.fileName));
     }
 
-    private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
-        string tempFrameImagesFilePath = GetFramesTempDirectory();
+	private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
+		string tempFrameImagesFilePath = GetFramesTempDirectory();
 
-        for (int frame = 0; frame <= totalFrames; frame++) {
-            _exportViewModel.CurrentFrame.Value = frame;
+		// Crear y reutilizar recursos
+		var processedRT = new RenderTexture(_videoResolution.x, _videoResolution.y, 0, RenderTextureFormat.ARGB32) {
+			enableRandomWrite = true
+		};
+		processedRT.Create();
+		var outputTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.RGBA32, false);
 
-            byte[] frameBytes = GetFrameAsPng();
-            string frameAbsoluteFilepath = Path.Combine(tempFrameImagesFilePath, $"frame_{frame:D5}.png");
-            File.WriteAllBytes(frameAbsoluteFilepath, frameBytes);
+		for (int frame = 0; frame <= totalFrames; frame++) {
+			_exportViewModel.CurrentFrame.Value = frame;
+
+			byte[] frameBytes = GetFrameAsPng(processedRT, outputTexture);
+			string frameAbsoluteFilepath = Path.Combine(tempFrameImagesFilePath, $"frame_{frame:D5}.png");
+			File.WriteAllBytes(frameAbsoluteFilepath, frameBytes);
 
 			yield return null;
-        }
+		}
 
-        _ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, fileName, targetFrameRate);
+		_cameraToCapture.targetTexture = null;
 
-        if (Directory.Exists(tempFrameImagesFilePath)) {
-            Directory.Delete(tempFrameImagesFilePath, recursive: true);
-        }
+		// Liberar recursos
+		RenderTexture.active = null;
+		processedRT.Release();
+		Destroy(processedRT);
+		Destroy(outputTexture);
 
-        Debug.Log("Exportación completada.");
+		_ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, fileName, targetFrameRate);
 
-        _exportViewModel.CurrentFrame.Value = 0;
-        _fullscreen.SetDefaultScreen();
-    }
+		if (Directory.Exists(tempFrameImagesFilePath)) {
+			Directory.Delete(tempFrameImagesFilePath, recursive: true);
+		}
 
-    private byte[] GetFrameAsPng() {
-        _cameraToCapture.targetTexture = new RenderTexture(_videoResolution.x, _videoResolution.y, depth: 24);
-        _cameraToCapture.Render(); // Renderiza la escena a la textura
-        RenderTexture.active = _cameraToCapture.targetTexture; // Establecer el RenderTexture como activo
+		Debug.Log("Exportación completada.");
 
-        var highQualityTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.RGB24, false);
-        highQualityTexture.ReadPixels(new Rect(0.0f, 0.0f, _videoResolution.x, _videoResolution.y), 0, 0); // Lee los píxeles
-        highQualityTexture.Apply();
+		_exportViewModel.CurrentFrame.Value = 0;
+		_fullscreen.SetDefaultScreen();
+	}
 
-        _cameraToCapture.targetTexture = null; 
-        RenderTexture.active = null; 
+	private byte[] GetFrameAsPng(RenderTexture processedRT, Texture2D outputTexture) {
+		// Renderizar la escena en el RenderTexture asignado
+		_cameraToCapture.targetTexture = processedRT;
+		_cameraToCapture.Render();
 
-        return highQualityTexture.EncodeToPNG();
-    }
+		// Configurar el Compute Shader
+		int kernel = _exportVideo.FindKernel("ExportFrame");
+		_exportVideo.SetTexture(kernel, "_InputTexture", processedRT);
+		_exportVideo.SetTexture(kernel, "_ResultTexture", processedRT);
+
+		// Ejecutar el shader
+		int threadGroupsX = Mathf.CeilToInt(processedRT.width / 8.0f);
+		int threadGroupsY = Mathf.CeilToInt(processedRT.height / 8.0f);
+		_exportVideo.Dispatch(kernel, threadGroupsX, threadGroupsY, 1);
+
+		// Descargar datos del RenderTexture a la CPU
+		RenderTexture.active = processedRT;
+		outputTexture.ReadPixels(new Rect(0, 0, processedRT.width, processedRT.height), 0, 0);
+		outputTexture.Apply();
+
+		// Guardar como PNG
+		return outputTexture.EncodeToPNG();
+	}
+
 
 	private string GetFramesTempDirectory() {
         var tempDirectoryPath = Path.Combine(Application.persistentDataPath, ".TempFrames");

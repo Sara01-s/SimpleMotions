@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/SimpleMotions.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 51d130fee40632cd0a116ab22e737459
   m_configObjects: {}

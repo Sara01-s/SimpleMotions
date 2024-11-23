@@ -1,0 +1,17 @@
+#pragma kernel ExportFrame
+
+Texture2D<float4> _InputTexture;
+RWTexture2D<float4> _ResultTexture;
+
+[numthreads(8, 8, 1)]
+void ExportFrame(uint3 id : SV_DispatchThreadID) {
+    uint width, height;
+    _ResultTexture.GetDimensions(width, height);
+
+    if (id.x >= width || id.y >= height) {
+        return;
+    }
+
+    float4 color = _InputTexture.Load(int3(id.xy, 0));
+    _ResultTexture[id.xy] = color;
+}
