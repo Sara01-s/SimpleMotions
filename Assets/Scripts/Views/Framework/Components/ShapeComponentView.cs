@@ -11,6 +11,8 @@ public class ShapeComponentView : MonoBehaviour {
     [SerializeField] private Image _keyframeImage;
     [SerializeField] private Image _currentColor;
     [SerializeField] private Sprite _addKeyframe, _removeKeyframe;
+    [SerializeField] private GameObject _keyframeMask;
+    [SerializeField] private Sprite _notModifiableKeyframe;
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
 
     private IEditorPainterParser _editorPainterParser;
@@ -44,7 +46,14 @@ public class ShapeComponentView : MonoBehaviour {
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
 		});
 
+        shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
+            _keyframeMask.SetActive(true);
+            _keyframeImage.sprite = _notModifiableKeyframe;
+        });
+
         shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(hasKeyframe => {
+            _keyframeMask.SetActive(false);
+            
             if (hasKeyframe) {
                 _keyframeImage.sprite = _removeKeyframe;
             }

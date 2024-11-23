@@ -15,6 +15,8 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private Image _keyframeImage;
     [SerializeField] private Sprite _addKeyframe;
     [SerializeField] private Sprite _removeKeyframe;
+    [SerializeField] private Sprite _notModifiableKeyframe;
+    [SerializeField] private GameObject _keyframeMask;
 
     private IInputValidator _inputValidator;
 
@@ -39,7 +41,14 @@ public class TransformComponentView : MonoBehaviour {
         _scaleH.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleH));
         _roll.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.Roll));
 
+        transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
+            _keyframeMask.SetActive(true);
+            _keyframeImage.sprite = _notModifiableKeyframe;
+        });
+
         transformComponentViewModel.OnFrameHasTransformKeyframe.Subscribe(hasKeyframe => {
+            _keyframeMask.SetActive(false);
+            
             if (hasKeyframe) {
                 _keyframeImage.sprite = _removeKeyframe;
             }

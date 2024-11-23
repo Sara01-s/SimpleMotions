@@ -10,6 +10,7 @@ namespace SimpleMotions {
 		void DeleteEntity(int entityId);
 		
 		ReactiveCommand ShowMaxEntitiesWarning { get; }
+		ReactiveCommand OnCreateEntity { get; }
 
 	}
 
@@ -24,6 +25,7 @@ namespace SimpleMotions {
 		// DEMO 1
 		private byte _createdEntities;
         public ReactiveCommand ShowMaxEntitiesWarning { get; } = new();
+		public ReactiveCommand OnCreateEntity { get; } = new();
 		private const byte MAX_ENTITIES = 3;
 
         public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
@@ -58,6 +60,8 @@ namespace SimpleMotions {
 			
 			_entitySelector.SelectEntity(entity.Id);
 			_videoCanvas.DisplayEntity(entity.Id);
+
+			OnCreateEntity.Execute();
 
 			return entity.Id;
 		}

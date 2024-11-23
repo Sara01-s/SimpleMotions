@@ -8,6 +8,7 @@ namespace SimpleMotions {
     public interface IShapeComponentViewModel {
         ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; }
         ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; }
+        ReactiveCommand OnFirstKeyframe { get; }
         ReactiveCommand OnDrawShapeKeyframe { get; }
         ReactiveCommand OnShapeKeyframeDeleted { get; }
 		ReactiveCommand<string> OnImageSelected { get; }
@@ -20,6 +21,7 @@ namespace SimpleMotions {
 
         public ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; } = new();
         public ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; } = new();
+        public ReactiveCommand OnFirstKeyframe { get; } = new();
         public ReactiveCommand OnDrawShapeKeyframe { get; } = new();
         public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
 		public ReactiveCommand<string> OnImageSelected { get; } = new();
@@ -35,8 +37,9 @@ namespace SimpleMotions {
             SaveShapeKeyframe.Subscribe(shapeView => SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName));
 
 			OnShapeKeyframeDeleted.Subscribe(() => {
-				string previousShapeName = GetPreviousKeyframeShapeName(keyframeStorage);
-				SetShape(previousShapeName);
+				var previousShape = GetPreviousShapeKeyframeName(keyframeStorage);
+				SetShape(previousShape.Item1);
+                SetColor(previousShape.Item2);
 
 				keyframeStorage.RemoveKeyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame());
 				videoCanvas.DisplayEntity(GetSelectedEntityId());
@@ -50,18 +53,18 @@ namespace SimpleMotions {
             _entitySelector = entitySelector;
         }
 
-		private string GetPreviousKeyframeShapeName(IKeyframeStorage keyframeStorage) {
+		private (string, Color) GetPreviousShapeKeyframeName(IKeyframeStorage keyframeStorage) {
 			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
 				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(frame)) {
 					var previousShape = keyframeStorage.GetKeyframeOfTypeAt<Shape>(frame);
 
 					if (previousShape is not null) {
-						return previousShape.Value.PrimitiveShape.ToString();
+						return (previousShape.Value.PrimitiveShape.ToString(), previousShape.Value.Color);
 					}
 				}
 			}
 
-			return string.Empty;
+			return (string.Empty, Color.White);
 		}
 
 		public void SaveKeyframe(Color color, string shapeName) {

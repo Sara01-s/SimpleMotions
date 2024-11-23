@@ -1,5 +1,5 @@
-using SimpleMotions.Internal;
 using static StringExtensions;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -7,6 +7,7 @@ namespace SimpleMotions {
 
 		ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; }
 		ReactiveCommand<bool> OnFrameHasTransformKeyframe { get; }
+		ReactiveCommand OnFirstKeyframe { get; }
 		ReactiveCommand OnDrawTransfromKeyframe { get; }
 		ReactiveCommand OnTransformKeyframeDeleted { get; }
 		ReactiveCommand<string> PositionX { get; }
@@ -22,6 +23,7 @@ namespace SimpleMotions {
 
 		public ReactiveCommand<((string x, string y) pos, (string w, string h) scale, string rollAngleDegrees)> SaveTransformKeyframe { get; } = new();
 		public ReactiveCommand<bool> OnFrameHasTransformKeyframe { get; } = new();
+		public ReactiveCommand OnFirstKeyframe { get; } = new();
 		public ReactiveCommand OnDrawTransfromKeyframe { get; } = new();
         public ReactiveCommand OnTransformKeyframeDeleted { get; } = new();
 		public ReactiveCommand<string> PositionX { get; } = new();
@@ -46,12 +48,35 @@ namespace SimpleMotions {
 			Roll.Subscribe(ModifyEntityRollAngleDegrees);
 
 			OnTransformKeyframeDeleted.Subscribe(() => {
+				var previousTransform = GetPreviousTransformKeyframe(keyframeStorage);
+				ModifyEntityPositionX(previousTransform.Item1.ToString());
+				ModifyEntityPositionY(previousTransform.Item2.ToString());
+				ModifyEntityScaleWidth(previousTransform.Item3.ToString());
+				ModifyEntityScaleHeight(previousTransform.Item4.ToString());
+				ModifyEntityRollAngleDegrees(previousTransform.Item5.ToString());
+
 				keyframeStorage.RemoveKeyframe<Transform>(GetSelectedEntityId(), GetCurrentFrame());
-				// TODO - Hacer que se actualice su posición en pantalla.
+				videoCanvas.DisplayEntity(GetSelectedEntityId());
 			});
 
 			_keyframeStorage = keyframeStorage;
 			_videoCanvas = videoCanvas;
+		}
+
+		private (float, float, float, float, float) GetPreviousTransformKeyframe(IKeyframeStorage keyframeStorage) {
+			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
+				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Transform>(frame)) {
+					var previousTransform = keyframeStorage.GetKeyframeOfTypeAt<Transform>(frame);
+
+					if (previousTransform is not null) {
+						return (previousTransform.Value.Position.X, previousTransform.Value.Position.Y,
+								previousTransform.Value.Scale.Width, previousTransform.Value.Scale.Height,
+								previousTransform.Value.Roll.AngleDegrees);
+					}
+				}
+			}
+
+			return (0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 		}
 
 		private void UpdateSelectedEntityDisplay() {
@@ -59,6 +84,7 @@ namespace SimpleMotions {
 		}
 
 		private void SaveKeyframe(Transform transform) {
+			UnityEngine.Debug.Log(transform);
 			var transformKeyframe = new Keyframe<Transform>(GetSelectedEntityId(), GetCurrentFrame(), transform);
 			_keyframeStorage.AddKeyframe(transformKeyframe);
 			UnityEngine.Debug.Log($"Keyframe de Transform guardado: {transformKeyframe}");

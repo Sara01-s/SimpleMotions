@@ -30,26 +30,31 @@ namespace SimpleMotions {
 
 		private readonly IVideoPlayerData _videoPlayerData;
 
-        public VideoTimelineViewModel(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData, 
+        public VideoTimelineViewModel(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData, IVideoEntities videoEntities,
 									  ITransformComponentViewModel transformComponentViewModel, IKeyframeStorage keyframeStorage,
 									  IShapeComponentViewModel shapeComponentViewModel) 
 		{
 			videoPlayerData.CurrentFrame.Subscribe(currentFrame => {
-				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Transform>(currentFrame) && !videoPlayerData.IsPlaying.Value){
-					transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
-				}
-				else {
-					transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
-				}
-
-				if  (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(currentFrame) && !videoPlayerData.IsPlaying.Value) {
-					shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
-				}
-				else {
-					shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
-				}
-
 				CurrentFrame.Value = currentFrame;
+
+				if (currentFrame == TimelineData.FIRST_FRAME) {
+					transformComponentViewModel.OnFirstKeyframe.Execute();
+					shapeComponentViewModel.OnFirstKeyframe.Execute();
+				}
+				else {
+					if (keyframeStorage.FrameHasKeyframeOfTypeAt<Transform>(currentFrame)) {
+						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
+					}
+					else {
+						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
+					}
+					if  (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(currentFrame)) {
+						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
+					}
+					else {
+						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
+					}
+				}
 			});
 
 			OnFrameChanged.Subscribe(newFrame => videoPlayer.SetCurrentFrame(newFrame));
@@ -59,6 +64,11 @@ namespace SimpleMotions {
 
 			shapeComponentViewModel.OnDrawShapeKeyframe.Subscribe(OnDrawShapeKeyframe.Execute);
 			shapeComponentViewModel.OnShapeKeyframeDeleted.Subscribe(OnShapeKeyframeDeleted.Execute);
+
+			videoEntities.OnCreateEntity.Subscribe(() => {
+				OnDrawTransformKeyframe.Execute();
+				OnDrawShapeKeyframe.Execute();
+			});
 
 			_videoPlayerData = videoPlayerData;
         }

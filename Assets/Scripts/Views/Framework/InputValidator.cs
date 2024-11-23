@@ -20,7 +20,7 @@ namespace SimpleMotions {
 		} 
 
         public string ValidateComponentInput(string input) {
-            input = input.Replace(',', '.');
+            input = input.Replace('.', '.');
             input = input.Substring(0).Replace("+", "");
 
             int decimalIndex = input.IndexOf(',');

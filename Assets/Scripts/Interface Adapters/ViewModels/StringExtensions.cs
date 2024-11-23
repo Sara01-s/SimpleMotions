@@ -8,7 +8,7 @@ public static class StringExtensions {
         }
 
         try {
-            return float.Parse(value, CultureInfo.InvariantCulture);
+            return float.Parse(value.Replace(',', '.'), CultureInfo.InvariantCulture);
         }
         catch (FormatException ex) {
             throw new FormatException($"Value '{value}' does not have correct format.", ex);
