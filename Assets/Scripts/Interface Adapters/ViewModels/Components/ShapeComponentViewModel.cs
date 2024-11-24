@@ -1,16 +1,22 @@
 using SimpleMotions.Internal;
 using System;
 
-#nullable enable
-
 namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
-        ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; }
-        ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; }
+
+        ReactiveCommand<(string shapeName, 
+                         float r, float g, float b, float a)> OnSaveShapeKeyframe { get; }
+
+        ReactiveCommand<(string shapeName, 
+                         float r, float g, float b, float a)> OnUpdateShapeKeyframe { get; }
+
+        ReactiveCommand OnDeleteShapeKeyframe { get; }
+
         ReactiveCommand OnFirstKeyframe { get; }
         ReactiveCommand OnDrawShapeKeyframe { get; }
-        ReactiveCommand OnShapeKeyframeDeleted { get; }
+        ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; }
+
 		ReactiveCommand<string> OnImageSelected { get; }
 
         void SetColor(Color color);
@@ -19,30 +25,46 @@ namespace SimpleMotions {
 
     public class ShapeComponentViewModel : InspectorComponentViewModel, IShapeComponentViewModel {
 
-        public ReactiveCommand<(string shapeName, float r, float g, float b, float a)> SaveShapeKeyframe { get; } = new();
-        public ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; } = new();
+        public ReactiveCommand<(string shapeName, 
+                                float r, float g, float b, float a)> OnSaveShapeKeyframe { get; } = new();
+
+        public ReactiveCommand<(string shapeName, 
+                                float r, float g, float b, float a)> OnUpdateShapeKeyframe { get; } = new();
+
+        public ReactiveCommand OnDeleteShapeKeyframe { get; } = new();
+
         public ReactiveCommand OnFirstKeyframe { get; } = new();
         public ReactiveCommand OnDrawShapeKeyframe { get; } = new();
-        public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
+        public ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; } = new();
+
 		public ReactiveCommand<string> OnImageSelected { get; } = new();
 
         private readonly IEntitySelector _entitySelector;
         private readonly IKeyframeStorage _keyframeStorage;
+        private readonly IVideoCanvas _videoCanvas;
 
         public ShapeComponentViewModel(IEntitySelectorViewModel entitySelectorViewModel, IComponentStorage componentStorage, 
                                        IVideoPlayerData videoPlayerData, IKeyframeStorage keyframeStorage, 
-                                       IVideoCanvas videoCanvas, IEntitySelector entitySelector) 
-                                       : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) 
+                                       IVideoCanvas videoCanvas, IEntitySelector entitySelector) : 
+                                       base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) 
         {
-            SaveShapeKeyframe.Subscribe(shapeView => SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName));
+            OnSaveShapeKeyframe.Subscribe(shapeView => { 
+                SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName);
+                OnDrawShapeKeyframe.Execute();
+            });
 
-			OnShapeKeyframeDeleted.Subscribe(() => {
+			OnDeleteShapeKeyframe.Subscribe(() => {
 				var previousShape = GetPreviousShapeKeyframeName(keyframeStorage);
-				SetShape(previousShape.Item1);
-                SetColor(previousShape.Item2);
+
+				SetShape(previousShape.type);
+                SetColor(previousShape.color);
 
 				keyframeStorage.RemoveKeyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame());
 				videoCanvas.DisplayEntity(GetSelectedEntityId());
+			});
+
+            OnUpdateShapeKeyframe.Subscribe(shapeView => {
+				SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName);
 			});
 
 			OnImageSelected.Subscribe(imageFilePath => {
@@ -51,23 +73,10 @@ namespace SimpleMotions {
 
             _keyframeStorage = keyframeStorage;
             _entitySelector = entitySelector;
+            _videoCanvas = videoCanvas;
         }
 
-		private (string, Color) GetPreviousShapeKeyframeName(IKeyframeStorage keyframeStorage) {
-			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
-				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(frame)) {
-					var previousShape = keyframeStorage.GetKeyframeOfTypeAt<Shape>(frame);
-
-					if (previousShape is not null) {
-						return (previousShape.Value.PrimitiveShape.ToString(), previousShape.Value.Color);
-					}
-				}
-			}
-
-			return (string.Empty, Color.White);
-		}
-
-		public void SaveKeyframe(Color color, string shapeName) {
+        public void SaveKeyframe(Color color, string shapeName) {
             var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
             var shapeKeyframe = new Keyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame(), shape);
 
@@ -84,15 +93,35 @@ namespace SimpleMotions {
             };
         }
 
+        private void UpdateSelectedEntityDisplay() {
+			_videoCanvas.DisplayEntity(GetSelectedEntityId());
+		}
+
+		private (string type, Color color) GetPreviousShapeKeyframeName(IKeyframeStorage keyframeStorage) {
+			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
+				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(frame)) {
+					var previousShape = keyframeStorage.GetKeyframeOfTypeAt<Shape>(frame);
+
+					if (previousShape is not null) {
+						return (previousShape.Value.PrimitiveShape.ToString(), previousShape.Value.Color);
+					}
+				}
+			}
+
+			return (string.Empty, Color.White);
+		}
+
 		public void SetShape(string shapeName) {
 			if (_entitySelector.TryGetSelectedEntityId(out int selectedEntity)) {
 				SetEntityShape(selectedEntity, shapeName);
+                UpdateSelectedEntityDisplay();
 			}
 		}
 
         public void SetColor(Color color) {
 			if (_entitySelector.TryGetSelectedEntityId(out int selectedEntity)) {
             	SetEntityColor(selectedEntity, color);
+                UpdateSelectedEntityDisplay();
 			}
         }
 

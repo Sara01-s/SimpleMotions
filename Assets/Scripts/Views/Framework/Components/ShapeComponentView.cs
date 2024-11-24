@@ -3,30 +3,70 @@ using SimpleMotions;
 using UnityEngine;
 using SFB;
 
-public class ShapeComponentView : MonoBehaviour {
+public class ShapeComponentView : ComponentView {
 
-    [SerializeField] private Button _addOrRemoveKeyframe;
 	[SerializeField] private Button[] _shapeButtons;
 	[SerializeField] private Button _imageButton;
-    [SerializeField] private Image _keyframeImage;
     [SerializeField] private Image _currentColor;
-    [SerializeField] private Sprite _addKeyframe, _removeKeyframe;
-    [SerializeField] private GameObject _keyframeMask;
-    [SerializeField] private Sprite _notModifiableKeyframe;
+
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
 
-    private IEditorPainterParser _editorPainterParser;
     private IShapeComponentViewModel _shapeComponentViewModel;
-    private EditorPainter _editorPainter;
+    private IEditorPainterParser _editorPainterParser;
     private ShapeType[] _shapeTypes;
     private ShapeType _currentShape;
 
     public void Configure(IShapeComponentViewModel shapeComponentViewModel, IEditorPainterParser editorPainterParser) {
-        _shapeComponentViewModel = shapeComponentViewModel;
-        _editorPainterParser = editorPainterParser;
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
 
-		_imageButton.onClick.AddListener(() => {
+        shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
+            _KeyframeImage.sprite = _Unchangeable;
+            _AddOrRemoveBlocker.SetActive(true);
+            _Updateblocker.SetActive(true);
+        });
+
+        shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(frameHasKeyframe => {
+            if (frameHasKeyframe) {
+                _KeyframeImage.sprite = _Remove;
+                _Update.color = _EditorPainter.CurrentAccentColor;
+                _Updateblocker.SetActive(false);
+            }
+            else {
+                _KeyframeImage.sprite = _Add;
+                _Update.color = _EditorPainter.Theme.TextColor;
+                _Updateblocker.SetActive(true);
+            }
+            
+            _AddOrRemoveBlocker.SetActive(false);
+            _FrameHasKeyframe = frameHasKeyframe;
+        });
+
+        _AddOrRemoveKeyframe.onClick.AddListener(() => {
+            if (!_FrameHasKeyframe) {
+                shapeComponentViewModel.OnSaveShapeKeyframe.Execute(GetShapeData());
+                _Update.color = _EditorPainter.CurrentAccentColor;
+                _KeyframeImage.sprite = _Remove;
+
+                _Updateblocker.SetActive(false);
+                _FrameHasKeyframe = true;
+            }
+            else {
+                shapeComponentViewModel.OnDeleteShapeKeyframe.Execute();
+                _Update.color = _EditorPainter.Theme.TextColor;
+                _KeyframeImage.sprite = _Add;
+
+                _Updateblocker.SetActive(true);
+                _FrameHasKeyframe = false;
+            }
+        });
+
+        _UpdateKeyframe.onClick.AddListener(() => {
+            if (_FrameHasKeyframe) {
+                shapeComponentViewModel.OnUpdateShapeKeyframe.Execute(GetShapeData());
+            }
+        });
+
+        _imageButton.onClick.AddListener(() => {
 			var imageExtensions = new [] {
                 new ExtensionFilter("Image Files", "png", "jpg", "jpeg"),
             };
@@ -46,34 +86,6 @@ public class ShapeComponentView : MonoBehaviour {
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
 		});
 
-        shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
-            _keyframeMask.SetActive(true);
-            _keyframeImage.sprite = _notModifiableKeyframe;
-        });
-
-        shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(hasKeyframe => {
-            _keyframeMask.SetActive(false);
-            
-            if (hasKeyframe) {
-                _keyframeImage.sprite = _removeKeyframe;
-            }
-            else {
-                _keyframeImage.sprite = _addKeyframe;
-            }
-        });
-
-        _addOrRemoveKeyframe.onClick.AddListener(() => {
-            if (_keyframeImage.sprite == _addKeyframe) {
-                shapeComponentViewModel.SaveShapeKeyframe.Execute(GetShapeData());
-                shapeComponentViewModel.OnDrawShapeKeyframe.Execute();
-                _keyframeImage.sprite = _removeKeyframe;
-            }
-            else {
-                shapeComponentViewModel.OnShapeKeyframeDeleted.Execute();
-                _keyframeImage.sprite = _addKeyframe;
-            }
-        });
-
 		if (_shapeButtons.Length == 0) {
 			Debug.LogError("Please assign shape buttons in inspector shape component.");
 		}
@@ -82,6 +94,9 @@ public class ShapeComponentView : MonoBehaviour {
 			_shapeTypes[i] = _shapeButtons[i].GetComponentInChildren<ShapeType>();
 			MapButtons(_shapeButtons[i], _shapeTypes[i]);
 		}
+
+        _shapeComponentViewModel = shapeComponentViewModel;
+        _editorPainterParser = editorPainterParser;
     }
 
     public (string shapeName, float r, float g, float b, float a) GetShapeData() {
@@ -89,12 +104,7 @@ public class ShapeComponentView : MonoBehaviour {
         return (_currentShape.ShapeTypeUI.ToString(), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
     }
 
-    public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData, EditorPainter editorPainter) {
-        _editorPainter = editorPainter;
-        UpdateShape(shapeData.primitiveShape);
-    }
-
-	private void MapButtons(Button button, ShapeType shapeType) {
+    private void MapButtons(Button button, ShapeType shapeType) {
 		button.onClick.AddListener(() => {
 			string shapeName = shapeType.ShapeTypeUI.ToString();
 			_shapeComponentViewModel.SetShape(shapeName);
@@ -102,17 +112,21 @@ public class ShapeComponentView : MonoBehaviour {
 		});
 	}
 
+    public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData) {
+        UpdateShape(shapeData.primitiveShape);
+    }
+
     private void UpdateShape(string shapeName) {
         foreach (var shapeImage in _shapeTypes) {
             var shapeType = shapeImage.ShapeTypeUI;
             var image = shapeImage.GetComponent<Image>();
 
             if (shapeType.ToString().CompareTo(shapeName) == 0) {
-                image.color = _editorPainter.Theme.AccentColor;
+                image.color = _EditorPainter.Theme.AccentColor;
                 _currentShape = shapeImage;
             }
             else {
-                image.color = _editorPainter.Theme.TextColor;
+                image.color = _EditorPainter.Theme.TextColor;
             }
         }
     }

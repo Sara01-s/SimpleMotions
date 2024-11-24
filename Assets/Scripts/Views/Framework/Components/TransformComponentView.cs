@@ -1,9 +1,8 @@
-using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 using TMPro;
 
-public class TransformComponentView : MonoBehaviour {
+public class TransformComponentView : ComponentView {
 
     [SerializeField] private TMP_InputField _positionX;
     [SerializeField] private TMP_InputField _positionY;
@@ -11,22 +10,9 @@ public class TransformComponentView : MonoBehaviour {
     [SerializeField] private TMP_InputField _scaleH;
     [SerializeField] private TMP_InputField _roll;
 
-    [SerializeField] private Button _addOrRemoveKeyframe;
-    [SerializeField] private Button _updateKeyframe;
-    [SerializeField] private GameObject _blocker;
-    
-    [SerializeField] private EditorPainter _editorPainter;
-
-    [SerializeField] private Image _keyframeImage;
-    [SerializeField] private Sprite _add;
-    [SerializeField] private Sprite _remove;
-    [SerializeField] private Sprite _unchangeable;
-    [SerializeField] private Image _update;
-
     private ITransformComponentViewModel _transformComponentViewModel;
     private IInputValidator _inputValidator;
 
-    private bool _frameHasKeyframe;
     private string _previousValue;
 	private bool _isSettingData;
 
@@ -34,43 +20,48 @@ public class TransformComponentView : MonoBehaviour {
         InitializeInputFields();
 
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
-            _keyframeImage.sprite = _unchangeable;
-            _blocker.SetActive(true);
+            _KeyframeImage.sprite = _Unchangeable;
+            _AddOrRemoveBlocker.SetActive(true);
+            _Updateblocker.SetActive(true);
         });
 
         transformComponentViewModel.OnFrameHasTransformKeyframe.Subscribe(frameHasKeyframe => {
             if (frameHasKeyframe) {
-                _keyframeImage.sprite = _remove;
-                _update.color = _editorPainter.CurrentAccentColor;
+                _KeyframeImage.sprite = _Remove;
+                _Update.color = _EditorPainter.CurrentAccentColor;
+                _Updateblocker.SetActive(false);
             }
             else {
-                _keyframeImage.sprite = _add;
-                _update.color = _editorPainter.Theme.TextColor;
+                _KeyframeImage.sprite = _Add;
+                _Update.color = _EditorPainter.Theme.TextColor;
+                _Updateblocker.SetActive(true);
             }
 
-            _blocker.SetActive(false);
-            _frameHasKeyframe = frameHasKeyframe;
+            _AddOrRemoveBlocker.SetActive(false);
+            _FrameHasKeyframe = frameHasKeyframe;
         });
 
-		_addOrRemoveKeyframe.onClick.AddListener(() => {
-            if (!_frameHasKeyframe) {
+		_AddOrRemoveKeyframe.onClick.AddListener(() => {
+            if (!_FrameHasKeyframe) {
                 transformComponentViewModel.OnSaveTransformKeyframe.Execute(GetTransformData());
-                _update.color = _editorPainter.CurrentAccentColor;
-                _keyframeImage.sprite = _remove;
+                _Update.color = _EditorPainter.CurrentAccentColor;
+                _KeyframeImage.sprite = _Remove;
 
-                _frameHasKeyframe = true;
+                _Updateblocker.SetActive(false);
+                _FrameHasKeyframe = true;
             }
             else {
                 transformComponentViewModel.OnDeleteTransformKeyframe.Execute();
-                _update.color = _editorPainter.Theme.TextColor;
-                _keyframeImage.sprite = _add;
+                _Update.color = _EditorPainter.Theme.TextColor;
+                _KeyframeImage.sprite = _Add;
 
-                _frameHasKeyframe = false;
+                _Updateblocker.SetActive(true);
+                _FrameHasKeyframe = false;
             }
         });
 
-        _updateKeyframe.onClick.AddListener(() => {
-            if (_frameHasKeyframe) {
+        _UpdateKeyframe.onClick.AddListener(() => {
+            if (_FrameHasKeyframe) {
                 transformComponentViewModel.OnUpdateTransformKeyframe.Execute(GetTransformData());
             }
         });
@@ -102,7 +93,7 @@ public class TransformComponentView : MonoBehaviour {
 		return (position, scale, rollAngleDegrees);
 	}
 
-    public void SetData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
+    public void RefreshData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
 		_isSettingData = true;
 
 		// General numeric formatting, see https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings

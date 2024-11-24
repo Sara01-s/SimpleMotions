@@ -67,7 +67,11 @@ namespace SimpleMotions {
 			});
 
 			shapeComponentViewModel.OnDrawShapeKeyframe.Subscribe(OnDrawShapeKeyframe.Execute);
-			shapeComponentViewModel.OnShapeKeyframeDeleted.Subscribe(OnShapeKeyframeDeleted.Execute);
+			shapeComponentViewModel.OnDeleteShapeKeyframe.Subscribe(OnShapeKeyframeDeleted.Execute);
+			shapeComponentViewModel.OnUpdateShapeKeyframe.Subscribe(_ => {
+				OnShapeKeyframeDeleted.Execute();
+				OnDrawShapeKeyframe.Execute();
+			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
 				OnDrawTransformKeyframe.Execute();
