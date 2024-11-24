@@ -13,6 +13,7 @@ public class FullscreenView : MonoBehaviour {
     [SerializeField] private GameObject _defaultPlaybackParent;
 
 	[SerializeField] private Camera _editorCamera;
+
     [SerializeField] private Canvas _editorCanvas;
 
     [SerializeField] private GameObject _fullscreenCanvasParent;
@@ -23,8 +24,8 @@ public class FullscreenView : MonoBehaviour {
     [SerializeField] private float _fullscreenWidth = 1920.0f;
     [SerializeField] private float _fullscreenHeight = 1080.0f;
 
-    [SerializeField] private string _backgroundLayerName = "UI - BG";
-    [SerializeField] private string _frontLayerName = "UI - Front";
+    [SerializeField] private int _fullscreenSortingOrder = -2;
+    [SerializeField] private int _defaultScreenSortingOrder = 0;
 
     [SerializeField] private float _defaultOrtographicSize = 10.0f;
 
@@ -83,7 +84,7 @@ public class FullscreenView : MonoBehaviour {
         _background.anchoredPosition = Vector2.zero;
         _background.sizeDelta = new Vector2(_fullscreenWidth, _fullscreenHeight);
 
-        _editorCanvas.sortingLayerName = _backgroundLayerName;
+        _editorCanvas.sortingOrder = _fullscreenSortingOrder;
     }
 
     public void SetDefaultScreen() {
@@ -110,7 +111,7 @@ public class FullscreenView : MonoBehaviour {
         _background.sizeDelta = _defaultBackgroundSize;
         _background.anchoredPosition = _defaultBackgroundPosition;
 
-        _editorCanvas.sortingLayerName = _frontLayerName;
+        _editorCanvas.sortingOrder = _defaultScreenSortingOrder;
     }
 
     private float TranslateCameraToWorldPosition() {
