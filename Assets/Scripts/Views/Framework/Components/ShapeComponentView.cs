@@ -22,9 +22,10 @@ public class ShapeComponentView : ComponentView {
         shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
             _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-            _Update.color = _EditorPainter.Theme.TextColor;
+            _Update.color = _EditorPainter.CurrentAccentColor;
             _AddOrRemoveBlocker.SetActive(true);
-            _Updateblocker.SetActive(true);
+            _Updateblocker.SetActive(false);
+            _FrameHasKeyframe = true;
         });
 
         shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(frameHasKeyframe => {
@@ -99,7 +100,10 @@ public class ShapeComponentView : ComponentView {
 		}
 
         _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-        _Update.color = _EditorPainter.Theme.TextColor;
+        _Update.color = _EditorPainter.Theme.AccentColor;
+        _AddOrRemoveBlocker.SetActive(true);
+        _Updateblocker.SetActive(false);
+        _FrameHasKeyframe = true;
 
         _shapeComponentViewModel = shapeComponentViewModel;
         _editorPainterParser = editorPainterParser;

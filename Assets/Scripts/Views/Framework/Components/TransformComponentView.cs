@@ -22,9 +22,10 @@ public class TransformComponentView : ComponentView {
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
             _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-            _Update.color = _EditorPainter.Theme.TextColor;
+            _Update.color = _EditorPainter.CurrentAccentColor;
             _AddOrRemoveBlocker.SetActive(true);
-            _Updateblocker.SetActive(true);
+            _Updateblocker.SetActive(false);
+            _FrameHasKeyframe = true;
         });
 
         transformComponentViewModel.OnFrameHasTransformKeyframe.Subscribe(frameHasKeyframe => {
@@ -70,7 +71,10 @@ public class TransformComponentView : ComponentView {
         });
 
         _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-        _Update.color = _EditorPainter.Theme.TextColor;
+        _Update.color = _EditorPainter.Theme.AccentColor;
+        _AddOrRemoveBlocker.SetActive(true);
+        _Updateblocker.SetActive(false);
+        _FrameHasKeyframe = true;
 
         _transformComponentViewModel = transformComponentViewModel;
         _inputValidator = inputValidator;
