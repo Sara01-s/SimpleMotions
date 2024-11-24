@@ -60,7 +60,11 @@ namespace SimpleMotions {
 			OnFrameChanged.Subscribe(newFrame => videoPlayer.SetCurrentFrame(newFrame));
 
 			transformComponentViewModel.OnDrawTransfromKeyframe.Subscribe(OnDrawTransformKeyframe.Execute);
-			transformComponentViewModel.OnTransformKeyframeDeleted.Subscribe(OnTransfromKeyframeDeleted.Execute);
+			transformComponentViewModel.OnDeleteTransformKeyframe.Subscribe(OnTransfromKeyframeDeleted.Execute);
+			transformComponentViewModel.OnUpdateTransformKeyframe.Subscribe(_ => { 
+				OnTransfromKeyframeDeleted.Execute();
+				OnDrawTransformKeyframe.Execute();
+			});
 
 			shapeComponentViewModel.OnDrawShapeKeyframe.Subscribe(OnDrawShapeKeyframe.Execute);
 			shapeComponentViewModel.OnShapeKeyframeDeleted.Subscribe(OnShapeKeyframeDeleted.Execute);

@@ -102,7 +102,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 			}
 			else {
 				_isLoopOn = false;
-				_loopImage.color = Color.white;
+				_loopImage.color = _editorPainter.Theme.TextColor;
 			}
 		});
 
