@@ -25,7 +25,7 @@ public class FullscreenView : MonoBehaviour {
     [SerializeField] private float _fullscreenHeight = 1080.0f;
 
     [SerializeField] private int _fullscreenSortingOrder = -2;
-    [SerializeField] private int _defaultScreenSortingOrder = 0;
+    [SerializeField] private int _defaultScreenSortingOrder = 2;
 
     [SerializeField] private float _defaultOrtographicSize = 10.0f;
 
