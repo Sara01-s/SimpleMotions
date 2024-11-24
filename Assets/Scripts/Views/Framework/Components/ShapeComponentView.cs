@@ -21,6 +21,8 @@ public class ShapeComponentView : ComponentView {
 
         shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
+            _KeyframeImage.color = _EditorPainter.Theme.TextColor;
+            _Update.color = _EditorPainter.Theme.TextColor;
             _AddOrRemoveBlocker.SetActive(true);
             _Updateblocker.SetActive(true);
         });
@@ -38,6 +40,7 @@ public class ShapeComponentView : ComponentView {
             }
             
             _AddOrRemoveBlocker.SetActive(false);
+            _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
         });
 
@@ -94,6 +97,9 @@ public class ShapeComponentView : ComponentView {
 			_shapeTypes[i] = _shapeButtons[i].GetComponentInChildren<ShapeType>();
 			MapButtons(_shapeButtons[i], _shapeTypes[i]);
 		}
+
+        _KeyframeImage.color = _EditorPainter.Theme.TextColor;
+        _Update.color = _EditorPainter.Theme.TextColor;
 
         _shapeComponentViewModel = shapeComponentViewModel;
         _editorPainterParser = editorPainterParser;

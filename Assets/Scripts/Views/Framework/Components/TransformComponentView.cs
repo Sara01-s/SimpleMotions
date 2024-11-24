@@ -21,6 +21,8 @@ public class TransformComponentView : ComponentView {
 
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
+            _KeyframeImage.color = _EditorPainter.Theme.TextColor;
+            _Update.color = _EditorPainter.Theme.TextColor;
             _AddOrRemoveBlocker.SetActive(true);
             _Updateblocker.SetActive(true);
         });
@@ -38,6 +40,7 @@ public class TransformComponentView : ComponentView {
             }
 
             _AddOrRemoveBlocker.SetActive(false);
+            _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
         });
 
@@ -65,6 +68,9 @@ public class TransformComponentView : ComponentView {
                 transformComponentViewModel.OnUpdateTransformKeyframe.Execute(GetTransformData());
             }
         });
+
+        _KeyframeImage.color = _EditorPainter.Theme.TextColor;
+        _Update.color = _EditorPainter.Theme.TextColor;
 
         _transformComponentViewModel = transformComponentViewModel;
         _inputValidator = inputValidator;
