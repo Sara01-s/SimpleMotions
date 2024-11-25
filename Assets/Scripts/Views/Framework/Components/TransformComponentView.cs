@@ -103,25 +103,25 @@ public class TransformComponentView : ComponentView {
 		return (position, scale, rollAngleDegrees);
 	}
 
-    public void RefreshData(((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
+    public void RefreshData(TransformDTO transformDTO) {
 		_isSettingData = true;
 
 		// General numeric formatting, see https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
 		const string floatFormat = "G";
 
-        var firstInput = transformData.pos.x.ToString(floatFormat);
+        var firstInput = transformDTO.Position.x.ToString(floatFormat);
         _positionX.text = firstInput;
 
-        firstInput = transformData.pos.y.ToString(floatFormat);
+        firstInput = transformDTO.Position.y.ToString(floatFormat);
         _positionY.text = firstInput;
 
-        firstInput = transformData.scale.w.ToString(floatFormat);
+        firstInput = transformDTO.Scale.w.ToString(floatFormat);
         _scaleW.text = firstInput;
 
-        firstInput = transformData.scale.h.ToString(floatFormat);
+        firstInput = transformDTO.Scale.h.ToString(floatFormat);
         _scaleH.text = firstInput;
 
-        firstInput = transformData.rollAngleDegrees.ToString(floatFormat);
+        firstInput = transformDTO.RollDegrees.ToString(floatFormat);
         _roll.text = firstInput;
 
 		_isSettingData = false;

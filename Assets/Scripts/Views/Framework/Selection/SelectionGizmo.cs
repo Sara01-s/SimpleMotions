@@ -4,6 +4,8 @@ using SimpleMotions;
 
 public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHandler {
     
+	public ReactiveCommand<EntityDTO> OnEntityChanged { get; } = new();
+
 	protected RectTransform _SelectionGizmoRect => (RectTransform)transform.parent;
 
 	private Camera _worldCamera;
@@ -28,7 +30,6 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 
     public abstract void OnBeginDrag(PointerEventData eventData);
 	public abstract void OnDrag(PointerEventData eventData);
-	protected abstract void SyncGizmoWithEntity();
 
     protected Vector2 _GetPointerWorldPos(Vector2 pointerScreenPos) {
         return _worldCamera.ScreenToWorldPoint(new Vector3(pointerScreenPos.x, pointerScreenPos.y, _worldCamera.nearClipPlane));
@@ -38,7 +39,7 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 		return RectTransformUtility.WorldToScreenPoint(_worldCamera, worldPoint);
 	}
 
-	protected Vector2 _ScreenPointToLocalPointInRectangle(Vector2 screenPoint) {
+	protected Vector2 _ScreenPointToRect(Vector2 screenPoint) {
 		RectTransformUtility.ScreenPointToLocalPointInRectangle (
 			_canvasArea,
 			screenPoint,
@@ -51,22 +52,22 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 
 	protected void _SetSelectedEntityPosition(Vector2 worldPosition) {
 		_entitySelectorViewModel.SetEntityPosition(SelectedEntityId, (worldPosition.x, worldPosition.y));
-		SyncGizmoWithEntity();
+		OnEntityChanged.Execute(new EntityDTO() { Id = SelectedEntityId });
 	}
 
 	protected void _SetSelectedEntityScale(Vector2 scale) {
         _entitySelectorViewModel.SetEntityScale(SelectedEntityId, (scale.x, scale.y));
-		SyncGizmoWithEntity();
+		OnEntityChanged.Execute(new EntityDTO() { Id = SelectedEntityId });
 	}
 
 	protected void _SetSelectedEntityRoll(float angleDegrees) {
 		_entitySelectorViewModel.SetEntityRoll(SelectedEntityId, angleDegrees);
-		SyncGizmoWithEntity();
+		OnEntityChanged.Execute(new EntityDTO() { Id = SelectedEntityId });
 	}
 
-	protected ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) _GetSelectedEntityTransformData() {
-		_entitySelectorViewModel.EntityHasTransform(SelectedEntityId, out var t);
-		return t;
+	protected TransformDTO _GetSelectedEntityTransformData() {
+		_entitySelectorViewModel.TryGetEntityTransform(SelectedEntityId, out var transformDTO);
+		return transformDTO;
 	}
 
 }

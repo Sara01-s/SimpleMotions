@@ -5,9 +5,9 @@ namespace SimpleMotions {
 	public interface IComponentViewModel {
 
 		bool EntityHasTransform(int entityId);
-		bool EntityHasTransform(int entityId, out ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData);
-		bool EntityHasShape(int entityId, out ((float r, float g, float b, float a) color, string primitiveShape) shapeData);
-		bool EntityHasText(int entityId, out string text);
+		bool TryGetEntityTransform(int entityId, out TransformDTO transformDTO);
+		bool TryGetEntityShape(int entityId, out ShapeDTO shapeDTO);
+		bool TryGetEntityText(int entityId, out string content);
 
 		void SetEntityPosition(int entityId, (float x, float y) position);
 		void SetEntityScale(int entityId, (float w, float h) scale);
@@ -61,35 +61,46 @@ namespace SimpleMotions {
 			return _videoCanvas.EntityHasComponent<Transform>(entityId);
 		}
 
-		public bool EntityHasTransform(int entityId, out ((float x, float y) pos, (float w, float h) scale, float rollAngleDegrees) transformData) {
+		public bool TryGetEntityTransform(int entityId, out TransformDTO transformDTO) {
 			if (!_videoCanvas.EntityHasComponent<Transform>(entityId)) {
-				transformData = default;
+				transformDTO = default;
 				return false;
 			}
 
-			var t = _videoCanvas.GetEntityComponent<Transform>(entityId);
-			transformData = ((t.Position.X, t.Position.Y), (t.Scale.Width, t.Scale.Height), t.Roll.AngleDegrees);
+			var transform = _videoCanvas.GetEntityComponent<Transform>(entityId);
+
+			transformDTO = new TransformDTO() {
+				Position = (transform.Position.X, transform.Position.Y),
+				Scale = (transform.Scale.Width, transform.Scale.Height),
+				RollDegrees = transform.Roll.AngleDegrees
+			};
+
 			return true;
 		}
 
-		public bool EntityHasShape(int entityId, out ((float r, float g, float b, float a) color, string primitiveShape) shapeData) {
+		public bool TryGetEntityShape(int entityId, out ShapeDTO shapeDTO) {
 			if (!_videoCanvas.EntityHasComponent<Shape>(entityId)) {
-				shapeData = default;
+				shapeDTO = default;
 				return false;
 			}
 
-			var s = _videoCanvas.GetEntityComponent<Shape>(entityId);
-			shapeData = ((s.Color.R, s.Color.G, s.Color.B, s.Color.A), s.PrimitiveShape.ToString());
+			var shape = _videoCanvas.GetEntityComponent<Shape>(entityId);
+
+			shapeDTO = new ShapeDTO() {
+				PrimitiveShape = shape.PrimitiveShape.ToString(),
+				Color = (shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A)
+			};
+
 			return true;
 		}
 
-		public bool EntityHasText(int entityId, out string text) {
+		public bool TryGetEntityText(int entityId, out string content) {
 			if (!_videoCanvas.EntityHasComponent<Text>(entityId)) {
-				text = default;
+				content = default;
 				return false;
 			}
 
-			text = _videoCanvas.GetEntityComponent<Text>(entityId).Content;
+			content = _videoCanvas.GetEntityComponent<Text>(entityId).Content;
 			return true;
 		}
 

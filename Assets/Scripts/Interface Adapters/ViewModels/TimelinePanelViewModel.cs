@@ -3,7 +3,7 @@ namespace SimpleMotions {
 	public interface ITimelinePanelViewModel {
 
 		public ReactiveCommand ShowMaxEntitiesWarning { get; }
-		public ReactiveCommand<int, string> OnEntityNameChanged { get ; }
+		public ReactiveCommand<EntityDTO> OnEntityNameChanged { get ; }
 		public ReactiveCommand<int> DeleteEntity { get; }
 
 		void ChangeEntityName(int entityId, string newName);
@@ -18,7 +18,7 @@ namespace SimpleMotions {
 		public ReactiveCommand ShowMaxEntitiesWarning { get; } = new();
 		public ReactiveCommand<int> DeleteEntity { get; } = new();
 		public ReactiveValue<string> EntityName { get; } = new();
-		public ReactiveCommand<int, string> OnEntityNameChanged { get; } = new();
+		public ReactiveCommand<EntityDTO> OnEntityNameChanged { get; } = new();
 
 		private readonly IVideoEntities _videoEntities;
 		private readonly IEntityViewModel _entityViewModel;
@@ -27,7 +27,7 @@ namespace SimpleMotions {
 		public TimelinePanelViewModel(IVideoEntities videoEntities, IEntityViewModel entityViewModel, 
 									  IEntitySelector entitySelector, IInspectorViewModel inspectorViewModel) {
 			videoEntities.ShowMaxEntitiesWarning.Subscribe(ShowMaxEntitiesWarning.Execute);
-			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => OnEntityNameChanged.Execute(id, name));
+			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => OnEntityNameChanged.Execute(new EntityDTO() { Id = id, Name = name}));
 
 			DeleteEntity.Subscribe(videoEntities.DeleteEntity);
 			DeleteEntity.Subscribe(_ => inspectorViewModel.OnClearInspector.Execute());

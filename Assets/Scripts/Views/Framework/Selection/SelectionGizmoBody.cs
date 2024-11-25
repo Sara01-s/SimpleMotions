@@ -6,8 +6,8 @@ public class SelectionGizmoBody : SelectionGizmo {
 	private Vector2 _startDragOffset;
 
 	public override void OnBeginDrag(PointerEventData eventData) {
-		var (pos, _, _) = _GetSelectedEntityTransformData();
-		var entityWorldPos = new Vector2(pos.x, pos.y);
+		var transformDTO = _GetSelectedEntityTransformData();
+		var entityWorldPos = new Vector2(transformDTO.Position.x, transformDTO.Position.y);
 		var pointerWorldPos = _GetPointerWorldPos(eventData.position);
 
 		_startDragOffset = entityWorldPos - pointerWorldPos;
@@ -22,14 +22,6 @@ public class SelectionGizmoBody : SelectionGizmo {
 		var newEntityWorldPosition = pointerWorldPosition + _startDragOffset;
 
 		_SetSelectedEntityPosition(newEntityWorldPosition);
-	}
-
-	protected override void SyncGizmoWithEntity() {
-		var (pos, _, _) = _GetSelectedEntityTransformData();
-		var entityWorldPos = new Vector2(pos.x, pos.y);
-		var entityScreenPos = _WorldToScreenPoint(entityWorldPos);
-
-		_SelectionGizmoRect.localPosition = _ScreenPointToLocalPointInRectangle(entityScreenPos);
 	}
 
 }

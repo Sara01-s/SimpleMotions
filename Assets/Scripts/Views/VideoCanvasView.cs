@@ -90,7 +90,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	}
 
 	private void DisplayEntityImage(int entityId, string imageFilepath) {
-		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
+		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var _)) {
 			var displayedEntity = _displayedEntites[entityId];
 
 			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
@@ -107,24 +107,24 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			return;
 		}
 
-		if (_videoCanvasViewModel.EntityHasTransform(entityId, out var transform)) {
+		if (_videoCanvasViewModel.TryGetEntityTransform(entityId, out var transformDTO)) {
 			var entityTransform = displayedEntity.GetComponent<Transform>();
 
-			entityTransform.localPosition = new Vector3(transform.pos.x, transform.pos.y, 0.0f);
-			entityTransform.localScale = new Vector2(transform.scale.w, transform.scale.h);
-			entityTransform.rotation = Quaternion.AngleAxis(transform.rollAngleDegrees, Vector3.forward);
+			entityTransform.localPosition = new Vector3(transformDTO.Position.x, transformDTO.Position.y, 0.0f);
+			entityTransform.localScale = new Vector2(transformDTO.Scale.w, transformDTO.Scale.h);
+			entityTransform.rotation = Quaternion.AngleAxis(transformDTO.RollDegrees, Vector3.forward);
 		}
 
-		if (_videoCanvasViewModel.EntityHasShape(entityId, out var shape)) {
+		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var shape)) {
 			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
 				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
 				spriteRenderer.sortingOrder = _sortingOrder;
 			}
 
-			spriteRenderer.color = new Color(shape.color.r, shape.color.g, shape.color.b, shape.color.a);
+			spriteRenderer.color = new Color(shape.Color.r, shape.Color.g, shape.Color.b, shape.Color.a);
 			
-			if (shape.primitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
-				spriteRenderer.sprite = _spriteByPrimitiveShape[shape.primitiveShape];
+			if (shape.PrimitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
+				spriteRenderer.sprite = _spriteByPrimitiveShape[shape.PrimitiveShape];
 			}
 		}
 	}

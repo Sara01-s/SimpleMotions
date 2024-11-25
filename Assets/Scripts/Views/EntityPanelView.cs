@@ -28,14 +28,14 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 			Destroy(gameObject);
 		});
 
-		timelinePanelViewModel.OnEntityNameChanged.Subscribe((id, name) => {
-			if (ownerEntityId == id) {
+		timelinePanelViewModel.OnEntityNameChanged.Subscribe(entityDTO => {
+			if (ownerEntityId == entityDTO.Id) {
 				_entityName.text = name;
 			}
 		});
 
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(() => _selectionHighlight.enabled = false);
-		entitySelectorViewModel.OnEntitySelected.Subscribe(entity => _selectionHighlight.enabled = ownerEntityId == entity.entityId);
+		entitySelectorViewModel.OnEntitySelected.Subscribe(entityDTO => _selectionHighlight.enabled = ownerEntityId == entityDTO.Id);
 		
 		_entitySelectorViewModel = entitySelectorViewModel;
 		_ownerEntityId = ownerEntityId;

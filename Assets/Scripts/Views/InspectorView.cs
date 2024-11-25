@@ -43,7 +43,7 @@ public class InspectorView : MonoBehaviour {
     }
 
 	private void CheckTransformComponent(int entityId) {
-		bool selectedEntityHasTransform = _inspectorViewModel.EntityHasTransform(entityId, out var transformData);
+		bool selectedEntityHasTransform = _inspectorViewModel.TryGetEntityTransform(entityId, out var transformData);
 
 		_transformComponent.SetActive(selectedEntityHasTransform);
 
@@ -55,7 +55,7 @@ public class InspectorView : MonoBehaviour {
 	}
 
 	private void CheckShapeComponent(int entityId) {
-		bool selectedEntityHasShape = _inspectorViewModel.EntityHasShape(entityId, out var shapeData);
+		bool selectedEntityHasShape = _inspectorViewModel.TryGetEntityShape(entityId, out var shapeData);
 
 		_shapeComponent.SetActive(selectedEntityHasShape);
 
@@ -67,7 +67,7 @@ public class InspectorView : MonoBehaviour {
 	}
 
 	private void CheckTextComponent(int entityId) {
-		bool selectedEntityHasText = _inspectorViewModel.EntityHasText(entityId, out string text);
+		bool selectedEntityHasText = _inspectorViewModel.TryGetEntityText(entityId, out string text);
 
 		_textComponent.SetActive(selectedEntityHasText);
 

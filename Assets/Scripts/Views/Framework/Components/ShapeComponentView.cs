@@ -122,8 +122,8 @@ public class ShapeComponentView : ComponentView {
 		});
 	}
 
-    public void RefreshData(((float r, float g, float b, float a) color, string primitiveShape) shapeData) {
-        UpdateShape(shapeData.primitiveShape);
+    public void RefreshData(ShapeDTO shapeDTO) {
+        UpdateShape(shapeDTO.PrimitiveShape);
     }
 
     private void UpdateShape(string shapeName) {

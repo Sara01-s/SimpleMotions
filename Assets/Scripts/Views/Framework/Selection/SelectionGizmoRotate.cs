@@ -12,8 +12,8 @@ public class SelectionGizmoRotate : SelectionGizmo {
         var direction = pointerWorldPos - gizmoWorldPos;
         float initialPointerAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-		var (_, _, rollAngleDegrees) = _GetSelectedEntityTransformData();
-		_startOffsetAngle = rollAngleDegrees - initialPointerAngle;
+		var transformDTO = _GetSelectedEntityTransformData();
+		_startOffsetAngle = transformDTO.RollDegrees - initialPointerAngle;
     }
 
     public override void OnDrag(PointerEventData eventData) {
@@ -29,9 +29,5 @@ public class SelectionGizmoRotate : SelectionGizmo {
 
 		_SetSelectedEntityRoll(finalAngle);
     }
-
-    protected override void SyncGizmoWithEntity() {
-		var (_, _, rollAngleDegrees) = _GetSelectedEntityTransformData();
-		_SelectionGizmoRect.localRotation = Quaternion.AngleAxis(rollAngleDegrees, Vector3.forward);
-    }
+	
 }
