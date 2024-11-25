@@ -67,6 +67,4 @@ public class EntitySelectorView : MonoBehaviour {
 		_selectionGizmo.gameObject.SetActive(true);
 	}
 
-
-
 }

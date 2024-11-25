@@ -69,11 +69,11 @@ namespace SimpleMotions {
 
 			var transform = _videoCanvas.GetEntityComponent<Transform>(entityId);
 
-			transformDTO = new TransformDTO() {
-				Position = (transform.Position.X, transform.Position.Y),
-				Scale = (transform.Scale.Width, transform.Scale.Height),
-				RollDegrees = transform.Roll.AngleDegrees
-			};
+			transformDTO = new TransformDTO (
+				position: (transform.Position.X, transform.Position.Y),
+				scale: (transform.Scale.Width, transform.Scale.Height),
+				rollDegrees: transform.Roll.AngleDegrees
+			);
 
 			return true;
 		}
@@ -86,10 +86,10 @@ namespace SimpleMotions {
 
 			var shape = _videoCanvas.GetEntityComponent<Shape>(entityId);
 
-			shapeDTO = new ShapeDTO() {
-				PrimitiveShape = shape.PrimitiveShape.ToString(),
-				Color = (shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A)
-			};
+			shapeDTO = new ShapeDTO (
+				primitiveShape: shape.PrimitiveShape.ToString(),
+				color: (shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A)
+			);
 
 			return true;
 		}

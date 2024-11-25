@@ -1,37 +1,18 @@
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
-
-	// TODO - Mover de lugar
-	public enum ComponentType {
-		Transform,
-		Shape,
-		Text
-	}
 	
-	public readonly struct EntityKeyframe {
-		public readonly ComponentType ComponentType;
-		public readonly int Id;
-		public readonly int Frame;
-
-		public EntityKeyframe(ComponentType componentType, int id, int frame) {
-			ComponentType = componentType;
-			Id = id;
-			Frame = frame;
-		}
-	}
-
 	public interface IVideoTimelineViewModel {
 		int TotalFrameCount { get; } 
 
 		ReactiveValue<int> CurrentFrame { get; }
 		ReactiveCommand<int> OnFrameChanged { get; }
 
-		ReactiveCommand<EntityKeyframe> OnDrawTransformKeyframe { get; }
-		ReactiveCommand<EntityKeyframe> OnTransfromKeyframeDeleted { get; }
+		ReactiveCommand<KeyframeDTO> OnDrawTransformKeyframe { get; }
+		ReactiveCommand<KeyframeDTO> OnTransfromKeyframeDeleted { get; }
 
-		ReactiveCommand<EntityKeyframe> OnDrawShapeKeyframe { get; }
-		ReactiveCommand<EntityKeyframe> OnShapeKeyframeDeleted { get; }
+		ReactiveCommand<KeyframeDTO> OnDrawShapeKeyframe { get; }
+		ReactiveCommand<KeyframeDTO> OnShapeKeyframeDeleted { get; }
 	}
 
     public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
@@ -41,11 +22,11 @@ namespace SimpleMotions {
 		public ReactiveValue<int> CurrentFrame { get; } = new();
 		public ReactiveCommand<int> OnFrameChanged { get; } = new();
 		
-        public ReactiveCommand<EntityKeyframe> OnDrawTransformKeyframe { get; } = new();
-		public ReactiveCommand<EntityKeyframe> OnTransfromKeyframeDeleted { get; } = new();
+        public ReactiveCommand<KeyframeDTO> OnDrawTransformKeyframe { get; } = new();
+		public ReactiveCommand<KeyframeDTO> OnTransfromKeyframeDeleted { get; } = new();
 
-		public ReactiveCommand<EntityKeyframe> OnDrawShapeKeyframe { get; } = new();
-		public ReactiveCommand<EntityKeyframe> OnShapeKeyframeDeleted { get; } = new();
+		public ReactiveCommand<KeyframeDTO> OnDrawShapeKeyframe { get; } = new();
+		public ReactiveCommand<KeyframeDTO> OnShapeKeyframeDeleted { get; } = new();
 
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IEntitySelector _entitySelector;
@@ -81,41 +62,41 @@ namespace SimpleMotions {
 			OnFrameChanged.Subscribe(newFrame => videoPlayer.SetCurrentFrame(newFrame));
 
 			transformComponentViewModel.OnDrawTransfromKeyframe.Subscribe(() => {
-				var transformEntityKeyframe = new EntityKeyframe(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var transformEntityKeyframe = new KeyframeDTO(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 			});
 
 			transformComponentViewModel.OnDeleteTransformKeyframe.Subscribe(() => {
-				var transformEntityKeyframe = new EntityKeyframe(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var transformEntityKeyframe = new KeyframeDTO(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
 			});
 
 			transformComponentViewModel.OnUpdateTransformKeyframe.Subscribe(_ => { 
-				var transformEntityKeyframe = new EntityKeyframe(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var transformEntityKeyframe = new KeyframeDTO(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 			});
 
 			shapeComponentViewModel.OnDrawShapeKeyframe.Subscribe(() => {
-				var shapeEntityKeyframe = new EntityKeyframe(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var shapeEntityKeyframe = new KeyframeDTO(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 
 			shapeComponentViewModel.OnDeleteShapeKeyframe.Subscribe(() => {
-				var shapeEntityKeyframe = new EntityKeyframe(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var shapeEntityKeyframe = new KeyframeDTO(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnShapeKeyframeDeleted.Execute(shapeEntityKeyframe);
 			});
 			shapeComponentViewModel.OnUpdateShapeKeyframe.Subscribe(_ => {
-				var shapeEntityKeyframe = new EntityKeyframe(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var shapeEntityKeyframe = new KeyframeDTO(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnShapeKeyframeDeleted.Execute(shapeEntityKeyframe);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
-				var transformEntityKeyframe = new EntityKeyframe(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var transformEntityKeyframe = new KeyframeDTO(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 
-				var shapeEntityKeyframe = new EntityKeyframe(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var shapeEntityKeyframe = new KeyframeDTO(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 

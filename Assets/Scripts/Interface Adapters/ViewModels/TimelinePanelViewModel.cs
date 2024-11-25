@@ -27,7 +27,7 @@ namespace SimpleMotions {
 		public TimelinePanelViewModel(IVideoEntities videoEntities, IEntityViewModel entityViewModel, 
 									  IEntitySelector entitySelector, IInspectorViewModel inspectorViewModel) {
 			videoEntities.ShowMaxEntitiesWarning.Subscribe(ShowMaxEntitiesWarning.Execute);
-			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => OnEntityNameChanged.Execute(new EntityDTO() { Id = id, Name = name}));
+			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => OnEntityNameChanged.Execute(new EntityDTO(id, name)));
 
 			DeleteEntity.Subscribe(videoEntities.DeleteEntity);
 			DeleteEntity.Subscribe(_ => inspectorViewModel.OnClearInspector.Execute());

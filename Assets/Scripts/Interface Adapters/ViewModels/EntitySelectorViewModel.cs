@@ -21,14 +21,14 @@ namespace SimpleMotions {
         public int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 		public bool HasSelectedEntity => _entitySelector.HasSelectedEntity;
 
-		public ReactiveCommand<EntityKeyframe> OnEntitySelectedChaged { get; } = new();
+		public ReactiveCommand<KeyframeDTO> OnEntitySelectedChaged { get; } = new();
 
 		private readonly IEntitySelector _entitySelector;
 
         public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {
 			entitySelector.OnEntityDeselected.Subscribe(OnEntityDeselected.Execute);
 			entitySelector.OnEntitySelected.Subscribe(entity => {
-				OnEntitySelected.Execute(new EntityDTO { Id = entity.Id, Name = entity.Name, IsActive = entity.IsActive });
+				OnEntitySelected.Execute(new EntityDTO(entity.Id, entity.Name));
 			});
 
 			SelectEntity.Subscribe(entitySelector.SelectEntity);

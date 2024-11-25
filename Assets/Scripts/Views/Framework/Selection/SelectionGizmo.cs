@@ -52,17 +52,17 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 
 	protected void _SetSelectedEntityPosition(Vector2 worldPosition) {
 		_entitySelectorViewModel.SetEntityPosition(SelectedEntityId, (worldPosition.x, worldPosition.y));
-		OnEntityChanged.Execute(new EntityDTO() { Id = SelectedEntityId });
+		OnEntityChanged.Execute(new EntityDTO(SelectedEntityId));
 	}
 
 	protected void _SetSelectedEntityScale(Vector2 scale) {
         _entitySelectorViewModel.SetEntityScale(SelectedEntityId, (scale.x, scale.y));
-		OnEntityChanged.Execute(new EntityDTO() { Id = SelectedEntityId });
+		OnEntityChanged.Execute(new EntityDTO(SelectedEntityId));
 	}
 
 	protected void _SetSelectedEntityRoll(float angleDegrees) {
 		_entitySelectorViewModel.SetEntityRoll(SelectedEntityId, angleDegrees);
-		OnEntityChanged.Execute(new EntityDTO() { Id = SelectedEntityId });
+		OnEntityChanged.Execute(new EntityDTO(SelectedEntityId));
 	}
 
 	protected TransformDTO _GetSelectedEntityTransformData() {

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-using System;
 
 public class TimelineCursorView : MonoBehaviour {
 
@@ -19,20 +18,18 @@ public class TimelineCursorView : MonoBehaviour {
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
 
-    //              EntityId    ->       Component     ->      Frame -> Keyframe
-    private Dictionary<int, Dictionary<ComponentType, Dictionary<int, GameObject>>> _entityComponentKeyframes = new();  
+    //              		EntityId    ->       Component     ->      Frame -> Keyframe
+    private readonly Dictionary<int, Dictionary<ComponentType, Dictionary<int, GameObject>>> _displayedEntityKeyframes = new();  
 
     public void Configure(IVideoTimelineViewModel videoTimelineViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
-        _videoTimelineViewModel = videoTimelineViewModel;
-
         _cursor.onValueChanged.AddListener(value => {
             _videoTimelineViewModel.OnFrameChanged.Execute((int)value);
         });
 
-        _videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);
+		entitySelectorViewModel.OnEntitySelected.Subscribe(entityDTO => {
+            UpdateDisplayedKeyframes(entityDTO.Id);
+        });
 
-        RefreshUI();                                                        
-		
         videoTimelineViewModel.OnDrawTransformKeyframe.Subscribe(transformEntityKeyframe => {
             var transformKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
             transformKeyframe.GetComponent<Image>().color = Color.blue;
@@ -44,11 +41,7 @@ public class TimelineCursorView : MonoBehaviour {
             AddKeyframe(transformEntityKeyframe, transformKeyframe);
         });
 
-        videoTimelineViewModel.OnTransfromKeyframeDeleted.Subscribe(transformEntityKeyframe => {
-            RemoveKeyframe(transformEntityKeyframe);
-        });
-
-        videoTimelineViewModel.OnDrawShapeKeyframe.Subscribe(shapeEntityKeyframe => {
+        videoTimelineViewModel.OnDrawShapeKeyframe.Subscribe(shapeKeyframeDTO => {
             var shapeKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
             shapeKeyframe.GetComponent<Image>().color = Color.red;
 
@@ -56,74 +49,77 @@ public class TimelineCursorView : MonoBehaviour {
             rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _shapeKeyframeYPosition);
             rect.transform.SetParent(_keyframesHolder.transform);
 
-            AddKeyframe(shapeEntityKeyframe, shapeKeyframe);
+            AddKeyframe(shapeKeyframeDTO, shapeKeyframe);
         });
 
-        videoTimelineViewModel.OnShapeKeyframeDeleted.Subscribe(shapeEntityKeyframe => {
-            RemoveKeyframe(shapeEntityKeyframe);
-        });
-
-        entitySelectorViewModel.OnEntitySelected.Subscribe(entitySelected => {
-            ShowEntityKeyframes(entitySelected.Id);
-        });
+		videoTimelineViewModel.OnTransfromKeyframeDeleted.Subscribe(RemoveKeyframe);
+        videoTimelineViewModel.OnShapeKeyframeDeleted.Subscribe(RemoveKeyframe);
+        videoTimelineViewModel.CurrentFrame.Subscribe(SetCursorNewFrame);
+        _videoTimelineViewModel = videoTimelineViewModel;
+        RefreshUI();
     }
 
-    private void AddKeyframe(EntityKeyframe entityKeyframe, GameObject keyframeToAdd) {
-        if (!_entityComponentKeyframes.TryGetValue(entityKeyframe.Id, out var componentsByType)) {
-                componentsByType = new Dictionary<ComponentType, Dictionary<int, GameObject>>();
-                _entityComponentKeyframes[entityKeyframe.Id] = componentsByType;
-            }
+    private void AddKeyframe(KeyframeDTO entityKeyframe, GameObject keyframeDisplay) {
+        if (!_displayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentsByType)) {
+			_displayedEntityKeyframes[entityKeyframe.Id] = componentsByType = new();
+		}
 
         if (!componentsByType.TryGetValue(entityKeyframe.ComponentType, out var frameByType)) {
-                frameByType = new Dictionary<int, GameObject>();
-                componentsByType[entityKeyframe.ComponentType] = frameByType;
+			componentsByType[entityKeyframe.ComponentType] = frameByType = new();
         }
 
-        frameByType[entityKeyframe.Frame] = keyframeToAdd;
+        frameByType[entityKeyframe.Frame] = keyframeDisplay;
 
         Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentType} ha sido añadida en el frame {entityKeyframe.Frame}");
     }
 
-    private void RemoveKeyframe(EntityKeyframe entityKeyframe) {
-        if (_entityComponentKeyframes.TryGetValue(entityKeyframe.Id, out var componentsByType)) {
-            if (componentsByType.TryGetValue(entityKeyframe.ComponentType, out var frameByType)) {
-                if (frameByType.TryGetValue(entityKeyframe.Frame, out var keyframeToRemove)) {
-                    frameByType.Remove(entityKeyframe.Frame);
-                    Destroy(keyframeToRemove);
+    private void RemoveKeyframe(KeyframeDTO entityKeyframe) {
+        if (!_displayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentTypeToKeyframes)) {
+			return;
+		}
 
-                    if (frameByType.Count == 0) {
-                        componentsByType.Remove(entityKeyframe.ComponentType);
-                    }
+		if (!componentTypeToKeyframes.TryGetValue(entityKeyframe.ComponentType, out var frameToKeyframe)) {
+			return;
+		}
 
-                    if (componentsByType.Count == 0) {
-                        _entityComponentKeyframes.Remove(entityKeyframe.Id);
-                    }
+		if (!frameToKeyframe.TryGetValue(entityKeyframe.Frame, out var keyframeToRemove)) {
+			return;
+		}
 
-                    Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentType} ha sido eliminada del frame {entityKeyframe.Frame}");
-                }
-            }
-        }
+		frameToKeyframe.Remove(entityKeyframe.Frame);
+		Destroy(keyframeToRemove);
+
+		if (frameToKeyframe.Count == 0) {
+			componentTypeToKeyframes.Remove(entityKeyframe.ComponentType);
+		}
+
+		if (componentTypeToKeyframes.Count == 0) {
+			_displayedEntityKeyframes.Remove(entityKeyframe.Id);
+		}
+
+		Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentType} ha sido eliminada del frame {entityKeyframe.Frame}");
     }
 
-    private void ShowEntityKeyframes(int entityId) {
-        if (_entityComponentKeyframes.TryGetValue(entityId, out var componentsByType)) {
-            foreach (var componentType in componentsByType.Keys) {
-                if (componentsByType.TryGetValue(componentType, out var frameByType)) {
-                    foreach (var frame in frameByType.Keys) {
-                        if (frameByType.TryGetValue(frame, out var keyframe)) {
-                            keyframe.SetActive(true);
+	private void UpdateDisplayedKeyframes(int selectedEntityId) {
+		foreach (var entityEntry in _displayedEntityKeyframes) {
+			var entityId = entityEntry.Key;
+			var componentTypeToKeyframes = entityEntry.Value;
 
-                            Debug.Log($"Activado el keyframe de nombre: {keyframe.name}");
-                        }
-                    }
-                }
-            }
-        }
-    }
+			bool entityIsSelected = entityId == selectedEntityId;
 
-    private void HideEntityKeyframes(int entityId) {
-        
-    }
+			foreach (var componentEntry in componentTypeToKeyframes) {
+				var componentType = componentEntry.Key;
+				var frameToKeyframe = componentEntry.Value;
+
+				foreach (var frameEntry in frameToKeyframe) {
+					var keyframe = frameEntry.Value;
+
+					keyframe.SetActive(entityIsSelected);
+					Debug.Log($"Keyframes de entidad: {entityId} {(entityIsSelected ? "Encendido" : "Apagado")}");
+				}
+			}
+		}
+	}
 
     public void SetCursorNewFrame(int currentFrame) {
         _cursor.value = currentFrame;
