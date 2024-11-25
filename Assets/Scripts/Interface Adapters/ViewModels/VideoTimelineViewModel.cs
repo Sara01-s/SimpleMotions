@@ -93,10 +93,10 @@ namespace SimpleMotions {
 			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
-				var transformEntityKeyframe = new KeyframeDTO(ComponentType.Transform, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var transformEntityKeyframe = new KeyframeDTO(ComponentType.Transform, _entitySelector.SelectedEntity.Id, 0);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 
-				var shapeEntityKeyframe = new KeyframeDTO(ComponentType.Shape, _entitySelector.SelectedEntity.Id, _videoPlayerData.CurrentFrame.Value);
+				var shapeEntityKeyframe = new KeyframeDTO(ComponentType.Shape, _entitySelector.SelectedEntity.Id, 0);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 

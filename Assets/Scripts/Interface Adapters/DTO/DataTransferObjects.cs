@@ -50,4 +50,5 @@ namespace SimpleMotions {
 		Shape,
 		Text
 	}
+	
 }

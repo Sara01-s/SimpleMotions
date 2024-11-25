@@ -32,27 +32,44 @@ public class TimelineCursorView : MonoBehaviour {
 
         videoTimelineViewModel.OnDrawTransformKeyframe.Subscribe(transformKeyframeDTO => {
             var transformKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
+            var keyframeRect = transformKeyframe.GetComponent<RectTransform>();
             transformKeyframe.GetComponent<Image>().color = Color.blue;
 
-            var rect = transformKeyframe.GetComponent<RectTransform>();
-			print("????????????????????????" + transformKeyframeDTO.Frame);
+            float keyframeXPosition;
 
-			bool dictionaryNotInitilized = !_displayedEntityKeyframes.TryGetValue(transformKeyframeDTO.Id, out var value);
-			float keyframePositionX = dictionaryNotInitilized ? 0.0f : rect.anchoredPosition.x;
+            if (transformKeyframeDTO.Frame == 0) {
+                transformKeyframe.transform.SetParent(_sliderArea);
+                keyframeRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 0.0f, transformKeyframe.GetComponent<RectTransform>().rect.height);
+                keyframeXPosition = 21.0f;
+            }
+            else {
+                keyframeXPosition = keyframeRect.anchoredPosition.x;
+            }
 
-            rect.anchoredPosition = new Vector2(keyframePositionX, _transformKeyframeYPosition);
-            rect.transform.SetParent(_keyframesHolder.transform);
+            keyframeRect.anchoredPosition = new Vector2(keyframeXPosition, _transformKeyframeYPosition);
+            keyframeRect.transform.SetParent(_keyframesHolder.transform);
 
             AddKeyframe(transformKeyframeDTO, transformKeyframe);
         });
 
         videoTimelineViewModel.OnDrawShapeKeyframe.Subscribe(shapeKeyframeDTO => {
             var shapeKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
+            var keyframeRect = shapeKeyframe.GetComponent<RectTransform>();
             shapeKeyframe.GetComponent<Image>().color = Color.red;
 
-            var rect = shapeKeyframe.GetComponent<RectTransform>();
-            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _shapeKeyframeYPosition);
-            rect.transform.SetParent(_keyframesHolder.transform);
+			float keyframeXPosition;
+
+            if (shapeKeyframeDTO.Frame == 0) {
+                shapeKeyframe.transform.SetParent(_sliderArea);
+                keyframeRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 0.0f, shapeKeyframe.GetComponent<RectTransform>().rect.height);
+                keyframeXPosition = 21.0f;
+            }
+            else {
+                keyframeXPosition = keyframeRect.anchoredPosition.x;
+            }
+
+            keyframeRect.anchoredPosition = new Vector2(keyframeXPosition, _shapeKeyframeYPosition);
+            keyframeRect.transform.SetParent(_keyframesHolder.transform);
 
             AddKeyframe(shapeKeyframeDTO, shapeKeyframe);
         });
@@ -120,7 +137,7 @@ public class TimelineCursorView : MonoBehaviour {
 					var keyframe = frameEntry.Value;
 
 					keyframe.SetActive(entityIsSelected);
-					Debug.Log($"Keyframes de entidad: {entityId} {(entityIsSelected ? "Encendido" : "Apagado")}");
+					//Debug.Log($"Keyframes de entidad: {entityId} {(entityIsSelected ? "Encendido" : "Apagado")}");
 				}
 			}
 		}
