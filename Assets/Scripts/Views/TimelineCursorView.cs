@@ -30,15 +30,20 @@ public class TimelineCursorView : MonoBehaviour {
             UpdateDisplayedKeyframes(entityDTO.Id);
         });
 
-        videoTimelineViewModel.OnDrawTransformKeyframe.Subscribe(transformEntityKeyframe => {
+        videoTimelineViewModel.OnDrawTransformKeyframe.Subscribe(transformKeyframeDTO => {
             var transformKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
             transformKeyframe.GetComponent<Image>().color = Color.blue;
 
             var rect = transformKeyframe.GetComponent<RectTransform>();
-            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _transformKeyframeYPosition);
+			print("????????????????????????" + transformKeyframeDTO.Frame);
+
+			bool dictionaryNotInitilized = !_displayedEntityKeyframes.TryGetValue(transformKeyframeDTO.Id, out var value);
+			float keyframePositionX = dictionaryNotInitilized ? 0.0f : rect.anchoredPosition.x;
+
+            rect.anchoredPosition = new Vector2(keyframePositionX, _transformKeyframeYPosition);
             rect.transform.SetParent(_keyframesHolder.transform);
 
-            AddKeyframe(transformEntityKeyframe, transformKeyframe);
+            AddKeyframe(transformKeyframeDTO, transformKeyframe);
         });
 
         videoTimelineViewModel.OnDrawShapeKeyframe.Subscribe(shapeKeyframeDTO => {
