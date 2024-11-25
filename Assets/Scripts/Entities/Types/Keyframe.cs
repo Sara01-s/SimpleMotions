@@ -2,8 +2,9 @@
 namespace SimpleMotions.Internal {
 
     public interface IKeyframe<out T> where T : Component {
-		int EntityId { get; set; }
-        int Frame { get; set; }
+		Ease Ease { get; }
+		int EntityId { get; }
+        int Frame { get; }
         T Value { get; }
     }
 
@@ -12,8 +13,9 @@ namespace SimpleMotions.Internal {
 
 		public static Keyframe<T> Invalid = new(Entity.Invalid.Id, TimelineData.INVALID_FRAME, new());
 
-		public int EntityId { get; set; }
-		public int Frame { get; set; }
+		public Ease Ease { get; } = Ease.Linear;
+		public int EntityId { get; }
+		public int Frame { get; }
 		public T Value { get; set; }
 
 		public Keyframe(IKeyframe<Component> keyframe) {
@@ -34,6 +36,13 @@ namespace SimpleMotions.Internal {
 			Value = value;
 		}
 
+		public Keyframe(int entityId, int frame, T value, Ease ease) {
+			Ease = ease;
+			EntityId = entityId;
+			Frame = frame;
+			Value = value;
+		}
+
 		public int CompareTo(object obj) {
 			var keyframe = obj as Keyframe<T> ?? throw new System.ArgumentException($"Only compare keyframes with another keyframes. " + nameof(obj));
 
@@ -45,7 +54,7 @@ namespace SimpleMotions.Internal {
 		}
 
 		public override string ToString() {
-			return $"Keyframe (entity id: {EntityId}, frame: {Frame} value: {Value}";
+			return $"Keyframe (entity id: {EntityId}, frame: {Frame} value: {Value}, ease: {Ease}";
 		}
 	}
 

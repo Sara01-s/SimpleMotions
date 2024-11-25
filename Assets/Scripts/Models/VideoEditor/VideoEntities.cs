@@ -48,15 +48,25 @@ namespace SimpleMotions {
 
 		public int CreateEntity() {
 			var entity = _entityStorage.CreateEntity();
-			_createdEntities++;
-			UnityEngine.Debug.Log($"Entidad Creada: {entity}, Total: {_createdEntities}");
-
 			entity.Name = $"Entity ({entity.Id})";
+			_createdEntities++;
+
+			UnityEngine.Debug.Log($"Entidad Creada: {entity}, Total: {_createdEntities}");
 
 			_componentStorage.AddComponent<Transform>(entity);
 			_componentStorage.AddComponent<Shape>(entity);
 
 			_keyframeStorage.AddDefaultKeyframes(entity.Id);
+
+			//_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, frame: 0, new Transform(new(0, 0), new(1,1), new Roll(0)), Ease.OutBack));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Shape>(entity.Id, frame: 0, new Shape(Shape.Primitive.Rect, Color.White), Ease.OutBack));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, frame: 50, new Transform(new(6, 0), new(2,1), new Roll(0)), Ease.OutBounce));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, frame: 100, new Transform(new(6, -3), new(-3,1), new Roll(120)), Ease.InOutElastic));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Shape>(entity.Id, frame: 100, new Shape(Shape.Primitive.Star, Color.Yellow), Ease.OutBack));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, frame: 150, new Transform(new(6, 3), new(1,2), new Roll(720)), Ease.OutExpo));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, frame: 200, new Transform(new(7, -2), new(1,5), new Roll(-30)), Ease.InQuint));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Shape>(entity.Id, frame: 200, new Shape(Shape.Primitive.Heart, Color.Magenta), Ease.OutBack));
+			//_keyframeStorage.AddKeyframe(new Keyframe<Transform>(entity.Id, frame: 300, new Transform(new(0, 0), new(1,1), new Roll(0)), Ease.Linear));
 			
 			_entitySelector.SelectEntity(entity.Id);
 			_videoCanvas.DisplayEntity(entity.Id);

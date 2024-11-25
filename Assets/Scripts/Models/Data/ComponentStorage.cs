@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using SimpleMotions.Internal;
 using System;
+using System.Linq;
+
+#nullable enable
 
 namespace SimpleMotions {
 
@@ -9,7 +12,8 @@ namespace SimpleMotions {
 		T AddComponent<T>(Entity entity) where T : Component, new();
 		void RemoveComponent<T>(Entity entity) where T : Component;
 
-		T GetComponent<T>(int entityId) where T : Component;
+		Component GetComponent(Type componentType, int entityId);
+		T? GetComponent<T>(int entityId) where T : Component;
 		bool HasComponent<T>(int entityId) where T : Component;
 
 		IEnumerable<int> GetEntitiesWithComponent<T>() where T : Component;
@@ -78,7 +82,7 @@ namespace SimpleMotions {
 			_components[componentType].Remove(entity.Id);
 		}
 
-		public T GetComponent<T>(int entityId) where T : Component {
+		public T? GetComponent<T>(int entityId) where T : Component {
 			var type = typeof(T);
 			
 			if (_components.ContainsKey(type) && _components[type].ContainsKey(entityId)) {
@@ -89,11 +93,23 @@ namespace SimpleMotions {
 			return null;
 		}
 
+		public Component GetComponent(Type componentType, int entityId) {
+			if (!_components.TryGetValue(componentType, out var entityComponents)) {
+				throw new ArgumentException("Component type not registered.", componentType.Name);
+			}
+
+			if (!entityComponents.TryGetValue(entityId, out var component)) {
+				throw new ArgumentException("Entity does not have component of type " + componentType.Name);
+			}
+
+			return component;
+		}
+
 		public Component[] GetAllComponents(int entityId) {
 			var components = new List<Component>();
 
 			foreach (var componentType in _components.Keys) { 					// For all registered components
-				if (_components[componentType].ContainsKey(entityId)) {		// if entity "id" has that component
+				if (_components[componentType].ContainsKey(entityId)) {			// if entity "id" has that component
 					components.Add(_components[componentType][entityId]);		// add the unique component instance associated with entity "id"
 				}
 			}
@@ -113,7 +129,7 @@ namespace SimpleMotions {
 				return _components[type].Keys;
 			}
 
-			return new List<int>();
+			return Enumerable.Empty<int>();
 		}
 
 		public Dictionary<int, Component> GetComponentsOfType<T>() where T : Component {

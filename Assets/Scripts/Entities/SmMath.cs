@@ -8,7 +8,8 @@ namespace SimpleMotions {
 
 		private const MethodImplOptions INLINE = MethodImplOptions.AggressiveInlining;
 		
-		public const float Deg2Rad = (float)PI / 180.0F;
+		public const float PI = (float)System.Math.PI;
+		public const float Deg2Rad = PI / 180.0F;
 
 		[MethodImpl(INLINE)]
 		public static float easeOutBack(float t) {
@@ -47,6 +48,21 @@ namespace SimpleMotions {
 			float dh = lerp(u.Height, v.Height, t);
 
 			return new Scale(dw, dh);
+		}
+
+		[MethodImpl(INLINE)]
+		public static float cos(float x) {
+			return (float)Cos(x);
+		}
+
+		[MethodImpl(INLINE)]
+		public static float sin(float x) {
+			return (float)Sin(x);
+		}
+
+		[MethodImpl(INLINE)]
+		public static float sqrt(float x) {
+			return (float)Sqrt(x);
 		}
 
 		[MethodImpl(INLINE)]

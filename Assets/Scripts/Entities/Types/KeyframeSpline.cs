@@ -12,17 +12,18 @@ namespace SimpleMotions.Internal {
 		int Count { get; }
 		IKeyframe<Component> this[int frame] { get; }
 		
-		void Add(int frame, IKeyframe<Component> keyframe);
+		void AddKeyframe(int frame, IKeyframe<Component> keyframe);
 		void AddRange(IKeyframeSpline keyframeSpline);
-		void Remove(int frame);
+		void RemoveKeyframe(int frame);
 		void RemoveRange(IKeyframeSpline keyframeSpline);
 		bool TryGetValue(int frame, out IKeyframe<Component> keyframe);
-		IKeyframe<Component> GetLastKeyframe(int frame);
+		IKeyframe<Component> GetPreviousKeyframe(int frame);
 		IKeyframe<Component> GetNextKeyframe(int frame);
 
 		IKeyframeSpline GetEntityKeyframes(int entityId);
 		IKeyframeSpline GetKeyframesOfComponent<T>() where T : Component;
 
+		bool HasKeyframeAtFrame(int frame);
 	}
 
 	[Serializable]
@@ -48,7 +49,7 @@ namespace SimpleMotions.Internal {
 
 			foreach (var keyframe in this) {
 				if (entityId == keyframe.EntityId) {
-					keyframeSpline.Add(keyframe.Frame, keyframe);
+					keyframeSpline.AddKeyframe(keyframe.Frame, keyframe);
 				}
 			}
 
@@ -60,14 +61,14 @@ namespace SimpleMotions.Internal {
 
 			foreach (var keyframe in this) {
 				if (keyframe.Value is T) {
-					keyframeSpline.Add(keyframe.Frame, keyframe);
+					keyframeSpline.AddKeyframe(keyframe.Frame, keyframe);
 				}
 			}
 
 			return keyframeSpline;
 		}
 
-		public IKeyframe<Component> GetLastKeyframe(int frame) {
+		public IKeyframe<Component> GetPreviousKeyframe(int frame) {
 			var allFramesWithKeyframes = _keyframes.Keys.ToArray();
 			var selectedKeyframeFrame = allFramesWithKeyframes[0];
 
@@ -95,11 +96,15 @@ namespace SimpleMotions.Internal {
 			return _keyframes.Last().Value;
 		}
 
-		public void Add(int frame, IKeyframe<Component> keyframe) {
+		public bool HasKeyframeAtFrame(int frame) {
+			return _keyframes.ContainsKey(frame);
+		}
+
+		public void AddKeyframe(int frame, IKeyframe<Component> keyframe) {
 			_keyframes[frame] = keyframe;
 		}
 
-		public void Remove(int frame) {
+		public void RemoveKeyframe(int frame) {
 			_keyframes[frame] = Keyframe<Component>.Invalid;
 		}
 
@@ -112,7 +117,7 @@ namespace SimpleMotions.Internal {
 				var keyframe = keyframeSpline.Keyframes[i];
 				int frame = keyframeSpline.KeyframeIndices[i];
 
-				Add(frame, keyframe);
+				AddKeyframe(frame, keyframe);
 			}
 		}
 
@@ -123,7 +128,7 @@ namespace SimpleMotions.Internal {
 
 			for (int i = 0; i < keyframeSpline.Count; i++) {
 				int frame = keyframeSpline.KeyframeIndices[i];
-				Remove(frame);
+				RemoveKeyframe(frame);
 			}
 		}
 

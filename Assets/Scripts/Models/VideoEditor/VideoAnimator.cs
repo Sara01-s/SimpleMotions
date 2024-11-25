@@ -1,7 +1,5 @@
-using static SimpleMotions.SmMath;
 using System.Collections.Generic;
 using SimpleMotions.Internal;
-using System.Linq;
 using System;
 
 namespace SimpleMotions {
@@ -18,10 +16,10 @@ namespace SimpleMotions {
 		
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IComponentStorage _componentStorage;
+		private readonly IInterpolator _interpolator;
 		private readonly IEntityStorage _entityStorage;
-		private readonly IEnumerable<Type> _componentTypes;
 
-		private IEnumerable<int> _entitiesWithKeyframes;
+		private IEnumerable<int> _activeEntities;
 		private IEnumerable<int> _lastEntitiesWithKeyframes;
 		private bool _videoCacheGenerated;
 
@@ -31,60 +29,50 @@ namespace SimpleMotions {
 		public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
 		
 		public VideoAnimator(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
-							 IEntityStorage entityStorage) {
+							 IEntityStorage entityStorage, IInterpolator interpolator) {
 			_keyframeStorage = keyframeStorage;
 			_componentStorage = componentStorage;
 			_entityStorage = entityStorage;
-
-			_componentTypes = _keyframeStorage.KeyframeTypes;
+			_interpolator = interpolator;
 		}
 
 		public void GenerateVideoCache() {
-			bool cacheAlreadyGenerated = _lastEntitiesWithKeyframes != null && _entitiesWithKeyframes != _lastEntitiesWithKeyframes;
+			bool cacheAlreadyGenerated = _lastEntitiesWithKeyframes != null && _activeEntities != _lastEntitiesWithKeyframes;
 			if (cacheAlreadyGenerated) {
 				return;
 			}
 
 			_videoCacheGenerated = false;
 
-			var activeEntities = _entityStorage.GetActiveEntities();
-			_entitiesWithKeyframes = activeEntities.Where(entityId => _keyframeStorage.EntityHasKeyframesOfAnyType(entityId));
-
-			_lastEntitiesWithKeyframes = _entitiesWithKeyframes;
+			_activeEntities = _entityStorage.GetActiveEntities();
+			_lastEntitiesWithKeyframes = _activeEntities;
+			
 			_videoCacheGenerated = true;
 		}
 
 		public void InterpolateAllEntities(int currentFrame) {
 			if (!_videoCacheGenerated) {
-				throw new Exception("Generate video cache before entity interpolation.");
+				throw new Exception("Generate video cache before starting entity interpolation.");
 			}
 
-			foreach (int entityId in _entitiesWithKeyframes) {
+			foreach (int entityId in _activeEntities) {
 				InterpolateEntityKeyframes(entityId, currentFrame);
 			}
 		}
 
 		private void InterpolateEntityKeyframes(int entityId, int currentFrame) {
-			foreach (var componentType in _componentTypes) {
-				switch (componentType) {
-					case var t when t == typeof(Transform):
-						SetCurrentInterpolatedComponent<Transform>(entityId);
-						break;
-					case var t when t == typeof(Shape):
-						SetCurrentInterpolatedComponent<Shape>(entityId);
-						break;
-					default:
-						continue;
-				}
-
+			foreach (var componentType in _keyframeStorage.GetEntityKeyframeTypes(entityId)) {
+				SetCurrentInterpolatedComponent(componentType, entityId);
 				InterpolateKeyframeSpline(_currentComponentSpline, _currentInterpolatedComponent, currentFrame);
 				SendInterpolationData(entityId);
 			}
 		}
 
-		private void InterpolateKeyframeSpline<T>(IKeyframeSpline keyframeSpline, T component, int currentFrame) where T : Component {
-			var startKeyframe = keyframeSpline.GetLastKeyframe(currentFrame);
+		private void InterpolateKeyframeSpline(IKeyframeSpline keyframeSpline, Component component, int currentFrame) {
+			var startKeyframe = keyframeSpline.GetPreviousKeyframe(currentFrame);
 			var targetKeyframe = keyframeSpline.GetNextKeyframe(currentFrame);
+
+			UnityEngine.Debug.Log(startKeyframe.Ease);
 
 			float t = 0.0f;
 			int deltaFrame = targetKeyframe.Frame - startKeyframe.Frame;
@@ -94,39 +82,20 @@ namespace SimpleMotions {
 				t = dt / deltaFrame;
 			}
 
-			InterpolateComponent(component, startKeyframe, targetKeyframe, easeOutBack(t));
+			InterpolateComponent(component, startKeyframe, targetKeyframe, t);
 		}
 
-		private void InterpolateComponent<T>(T component, IKeyframe<Component> start, IKeyframe<Component> target, float t) {
-			switch (component) {
-				case Transform transform:
-					var startTransform = start.Value as Transform;
-					var targetTransform = target.Value as Transform;
-
-					var deltaPosition = lerp(startTransform.Position, targetTransform.Position, t);
-					var deltaScale = lerp(startTransform.Scale, targetTransform.Scale, t);
-					var deltaRoll = lerp(startTransform.Roll.AngleDegrees, targetTransform.Roll.AngleDegrees, t);
-
-					transform.Position = deltaPosition;
-					transform.Scale = deltaScale;
-					transform.Roll.AngleDegrees = deltaRoll;
-					break;
-					
-				case Shape shape:
-					var startShape = start.Value as Shape;
-					var targetShape = target.Value as Shape;
-
-					var deltaColor = lerp(startShape.Color, targetShape.Color, t);
-
-					shape.Color = deltaColor;
-					shape.PrimitiveShape = startShape.PrimitiveShape;
-					break;
+		private void InterpolateComponent(Component component, IKeyframe<Component> start, IKeyframe<Component> target, float t) {
+			if (!_interpolator.TryGetInterpolation(component.GetType(), out var interpolation)) {
+				throw new NotSupportedException($"Interpolation not supported for type {component.GetType().Name}.");
 			}
+
+			interpolation.Interpolate(component, start.Value, target.Value, t, start.Ease);
 		}
 
-		private void SetCurrentInterpolatedComponent<T>(int entityId) where T : Component {
-			_currentComponentSpline = _keyframeStorage.GetEntityKeyframesOfType<T>(entityId);
-			_currentInterpolatedComponent = _componentStorage.GetComponent<T>(entityId);
+		private void SetCurrentInterpolatedComponent(Type componentType, int entityId) {
+			_currentComponentSpline = _keyframeStorage.GetEntityKeyframeSplineOfType(componentType, entityId);
+			_currentInterpolatedComponent = _componentStorage.GetComponent(componentType, entityId);
 		}
 
 		private void SendInterpolationData(int entityId) {

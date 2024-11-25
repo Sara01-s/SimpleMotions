@@ -68,7 +68,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IEditorPainterParser, EditorPainterParser>();
 
 			// Data
-			
+			_services.RegisterService<IInterpolator,	 Interpolator>();
 			_services.RegisterService<VideoData, 		 VideoData>();
 			_services.RegisterService<ComponentsData, 	 ComponentsData>();
 			_services.RegisterService<EntitiesData, 	 EntitiesData>();

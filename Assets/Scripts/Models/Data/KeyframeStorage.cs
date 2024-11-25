@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SimpleMotions.Internal;
+using System.Linq;
 using System;
 
 #nullable enable
@@ -7,229 +8,236 @@ using System;
 namespace SimpleMotions {
 
 	public interface IKeyframeStorage {
-
-		IEnumerable<Type> KeyframeTypes { get; }
 		int TotalFrames { get; }
+		Type[] AllComponentTypes { get; }
 
-		IKeyframeSpline? GetKeyframeSplineOfType<T>() where T : Component;
-		IKeyframeSpline? GetEntityKeyframesOfType<T>(int entityId) where T : Component;
+		bool EntityHasKeyframes(int entityId);
+		bool EntityHasKeyframesOfType(Type componentType, int entityId);
+		bool EntityHasKeyframeAtFrame(int entityId, int frame);
+		bool EntityHasKeyframeAtFrameOfType<T>(int entityId, int frame) where T : Component, new();
 
-		IKeyframe<T>? GetKeyframeOfTypeAt<T>(int frame) where T : Component, new();
-		IKeyframe<Component> GetKeyframeAt(int frame);
-		KeyframesData GetKeyframesData();
-
+		void AddKeyframe(IKeyframe<Component> keyframe);
 		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component;
-		void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component;
-		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component;
+		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component;
+
 		void AddDefaultKeyframes(int entityId);
+		void AddDefaultKeyframe(Type componentType, int entityId);
 
-		void RemoveKeyframe<T>(int entityId, int frame) where T : Component;
 		void ClearEntityKeyframes(int entityId);
-	
-		IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId);
-		IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int currentFrame);
+		void RemoveKeyframeOfType(Type componentType, int entityId, int frame);
 
-		bool FrameHasKeyframe(int frame);
-		bool FrameHasKeyframeOfTypeAt<T>(int frame) where T : Component, new();
-		bool EntityHasKeyframesOfType<T>(int entityId) where T : Component;
-		bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline keyframeSpline) where T : Component;
-		bool EntityHasKeyframesOfAnyType(int entityId);
+		IKeyframeSpline GetEntityKeyframeSplineOfType(Type componentType, int entityId);
+		IEnumerable<IKeyframeSpline> GetEntityKeyframeSplines(int entityId);
+
+		IEnumerable<IKeyframe<Component>> GetEntityKeyframesAtFrame(int entityId, int frame);
+		IEnumerable<Type> GetEntityKeyframeTypes(int entityId);
+		IKeyframe<T>? GetEntityKeyframeOfType<T>(int entityId, int frame) where T : Component, new();
+
+		KeyframesData GetKeyframesData();
 	}
-	
 
 	public sealed class KeyframeStorage : IKeyframeStorage {
 
-		private readonly Dictionary<Type, IKeyframeSpline> _allKeyframes;
+		public int TotalFrames => _videoData.TotalFrames;
+		public Type[] AllComponentTypes { get; }
+
+		// entity id -> [component type -> keyframe spline (frame -> keyframe)].
+		private readonly Dictionary<int, Dictionary<Type, IKeyframeSpline>> _keyframes;
 		private readonly VideoData _videoData;
 
-		public IEnumerable<Type> KeyframeTypes => _allKeyframes.Keys;
-		public int TotalFrames => _videoData.TotalFrames;
-
 		public KeyframeStorage(KeyframesData keyframesData, VideoData videoData) {
-			_allKeyframes = keyframesData.AllKeyframes;
+			_keyframes = keyframesData.AllKeyframes;
 			_videoData = videoData;
+
+			AllComponentTypes = new Type[] { // TODO - Get from outside this class. (Dependency injection).
+				typeof(Transform), typeof(Shape), typeof(Text)
+			};
 		}
 
-		private IKeyframeSpline RegisterComponentKeyframes<T>() where T : Component {
-			var componentKeyframes = new KeyframeSpline();
-
-			_allKeyframes.Add(typeof(T), componentKeyframes);
-			return componentKeyframes;
+		public bool EntityHasKeyframes(int entityId) {
+			return _keyframes.TryGetValue(entityId, out var _);
 		}
 
-		public IEnumerable<IKeyframe<Component>> GetAllKeyframesAt(int frame) {
-			var keyframesAtFrame = new List<IKeyframe<Component>>();
-
-			foreach (var componentType in _allKeyframes.Keys) {
-				if (_allKeyframes[componentType].TryGetValue(frame, out var keyframe)) {
-					keyframesAtFrame.Add(keyframe);
-				}
+		public bool EntityHasKeyframesOfType(Type componentType, int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return false;
 			}
 
-			if (keyframesAtFrame.Count <= 0) {
-				keyframesAtFrame.Add(Keyframe<Component>.Invalid);
-			}
-
-			return keyframesAtFrame;
+			return componentToKeyframeSpline.ContainsKey(componentType);
 		}
 
-		public IKeyframeSpline? GetKeyframeSplineOfType<T>() where T : Component {
-			return _allKeyframes[typeof(T)];
+		public bool EntityHasKeyframeAtFrame(int entityId, int frame) {
+			return GetEntityKeyframesAtFrame(entityId, frame).Count() != 0;
 		}
 
-		public bool TryGetAllKeyframesOfType<T>(out IKeyframeSpline componentKeyframeSpline) where T : Component {
-			var componentType = typeof(T);
-
-			if (_allKeyframes.TryGetValue(componentType, out var keyframeSpline)) {
-				componentKeyframeSpline = keyframeSpline;
-				return true;
+		public bool EntityHasKeyframeAtFrameOfType<T>(int entityId, int frame) where T : Component, new() {
+			if (!EntityHasKeyframeAtFrame(entityId, frame)) {
+				return false;
 			}
 
-			componentKeyframeSpline = default!;
-			return false;
+			return GetEntityKeyframeOfType<T>(entityId, frame) != null;
+ 		}
+
+		public void AddKeyframe(IKeyframe<Component> keyframe) {
+			AddKeyframe(keyframe.EntityId, keyframe.Frame, keyframe.Value, keyframe.Ease);
 		}
 
 		public void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component {
-			AddKeyframe(keyframe.EntityId, keyframe.Frame, keyframe.Value);
-		}
-
-		public void AddKeyframe<T>(int entityId, IKeyframe<T> keyframe) where T : Component {
-			AddKeyframe(entityId, keyframe.Frame, keyframe.Value);
+			AddKeyframe(keyframe.EntityId, keyframe.Frame, keyframe.Value, keyframe.Ease);
 		}
 
 		public void AddDefaultKeyframes(int entityId) {
-			AddKeyframe(entityId, new Keyframe<Transform>(entityId));
-			AddKeyframe(entityId, new Keyframe<Shape>(entityId));
-			AddKeyframe(entityId, new Keyframe<Text>(entityId));
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Transform());
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Shape());
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Text());
+
+			//foreach (var componentType in AllComponentTypes) {
+			//	AddDefaultKeyframe(componentType, entityId);
+			//}
 		}
 
-		public void ClearEntityKeyframes(int entityId) { // TODO - Measure a faster way to do this?
-			for (int frame = TimelineData.FIRST_FRAME; frame <= TotalFrames; frame++) {
-				RemoveKeyframe<Transform>(entityId, frame);
+		// TODO - Abstraer esto, el problema es que no puedo crear instancias específicas de Transform, Shape y Text,
+		// todas son tratadas como Component.
+		public void AddDefaultKeyframe(Type componentType, int entityId) {
+			if (!AllComponentTypes.Contains(componentType)) {
+				throw new ArgumentException($"Unsupported component type: {componentType}", nameof(componentType));
 			}
+
+			var component = (Component)Activator.CreateInstance(componentType);
+
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, component);
 		}
 
-		public void RemoveKeyframe<T>(int entityId, int frame) where T : Component {
-			if (!FrameHasKeyframe(frame)) {
-				return;
+		public IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component {
+			var keyframe = new Keyframe<Component>(entityId, frame, value, ease);
+			var componentType = typeof(T);
+
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				_keyframes[entityId] = componentToKeyframeSpline = new Dictionary<Type, IKeyframeSpline>();
 			}
 
-			if (GetKeyframeAt(frame).EntityId == entityId) {
-				_allKeyframes[typeof(T)].Remove(frame);
-			}
-		}
-
-		public IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value) where T : Component {
-			IKeyframe<Component> keyframe = new Keyframe<Component>(entityId, frame, value);
-
-			if (TryGetAllKeyframesOfType<T>(out var componentKeyframeSpline)) {
-				componentKeyframeSpline.Add(frame, keyframe);
-				return keyframe;
+			if (!componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+				componentToKeyframeSpline[componentType] = keyframeSpline = new KeyframeSpline();
 			}
 
-			componentKeyframeSpline = RegisterComponentKeyframes<T>();
-			componentKeyframeSpline.Add(frame, keyframe);
-
+			keyframeSpline.AddKeyframe(frame, keyframe);
+			UnityEngine.Debug.Log("Añadido keyframe: " + keyframe);
 			return keyframe;
 		}
 
-		public IKeyframeSpline? GetEntityKeyframesOfType<T>(int entityId) where T : Component {
-			if (!EntityHasKeyframesOfType<T>(entityId)) {
-				throw new Exception("Entity has no keyframes of type " + typeof(T));
+		public void ClearEntityKeyframes(int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return;
 			}
-			
-			var entityKeyframeSplines = GetEntityKeyframes(entityId);
 
-			foreach (var spline in entityKeyframeSplines) {
-				if (spline[0].Value is T) {
-					return spline;
+			componentToKeyframeSpline.Clear();
+			AddDefaultKeyframes(entityId);
+		}
+
+		public void RemoveKeyframeOfType(Type componentType, int entityId, int frame) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return;
+			}
+
+			if (!componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+				return;
+			}
+
+			if (!keyframeSpline.HasKeyframeAtFrame(frame)) {
+				return;
+			}
+
+			keyframeSpline.RemoveKeyframe(frame);
+		}
+
+		public IKeyframeSpline GetEntityKeyframeSplineOfType(Type componentType, int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				throw new ArgumentException("Entity has no keyframes", entityId.ToString());
+			}
+
+			if (!EntityHasKeyframesOfType(componentType, entityId)) {
+				throw new ArgumentException($"Entity has no keyframes of type {componentType}", componentType.Name);
+			}
+
+			if (!componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+				throw new ArgumentException($"Component has no keyframe spline {componentType}", componentType.Name);
+			}
+
+			return keyframeSpline;
+		}
+
+		public IEnumerable<IKeyframeSpline> GetEntityKeyframeSplines(int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return Enumerable.Empty<IKeyframeSpline>();
+			}
+
+			var entityKeyframeSplines = new List<IKeyframeSpline>();
+
+			foreach (var componentType in componentToKeyframeSpline.Keys) {
+				if (componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+					entityKeyframeSplines.Add(keyframeSpline);
 				}
 			}
 
-			return null;
+			return entityKeyframeSplines;
 		}
 
-		public IEnumerable<IKeyframeSpline> GetEntityKeyframes(int entityId) {
-			var allEntityKeyframes = new List<IKeyframeSpline>(_allKeyframes.Keys.Count);
+		/// <summary> RETURNS A COPY!! </summary>>
+        public IKeyframe<T>? GetEntityKeyframeOfType<T>(int entityId, int frame) where T : Component, new() {
+			var keyframesAtFrame = GetEntityKeyframesAtFrame(entityId, frame);
 
-			foreach (var keyframeSpline in _allKeyframes.Values) {
-				allEntityKeyframes.Add(keyframeSpline.GetEntityKeyframes(entityId));
-			}
-
-			return allEntityKeyframes;
-		}
-
-		public bool FrameHasKeyframe(int frame) {
-			return GetKeyframeAt(frame).EntityId != Entity.Invalid.Id;
-		}
-
-		public bool FrameHasKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
-			bool frameHasKeyframe = FrameHasKeyframe(frame);
-			bool keyframeIsOfTypeT = GetKeyframeOfTypeAt<T>(frame) is not null;
-			return frameHasKeyframe && keyframeIsOfTypeT;
- 		}
-
-		// FIXME - Find a way to not return a copy.
-		/// <summary>
-		/// Returns a !!!COPY!!! of the keyframe of type `T` at given frame.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="frame"></param>
-		/// <returns>A COPY!!!!!!!</returns>
-        public IKeyframe<T>? GetKeyframeOfTypeAt<T>(int frame) where T : Component, new() {
-			if (TryGetAllKeyframesOfType<T>(out var componentKeyframes)) {
-				if (componentKeyframes.TryGetValue(frame, out var keyframe)) {
-					if (keyframe.Value is T keyframeValue) {
-						return new Keyframe<T>(keyframe.EntityId, keyframe.Frame, keyframeValue);
-					}
+			foreach (var keyframe in keyframesAtFrame) {
+				if (keyframe.Value is T value) {
+					return CopyKeyframeWithNewValue(keyframe, value);
 				}
 			}
 
 			return null;
         }
 
-		public IKeyframe<Component> GetKeyframeAt(int frame) {
-			foreach (var componentType in _allKeyframes.Keys) {
-				var componentKeyframes = _allKeyframes[componentType];
-
-				if (componentKeyframes.TryGetValue(frame, out var keyframe)) {
-					return keyframe;
-				}
+		public IEnumerable<IKeyframe<Component>> GetEntityKeyframesAtFrame(int entityId, int frame) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return Array.Empty<IKeyframe<Component>>();
 			}
 
-			return new Keyframe<Component>(Entity.Invalid.Id);
+			var foundKeyframes = new List<IKeyframe<Component>>();
+
+			foreach (var componentType in componentToKeyframeSpline.Keys) {
+				if (componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+					if (keyframeSpline.TryGetValue(frame, out var keyframe)) {
+						foundKeyframes.Add(keyframe);
+					}
+				}
+			}
+			
+			if (foundKeyframes.Count <= 0) {
+				return Enumerable.Empty<IKeyframe<Component>>();
+			}
+
+			return foundKeyframes;
 		}
 
-		public bool EntityHasKeyframesOfAnyType(int entityId) {
-			foreach (var componentType in KeyframeTypes) {
-				var componentKeyframes = _allKeyframes[componentType];
-
-				if (componentKeyframes is null || componentKeyframes.Count <= 0) {
-					continue;
-				}
+		public IEnumerable<Type> GetEntityKeyframeTypes(int entityId) {
+			if (_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				var entityKeyframeTypes = componentToKeyframeSpline.Keys;
 				
-				return componentKeyframes[0].EntityId == entityId;
+				return entityKeyframeTypes.Where(componentType => {
+					var keyframeSpline = componentToKeyframeSpline[componentType];
+					return keyframeSpline.Count > 1; // If this component only has the default keyframe associated, exclude it.
+				});
 			}
 
-			return false;
-		}
-
-		public bool EntityHasKeyframesOfType<T>(int entityId) where T : Component {
-			if (!TryGetAllKeyframesOfType<T>(out var componentKeyframes)) {
-				return false;
-			}
-
-			if (componentKeyframes.Count <= 0) {
-				return false;
-			}
-
-			return componentKeyframes[0].EntityId == entityId;
+			return Enumerable.Empty<Type>();
 		}
 
         public KeyframesData GetKeyframesData() {
 			return new KeyframesData {
-				AllKeyframes = _allKeyframes
+				AllKeyframes = _keyframes
 			};
+		}
+
+		private static IKeyframe<T> CopyKeyframeWithNewValue<T>(IKeyframe<Component> original, T newValue) where T : Component, new() {
+			return new Keyframe<T>(original.EntityId, original.Frame, newValue);
 		}
 
 	}

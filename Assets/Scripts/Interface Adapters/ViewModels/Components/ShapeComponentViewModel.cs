@@ -54,13 +54,13 @@ namespace SimpleMotions {
             });
 
 			OnDeleteShapeKeyframe.Subscribe(() => {
-				var previousShape = GetPreviousShapeKeyframeName(keyframeStorage);
+				var (type, color) = GetPreviousShapeKeyframeName(keyframeStorage);
 
-				SetShape(previousShape.type);
-                SetColor(previousShape.color);
+				SetShape(type);
+                SetColor(color);
 
-				keyframeStorage.RemoveKeyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame());
-				videoCanvas.DisplayEntity(GetSelectedEntityId());
+				keyframeStorage.RemoveKeyframeOfType(typeof(Shape), _SelectedEntityId, _CurrentFrame);
+				videoCanvas.DisplayEntity(_SelectedEntityId);
 			});
 
             OnUpdateShapeKeyframe.Subscribe(shapeView => {
@@ -68,7 +68,7 @@ namespace SimpleMotions {
 			});
 
 			OnImageSelected.Subscribe(imageFilePath => {
-				videoCanvas.OnSetEntityImage.Execute(GetSelectedEntityId(), imageFilePath);
+				videoCanvas.OnSetEntityImage.Execute(_SelectedEntityId, imageFilePath);
 			});
 
             _keyframeStorage = keyframeStorage;
@@ -78,7 +78,7 @@ namespace SimpleMotions {
 
         public void SaveKeyframe(Color color, string shapeName) {
             var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
-            var shapeKeyframe = new Keyframe<Shape>(GetSelectedEntityId(), GetCurrentFrame(), shape);
+            var shapeKeyframe = new Keyframe<Shape>(_SelectedEntityId, _CurrentFrame, shape);
 
             _keyframeStorage.AddKeyframe(shapeKeyframe);
             UnityEngine.Debug.Log($"Keyframe de Shape guardado: {shapeKeyframe}");
@@ -94,13 +94,13 @@ namespace SimpleMotions {
         }
 
         private void UpdateSelectedEntityDisplay() {
-			_videoCanvas.DisplayEntity(GetSelectedEntityId());
+			_videoCanvas.DisplayEntity(_SelectedEntityId);
 		}
 
 		private (string type, Color color) GetPreviousShapeKeyframeName(IKeyframeStorage keyframeStorage) {
-			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
-				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(frame)) {
-					var previousShape = keyframeStorage.GetKeyframeOfTypeAt<Shape>(frame);
+			for (int frame = _CurrentFrame - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
+				if (keyframeStorage.EntityHasKeyframeAtFrameOfType<Shape>(_SelectedEntityId, frame)) {
+					var previousShape = keyframeStorage.GetEntityKeyframeOfType<Shape>(_SelectedEntityId, frame);
 
 					if (previousShape is not null) {
 						return (previousShape.Value.PrimitiveShape.ToString(), previousShape.Value.Color);

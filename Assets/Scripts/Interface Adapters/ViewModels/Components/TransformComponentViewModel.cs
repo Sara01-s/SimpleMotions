@@ -107,8 +107,8 @@ namespace SimpleMotions {
 									 transform => transform.Roll,
 									 (roll, parsedValue) => roll.AngleDegrees = parsedValue);
 
-				keyframeStorage.RemoveKeyframe<Transform>(GetSelectedEntityId(), GetCurrentFrame());
-				videoCanvas.DisplayEntity(GetSelectedEntityId());
+				keyframeStorage.RemoveKeyframeOfType(typeof(Transform), _SelectedEntityId, _CurrentFrame);
+				videoCanvas.DisplayEntity(_SelectedEntityId);
 			});
 
 			OnUpdateTransformKeyframe.Subscribe(transformView => {
@@ -121,7 +121,7 @@ namespace SimpleMotions {
 
 		private void SaveKeyframe(Transform transform) {
 			UnityEngine.Debug.Log(transform);
-			var transformKeyframe = new Keyframe<Transform>(GetSelectedEntityId(), GetCurrentFrame(), transform);
+			var transformKeyframe = new Keyframe<Transform>(_SelectedEntityId, _CurrentFrame, transform);
 			_keyframeStorage.AddKeyframe(transformKeyframe);
 			UnityEngine.Debug.Log($"Keyframe de Transform guardado: {transformKeyframe}");
 		}
@@ -135,13 +135,13 @@ namespace SimpleMotions {
 		}
 
 		private void UpdateSelectedEntityDisplay() {
-			_videoCanvas.DisplayEntity(GetSelectedEntityId());
+			_videoCanvas.DisplayEntity(_SelectedEntityId);
 		}
 
 		private (float posX, float posY, float scaleW, float scaleH, float roll) GetPreviousTransformKeyframe(IKeyframeStorage keyframeStorage) {
-			for (int frame = GetCurrentFrame() - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
-				if (keyframeStorage.FrameHasKeyframeOfTypeAt<Transform>(frame)) {
-					var previousTransform = keyframeStorage.GetKeyframeOfTypeAt<Transform>(frame);
+			for (int frame = _CurrentFrame - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
+				if (keyframeStorage.EntityHasKeyframeAtFrameOfType<Transform>(_SelectedEntityId, frame)) {
+					var previousTransform = keyframeStorage.GetEntityKeyframeOfType<Transform>(_SelectedEntityId, frame);
 
 					if (previousTransform is not null) {
 						return (previousTransform.Value.Position.X, previousTransform.Value.Position.Y,

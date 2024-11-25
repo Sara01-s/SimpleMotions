@@ -29,10 +29,12 @@ namespace SimpleMotions {
 		public ReactiveCommand OnShapeKeyframeDeleted { get; } = new();
 
 		private readonly IVideoPlayerData _videoPlayerData;
+		private readonly IEntitySelector _entitySelector;
+		private int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 
         public VideoTimelineViewModel(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData, IVideoEntities videoEntities,
 									  ITransformComponentViewModel transformComponentViewModel, IKeyframeStorage keyframeStorage,
-									  IShapeComponentViewModel shapeComponentViewModel) 
+									  IShapeComponentViewModel shapeComponentViewModel, IEntitySelector entitySelector) 
 		{
 			videoPlayerData.CurrentFrame.Subscribe(currentFrame => {
 				CurrentFrame.Value = currentFrame;
@@ -42,13 +44,13 @@ namespace SimpleMotions {
 					shapeComponentViewModel.OnFirstKeyframe.Execute();
 				}
 				else {
-					if (keyframeStorage.FrameHasKeyframeOfTypeAt<Transform>(currentFrame)) {
+					if (keyframeStorage.EntityHasKeyframeAtFrameOfType<Transform>(SelectedEntityId, currentFrame)) {
 						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
 					}
 					else {
 						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
 					}
-					if  (keyframeStorage.FrameHasKeyframeOfTypeAt<Shape>(currentFrame)) {
+					if  (keyframeStorage.EntityHasKeyframeAtFrameOfType<Shape>(SelectedEntityId, currentFrame)) {
 						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
 					}
 					else {
@@ -79,6 +81,7 @@ namespace SimpleMotions {
 			});
 
 			_videoPlayerData = videoPlayerData;
+			_entitySelector = entitySelector;
         }
 
     }

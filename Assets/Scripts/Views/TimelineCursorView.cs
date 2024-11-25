@@ -40,7 +40,7 @@ public class TimelineCursorView : MonoBehaviour {
             rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _transformKeyframeYPosition);
             rect.transform.SetParent(_keyframesHolder.transform);
 
-            _transformKeyframes.Add((int)_cursor.value, transformKeyframe);
+//            _transformKeyframes.Add((int)_cursor.value, transformKeyframe);
         });
 
         videoTimelineViewModel.OnTransfromKeyframeDeleted.Subscribe(() => {
@@ -60,7 +60,7 @@ public class TimelineCursorView : MonoBehaviour {
             rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _shapeKeyframeYPosition);
             rect.transform.SetParent(_keyframesHolder.transform);
 
-            _shapeKeyframes.Add((int)_cursor.value, shapeKeyframe);
+//            _shapeKeyframes.Add((int)_cursor.value, shapeKeyframe);
         });
 
         videoTimelineViewModel.OnShapeKeyframeDeleted.Subscribe(() => {
