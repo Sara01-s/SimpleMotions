@@ -22,7 +22,7 @@ public class TimelineCursorView : MonoBehaviour {
     //              EntityId    ->       Component     ->      Frame -> Keyframe
     private Dictionary<int, Dictionary<ComponentType, Dictionary<int, GameObject>>> _entityComponentKeyframes = new();  
 
-    public void Configure(IVideoTimelineViewModel videoTimelineViewModel) {
+    public void Configure(IVideoTimelineViewModel videoTimelineViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
         _videoTimelineViewModel = videoTimelineViewModel;
 
         _cursor.onValueChanged.AddListener(value => {
@@ -62,6 +62,10 @@ public class TimelineCursorView : MonoBehaviour {
         videoTimelineViewModel.OnShapeKeyframeDeleted.Subscribe(shapeEntityKeyframe => {
             RemoveKeyframe(shapeEntityKeyframe);
         });
+
+        entitySelectorViewModel.OnEntitySelected.Subscribe(entitySelected => {
+            ShowEntityKeyframes(entitySelected.Id);
+        });
     }
 
     private void AddKeyframe(EntityKeyframe entityKeyframe, GameObject keyframeToAdd) {
@@ -99,6 +103,26 @@ public class TimelineCursorView : MonoBehaviour {
                 }
             }
         }
+    }
+
+    private void ShowEntityKeyframes(int entityId) {
+        if (_entityComponentKeyframes.TryGetValue(entityId, out var componentsByType)) {
+            foreach (var componentType in componentsByType.Keys) {
+                if (componentsByType.TryGetValue(componentType, out var frameByType)) {
+                    foreach (var frame in frameByType.Keys) {
+                        if (frameByType.TryGetValue(frame, out var keyframe)) {
+                            keyframe.SetActive(true);
+
+                            Debug.Log($"Activado el keyframe de nombre: {keyframe.name}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void HideEntityKeyframes(int entityId) {
+        
     }
 
     public void SetCursorNewFrame(int currentFrame) {

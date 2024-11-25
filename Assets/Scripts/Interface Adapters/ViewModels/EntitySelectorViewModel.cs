@@ -21,6 +21,8 @@ namespace SimpleMotions {
         public int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 		public bool HasSelectedEntity => _entitySelector.HasSelectedEntity;
 
+		public ReactiveCommand<EntityKeyframe> OnEntitySelectedChaged { get; } = new();
+
 		private readonly IEntitySelector _entitySelector;
 
         public EntitySelectorViewModel(IEntitySelector entitySelector, IVideoCanvas videoCanvas) : base(videoCanvas) {

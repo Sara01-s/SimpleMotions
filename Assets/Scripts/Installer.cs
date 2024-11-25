@@ -152,7 +152,7 @@ namespace SimpleMotions {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
 			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>(), _services.GetService<IEntitySelectorViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
-			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
+			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>(), _services.GetService<IEntitySelectorViewModel>());
 			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
