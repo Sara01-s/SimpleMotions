@@ -2,7 +2,8 @@
 namespace SimpleMotions {
 
     public interface IExportViewModel {
-
+		
+		// TODO - Use DTO
         ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath, string fileName)> OnExport { get; }
         ReactiveValue<int> CurrentFrame { get; }
 		

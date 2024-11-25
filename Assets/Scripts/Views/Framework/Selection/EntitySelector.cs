@@ -2,7 +2,7 @@ using UnityEngine;
 using SimpleMotions;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Selectable : MonoBehaviour {
+public class EntitySelector : MonoBehaviour {
 
 	public int OwnerId { get; private set; } = -1;
 
@@ -14,11 +14,15 @@ public class Selectable : MonoBehaviour {
 	}
 
 	private void OnMouseDown() {
+		Select();
+	}
+
+	public void Select() {
 		if (OwnerId == -1) {
 			Debug.LogError("Assign a valid owner id to selectable");
 		}
 
-		print("Entiidad clickeada, seleccionando: " + OwnerId);
+		print("Entidad clickeada, seleccionando: " + OwnerId);
 		_entitySelectorViewModel.SelectEntity.Execute(OwnerId);
 	}
 	

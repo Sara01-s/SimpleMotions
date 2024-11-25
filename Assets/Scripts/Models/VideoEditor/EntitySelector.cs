@@ -38,6 +38,7 @@ namespace SimpleMotions {
 		}
 
 		public void DeselectEntity() {
+			UnityEngine.Debug.Log($"Entidad {SelectedEntity} deseleccionada.");
 			SelectedEntity = Entity.Invalid;
 			OnEntityDeselected.Execute();
 		}

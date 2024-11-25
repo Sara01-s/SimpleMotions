@@ -8,14 +8,14 @@ namespace SimpleMotions {
 		void ToggleEntityActive(int entityId, bool isActive);
 		Entity GetEntity(int entityId);
 
-		ReactiveCommand<int, string> OnEntityNameChanged { get; }
+		ReactiveCommand<EntityDTO> OnEntityNameChanged { get; }
 
 	}
 
 	public class EntityViewModel : IEntityViewModel {
 
 		private readonly IEntityStorage _entityStorage;
-		public ReactiveCommand<int, string> OnEntityNameChanged { get; } = new();
+		public ReactiveCommand<EntityDTO> OnEntityNameChanged { get; } = new();
 
 		public EntityViewModel(IEntityStorage entityStorage) {
 			_entityStorage = entityStorage;
@@ -27,7 +27,7 @@ namespace SimpleMotions {
 
 		public void ChangeEntityName(int entityId, string newName) {
 			_entityStorage.GetEntity(entityId).Name = newName;
-			OnEntityNameChanged.Execute(entityId, newName);
+			OnEntityNameChanged.Execute(new EntityDTO(entityId, newName));
 		}
 
 		public void ToggleEntityActive(int entityId, bool isActive) {

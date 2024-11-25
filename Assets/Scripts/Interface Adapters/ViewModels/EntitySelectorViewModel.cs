@@ -4,6 +4,7 @@ namespace SimpleMotions {
 		
 		public int SelectedEntityId { get; }
 		ReactiveCommand<int> SelectEntity { get; }
+		ReactiveCommand DeselectEntity { get; }
 		ReactiveCommand<EntityDTO> OnEntitySelected { get; }
 		ReactiveCommand OnEntityDeselected { get; }
 		bool HasSelectedEntity { get; }
@@ -16,12 +17,14 @@ namespace SimpleMotions {
 
 		public ReactiveCommand<EntityDTO> OnEntitySelected { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
-		public ReactiveCommand<int> SelectEntity { get; private set; } = new();
+		public ReactiveCommand<int> SelectEntity { get; } = new();
+		public ReactiveCommand DeselectEntity { get; } = new();
 
         public int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 		public bool HasSelectedEntity => _entitySelector.HasSelectedEntity;
 
 		public ReactiveCommand<KeyframeDTO> OnEntitySelectedChaged { get; } = new();
+
 
 		private readonly IEntitySelector _entitySelector;
 
@@ -31,6 +34,7 @@ namespace SimpleMotions {
 				OnEntitySelected.Execute(new EntityDTO(entity.Id, entity.Name));
 			});
 
+			DeselectEntity.Subscribe(entitySelector.DeselectEntity);
 			SelectEntity.Subscribe(entitySelector.SelectEntity);
 			_entitySelector = entitySelector;
         }

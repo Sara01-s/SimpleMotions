@@ -4,14 +4,16 @@ namespace SimpleMotions {
     public interface IInspectorViewModel : IComponentViewModel {
 
 		string SelectedEntityName { get; set; }
-        ReactiveCommand<(int id, string name)> OnEntitySelected { get; }
+        ReactiveCommand<EntityDTO> OnEntitySelected { get; }
+		ReactiveCommand OnEntityDeselected { get; }
 		ReactiveCommand OnClearInspector { get; }
 
     }
 
     public class InspectorViewModel : ComponentViewModel, IInspectorViewModel {
 
-        public ReactiveCommand<(int id, string name)> OnEntitySelected { get; } = new();
+        public ReactiveCommand<EntityDTO> OnEntitySelected { get; } = new();
+        public ReactiveCommand OnEntityDeselected { get; } = new();
 		public ReactiveCommand OnClearInspector { get; } = new();
 		public string SelectedEntityName {
 			get => _selectedEntityName.Value;
@@ -25,10 +27,15 @@ namespace SimpleMotions {
         public InspectorViewModel(IVideoCanvas videoCanvas, IVideoAnimator videoAnimator,
 								  IEntitySelector entitySelector, IEntityViewModel entityViewModel) : base(videoCanvas) 
 		{
-            videoCanvas.EntityDisplayInfo.Subscribe(UpdateEntityInfo);
+            videoCanvas.EntityDisplayInfo.Subscribe(entity => UpdateEntityInfo(new EntityDTO(entity.Id, entity.Name)));
 			videoCanvas.OnEntityRemoved.Subscribe(_ => OnClearInspector.Execute());
-            videoAnimator.EntityDisplayInfo.Subscribe(UpdateEntityInfo);
-			entityViewModel.OnEntityNameChanged.Subscribe((id, name) => UpdateEntityInfo((id, name)));
+
+            videoAnimator.EntityDisplayInfo.Subscribe(entity => UpdateEntityInfo(new EntityDTO(entity.Id, entity.Name)));
+
+			entityViewModel.OnEntityNameChanged.Subscribe(UpdateEntityInfo);
+			
+			entitySelector.OnEntitySelected.Subscribe(entity => UpdateEntityInfo(new EntityDTO(entity.Id, entity.Name)));
+			entitySelector.OnEntityDeselected.Subscribe(OnEntityDeselected.Execute);
 
 			_entitySelector = entitySelector;
 			_entityViewModel = entityViewModel;
@@ -39,8 +46,8 @@ namespace SimpleMotions {
 			_entityViewModel.ChangeEntityName(_entitySelector.SelectedEntity.Id, newName);
 		}
 
-        private void UpdateEntityInfo((int id, string name) entity) {
-            OnEntitySelected.Execute(entity);
+        private void UpdateEntityInfo(EntityDTO entityDTO) {
+            OnEntitySelected.Execute(entityDTO);
         }
 
     }

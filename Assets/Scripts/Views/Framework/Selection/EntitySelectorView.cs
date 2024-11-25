@@ -13,10 +13,11 @@ public class EntitySelectorView : MonoBehaviour {
 	private IEntitySelectorViewModel _entitySelectorViewModel;
 	private Camera _editorCamera;
 
-	public void Configure(IEntitySelectorViewModel entitySelectorViewModel) {
+	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel) {
 		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
-		_entitySelectorViewModel = entitySelectorViewModel;
+
+		videoCanvasViewModel.OnCanvasUpdate.Subscribe(DrawSelectionGizmoOverEntity);
 
 		foreach (var selectionGizmoPart in _selectionGizmoParts) {
 			selectionGizmoPart.Configure(entitySelectorViewModel, _editorCanvas.worldCamera, (RectTransform)_editorCanvas.transform);
@@ -24,6 +25,7 @@ public class EntitySelectorView : MonoBehaviour {
 		}
 
 		_editorCamera = _editorCanvas.worldCamera;
+		_entitySelectorViewModel = entitySelectorViewModel;
 	}
 
 	private void HideSelectionGizmo() {

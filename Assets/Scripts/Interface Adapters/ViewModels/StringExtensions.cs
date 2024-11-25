@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 
 public static class StringExtensions {
+	
     public static float ParseFloat(string value) {
         if (string.IsNullOrWhiteSpace(value)) {
             throw new ArgumentException("Tried to parse an empty string.");

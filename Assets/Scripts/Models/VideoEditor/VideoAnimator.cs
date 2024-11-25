@@ -8,7 +8,7 @@ namespace SimpleMotions {
         
         void GenerateVideoCache();
         void InterpolateAllEntities(int currentFrame);
-		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
+		ReactiveValue<Entity> EntityDisplayInfo { get; }
 
     }
 
@@ -26,7 +26,7 @@ namespace SimpleMotions {
 		private IKeyframeSpline _currentComponentSpline;
 		private Component _currentInterpolatedComponent;
 
-		public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
+		public ReactiveValue<Entity> EntityDisplayInfo { get; } = new();
 		
 		public VideoAnimator(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
 							 IEntityStorage entityStorage, IInterpolator interpolator) {
@@ -99,9 +99,7 @@ namespace SimpleMotions {
 		}
 
 		private void SendInterpolationData(int entityId) {
-			// Send updated data to view.
-			var entity = _entityStorage.GetEntity(entityId);
-			EntityDisplayInfo.Value = (entity.Id, entity.Name);
+			EntityDisplayInfo.Value = _entityStorage.GetEntity(entityId);
 		}
 
 	}

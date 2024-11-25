@@ -9,7 +9,7 @@ namespace SimpleMotions {
 		void SetBackgroundColor(Color color);
 		bool EntityHasComponent<T>(int entityId) where T : Component;
 		T GetEntityComponent<T>(int entityId) where T : Component;
-		ReactiveValue<(int, string)> EntityDisplayInfo { get; }
+		ReactiveValue<Entity> EntityDisplayInfo { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }
 		ReactiveCommand<int, string> OnSetEntityImage { get; }
 
@@ -20,7 +20,7 @@ namespace SimpleMotions {
 		private readonly IComponentStorage _componentStorage;
 		private readonly IEntityStorage _entityStorage;
 
-        public ReactiveValue<(int, string)> EntityDisplayInfo { get; } = new();
+        public ReactiveValue<Entity> EntityDisplayInfo { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 		public ReactiveCommand<int, string> OnSetEntityImage { get; } = new();
 
@@ -52,7 +52,7 @@ namespace SimpleMotions {
 		}
 
 		public void DisplayEntity(Entity entity) {
-			EntityDisplayInfo.Value = (entity.Id, entity.Name);
+			EntityDisplayInfo.Value = entity;
 		}
 
         public void SetBackgroundColor(Color color) {

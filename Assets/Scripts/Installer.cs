@@ -27,6 +27,7 @@ namespace SimpleMotions {
 		[SerializeField] private FullscreenView _fullscreenView;
 		[SerializeField] private FullscreenPlaybackView _fullscreenPlaybackView;
 		[SerializeField] private ExportView _exportView;
+		[SerializeField] private EntityDeselector _entityDeselector;
 
 		[Header("Data")]
 		[SerializeField] private string _projectName;
@@ -156,8 +157,8 @@ namespace SimpleMotions {
 			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
-			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>(), _editorPainter);
-			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>());
+			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>());
+			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
@@ -168,6 +169,7 @@ namespace SimpleMotions {
 			_fullscreenView			.Configure();
 			_fullscreenPlaybackView	.Configure();
 			_exportView				.Configure(_services.GetService<IExportViewModel>());
+			_entityDeselector		.Configure(_services.GetService<IEntitySelectorViewModel>());
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.Configure();

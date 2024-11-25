@@ -20,5 +20,4 @@ public abstract class ComponentView : MonoBehaviour {
 
     protected bool _FrameHasKeyframe;
 
-
 }

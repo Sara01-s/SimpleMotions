@@ -56,7 +56,7 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 	}
 
 	protected void _SetSelectedEntityScale(Vector2 scale) {
-        _entitySelectorViewModel.SetEntityScale(SelectedEntityId, (scale.x, scale.y));
+		_entitySelectorViewModel.SetEntityScale(SelectedEntityId, (scale.x, scale.y));
 		OnEntityChanged.Execute(new EntityDTO(SelectedEntityId));
 	}
 

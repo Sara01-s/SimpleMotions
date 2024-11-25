@@ -10,16 +10,15 @@ public class InspectorView : MonoBehaviour {
 	[SerializeField] private GameObject _textComponent;
 
 	private IInspectorViewModel _inspectorViewModel;
-	private EditorPainter _editorPainter;
 
-    public void Configure(IInspectorViewModel inspectorViewModel, EditorPainter editorPainter) {
-        _inspectorViewModel = inspectorViewModel;
-		_editorPainter = editorPainter;
-
+    public void Configure(IInspectorViewModel inspectorViewModel) {
 		_selectedEntityName.onValueChanged.AddListener(name => inspectorViewModel.SelectedEntityName = name);
+
 		inspectorViewModel.OnEntitySelected.Subscribe(UpdateInspector);
+		inspectorViewModel.OnEntityDeselected.Subscribe(ClearInspector);
 		inspectorViewModel.OnClearInspector.Subscribe(ClearInspector);
 
+        _inspectorViewModel = inspectorViewModel;
 		InitializeUI();
     }
 
@@ -34,12 +33,14 @@ public class InspectorView : MonoBehaviour {
 		_selectedEntityName.text = string.Empty;
 	}
 
-    private void UpdateInspector((int id, string name) entity) {
-        _selectedEntityName.text = entity.name;
+    private void UpdateInspector(EntityDTO entityDTO) {
+        _selectedEntityName.text = entityDTO.Name;
 
-		CheckTransformComponent(entity.id);
-		CheckShapeComponent(entity.id);
-		CheckTextComponent(entity.id);
+		CheckTransformComponent(entityDTO.Id);
+		CheckShapeComponent(entityDTO.Id);
+		CheckTextComponent(entityDTO.Id);
+
+		print($"datos recibidos de entidad con id: {entityDTO.Id}");
     }
 
 	private void CheckTransformComponent(int entityId) {

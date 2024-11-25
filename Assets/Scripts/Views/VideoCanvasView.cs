@@ -50,8 +50,8 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		};
 	}
 
-	private void OnUpdateCanvas((int id, string name) entity) {
-		UpdateEntityDisplay(entity);
+	private void OnUpdateCanvas(EntityDTO entityDTO) {
+		UpdateEntityDisplay(entityDTO);
 	}
 
 	private void RemoveEntity(int entityId) {
@@ -63,14 +63,14 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		}
 	}
 
-	private void UpdateEntityDisplay((int id, string name) entity) {
+	private void UpdateEntityDisplay(EntityDTO entityDTO) {
 		// entity not registered, create it.
-		if (!_displayedEntites.ContainsKey(entity.id)) {
-			DisplayNewEntity(entity.id, entity.name);
+		if (!_displayedEntites.ContainsKey(entityDTO.Id)) {
+			DisplayNewEntity(entityDTO.Id, entityDTO.Name);
 		}
 
 		// entity already registered, update it.
-		UpdateEntityDisplay(entity.id);
+		UpdateEntityDisplay(entityDTO.Id);
 	}
 
 	private void DisplayNewEntity(int entityId, string entityName) {
@@ -82,7 +82,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		displayedEntity.transform.SetParent(_canvasOrigin);
 		displayedEntity.transform.localPosition = Vector2.zero;
 		displayedEntity.transform.name = entity;
-		displayedEntity.AddComponent<Selectable>().Configure(entityId, _entitySelectorViewModel);
+		displayedEntity.AddComponent<EntitySelector>().Configure(entityId, _entitySelectorViewModel);
 
 		_displayedEntites.Add(entityId, displayedEntity);
 
@@ -129,6 +129,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		}
 	}
 
+	// TODO - Use color DTO?
 	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
 		_background.color = new Color(color.r, color.g, color.b, color.a);
 	}
