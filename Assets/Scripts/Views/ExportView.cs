@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections;
 using SimpleMotions;
 using UnityEngine;
@@ -17,7 +16,7 @@ public class ExportView : MonoBehaviour {
     private IExportViewModel _exportViewModel;
 
     public void Configure(IExportViewModel exportViewModel) {
-        exportViewModel.OnExport.Subscribe(StartExport);
+        exportViewModel.OnExportStart.Subscribe(StartExport);
         _exportViewModel = exportViewModel;
     }
 
@@ -61,6 +60,7 @@ public class ExportView : MonoBehaviour {
 		}
 
 		Debug.Log("Exportación completada.");
+		_exportViewModel.OnExportEnd.Execute();
 
 		_exportViewModel.CurrentFrame.Value = 0;
 		_fullscreen.SetDefaultScreen();

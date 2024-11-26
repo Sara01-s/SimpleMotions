@@ -160,7 +160,7 @@ namespace SimpleMotions {
 			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>());
-			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>(), _services.GetService<IVideoCanvasViewModel>(), _services.GetService<IFullscreenViewModel>(), _services.GetService<IVideoPlaybackViewModel>());
+			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>(), _services.GetService<IVideoCanvasViewModel>(), _services.GetService<IFullscreenViewModel>(), _services.GetService<IVideoPlaybackViewModel>(), _services.GetService<IExportViewModel>());
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());

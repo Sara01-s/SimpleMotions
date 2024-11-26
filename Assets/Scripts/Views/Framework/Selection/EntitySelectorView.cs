@@ -14,7 +14,10 @@ public class EntitySelectorView : MonoBehaviour {
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private Camera _editorCamera;
 
-	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel, IVideoPlaybackViewModel videoPlaybackViewModel, IFullscreenViewModel fullscreenViewModel) {
+	private bool _isExporting;
+
+	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel, 
+						  IFullscreenViewModel fullscreenViewModel, IVideoPlaybackViewModel videoPlaybackViewModel, IExportViewModel exportViewModel) {
 		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 
@@ -26,6 +29,12 @@ public class EntitySelectorView : MonoBehaviour {
 		}
 		
 		fullscreenViewModel.OnFullscreen.Subscribe(() => HideSelectionGizmo());
+		exportViewModel.OnExportEnd.Subscribe(() => _isExporting = false);
+		exportViewModel.OnExportStart.Subscribe(_ => { 
+			_isExporting = true;
+			HideSelectionGizmo();
+		});
+
 
 		_editorCamera = _editorCanvas.worldCamera;
 		_entitySelectorViewModel = entitySelectorViewModel;
@@ -50,7 +59,7 @@ public class EntitySelectorView : MonoBehaviour {
 			return;
 		}
 
-		if (!_entitySelectorViewModel.TryGetEntityTransform(entityDTO.Id, out var transformDTO)) {
+		if (!_entitySelectorViewModel.TryGetEntityTransform(entityDTO.Id, out var transformDTO) || _isExporting) {
 			return;
 		}
 
