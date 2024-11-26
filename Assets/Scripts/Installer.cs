@@ -28,6 +28,7 @@ namespace SimpleMotions {
 		[SerializeField] private FullscreenPlaybackView _fullscreenPlaybackView;
 		[SerializeField] private ExportView _exportView;
 		[SerializeField] private EntityDeselector _entityDeselector;
+		[SerializeField] private CameraSelector _cameraSelector;
 
 		[Header("Data")]
 		[SerializeField] private string _projectName;
@@ -103,6 +104,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IVideoSettingsViewModel, 		VideoSettingsViewModel>();
 			_services.RegisterService<IExportSettingsViewModel, 	ExportSettingsViewModel>();
 			_services.RegisterService<IExportViewModel, 			ExportViewModel>();
+			_services.RegisterService<ICameraSelectorViewModel, 	CameraSelectorViewModel>();
 
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -171,6 +173,7 @@ namespace SimpleMotions {
 			_exportView				.Configure(_services.GetService<IExportViewModel>());
 			_entityDeselector		.Configure(_services.GetService<IEntitySelectorViewModel>());
 			_colorPickerView		.Configure();
+			_cameraSelector			.Configure(_services.GetService<ICameraSelectorViewModel>());
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.Configure();

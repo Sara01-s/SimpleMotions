@@ -14,15 +14,23 @@ public class ExportView : MonoBehaviour {
 	[SerializeField] private ComputeShader _exportVideo;
 
     private IExportViewModel _exportViewModel;
+	private Coroutine _exportFrames;
+
+	private bool _exportSttoped;
 
     public void Configure(IExportViewModel exportViewModel) {
         exportViewModel.OnExportStart.Subscribe(StartExport);
         _exportViewModel = exportViewModel;
     }
 
+	public void CancelExport() {
+		_exportSttoped = true;
+	}
+
     private void StartExport((int totalFrames, int targetFrameRate, string outputFilePath, string fileName) data) {
+		_exportSttoped = false;
         _fullscreen.SetFullscreen(withPlayback: false);
-        StartCoroutine(CO_ExportFrames(data.totalFrames, data.targetFrameRate, data.outputFilePath, data.fileName));
+        _exportFrames = StartCoroutine(CO_ExportFrames(data.totalFrames, data.targetFrameRate, data.outputFilePath, data.fileName));
     }
 
 	private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
@@ -36,6 +44,10 @@ public class ExportView : MonoBehaviour {
 		var outputTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.RGBA32, false);
 
 		for (int frame = 0; frame <= totalFrames; frame++) {
+			if (_exportSttoped) {
+				break;
+			}
+
 			_exportViewModel.CurrentFrame.Value = frame;
 
 			byte[] frameBytes = GetFrameAsPng(processedRT, outputTexture);
@@ -53,7 +65,9 @@ public class ExportView : MonoBehaviour {
 		Destroy(processedRT);
 		Destroy(outputTexture);
 
-		_ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, fileName, targetFrameRate);
+		if (!_exportSttoped) {
+			_ffmpegExporter.GenerateVideo(tempFrameImagesFilePath, outputFilePath, fileName, targetFrameRate);
+		}
 
 		if (Directory.Exists(tempFrameImagesFilePath)) {
 			Directory.Delete(tempFrameImagesFilePath, recursive: true);
