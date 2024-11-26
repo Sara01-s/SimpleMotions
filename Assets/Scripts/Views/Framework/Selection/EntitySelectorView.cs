@@ -13,7 +13,7 @@ public class EntitySelectorView : MonoBehaviour {
 	private IEntitySelectorViewModel _entitySelectorViewModel;
 	private Camera _editorCamera;
 
-	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel) {
+	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel, IFullscreenViewModel fullscreenViewModel) {
 		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 
@@ -23,6 +23,8 @@ public class EntitySelectorView : MonoBehaviour {
 			selectionGizmoPart.Configure(entitySelectorViewModel, _editorCanvas.worldCamera, (RectTransform)_editorCanvas.transform);
 			selectionGizmoPart.OnEntityChanged.Subscribe(DrawSelectionGizmoOverEntity);
 		}
+		
+		fullscreenViewModel.OnFullscreen.Subscribe(() => HideSelectionGizmo());
 
 		_editorCamera = _editorCanvas.worldCamera;
 		_entitySelectorViewModel = entitySelectorViewModel;

@@ -88,6 +88,7 @@ namespace SimpleMotions {
 			_services.RegisterService<IExportModel, 	 ExportModel>();
 
 			// ViewModels
+			_services.RegisterService<IFullscreenViewModel, 		FullscreenViewModel>();
 			_services.RegisterService<IVideoPlaybackViewModel, 		VideoPlaybackViewModel>();
 			_services.RegisterService<IVideoTimelineViewModel, 		VideoTimelineViewModel>();
 			_services.RegisterService<ITimelinePanelViewModel, 		TimelinePanelViewModel>();
@@ -99,9 +100,9 @@ namespace SimpleMotions {
 			_services.RegisterService<ITextComponentViewModel, 		TextComponentViewModel>();
 			_services.RegisterService<IInputValidator, 				InputValidator>();
 			_services.RegisterService<IEntityViewModel,				EntityViewModel>();
-			_services.RegisterService<IVideoSettingsViewModel, 	VideoSettingsViewModel>();
-			_services.RegisterService<IExportSettingsViewModel, ExportSettingsViewModel>();
-			_services.RegisterService<IExportViewModel, ExportViewModel>();
+			_services.RegisterService<IVideoSettingsViewModel, 		VideoSettingsViewModel>();
+			_services.RegisterService<IExportSettingsViewModel, 	ExportSettingsViewModel>();
+			_services.RegisterService<IExportViewModel, 			ExportViewModel>();
 
 			// DO NOT CHANGE ORDER OF EXECUTION.
 			BuildStorage();
@@ -151,6 +152,7 @@ namespace SimpleMotions {
 
 		private void BuildGUI() {
 			_editorPainterParser = _services.GetService<IEditorPainterParser>();
+			_fullscreenView			.Configure(_services.GetService<IFullscreenViewModel>());
 			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>(), _services.GetService<IEntitySelectorViewModel>());
             _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>());
 			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>(), _services.GetService<IEntitySelectorViewModel>());
@@ -158,14 +160,13 @@ namespace SimpleMotions {
 			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
 			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
 			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>());
-			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>(), _services.GetService<IVideoCanvasViewModel>());
+			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>(), _services.GetService<IVideoCanvasViewModel>(), _services.GetService<IFullscreenViewModel>());
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_editorSettingsView		.Configure();
 			_exportSettingsView		.Configure(_services.GetService<IExportSettingsViewModel>(), _inputValidator);
-			_fullscreenView			.Configure();
 			_fullscreenPlaybackView	.Configure();
 			_exportView				.Configure(_services.GetService<IExportViewModel>());
 			_entityDeselector		.Configure(_services.GetService<IEntitySelectorViewModel>());

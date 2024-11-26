@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
+using SimpleMotions;
 
 public class FullscreenView : MonoBehaviour {
 
@@ -35,7 +36,9 @@ public class FullscreenView : MonoBehaviour {
     private Vector3 _defaultBackgroundSize;
     private Vector3 _defaultBackgroundPosition;
 
-    public void Configure() {
+    private IFullscreenViewModel _fullscreenViewModel;
+
+    public void Configure(IFullscreenViewModel fullscreenViewModel) {
         _defaultCanvasSize = _videoCanvas.sizeDelta;
         _defaultPlaybackSize = _videoPlayback.sizeDelta;
         _defaultBackgroundSize = _background.sizeDelta;
@@ -52,6 +55,7 @@ public class FullscreenView : MonoBehaviour {
 
 		CenterVideoCanvasOrigin();
 		_defaultCanvasOrigin = _videoCanvasOrigin.transform.position;
+        _fullscreenViewModel = fullscreenViewModel;
     }
 
 	private void CenterVideoCanvasOrigin() {
@@ -85,6 +89,8 @@ public class FullscreenView : MonoBehaviour {
         _background.sizeDelta = new Vector2(_fullscreenWidth, _fullscreenHeight);
 
         _editorCanvas.sortingOrder = _fullscreenSortingOrder;
+
+        _fullscreenViewModel.OnFullscreen.Execute();
     }
 
     public void SetDefaultScreen() {
@@ -112,6 +118,8 @@ public class FullscreenView : MonoBehaviour {
         _background.anchoredPosition = _defaultBackgroundPosition;
 
         _editorCanvas.sortingOrder = _defaultScreenSortingOrder;
+
+        _fullscreenViewModel.OnFullscreen.Execute();
     }
 
     private float TranslateCameraToWorldPosition() {
