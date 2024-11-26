@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6238244654534952074}
   m_Layer: 5
   m_Name: Image - Keyframe
-  m_TagString: Untagged
+  m_TagString: AccentColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

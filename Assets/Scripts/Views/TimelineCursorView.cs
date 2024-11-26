@@ -33,7 +33,6 @@ public class TimelineCursorView : MonoBehaviour {
         videoTimelineViewModel.OnDrawTransformKeyframe.Subscribe(transformKeyframeDTO => {
             var transformKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
             var keyframeRect = transformKeyframe.GetComponent<RectTransform>();
-            transformKeyframe.GetComponent<Image>().color = Color.blue;
 
             float keyframeXPosition;
 
@@ -55,7 +54,6 @@ public class TimelineCursorView : MonoBehaviour {
         videoTimelineViewModel.OnDrawShapeKeyframe.Subscribe(shapeKeyframeDTO => {
             var shapeKeyframe = Instantiate(_keyframePrefab, parent: _cursorHandle);
             var keyframeRect = shapeKeyframe.GetComponent<RectTransform>();
-            shapeKeyframe.GetComponent<Image>().color = Color.red;
 
 			float keyframeXPosition;
 
