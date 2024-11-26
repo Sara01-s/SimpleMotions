@@ -11435,11 +11435,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _horizontalScrollbar: {fileID: 572687639}
+  _editorPainter: {fileID: 524110107}
   _content: {fileID: 956124294}
   _framesHolder: {fileID: 774283771}
-  _framePrefab: {fileID: 6172985303513405951, guid: e59e605ac560bc686b0b36fdfb7ba4b0, type: 3}
+  _keyframePrefab: {fileID: 4010176895635531034, guid: a8fe67b5e1b675248afcace9d916e474, type: 3}
   _headerView: {fileID: 1672038235}
   _cursorView: {fileID: 1283388020}
+  _transformKeyframeYPosition: 41.125
+  _shapeKeyframeYPosition: -24.25
 --- !u!222 &975421504
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16356,14 +16359,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840541d3ac7d563cba53a05b4360077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cursorHandle: {fileID: 315715043}
-  _keyframePrefab: {fileID: 4010176895635531034, guid: a8fe67b5e1b675248afcace9d916e474, type: 3}
   _sliderArea: {fileID: 1688799830}
   _framesHolder: {fileID: 774283772}
   _cursor: {fileID: 1283388019}
-  _keyframesHolder: {fileID: 1528097741}
-  _transformKeyframeYPosition: 41.125
-  _shapeKeyframeYPosition: -24.25
 --- !u!1 &1287091896
 GameObject:
   m_ObjectHideFlags: 0

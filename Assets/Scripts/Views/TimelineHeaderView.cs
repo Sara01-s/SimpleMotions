@@ -30,7 +30,7 @@ public class TimelineHeaderView : MonoBehaviour {
     private void DrawHeader() {
         ConfigureTimelineHeaderSize();
 
-        for (int i = 0; i < _videoTimelineViewModel.TotalFrameCount + 1; i++) {
+        for (int i = 0; i <= _videoTimelineViewModel.TotalFrameCount; i++) {
 			var header = Instantiate(_headerPrefab, parent: _headerHolder.transform);
             header.name = $"Header_{i}";
 

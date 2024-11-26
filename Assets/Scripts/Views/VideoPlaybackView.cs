@@ -79,7 +79,8 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 			totalFrames = _inputValidator.ValidateComponentInput(totalFrames);
 			int.TryParse(totalFrames, out int newTotalFrames);
 
-			if (newTotalFrames >= minFrames || newTotalFrames >= maxFrames) {
+			// TODO - Ver porque deja poner 10_000
+			if (newTotalFrames >= minFrames || newTotalFrames < maxFrames) {
 				_videoPlaybackViewModel.OnSetTotalFrames.Execute(newTotalFrames);
 				_timelineView.RefreshUI();
 			}

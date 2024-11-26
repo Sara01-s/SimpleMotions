@@ -61,7 +61,7 @@ public class SelectionGizmoSide : SelectionGizmo {
             scaleDirection.y * (newEntityScale.y - _startEntityScale.y) * 0.5f
         );
 
-        var scaleCenterOffsetWorld = new Vector2(
+        var scaleCenterOffsetWorld = new Vector2 (
             cos * scaleCenterOffset.x - sin * scaleCenterOffset.y,
             sin * scaleCenterOffset.x + cos * scaleCenterOffset.y
         );
