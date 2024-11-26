@@ -19,12 +19,16 @@ namespace SimpleMotions {
         private readonly IExportModel _exportModel;
         private readonly IVideoPlayerData _videoPlayerData;
 
-        public ExportViewModel(IExportModel exportModel, IVideoPlayerData videoPlayerData) {
+        public ExportViewModel(IExportModel exportModel, IVideoPlayerData videoPlayerData, IEntitySelectorViewModel entitySelectoViewModel) {
             _exportModel = exportModel;
             _videoPlayerData = videoPlayerData;
 
-            _exportModel.OnExport.Subscribe(OnExportStart.Execute);
+            _exportModel.OnExport.Subscribe(exportSettings => {
+                entitySelectoViewModel.DeselectEntity.Execute();
+                OnExportStart.Execute(exportSettings);
+            });
             CurrentFrame.Subscribe(currentFrame => _videoPlayerData.CurrentFrame.Value = currentFrame);
+
         }
 
     }

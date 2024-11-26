@@ -14,7 +14,6 @@ public class ExportView : MonoBehaviour {
 	[SerializeField] private ComputeShader _exportVideo;
 
     private IExportViewModel _exportViewModel;
-	private Coroutine _exportFrames;
 
 	private bool _exportSttoped;
 
@@ -30,7 +29,7 @@ public class ExportView : MonoBehaviour {
     private void StartExport((int totalFrames, int targetFrameRate, string outputFilePath, string fileName) data) {
 		_exportSttoped = false;
         _fullscreen.SetFullscreen(withPlayback: false);
-        _exportFrames = StartCoroutine(CO_ExportFrames(data.totalFrames, data.targetFrameRate, data.outputFilePath, data.fileName));
+        StartCoroutine(CO_ExportFrames(data.totalFrames, data.targetFrameRate, data.outputFilePath, data.fileName));
     }
 
 	private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {

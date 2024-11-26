@@ -47,7 +47,9 @@ namespace SimpleMotions {
 		}
 
         private void UpdateEntityInfo(EntityDTO entityDTO) {
-            OnEntitySelected.Execute(entityDTO);
+			if (_entitySelector.HasSelectedEntity) {
+            	OnEntitySelected.Execute(entityDTO);
+			}
         }
 
     }
