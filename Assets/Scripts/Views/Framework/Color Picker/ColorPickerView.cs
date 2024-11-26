@@ -34,6 +34,7 @@ public class ColorPickerView : MonoBehaviour {
 
         _defaultSize = _colorPickerPanel.GetComponent<RectTransform>().sizeDelta;
         _withoutAlpha = new Vector2(_defaultSize.x, _defaultSize.y - 45.0f);
+
     }
 
     private void OpenShapeColorPicker() {

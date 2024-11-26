@@ -162,7 +162,6 @@ namespace SimpleMotions {
 			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
 			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
 			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
-			_colorPickerView		.Configure();
 			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
 			_editorSettingsView		.Configure();
 			_exportSettingsView		.Configure(_services.GetService<IExportSettingsViewModel>(), _inputValidator);
@@ -170,6 +169,7 @@ namespace SimpleMotions {
 			_fullscreenPlaybackView	.Configure();
 			_exportView				.Configure(_services.GetService<IExportViewModel>());
 			_entityDeselector		.Configure(_services.GetService<IEntitySelectorViewModel>());
+			_colorPickerView		.Configure();
 
 			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.Configure();
