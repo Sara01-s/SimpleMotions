@@ -53,8 +53,6 @@ namespace SimpleMotions {
                 input = stringBuilder.ToString();
             }
 
-            UnityEngine.Debug.Log(input);
-
             return input;
         }
 

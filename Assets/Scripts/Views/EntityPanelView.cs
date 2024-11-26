@@ -30,7 +30,7 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 
 		timelinePanelViewModel.OnEntityNameChanged.Subscribe(entityDTO => {
 			if (ownerEntityId == entityDTO.Id) {
-				_entityName.text = name;
+				_entityName.text = entityDTO.Name;
 			}
 		});
 
