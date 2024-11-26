@@ -11,6 +11,7 @@ public class TransformComponentView : ComponentView {
     [SerializeField] private TMP_InputField _roll;
 
     private ITransformComponentViewModel _transformComponentViewModel;
+	private TMP_InputField[] _allInputFields;
     private IInputValidator _inputValidator;
 
     private string _previousValue;
@@ -18,6 +19,7 @@ public class TransformComponentView : ComponentView {
 
 	public void Configure(ITransformComponentViewModel transformComponentViewModel, IInputValidator inputValidator) {
         InitializeInputFields();
+		_allInputFields = new [] { _positionX, _positionY, _scaleW, _scaleH, _roll };
 
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
@@ -67,6 +69,9 @@ public class TransformComponentView : ComponentView {
         _UpdateKeyframe.onClick.AddListener(() => {
             if (_FrameHasKeyframe) {
                 transformComponentViewModel.OnUpdateTransformKeyframe.Execute(GetTransformData());
+				foreach (var inputField in _allInputFields) {
+					_FlashInputField(inputField);
+				}
             }
         });
 

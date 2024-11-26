@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
+using System.Collections;
 
 public abstract class ComponentView : MonoBehaviour {
 
@@ -19,5 +20,29 @@ public abstract class ComponentView : MonoBehaviour {
     [SerializeField] protected Image _Update;
 
     protected bool _FrameHasKeyframe;
+
+	protected void _FlashInputField(TMPro.TMP_InputField inputField) {
+		StopCoroutine(CO_FlashInputField(inputField));
+		StartCoroutine(CO_FlashInputField(inputField));
+	}
+
+	private IEnumerator CO_FlashInputField(TMPro.TMP_InputField inputField) {
+		const float startIntensity = 1.0f;
+		const float flashIntensity = 2.0f;
+		const float decreaseMultiplier = 0.1f;
+
+		var colorBlock = inputField.colors;
+		colorBlock.colorMultiplier = flashIntensity;
+		inputField.colors = colorBlock;
+
+		while (colorBlock.colorMultiplier >= startIntensity) {
+			colorBlock.colorMultiplier -= decreaseMultiplier;
+			inputField.colors = colorBlock;
+			yield return null;
+		}
+
+		colorBlock.colorMultiplier = startIntensity;
+		inputField.colors = colorBlock;
+	}
 
 }

@@ -11,9 +11,10 @@ public class EntitySelectorView : MonoBehaviour {
 	[SerializeField] private SelectionGizmo[] _selectionGizmoParts;
 
 	private IEntitySelectorViewModel _entitySelectorViewModel;
+	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private Camera _editorCamera;
 
-	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel, IFullscreenViewModel fullscreenViewModel) {
+	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel, IVideoPlaybackViewModel videoPlaybackViewModel, IFullscreenViewModel fullscreenViewModel) {
 		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 
@@ -28,6 +29,7 @@ public class EntitySelectorView : MonoBehaviour {
 
 		_editorCamera = _editorCanvas.worldCamera;
 		_entitySelectorViewModel = entitySelectorViewModel;
+		_videoPlaybackViewModel = videoPlaybackViewModel;
 	}
 
 	private void HideSelectionGizmo() {
@@ -44,6 +46,10 @@ public class EntitySelectorView : MonoBehaviour {
 	}
 
 	private void DrawSelectionGizmoOverEntity(EntityDTO entityDTO) {
+		if (_videoPlaybackViewModel.IsPlaying.Value && !_entitySelectorViewModel.HasSelectedEntity) {
+			return;
+		}
+
 		if (!_entitySelectorViewModel.TryGetEntityTransform(entityDTO.Id, out var transformDTO)) {
 			return;
 		}
