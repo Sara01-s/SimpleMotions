@@ -164,4 +164,24 @@ public class TimelineCursorView : MonoBehaviour {
         _cursor.maxValue = _videoTimelineViewModel.TotalFrameCount;
     }
 
+	private void DrawKeyframe(ComponentType componentType) {
+		var contentRect = new RectTransform();
+		int currentFrame = 30;
+
+		float keyframePosX = Remap(currentFrame, 0, 300, contentRect.rect.xMin, contentRect.rect.xMax);
+	}
+
+	private float RemapConcrete(float currentFrame, float firstFrame, float lastFrame, float contentRectMinX, float contentRectMaxX) {
+		float t = Mathf.InverseLerp(firstFrame, lastFrame, currentFrame);
+		return Mathf.Lerp(contentRectMinX, contentRectMaxX, t);
+
+		// inverselerp(0, 300) -> cf = 30 = 0.3
+		// lerp(0, 12_600) -> t = 0.3 = 30%
+	}
+
+	private static float Remap(float value, float iMin, float iMax, float oMin, float oMax) {
+		float t = Mathf.InverseLerp(iMin, iMax, value);
+		return Mathf.Lerp(oMin, oMax, t);
+	}
+
 }

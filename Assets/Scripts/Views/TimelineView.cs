@@ -11,7 +11,6 @@ public sealed class TimelineView : MonoBehaviour {
 	[Header("Draw")]
 	[SerializeField] private RectTransform _content;
 	[SerializeField] private RectTransform _framesHolder;
-	[SerializeField] private GameObject _framePrefab;
 
 	[Header("Relationed Views")]
 	[SerializeField] private TimelineHeaderView _headerView;
@@ -43,13 +42,6 @@ public sealed class TimelineView : MonoBehaviour {
 
 	private void DrawTimeline() {
 		ConfigureTimelineSize();
-
-		for (int i = 0; i < _videoTimelineViewModel.TotalFrameCount + 1; i++) {
-			var frame = Instantiate(_framePrefab, parent: _framesHolder.transform);
-			frame.name = $"Frame_{i}";
-
-			_timeline.Add(frame);
-		}
 	}
 
 	private void ConfigureTimelineSize() {

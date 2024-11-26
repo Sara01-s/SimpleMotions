@@ -73,11 +73,14 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		});
 
 		_totalFrames.onValueChanged.AddListener(totalFrames => {
+			const int minFrames = 10;
+			const int maxFrames = 10_000;
+			
 			totalFrames = _inputValidator.ValidateComponentInput(totalFrames);
-			int.TryParse(totalFrames, out var newFrame);
+			int.TryParse(totalFrames, out int newTotalFrames);
 
-			if (newFrame >= 10) {
-				_videoPlaybackViewModel.OnSetTotalFrames.Execute(newFrame);
+			if (newTotalFrames >= minFrames || newTotalFrames >= maxFrames) {
+				_videoPlaybackViewModel.OnSetTotalFrames.Execute(newTotalFrames);
 				_timelineView.RefreshUI();
 			}
 		});
@@ -85,12 +88,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private void InitReactiveValues() {
 		_videoPlaybackViewModel.IsPlaying.Subscribe(isPlaying => {
-			if (isPlaying) {
-				_togglePlayStopImage.sprite = _stop;
-			}
-			else {
-				_togglePlayStopImage.sprite = _play;
-			}
+			_togglePlayStopImage.sprite = isPlaying ? _stop : _play;
 		});
 
 		_videoPlaybackViewModel.IsLooping.Subscribe(isLooping => {
@@ -118,7 +116,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 		_videoPlaybackViewModel.DurationSeconds.Subscribe(durationSeconds => _duration.text = FormatTime(durationSeconds));
 
 		_videoPlaybackViewModel.TargetFramerate.Subscribe(targetFramerate => {
-			if (float.TryParse(_totalFrames.text, out var totalFrames)) {
+			if (float.TryParse(_totalFrames.text, out float totalFrames)) {
 				float durationSeconds = totalFrames / targetFramerate;
 				_duration.text = FormatTime(durationSeconds);
 			}
@@ -129,7 +127,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private string FormatTime(float value) {
 		int totalSeconds = Mathf.FloorToInt(value);
-		int minutes = totalSeconds / 60; 
+		int minutes = totalSeconds / 60;
 		int seconds = totalSeconds % 60;
 		int milliseconds = Mathf.FloorToInt((value - totalSeconds) * 100);
 
