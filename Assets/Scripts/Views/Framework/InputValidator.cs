@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 namespace SimpleMotions {
 
@@ -45,6 +46,14 @@ namespace SimpleMotions {
                     input = stringBuilder.ToString();
                 }
             }
+
+            if (input.StartsWith('.')) {
+                var stringBuilder = new StringBuilder(input);
+                stringBuilder.Insert(0, "0");
+                input = stringBuilder.ToString();
+            }
+
+            UnityEngine.Debug.Log(input);
 
             return input;
         }

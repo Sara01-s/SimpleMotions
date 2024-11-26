@@ -133,7 +133,19 @@ public class TransformComponentView : ComponentView {
     }
 
     private bool CanSendInput(string newValue) {
-        return newValue == "0" || !newValue.EndsWith("0") && !newValue.EndsWith(",") && newValue != string.Empty;
+        if (newValue == string.Empty) {
+            return false;
+        }
+
+        if (newValue == "0") {
+            return true;
+        }
+
+        if ("123456789".Contains(newValue[0])) {
+            return true;
+        }
+
+        return !newValue.EndsWith("0") && !newValue.EndsWith(",");
     }
 
     private void CorrectInput(string newValue, ReactiveCommand<string> reactiveCommand) {
