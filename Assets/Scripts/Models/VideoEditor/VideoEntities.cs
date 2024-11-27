@@ -22,11 +22,11 @@ namespace SimpleMotions {
 		private readonly IEntitySelector _entitySelector;
 		private readonly IVideoCanvas _videoCanvas;
 		
-		// DEMO 1
-		private byte _createdEntities;
         public ReactiveCommand ShowMaxEntitiesWarning { get; } = new();
 		public ReactiveCommand OnCreateEntity { get; } = new();
-		private const byte MAX_ENTITIES = 3;
+
+		private const byte MAX_ENTITIES = 50;
+		private byte _createdEntities;
 
         public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
 							 IEntityStorage entityStorage, IEntitySelector entitySelector, IVideoCanvas videoCanvas) {
