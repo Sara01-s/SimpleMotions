@@ -68,6 +68,10 @@ namespace SimpleMotions {
 			});
 
 			OnImageSelected.Subscribe(imageFilePath => {
+				if (string.IsNullOrEmpty(imageFilePath)) {
+					return;
+				}
+
 				videoCanvas.OnSetEntityImage.Execute(_SelectedEntityId, imageFilePath);
 			});
 
