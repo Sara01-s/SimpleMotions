@@ -3,35 +3,20 @@ using SimpleMotions.Internal;
 namespace SimpleMotions {
 
     public interface IEditKeyframeViewModel {
-        ReactiveValue<KeyframeDTO> OnKeyframeEdit { get; }
-
-        ReactiveValue<int> EntityKeyframeEase { get; }
-        ReactiveValue<int> EntityKeyframeFrame { get; }
+        ReactiveValue<(int entityId, int originalEase, int targetEase)> NewKeyframeEase { get; }
+        ReactiveValue<(int entityId, int targetFrane, int originalFrame)> NewKeyframeFrame { get; }
     }
 
     public class EditKeyframeViewModel : IEditKeyframeViewModel {
 
-        public ReactiveValue<KeyframeDTO> OnKeyframeEdit { get; } = new();
-
-        public ReactiveValue<int> EntityKeyframeEase { get; } = new();
-        public ReactiveValue<int> EntityKeyframeFrame { get; } = new();
+        public ReactiveValue<(int entityId, int originalEase, int targetEase)> NewKeyframeEase { get; } = new();
+        public ReactiveValue<(int entityId, int targetFrane, int originalFrame)> NewKeyframeFrame { get; } = new();
 
         public KeyframeStorage _keyframeStorage;
 
         public EditKeyframeViewModel(IKeyframeStorage keyframeStorage) {
-            OnKeyframeEdit.Subscribe(keyframeDTO => {
-                if (keyframeDTO.ComponentDTO == ComponentDTO.Transform) {
-                    var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(keyframeDTO.Id, keyframeDTO.Frame);
-                    keyframeStorage.SetKeyframeFrame(keyframe, keyframeDTO.Ease);
-                }
-                else if (keyframeDTO.ComponentDTO == ComponentDTO.Shape) {
-                    var keyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(keyframeDTO.Id, keyframeDTO.Frame);
-                    keyframeStorage.SetKeyframeFrame(keyframe, keyframeDTO.Ease);
-                }
-                else {
-                    var keyframe = keyframeStorage.GetEntityKeyframeOfType<Text>(keyframeDTO.Id, keyframeDTO.Frame);
-                    keyframeStorage.SetKeyframeFrame(keyframe, keyframeDTO.Ease);
-                }
+            NewKeyframeFrame.Subscribe(keyframe => {
+                var transformKeyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(keyframe.entityId, keyframe.originalFrame);
             });
         }
 
