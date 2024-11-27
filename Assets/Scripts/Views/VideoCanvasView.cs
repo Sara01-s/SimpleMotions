@@ -92,13 +92,27 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	private void DisplayEntityImage(int entityId, string imageFilepath) {
 		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var _)) {
 			var displayedEntity = _displayedEntites[entityId];
+			displayedEntity.GetComponent<SpriteRenderer>().enabled = false;
 
-			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
-				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
-				spriteRenderer.sortingOrder = _sortingOrder;
+			if (displayedEntity.transform.childCount >= 2) {
+				Debug.LogError("2 or more children inside entity, this is unwanted behaviour.");
+				return;
 			}
 
-			spriteRenderer.sprite = FilePathToSprite(imageFilepath);
+			if (displayedEntity.transform.childCount == 0) {
+				var imageSlot = new GameObject (
+					name: $"{displayedEntity.name} Image Slot",
+					components: typeof(SpriteRenderer)
+				);
+
+				imageSlot.transform.SetParent(displayedEntity.transform);
+				imageSlot.transform.localPosition = Vector2.zero;
+			}
+
+			displayedEntity.transform.GetChild(index: 0).gameObject.SetActive(true); // Make sure is active.
+
+			var imageSlotRenderer = displayedEntity.GetComponentsInChildren<SpriteRenderer>()[1];
+			imageSlotRenderer.sprite = FilePathToSprite(imageFilepath);
 		}
 	}
 
@@ -123,8 +137,14 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 			spriteRenderer.color = new Color(shape.Color.r, shape.Color.g, shape.Color.b, shape.Color.a);
 			
+			// Primitive shape is NOT an image.
 			if (shape.PrimitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
+				spriteRenderer.enabled = true;
 				spriteRenderer.sprite = _spriteByPrimitiveShape[shape.PrimitiveShape];
+				
+				if (displayedEntity.transform.childCount >= 1) { // Entity had image slot.
+					displayedEntity.transform.GetChild(index: 0).gameObject.SetActive(false);
+				}
 			}
 		}
 	}
