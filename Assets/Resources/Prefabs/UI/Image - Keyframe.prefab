@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1801200461610835696}
   - component: {fileID: 6640817391787737041}
   - component: {fileID: 6238244654534952074}
+  - component: {fileID: 2107004233041649802}
   m_Layer: 5
   m_Name: Image - Keyframe
   m_TagString: AccentColor
@@ -75,3 +76,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2107004233041649802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010176895635531034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa853484b6a4cea74a4286cb92daab0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timelineView: {fileID: 0}

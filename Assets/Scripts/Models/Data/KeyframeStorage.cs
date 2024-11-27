@@ -26,6 +26,8 @@ namespace SimpleMotions {
 		void ClearEntityKeyframes(int entityId);
 		void RemoveKeyframeOfType(Type componentType, int entityId, int frame);
 
+		void EditKeyframe(IKeyframe<Component> keyframe, int targetFrame);
+
 		IKeyframeSpline GetEntityKeyframeSplineOfType(Type componentType, int entityId);
 		IEnumerable<IKeyframeSpline> GetEntityKeyframeSplines(int entityId);
 
@@ -240,5 +242,9 @@ namespace SimpleMotions {
 			return new Keyframe<T>(original.EntityId, original.Frame, newValue);
 		}
 
-	}
+        public void EditKeyframe(IKeyframe<Component> keyframe, int targetFrame) {
+            throw new NotImplementedException();
+        }
+
+    }
 }

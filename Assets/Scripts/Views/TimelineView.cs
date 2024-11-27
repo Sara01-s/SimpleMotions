@@ -8,6 +8,7 @@ public sealed class TimelineView : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Scrollbar _horizontalScrollbar;
 	[SerializeField] private EditorPainter _editorPainter;
+	[SerializeField] private GameObject _editKeyframePanel;
 
 	[Header("Draw")]
 	[SerializeField] private RectTransform _content;
@@ -28,7 +29,7 @@ public sealed class TimelineView : MonoBehaviour {
 	private List<GameObject> _timeline = new();
 
 	//              		EntityId    ->       Component     ->      Frame -> Keyframe
-    private readonly Dictionary<int, Dictionary<ComponentType, Dictionary<int, GameObject>>> _displayedEntityKeyframes = new();  
+    public readonly Dictionary<int, Dictionary<ComponentDTO, Dictionary<int, GameObject>>> DisplayedEntityKeyframes = new();  
 
 	private float _frameWidth = 42.0f;
 	private bool _alreadyPainted;
@@ -59,6 +60,7 @@ public sealed class TimelineView : MonoBehaviour {
 
 		var keyframe = Instantiate(_keyframePrefab, _content);
 		var keyframeRect = keyframe.GetComponent<RectTransform>();
+		
 
 		keyframeRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 0.0f, keyframeRect.rect.height);
 
@@ -72,6 +74,88 @@ public sealed class TimelineView : MonoBehaviour {
 		keyframe.GetComponent<Image>().color = _editorPainter.CurrentAccentColor;
 
 		return keyframe;
+	}
+
+	private float GetKeyframeXPosition() {
+		return Remap (
+			_videoTimelineViewModel.CurrentFrame.Value, 
+			iMin: 0.0f, 
+			_videoTimelineViewModel.TotalFrameCount, 
+			_content.rect.xMin, 
+			_content.rect.xMax - (_frameWidth * 2)
+		);
+	}
+
+	// TODO - Mover
+	private static float Remap(float value, float iMin, float iMax, float oMin, float oMax) {
+		float t = Mathf.InverseLerp(iMin, iMax, value);
+		return Mathf.Lerp(oMin, oMax, t);
+	}
+
+	private void AddKeyframe(KeyframeDTO entityKeyframe, GameObject keyframeDisplay) {
+        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentsByType)) {
+			DisplayedEntityKeyframes[entityKeyframe.Id] = componentsByType = new();
+		}
+
+        if (!componentsByType.TryGetValue(entityKeyframe.ComponentDTO, out var frameByType)) {
+			componentsByType[entityKeyframe.ComponentDTO] = frameByType = new();
+        }
+
+        frameByType[entityKeyframe.Frame] = keyframeDisplay;
+
+		var keyframeSelector = keyframeDisplay.GetComponent<KeyframeSelector>();
+		keyframeSelector.Configure(entityKeyframe.Id, entityKeyframe.ComponentDTO, entityKeyframe.Frame, entityKeyframe.Ease, _editKeyframePanel);
+
+		// TODO - ¿Después hay que borrarlo?
+
+        Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
+    }
+
+    private void RemoveKeyframe(KeyframeDTO entityKeyframe) {
+        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentTypeToKeyframes)) {
+			return;
+		}
+
+		if (!componentTypeToKeyframes.TryGetValue(entityKeyframe.ComponentDTO, out var frameToKeyframe)) {
+			return;
+		}
+
+		if (!frameToKeyframe.TryGetValue(entityKeyframe.Frame, out var keyframeToRemove)) {
+			return;
+		}
+
+		frameToKeyframe.Remove(entityKeyframe.Frame);
+		Destroy(keyframeToRemove);
+
+		if (frameToKeyframe.Count == 0) {
+			componentTypeToKeyframes.Remove(entityKeyframe.ComponentDTO);
+		}
+
+		if (componentTypeToKeyframes.Count == 0) {
+			DisplayedEntityKeyframes.Remove(entityKeyframe.Id);
+		}
+
+		Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
+    }
+
+	private void UpdateDisplayedKeyframes(int selectedEntityId) {
+		foreach (var entityEntry in DisplayedEntityKeyframes) {
+			var entityId = entityEntry.Key;
+			var componentTypeToKeyframes = entityEntry.Value;
+
+			bool entityIsSelected = entityId == selectedEntityId;
+
+			foreach (var componentEntry in componentTypeToKeyframes) {
+				var componentType = componentEntry.Key;
+				var frameToKeyframe = componentEntry.Value;
+
+				foreach (var frameEntry in frameToKeyframe) {
+					var keyframe = frameEntry.Value;
+
+					keyframe.SetActive(entityIsSelected);
+				}
+			}
+		}
 	}
 
 	public void RefreshUI() {
@@ -111,92 +195,6 @@ public sealed class TimelineView : MonoBehaviour {
 
 		_timeline.Clear();
 		_alreadyPainted = false;
-	}
-
-	private float GetKeyframeXPosition() {
-		return Remap (
-			_videoTimelineViewModel.CurrentFrame.Value, 
-			iMin: 0.0f, 
-			_videoTimelineViewModel.TotalFrameCount, 
-			_content.rect.xMin, 
-			_content.rect.xMax - (_frameWidth * 2)
-		);
-	}
-
-	//private float RemapConcrete(float currentFrame, float firstFrame, float lastFrame, float contentRectMinX, float contentRectMaxX) {
-	//	float t = Mathf.InverseLerp(firstFrame, lastFrame, currentFrame);
-	//	return Mathf.Lerp(contentRectMinX, contentRectMaxX, t);
-//
-	//	// inverselerp(0, 300) -> cf = 30 = 0.3
-	//	// lerp(0, 12_600) -> t = 0.3 = 30%
-	//}
-
-	// TODO - Mover
-	private static float Remap(float value, float iMin, float iMax, float oMin, float oMax) {
-		float t = Mathf.InverseLerp(iMin, iMax, value);
-		return Mathf.Lerp(oMin, oMax, t);
-	}
-
-	private void AddKeyframe(KeyframeDTO entityKeyframe, GameObject keyframeDisplay) {
-        if (!_displayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentsByType)) {
-			_displayedEntityKeyframes[entityKeyframe.Id] = componentsByType = new();
-		}
-
-        if (!componentsByType.TryGetValue(entityKeyframe.ComponentType, out var frameByType)) {
-			componentsByType[entityKeyframe.ComponentType] = frameByType = new();
-        }
-
-        frameByType[entityKeyframe.Frame] = keyframeDisplay;
-
-        Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentType} ha sido añadida en el frame {entityKeyframe.Frame}");
-    }
-
-    private void RemoveKeyframe(KeyframeDTO entityKeyframe) {
-        if (!_displayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentTypeToKeyframes)) {
-			return;
-		}
-
-		if (!componentTypeToKeyframes.TryGetValue(entityKeyframe.ComponentType, out var frameToKeyframe)) {
-			return;
-		}
-
-		if (!frameToKeyframe.TryGetValue(entityKeyframe.Frame, out var keyframeToRemove)) {
-			return;
-		}
-
-		frameToKeyframe.Remove(entityKeyframe.Frame);
-		Destroy(keyframeToRemove);
-
-		if (frameToKeyframe.Count == 0) {
-			componentTypeToKeyframes.Remove(entityKeyframe.ComponentType);
-		}
-
-		if (componentTypeToKeyframes.Count == 0) {
-			_displayedEntityKeyframes.Remove(entityKeyframe.Id);
-		}
-
-		Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentType} ha sido eliminada del frame {entityKeyframe.Frame}");
-    }
-
-	private void UpdateDisplayedKeyframes(int selectedEntityId) {
-		foreach (var entityEntry in _displayedEntityKeyframes) {
-			var entityId = entityEntry.Key;
-			var componentTypeToKeyframes = entityEntry.Value;
-
-			bool entityIsSelected = entityId == selectedEntityId;
-
-			foreach (var componentEntry in componentTypeToKeyframes) {
-				var componentType = componentEntry.Key;
-				var frameToKeyframe = componentEntry.Value;
-
-				foreach (var frameEntry in frameToKeyframe) {
-					var keyframe = frameEntry.Value;
-
-					keyframe.SetActive(entityIsSelected);
-					//Debug.Log($"Keyframes de entidad: {entityId} {(entityIsSelected ? "Encendido" : "Apagado")}");
-				}
-			}
-		}
 	}
 
 }

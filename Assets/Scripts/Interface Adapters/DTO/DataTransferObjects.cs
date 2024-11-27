@@ -1,4 +1,5 @@
 using static StringExtensions;
+using SimpleMotions.Internal;
 
 namespace SimpleMotions {
 
@@ -42,18 +43,27 @@ namespace SimpleMotions {
 	}
 
 	public readonly struct KeyframeDTO {
-		public readonly ComponentType ComponentType;
+		public readonly ComponentDTO ComponentDTO;
 		public readonly int Id;
 		public readonly int Frame;
+		public readonly int Ease;
 
-		public KeyframeDTO(ComponentType componentType, int id, int frame) {
-			ComponentType = componentType;
+		public KeyframeDTO(ComponentDTO componentType, int id, int frame, int ease) {
+			ComponentDTO = componentType;
 			Id = id;
 			Frame = frame;
+			Ease = ease;
+		}
+
+		public KeyframeDTO(ComponentDTO componentType, int id, int frame, Ease ease) {
+			ComponentDTO = componentType;
+			Id = id;
+			Frame = frame;
+			Ease = (int)ease;
 		}
 	}
 
-	public enum ComponentType {
+	public enum ComponentDTO {
 		Transform,
 		Shape,
 		Text

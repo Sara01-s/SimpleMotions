@@ -9,7 +9,6 @@ public class TransformComponentView : ComponentView {
     [SerializeField] private TMP_InputField _scaleW;
     [SerializeField] private TMP_InputField _scaleH;
     [SerializeField] private TMP_InputField _roll;
-    [SerializeField] private TMP_Dropdown _easeDropdown;
 
     private ITransformComponentViewModel _transformComponentViewModel;
 	private TMP_InputField[] _allInputFields;
@@ -46,10 +45,6 @@ public class TransformComponentView : ComponentView {
             _AddOrRemoveBlocker.SetActive(false);
             _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
-        });
-
-        _easeDropdown.onValueChanged.AddListener(newEase => {
-            transformComponentViewModel.EaseDropdown.Value = newEase;
         });
 
 		_AddOrRemoveKeyframe.onClick.AddListener(() => {
