@@ -81,26 +81,21 @@ public class ExportView : MonoBehaviour {
 	}
 
 	private byte[] GetFrameAsPng(RenderTexture processedRT, Texture2D outputTexture) {
-		// Renderizar la escena en el RenderTexture asignado
 		_cameraToCapture.targetTexture = processedRT;
 		_cameraToCapture.Render();
 
-		// Configurar el Compute Shader
 		int kernel = _exportVideo.FindKernel("ExportFrame");
 		_exportVideo.SetTexture(kernel, "_InputTexture", processedRT);
 		_exportVideo.SetTexture(kernel, "_ResultTexture", processedRT);
 
-		// Ejecutar el shader
 		int threadGroupsX = Mathf.CeilToInt(processedRT.width / 8.0f);
 		int threadGroupsY = Mathf.CeilToInt(processedRT.height / 8.0f);
 		_exportVideo.Dispatch(kernel, threadGroupsX, threadGroupsY, 1);
 
-		// Descargar datos del RenderTexture a la CPU
 		RenderTexture.active = processedRT;
 		outputTexture.ReadPixels(new Rect(0, 0, processedRT.width, processedRT.height), 0, 0);
 		outputTexture.Apply();
 
-		// Guardar como PNG
 		return outputTexture.EncodeToPNG();
 	}
 
