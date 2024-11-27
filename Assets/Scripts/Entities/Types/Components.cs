@@ -8,9 +8,9 @@ namespace SimpleMotions.Internal {
 	}
 
 	public sealed class Transform : Component {
-		public Position Position = new();
-		public Scale Scale = new();
-		public Roll Roll = new();
+		public Position Position { get; set; } = new();
+		public Scale Scale { get; set; } = new();
+		public Roll Roll { get; set; } = new();
 
 		public Transform() {}
 
@@ -67,6 +67,11 @@ namespace SimpleMotions.Internal {
 			Y = y;
 		}
 
+		public Position((float x, float y) position) {
+			X = position.x;
+			Y = position.y;
+		}
+
 		public static Position operator +(Position a, Position b) {
 			return new Position(a.X + b.X, a.Y + b.Y);
 		}
@@ -90,7 +95,11 @@ namespace SimpleMotions.Internal {
 			Width = width;
 			Height = height;
 		}
-
+		
+		public Scale((float w, float h) scale) {
+			Width = scale.w;
+			Height = scale.h;
+		}
 		
 		public static Scale operator +(Scale a, Scale b) {
 			return new Scale(a.Width + b.Width, a.Height + b.Height);
@@ -185,10 +194,8 @@ namespace SimpleMotions.Internal {
 			Image
 		}
 
-		public Primitive PrimitiveShape = Primitive.Rect;
-		public Color Color = new();
-
-        public object V { get; }
+		public Primitive PrimitiveShape { get; set; } = Primitive.Rect;
+		public Color Color { get; set; } = new();
 
         public Shape() {}
 
@@ -205,7 +212,7 @@ namespace SimpleMotions.Internal {
 	}
 
 	public sealed class Text : Component {
-		public string Content = string.Empty;
+		public string Content { get; set; } = string.Empty;
 
 		public Text() {}
 

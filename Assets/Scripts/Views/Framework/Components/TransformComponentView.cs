@@ -49,7 +49,7 @@ public class TransformComponentView : ComponentView {
         });
 
         _easeDropdown.onValueChanged.AddListener(newEase => {
-            transformComponentViewModel.EaseDropdown.Execute(newEase);
+            transformComponentViewModel.EaseDropdown.Value = newEase;
         });
 
 		_AddOrRemoveKeyframe.onClick.AddListener(() => {
@@ -90,28 +90,26 @@ public class TransformComponentView : ComponentView {
         _inputValidator = inputValidator;
 	}
 
-    private void TrySendNewComponentValue(string newValue, ReactiveCommand<string> reactiveCommand) {
+    private void TrySendNewComponentValue(string newValue, ReactiveValue<string> reactiveValue) {
 		if (_isSettingData) {
 			return;
 		}
 		
         newValue = _inputValidator.ValidateComponentInput(newValue);
-
         bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
 
         if (CanSendInput(newValue) && !hasInvalidCharacters) {
-		    reactiveCommand.Execute(newValue);
+		    reactiveValue.Value = newValue;
             _previousValue = newValue;
         }
 	}
 
-	private ((string x, string y) pos, (string w, string h) scale, string rollAngleDegreesm) GetTransformData() {
+	private TransformDTO GetTransformData() {
 		var position = (_positionX.text, _positionY.text);
 		var scale = (_scaleW.text, _scaleH.text);
 		string rollAngleDegrees = _roll.text;
-        int ease = _easeDropdown.value;
 
-		return (position, scale, rollAngleDegrees);
+		return new TransformDTO(position, scale, rollAngleDegrees);
 	}
 
     public void RefreshData(TransformDTO transformDTO) {
@@ -154,11 +152,11 @@ public class TransformComponentView : ComponentView {
         return !newValue.EndsWith("0") && !newValue.EndsWith(",");
     }
 
-    private void CorrectInput(string newValue, ReactiveCommand<string> reactiveCommand) {
+    private void CorrectInput(string newValue, ReactiveValue<string> reactiveValue) {
         bool hasInvalidCharacters = _inputValidator.IsComponentNewInputInvalid(newValue);
 
         if (hasInvalidCharacters && CanSendInput(newValue)) {
-            reactiveCommand.Execute(_previousValue);
+            reactiveValue.Value = _previousValue;
         }
     }
 

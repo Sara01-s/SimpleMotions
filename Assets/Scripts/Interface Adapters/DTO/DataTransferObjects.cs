@@ -1,3 +1,5 @@
+using static StringExtensions;
+
 namespace SimpleMotions {
 
 	public readonly struct EntityDTO {
@@ -20,6 +22,12 @@ namespace SimpleMotions {
 			Position = position;
 			Scale = scale;
 			RollDegrees = rollDegrees;
+		}
+
+		public TransformDTO((string x, string y) position, (string w, string h) scale, string rollDegrees) {
+			Position = (ParseFloat(position.x), ParseFloat(position.y));
+			Scale = (ParseFloat(scale.w), ParseFloat(scale.h));
+			RollDegrees = ParseFloat(rollDegrees);
 		}
 	}
 

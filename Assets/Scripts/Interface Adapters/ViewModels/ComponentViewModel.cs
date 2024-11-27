@@ -1,4 +1,6 @@
 using SimpleMotions.Internal;
+using System.Linq.Expressions;
+using System;
 
 namespace SimpleMotions {
 
@@ -25,6 +27,22 @@ namespace SimpleMotions {
 			_videoCanvas = videoCanvas;
 		}
 
+		public void SetEntityComponentProperty<TComponent, TProperty>(int entityId, Expression<Func<TComponent, TProperty>> propertySelector, TProperty value) where TComponent : Component {
+			var component = _videoCanvas.GetEntityComponent<TComponent>(entityId);
+
+			if (propertySelector.Body is MemberExpression memberExpr) {
+				var componentPropertyInfo = typeof(TComponent).GetProperty(memberExpr.Member.Name)
+					   					 ?? throw new Exception("Failed to set property: " + memberExpr.Member.Name);
+
+				componentPropertyInfo.SetValue(component, value);
+			}
+			else {
+				throw new ArgumentException("Expression must be a property.");
+			}
+
+			_videoCanvas.DisplayEntity(entityId);
+		}
+
 		public void SetEntityPosition(int entityId, (float x, float y) position) {
 			_videoCanvas.GetEntityComponent<Transform>(entityId).Position = new Position(position.x, position.y);
 			_videoCanvas.DisplayEntity(entityId);
@@ -48,7 +66,7 @@ namespace SimpleMotions {
         }
 
 		public void SetEntityShape(int entityId, string shapeName) {
-			if (System.Enum.TryParse(typeof(Shape.Primitive), shapeName, out var primitiveShape)) {
+			if (Enum.TryParse(typeof(Shape.Primitive), shapeName, out var primitiveShape)) {
 				_videoCanvas.GetEntityComponent<Shape>(entityId).PrimitiveShape = (Shape.Primitive)primitiveShape;
 				_videoCanvas.DisplayEntity(entityId);
 			}
