@@ -13,5 +13,6 @@ void ExportFrame(uint3 id : SV_DispatchThreadID) {
     }
 
     float4 color = _InputTexture.Load(int3(id.xy, 0));
+    color.rgb = pow(color.rgb, 1.0 / 2.2); // Corrección gamma
     _ResultTexture[id.xy] = color;
 }

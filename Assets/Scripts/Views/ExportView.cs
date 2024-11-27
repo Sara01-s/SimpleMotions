@@ -37,8 +37,9 @@ public class ExportView : MonoBehaviour {
 
 		// Crear y reutilizar recursos
 		var processedRT = new RenderTexture(_videoResolution.x, _videoResolution.y, 0, RenderTextureFormat.ARGB32) {
-			enableRandomWrite = true
+			enableRandomWrite = true,
 		};
+		
 		processedRT.Create();
 		var outputTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.RGBA32, false);
 
