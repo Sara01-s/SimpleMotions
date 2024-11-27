@@ -37,6 +37,8 @@ public class EditKeyframeView : MonoBehaviour {
 
             editKeyframeViewModel.OnKeyframeEdit.Value = new KeyframeDTO(_keyframeComponent, _keyframeId, frame, newEase);
         });
+
+        gameObject.SetActive(false);
     }
 
     public void SetData(int id, ComponentDTO componentDTO, int frame, int ease) {
