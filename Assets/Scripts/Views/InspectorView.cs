@@ -39,8 +39,6 @@ public class InspectorView : MonoBehaviour {
 		CheckTransformComponent(entityDTO.Id);
 		CheckShapeComponent(entityDTO.Id);
 		CheckTextComponent(entityDTO.Id);
-
-		print($"datos recibidos de entidad con id: {entityDTO.Id}");
     }
 
 	private void CheckTransformComponent(int entityId) {

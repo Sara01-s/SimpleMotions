@@ -113,6 +113,12 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 			var imageSlotRenderer = displayedEntity.GetComponentsInChildren<SpriteRenderer>()[1];
 			imageSlotRenderer.sprite = FilePathToSprite(imageFilepath);
+
+			var size = imageSlotRenderer.bounds.size;
+			imageSlotRenderer.transform.SetParent(null);
+
+			_videoCanvasViewModel.SetEntityScale(entityId, (size.x, size.y));
+			imageSlotRenderer.transform.SetParent(displayedEntity.transform);
 		}
 	}
 
