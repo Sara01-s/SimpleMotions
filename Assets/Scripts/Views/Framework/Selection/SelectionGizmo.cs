@@ -1,16 +1,20 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using SimpleMotions;
 
-public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHandler {
+public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler {
     
 	public ReactiveCommand<EntityDTO> OnEntityChanged { get; } = new();
+
+	[SerializeField] protected Image _GizmoImage;
 
 	protected RectTransform _SelectionGizmoRect => (RectTransform)transform.parent;
 
 	private Camera _worldCamera;
 	private RectTransform _canvasArea;
     private IEntitySelectorViewModel _entitySelectorViewModel;
+	private Color _startImageColor;
 	private int SelectedEntityId {
 		get {
 			if (_entitySelectorViewModel.HasSelectedEntity) {
@@ -26,10 +30,37 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
         _entitySelectorViewModel = entitySelectorViewModel;
 		_worldCamera = worldCamera;
 		_canvasArea = canvasArea;
+
+		if (_GizmoImage == null) {
+			_GizmoImage = GetComponent<Image>();
+		}
     }
 
     public abstract void OnBeginDrag(PointerEventData eventData);
 	public abstract void OnDrag(PointerEventData eventData);
+
+	private Color _normalColor = Color.magenta;
+	private Color _selectedColor = Color.cyan;
+
+	public void OnPointerEnter(PointerEventData eventData) {
+		_GizmoImage.color = _selectedColor;
+	}
+
+	public void OnPointerExit(PointerEventData eventData) {
+		if (!eventData.dragging)  {
+			_GizmoImage.color = _normalColor;
+		}
+	}
+
+	public void OnPointerDown(PointerEventData eventData) {
+		_GizmoImage.color = _selectedColor;
+	}
+	
+	public void OnPointerUp(PointerEventData eventData) {
+		if (!eventData.dragging)  {
+			_GizmoImage.color = _normalColor;
+		}
+	}
 
     protected Vector2 _GetPointerWorldPos(Vector2 pointerScreenPos) {
         return _worldCamera.ScreenToWorldPoint(new Vector3(pointerScreenPos.x, pointerScreenPos.y, _worldCamera.nearClipPlane));
