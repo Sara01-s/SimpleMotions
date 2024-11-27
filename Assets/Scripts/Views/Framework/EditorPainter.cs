@@ -149,7 +149,7 @@ public class EditorPainter : MonoBehaviour {
 		ApplyTheme(Theme);
 	}
 
-	public void ChangeEditorAccentColor(Color accentColor) {
+	public void ChangeEditorAccentColor(Color newAccentColor) {
 		_imagesWithAccentColor = GetImagesWithTag(_accentColorTag);
 
 		if (_previousImagesWithAccentColor == null || _imagesWithAccentColor != _previousImagesWithAccentColor) {
@@ -158,8 +158,9 @@ public class EditorPainter : MonoBehaviour {
 			_previousImagesWithAccentColor = _imagesWithAccentColor;
 		}
 
-		PaintImages(_imagesWithAccentColor, accentColor);
-		CurrentAccentColor = accentColor;
+		PaintImages(_imagesWithAccentColor, newAccentColor);
+
+		CurrentAccentColor = newAccentColor;
 		OnAccentColorUpdate?.Invoke(CurrentAccentColor);
     }
 

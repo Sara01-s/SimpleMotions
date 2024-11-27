@@ -81,10 +81,10 @@ namespace SimpleMotions {
 				return;
 			}
 
-			_entitySelector.DeselectEntity();
 			_videoCanvas.OnEntityRemoved.Execute(entityId);
 			_keyframeStorage.ClearEntityKeyframes(entityId);
 			_entityStorage.DeleteEntity(entityId);
+			_entitySelector.DeselectEntity();
 
 			_createdEntities--;
 			UnityEngine.Debug.Log($"Entidad Eliminada: {entityId}, Total: {_createdEntities}");

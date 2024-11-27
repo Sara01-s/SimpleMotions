@@ -1,6 +1,12 @@
 using static StringExtensions;
 using SimpleMotions.Internal;
 
+/// <summary>
+/// DTO stands for "Data Transfer Object" this objects are used instead of the structs declared in SimpleMotions.Internal.Components.cs
+/// to maintain view agnostic from domain types. Also this structs are readonly because they're meant to be presented and not mutated.
+/// 
+/// TL;DR; Use this structs to communicate between View Models and Views.
+/// </summary>
 namespace SimpleMotions {
 
 	public readonly struct EntityDTO {

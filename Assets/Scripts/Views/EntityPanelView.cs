@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
+public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisposable {
 
 	[SerializeField] private Image _selectionHighlight;
 	[SerializeField] private TMP_InputField _entityName;
@@ -15,16 +15,13 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 	private int _ownerEntityId;
 
     public void Configure(ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel, int ownerEntityId) {
-		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
-		_entityName.onValueChanged.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
 		_entityName.text = timelinePanelViewModel.GetEntityName(ownerEntityId);
 
+		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
+		_entityName.onValueChanged.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
         _deleteEntity.onClick.AddListener(() => {
 			timelinePanelViewModel.DeleteEntity.Execute(ownerEntityId);
-			entitySelectorViewModel.OnEntitySelected.Dispose();
-			entitySelectorViewModel.OnEntityDeselected.Dispose();
-			_toggleActive.onValueChanged.RemoveAllListeners();
-			_entityName.onValueChanged.RemoveAllListeners();
+			Dispose();
 			Destroy(gameObject);
 		});
 
@@ -34,13 +31,21 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 			}
 		});
 
-		entitySelectorViewModel.OnEntityDeselected.Subscribe(() => _selectionHighlight.enabled = false);
-		entitySelectorViewModel.OnEntitySelected.Subscribe(entityDTO => _selectionHighlight.enabled = ownerEntityId == entityDTO.Id);
+		entitySelectorViewModel.OnEntitySelected.Subscribe(EnableHightlight);
+		entitySelectorViewModel.OnEntityDeselected.Subscribe(DisableHighlight);
 		
 		_entitySelectorViewModel = entitySelectorViewModel;
 		_ownerEntityId = ownerEntityId;
 
 		SelectOwnerEntity();
+	}
+
+	private void DisableHighlight() {
+		_selectionHighlight.enabled = false;
+	}
+
+	private void EnableHightlight(EntityDTO entityDTO) {
+		_selectionHighlight.enabled = _ownerEntityId == entityDTO.Id;
 	}
 
 	public void OnPointerClick(PointerEventData _) {
@@ -49,5 +54,13 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler {
 
 	private void SelectOwnerEntity() {
 		_entitySelectorViewModel.SelectEntity.Execute(_ownerEntityId);
+	}
+
+	public void Dispose() {
+		_entitySelectorViewModel.OnEntityDeselected.Dispose();
+		_entitySelectorViewModel.OnEntitySelected.Dispose();
+		_deleteEntity.onClick.RemoveAllListeners();
+		_entityName.onValueChanged.RemoveAllListeners();
+		_toggleActive.onValueChanged.RemoveAllListeners();
 	}
 }

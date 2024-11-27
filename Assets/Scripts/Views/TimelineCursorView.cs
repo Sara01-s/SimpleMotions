@@ -7,6 +7,7 @@ public class TimelineCursorView : MonoBehaviour {
     [SerializeField] private RectTransform _sliderArea;
     [SerializeField] private GridLayoutGroup _framesHolder;
     [SerializeField] private Slider _cursor;
+	[SerializeField] private TMPro.TextMeshProUGUI _currentFrame;
 
     private IVideoTimelineViewModel _videoTimelineViewModel;
 
@@ -22,6 +23,7 @@ public class TimelineCursorView : MonoBehaviour {
 
     public void SetCursorNewFrame(int currentFrame) {
         _cursor.value = currentFrame;
+		_currentFrame.text = currentFrame.ToString();
     }
 
     public void UpdateSliderArea(float contentXPos) {
