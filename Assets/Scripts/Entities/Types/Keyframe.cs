@@ -2,7 +2,7 @@
 namespace SimpleMotions.Internal {
 
     public interface IKeyframe<out T> where T : Component {
-		Ease Ease { get; }
+		Ease Ease { get; set; }
 		int EntityId { get; }
         int Frame { get; }
         T Value { get; }
@@ -13,7 +13,7 @@ namespace SimpleMotions.Internal {
 
 		public static Keyframe<T> Invalid = new(Entity.Invalid.Id, TimelineData.INVALID_FRAME, new());
 
-		public Ease Ease { get; } = Ease.Linear;
+		public Ease Ease { get; set; } = Ease.Linear;
 		public int EntityId { get; }
 		public int Frame { get; }
 		public T Value { get; set; }

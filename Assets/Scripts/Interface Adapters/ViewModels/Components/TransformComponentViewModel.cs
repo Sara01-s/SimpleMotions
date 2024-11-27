@@ -25,6 +25,7 @@ namespace SimpleMotions {
 		ReactiveCommand<string> ScaleW { get; }
 		ReactiveCommand<string> ScaleH { get; }
 		ReactiveCommand<string> Roll { get; }
+		ReactiveCommand<int> EaseDropdown { get; }
 
 	}
 
@@ -50,6 +51,7 @@ namespace SimpleMotions {
 		public ReactiveCommand<string> ScaleW { get; } = new();
 		public ReactiveCommand<string> ScaleH { get; } = new();
 		public ReactiveCommand<string> Roll { get; } = new();
+		public ReactiveCommand<int> EaseDropdown { get; } = new();
 
 		private readonly IKeyframeStorage _keyframeStorage;
 		private readonly IVideoCanvas _videoCanvas;
@@ -78,7 +80,7 @@ namespace SimpleMotions {
 			Roll.Subscribe(rollAnglesDegrees => ModifyEntityProperty(rollAnglesDegrees, 
 																	 transform => transform.Roll,
 																	 (roll, parsedValue) => roll.AngleDegrees = parsedValue));
-			
+
 			OnSaveTransformKeyframe.Subscribe(transformView => {
 				SaveKeyframe(ParseTransformView(transformView));
 				OnDrawTransfromKeyframe.Execute();

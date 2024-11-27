@@ -2,7 +2,7 @@ using static SimpleMotions.SmMath;
 
 namespace SimpleMotions.Internal {
 
-    public enum Ease {
+    public enum Ease : int {
 		Linear,
 		InSine,
 		OutSine,
