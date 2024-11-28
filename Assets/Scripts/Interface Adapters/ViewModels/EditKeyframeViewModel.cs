@@ -18,6 +18,8 @@ namespace SimpleMotions {
         public EditKeyframeViewModel(IKeyframeStorage keyframeStorage) {
             NewKeyframeFrame.Subscribe(values => {
                 var keyframes = keyframeStorage.GetEntityKeyframesAtFrame(values.keyframeDTO.Id, values.targetFrame);
+
+				// TODO - EDIT KEYFRAME
             });
 
             NewKeyframeEase.Subscribe(values => {

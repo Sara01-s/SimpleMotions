@@ -186,6 +186,7 @@ namespace SimpleMotions {
 		}
 
 		/// <summary> RETURNS A COPY!! </summary>>
+		/// TODO - RETURNS A REFERENCE
         public IKeyframe<T>? GetEntityKeyframeOfType<T>(int entityId, int frame) where T : Component, new() {
 			var keyframesAtFrame = GetEntityKeyframesAtFrame(entityId, frame);
 
