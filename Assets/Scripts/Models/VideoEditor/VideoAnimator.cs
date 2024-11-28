@@ -72,7 +72,7 @@ namespace SimpleMotions {
 			var startKeyframe = keyframeSpline.GetPreviousKeyframe(currentFrame);
 			var targetKeyframe = keyframeSpline.GetNextKeyframe(currentFrame);
 
-			UnityEngine.Debug.Log(startKeyframe.Ease);
+			//UnityEngine.Debug.Log(startKeyframe.Ease);
 
 			float t = 0.0f;
 			int deltaFrame = targetKeyframe.Frame - startKeyframe.Frame;

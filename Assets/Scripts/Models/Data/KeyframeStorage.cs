@@ -218,7 +218,7 @@ namespace SimpleMotions {
 			if (!componentKeyframes.As<T>().TryGetValue(frame, out var keyframe)) {
 				throw new ArgumentException($"No keyframe of type {typeof(T)} was found in frame [{frame}]");
 			}
-
+			
 			return keyframe;
         }
 

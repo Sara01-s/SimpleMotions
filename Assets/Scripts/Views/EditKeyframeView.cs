@@ -20,6 +20,7 @@ public class EditKeyframeView : MonoBehaviour {
             }
 
             if (targetFrame < 0 || targetFrame > videoTimelineViewModel.TotalFrameCount) {
+    			Debug.Log("Keyframe can't be moved to a frame that do not exists.");
                 return;
             }
 

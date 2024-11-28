@@ -2,6 +2,8 @@ using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Xml.Schema;
 
 public sealed class TimelineView : MonoBehaviour {
 
@@ -23,7 +25,7 @@ public sealed class TimelineView : MonoBehaviour {
 	[Header("Keyframe Y Positions")]
 	[SerializeField] private float _transformKeyframeYPosition = 41.125f;
     [SerializeField] private float _shapeKeyframeYPosition = -24.25f;
-    //[SerializeField] private float _textKeyframeYPosition = -89.625f;
+    [SerializeField] private float _textKeyframeYPosition = -89.625f;
 
 	private IVideoTimelineViewModel _videoTimelineViewModel;
 
@@ -33,7 +35,8 @@ public sealed class TimelineView : MonoBehaviour {
 	private const float FRAME_WIDTH = 42.0f;
 	private bool _alreadyPainted;
 
-	public void Configure(IVideoTimelineViewModel videoTimelineViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
+	public void Configure(IVideoTimelineViewModel videoTimelineViewModel, IEntitySelectorViewModel entitySelectorViewModel,
+						  IEditKeyframeViewModel editKeyframeViewModel) {
 		_videoTimelineViewModel = videoTimelineViewModel;
 
 		_horizontalScrollbar.onValueChanged.AddListener(OnScrollbarValueChanged);
@@ -52,12 +55,14 @@ public sealed class TimelineView : MonoBehaviour {
 		entitySelectorViewModel.OnEntitySelected.Subscribe(entityDTO => {
             SetKeyframesVisibilityByEntity(entityDTO.Id);
         });
+
+		editKeyframeViewModel.NewKeyframeFrame.Subscribe(EditEntityKeyframe);
 	}
 
 	private GameObject CreateKeyframe(float frame, float keyframeYPosition) {
-		float keyframeXPosition = GetKeyframeXPosition();
+		float keyframeXPosition = GetKeyframeXPosition(frame);
 
-		var keyframe = Instantiate(_keyframePrefab, _content);
+		var keyframe = Instantiate(_keyframePrefab, parent: _content);
 		var keyframeRect = keyframe.GetComponent<RectTransform>();
 
 		keyframeRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 0.0f, keyframeRect.rect.height);
@@ -75,9 +80,9 @@ public sealed class TimelineView : MonoBehaviour {
 		return keyframe;
 	}
 
-	private float GetKeyframeXPosition() {
+	private float GetKeyframeXPosition(float targetFrame) {
 		return Remap (
-			_videoTimelineViewModel.CurrentFrame.Value, 
+			targetFrame, 
 			iMin: 0.0f, 
 			_videoTimelineViewModel.TotalFrameCount, 
 			_content.rect.xMin, 
@@ -111,26 +116,26 @@ public sealed class TimelineView : MonoBehaviour {
     }
 
     private void RemoveKeyframe(KeyframeDTO entityKeyframe) {
-        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.EntityId, out var componentTypeToKeyframes)) {
+        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.EntityId, out var keyframeComponents)) {
 			return;
 		}
 
-		if (!componentTypeToKeyframes.TryGetValue(entityKeyframe.ComponentDTO, out var frameToKeyframe)) {
+		if (!keyframeComponents.TryGetValue(entityKeyframe.ComponentDTO, out var componentFrames)) {
 			return;
 		}
 
-		if (!frameToKeyframe.TryGetValue(entityKeyframe.Frame, out var keyframeToRemove)) {
+		if (!componentFrames.TryGetValue(entityKeyframe.Frame, out var frameKeyframe)) {
 			return;
 		}
 
-		frameToKeyframe.Remove(entityKeyframe.Frame);
-		Destroy(keyframeToRemove);
+		componentFrames.Remove(entityKeyframe.Frame);
+		Destroy(frameKeyframe);
 
-		if (frameToKeyframe.Count == 0) {
-			componentTypeToKeyframes.Remove(entityKeyframe.ComponentDTO);
+		if (componentFrames.Count == 0) {
+			keyframeComponents.Remove(entityKeyframe.ComponentDTO);
 		}
 
-		if (componentTypeToKeyframes.Count == 0) {
+		if (keyframeComponents.Count == 0) {
 			DisplayedEntityKeyframes.Remove(entityKeyframe.EntityId);
 		}
 
@@ -172,7 +177,32 @@ public sealed class TimelineView : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	private void EditEntityKeyframe((KeyframeDTO originalKeyframe, int targetFrame) values) {
+		var entityId = values.originalKeyframe.EntityId;
+		var componentDTO = values.originalKeyframe.ComponentDTO;
+		var frame = values.originalKeyframe.Frame;
+		var ease = values.originalKeyframe.Ease;
+
+		var previousKeyframe = new KeyframeDTO(componentDTO, entityId, frame, ease);
+		RemoveKeyframe(previousKeyframe);
+
+		var newKeyframe = new KeyframeDTO(componentDTO, entityId, values.targetFrame, ease);
+
+		print(values.targetFrame);
+
+		if (componentDTO == ComponentDTO.Transform) {
+			AddKeyframe(newKeyframe, CreateKeyframe(values.targetFrame, _transformKeyframeYPosition));
+		}
+		else if (componentDTO == ComponentDTO.Shape) {
+			AddKeyframe(newKeyframe, CreateKeyframe(values.targetFrame, _shapeKeyframeYPosition));
+		}
+		else if (componentDTO == ComponentDTO.Text) {
+			AddKeyframe(newKeyframe, CreateKeyframe(values.targetFrame, _textKeyframeYPosition));
+		}
+
+	}
+
 	public void RefreshUI() {
 		DrawTimeline();
 		_headerView.RefreshUI();
