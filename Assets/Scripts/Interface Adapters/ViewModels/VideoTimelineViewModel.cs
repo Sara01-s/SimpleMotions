@@ -70,7 +70,7 @@ namespace SimpleMotions {
 
 			transformComponentViewModel.OnDeleteTransformKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var transformEntityKeyframe = new KeyframeDTO(ComponentDTO.Transform,keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var transformEntityKeyframe = new KeyframeDTO(ComponentDTO.Transform, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
 			});
 

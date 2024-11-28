@@ -31,7 +31,6 @@ public sealed class TimelineView : MonoBehaviour {
     public readonly Dictionary<int, Dictionary<ComponentDTO, Dictionary<int, GameObject>>> DisplayedEntityKeyframes = new();  
 
 	private const float FRAME_WIDTH = 42.0f;
-	private float _previousWidth;
 	private bool _alreadyPainted;
 
 	public void Configure(IVideoTimelineViewModel videoTimelineViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
@@ -203,7 +202,6 @@ public sealed class TimelineView : MonoBehaviour {
 		_content.sizeDelta = new Vector2(totalWidth, gridLayout.cellSize.y);
 		_framesHolder.sizeDelta = new Vector2(totalWidth, _framesHolder.sizeDelta.y);
 
-		_previousWidth = totalWidth;
 		_alreadyPainted = true;
 		
 	}
