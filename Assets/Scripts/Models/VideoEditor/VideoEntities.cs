@@ -51,7 +51,7 @@ namespace SimpleMotions {
 			entity.Name = $"Entity ({entity.Id})";
 			_createdEntities++;
 
-			UnityEngine.Debug.Log($"Entidad Creada: {entity}, Total: {_createdEntities}");
+			//UnityEngine.Debug.Log($"Entidad Creada: {entity}, Total: {_createdEntities}");
 
 			_componentStorage.AddComponent<Transform>(entity);
 			_componentStorage.AddComponent<Shape>(entity);

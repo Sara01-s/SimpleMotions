@@ -52,9 +52,9 @@ namespace SimpleMotions.Internal {
 					var castedKeyframe = new Keyframe<TComponent>(keyframe.EntityId, keyframe.Frame, castedValue);
 					keyframeSpline.AddKeyframe(keyframe.Frame, castedKeyframe);
 				}
-				//else {
-				//	throw new Exception("Failed to cast keyframe spline to: " + typeof(TComponent));
-				//}
+				else {
+					throw new Exception("Failed to cast keyframe spline to: " + typeof(TComponent));
+				}
 			}
 
 			return keyframeSpline;

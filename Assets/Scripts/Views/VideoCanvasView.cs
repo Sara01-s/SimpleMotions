@@ -86,7 +86,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 		_displayedEntites.Add(entityId, displayedEntity);
 
-		Debug.Log("Mostrando entidad: " + entity);
+		//Debug.Log("Mostrando entidad: " + entity);
 	}
 
 	private void DisplayEntityImage(int entityId, string imageFilepath) {

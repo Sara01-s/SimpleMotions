@@ -3,6 +3,8 @@ using SimpleMotions.Internal;
 using System.Linq;
 using System;
 using Unity.Collections;
+using UnityEngine.UIElements;
+using UnityEngine.Analytics;
 
 #nullable enable
 
@@ -126,7 +128,7 @@ namespace SimpleMotions {
 			}
 
 			keyframeSpline.AddKeyframe(frame, keyframe);
-			UnityEngine.Debug.Log("Añadido keyframe: " + keyframe);
+			//UnityEngine.Debug.Log("Añadido keyframe: " + keyframe);
 			return keyframe;
 		}
 
@@ -205,20 +207,22 @@ namespace SimpleMotions {
 			return entityKeyframeSplines;
 		}
 
+		// TODO - Tiene que evitar buscar por todos los tipos de componentes
         public IKeyframe<T>? GetEntityKeyframeOfType<T>(int entityId, int frame) where T : Component, new() {
 			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
 				throw new ArgumentException("Entity has no keyframes", entityId.ToString());
 			}
 
 			var componentKeyframes = componentToKeyframeSpline[typeof(T)];
+
 			foreach (var k in componentKeyframes) {
 				UnityEngine.Debug.Log(k);
 			}
 
 			if (!componentKeyframes.As<T>().TryGetValue(frame, out var keyframe)) {
-				throw new ArgumentException($"No keyframe of type {typeof(T)} was found in frame [{frame}]");
+				throw new InvalidCastException($"Keyframe found at frame {frame} is not of the expected type {typeof(IKeyframe<T>)}.");
 			}
-			
+
 			return keyframe;
         }
 

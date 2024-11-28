@@ -112,7 +112,7 @@ public sealed class TimelineView : MonoBehaviour {
 
 		// TODO - ¿Después hay que borrarlo?
 
-        Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
+        //Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
     }
 
     private void RemoveKeyframe(KeyframeDTO entityKeyframe) {

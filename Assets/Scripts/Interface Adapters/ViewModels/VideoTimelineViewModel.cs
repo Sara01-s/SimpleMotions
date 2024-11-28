@@ -64,48 +64,48 @@ namespace SimpleMotions {
 
 			transformComponentViewModel.OnDrawTransfromKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var transformEntityKeyframe = new KeyframeDTO(ComponentDTO.Transform, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var transformEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Transform, keyframe.Ease);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 			});
 
 			transformComponentViewModel.OnDeleteTransformKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var transformEntityKeyframe = new KeyframeDTO(ComponentDTO.Transform, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var transformEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Transform, keyframe.Ease);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
 			});
 
 			transformComponentViewModel.OnUpdateTransformKeyframe.Subscribe(_ => { 
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var transformEntityKeyframe = new KeyframeDTO(ComponentDTO.Transform, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var transformEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Transform, keyframe.Ease);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 			});
 
 			shapeComponentViewModel.OnDrawShapeKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var shapeEntityKeyframe = new KeyframeDTO(ComponentDTO.Shape, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var shapeEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Shape, keyframe.Ease);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 
 			shapeComponentViewModel.OnDeleteShapeKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var shapeEntityKeyframe = new KeyframeDTO(ComponentDTO.Shape, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var shapeEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Shape, keyframe.Ease);
 				OnShapeKeyframeDeleted.Execute(shapeEntityKeyframe);
 			});
 			shapeComponentViewModel.OnUpdateShapeKeyframe.Subscribe(_ => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var shapeEntityKeyframe = new KeyframeDTO(ComponentDTO.Shape, keyframe.EntityId, keyframe.Frame, keyframe.Ease);
+				var shapeEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Shape, keyframe.Ease);
 				OnShapeKeyframeDeleted.Execute(shapeEntityKeyframe);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
-				var transformKeyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var transformEntityKeyframe = new KeyframeDTO(ComponentDTO.Transform, transformKeyframe.EntityId, 0, transformKeyframe.Ease);
+				var transformKeyframe = keyframeStorage.AddKeyframe(_entitySelector.SelectedEntity.Id, TimelineData.FIRST_FRAME, new Transform());
+				var transformEntityKeyframe = new KeyframeDTO(transformKeyframe.EntityId, TimelineData.FIRST_FRAME, ComponentDTO.Transform,  transformKeyframe.Ease);
 				OnDrawTransformKeyframe.Execute(transformEntityKeyframe);
 
-				var shapeKeyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
-				var shapeEntityKeyframe = new KeyframeDTO(ComponentDTO.Shape, shapeKeyframe.EntityId, 0, shapeKeyframe.Ease);
+				var shapeKeyframe = keyframeStorage.AddKeyframe(_entitySelector.SelectedEntity.Id, TimelineData.FIRST_FRAME, new Shape());
+				var shapeEntityKeyframe = new KeyframeDTO(shapeKeyframe.EntityId, TimelineData.FIRST_FRAME, ComponentDTO.Shape,shapeKeyframe.Ease);
 				OnDrawShapeKeyframe.Execute(shapeEntityKeyframe);
 			});
 
