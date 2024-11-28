@@ -11896,8 +11896,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292897951
-  m_fontColor: {r: 0.62352943, g: 0.42352942, b: 0.8784314, a: 1}
+    rgba: 4292730612
+  m_fontColor: {r: 0.95686275, g: 0.87058824, b: 0.8666667, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -27247,7 +27247,7 @@ GameObject:
   - component: {fileID: 1901096871}
   m_Layer: 5
   m_Name: Image - Logo
-  m_TagString: Untagged
+  m_TagString: AccentColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
