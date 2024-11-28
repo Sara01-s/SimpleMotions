@@ -50,20 +50,20 @@ namespace SimpleMotions {
 
 	public readonly struct KeyframeDTO {
 		public readonly ComponentDTO ComponentDTO;
-		public readonly int Id;
+		public readonly int EntityId;
 		public readonly int Frame;
 		public readonly int Ease;
 
 		public KeyframeDTO(ComponentDTO componentType, int id, int frame, int ease) {
 			ComponentDTO = componentType;
-			Id = id;
+			EntityId = id;
 			Frame = frame;
 			Ease = ease;
 		}
 
 		public KeyframeDTO(ComponentDTO componentType, int id, int frame, Ease ease) {
 			ComponentDTO = componentType;
-			Id = id;
+			EntityId = id;
 			Frame = frame;
 			Ease = (int)ease;
 		}

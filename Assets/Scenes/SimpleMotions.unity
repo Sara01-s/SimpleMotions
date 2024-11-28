@@ -13625,6 +13625,10 @@ PrefabInstance:
       propertyPath: _editorCanvas
       value: 
       objectReference: {fileID: 1094580098}
+    - target: {fileID: 2758155684844567641, guid: 9c7953e42ba65ed339a486fbf98ca2e2, type: 3}
+      propertyPath: m_TagString
+      value: AccentColor
+      objectReference: {fileID: 0}
     - target: {fileID: 2964336177465309984, guid: 9c7953e42ba65ed339a486fbf98ca2e2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

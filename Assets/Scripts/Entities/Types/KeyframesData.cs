@@ -5,7 +5,7 @@ namespace SimpleMotions.Internal {
 	[System.Serializable]
 	public sealed class KeyframesData {
 
-		public Dictionary<int, Dictionary<System.Type, IKeyframeSpline>> AllKeyframes = new();
+		public Dictionary<int, Dictionary<System.Type, IKeyframeSpline<Component>>> AllKeyframes = new();
 
 	}
 }
