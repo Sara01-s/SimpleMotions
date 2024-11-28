@@ -83,10 +83,10 @@ public class ShapeComponentView : ComponentView {
 			);
 			
 			// TODO - Validate
-			if (imageFilePath == null) {
+			if (imageFilePath == null || imageFilePath.Length <= 0) {
 				return;
 			}
-			
+
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
 		});
 

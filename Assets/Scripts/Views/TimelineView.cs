@@ -9,6 +9,7 @@ public sealed class TimelineView : MonoBehaviour {
 	[SerializeField] private Scrollbar _horizontalScrollbar;
 	[SerializeField] private EditorPainter _editorPainter;
 	[SerializeField] private GameObject _editKeyframePanel;
+	[SerializeField] private GameObject _keyframesHolder;
 
 	[Header("Draw")]
 	[SerializeField] private RectTransform _content;
@@ -26,12 +27,11 @@ public sealed class TimelineView : MonoBehaviour {
 
 	private IVideoTimelineViewModel _videoTimelineViewModel;
 
-	private List<GameObject> _timeline = new();
-
 	//              		EntityId    ->       Component     ->      Frame -> Keyframe
     public readonly Dictionary<int, Dictionary<ComponentDTO, Dictionary<int, GameObject>>> DisplayedEntityKeyframes = new();  
 
-	private float _frameWidth = 42.0f;
+	private const float FRAME_WIDTH = 42.0f;
+	private float _previousWidth;
 	private bool _alreadyPainted;
 
 	public void Configure(IVideoTimelineViewModel videoTimelineViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
@@ -51,7 +51,7 @@ public sealed class TimelineView : MonoBehaviour {
         });
 
 		entitySelectorViewModel.OnEntitySelected.Subscribe(entityDTO => {
-            UpdateDisplayedKeyframes(entityDTO.Id);
+            SetKeyframesVisibilityByEntity(entityDTO.Id);
         });
 	}
 
@@ -60,17 +60,17 @@ public sealed class TimelineView : MonoBehaviour {
 
 		var keyframe = Instantiate(_keyframePrefab, _content);
 		var keyframeRect = keyframe.GetComponent<RectTransform>();
-		
 
 		keyframeRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 0.0f, keyframeRect.rect.height);
 
 		if (frame == 0) {
-			keyframeRect.anchoredPosition = new Vector2(_frameWidth, keyframeYPosition);
+			keyframeRect.anchoredPosition = new Vector2(FRAME_WIDTH, keyframeYPosition);
 		}
 		else { 
-			keyframeRect.anchoredPosition = new Vector2(keyframeXPosition + _frameWidth, keyframeYPosition);
+			keyframeRect.anchoredPosition = new Vector2(keyframeXPosition + FRAME_WIDTH, keyframeYPosition);
 		}
 
+		keyframe.GetComponent<RectTransform>().SetParent(_keyframesHolder.transform);
 		keyframe.GetComponent<Image>().color = _editorPainter.CurrentAccentColor;
 
 		return keyframe;
@@ -82,7 +82,7 @@ public sealed class TimelineView : MonoBehaviour {
 			iMin: 0.0f, 
 			_videoTimelineViewModel.TotalFrameCount, 
 			_content.rect.xMin, 
-			_content.rect.xMax - (_frameWidth * 2)
+			_content.rect.xMax - (FRAME_WIDTH * 2)
 		);
 	}
 
@@ -138,7 +138,23 @@ public sealed class TimelineView : MonoBehaviour {
 		Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
     }
 
-	private void UpdateDisplayedKeyframes(int selectedEntityId) {
+	private void SetKeyframesVisibility() {
+		 foreach (var entityId in DisplayedEntityKeyframes.Keys) {
+			var entityComponents = DisplayedEntityKeyframes[entityId];
+
+			foreach (var component in entityComponents.Keys) {
+				var entityKeyframes = entityComponents[component];
+
+				foreach (var keyframes in entityKeyframes.Keys) {
+					var keyframe = entityKeyframes[keyframes];
+
+					keyframe.SetActive(keyframes <= _videoTimelineViewModel.TotalFrameCount);
+				}
+			}
+		}
+	}
+
+	private void SetKeyframesVisibilityByEntity(int selectedEntityId) {
 		foreach (var entityEntry in DisplayedEntityKeyframes) {
 			var entityId = entityEntry.Key;
 			var componentTypeToKeyframes = entityEntry.Value;
@@ -157,7 +173,7 @@ public sealed class TimelineView : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	public void RefreshUI() {
 		DrawTimeline();
 		_headerView.RefreshUI();
@@ -182,18 +198,17 @@ public sealed class TimelineView : MonoBehaviour {
 
 		float totalWidth = gridLayout.cellSize.x * _videoTimelineViewModel.TotalFrameCount + (gridLayout.cellSize.x * 2);
 
+		SetKeyframesVisibility();
+
 		_content.sizeDelta = new Vector2(totalWidth, gridLayout.cellSize.y);
 		_framesHolder.sizeDelta = new Vector2(totalWidth, _framesHolder.sizeDelta.y);
 
+		_previousWidth = totalWidth;
 		_alreadyPainted = true;
+		
 	}
 
 	private void DeleteTimeline() {
-		foreach (var frame in _timeline) {
-			Destroy(frame);
-		}
-
-		_timeline.Clear();
 		_alreadyPainted = false;
 	}
 
