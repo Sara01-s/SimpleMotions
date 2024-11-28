@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using SimpleMotions.Internal;
 using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace SimpleMotions {
 
@@ -20,7 +22,8 @@ namespace SimpleMotions {
 		private readonly IEntityStorage _entityStorage;
 
 		private IEnumerable<int> _activeEntities;
-		private IEnumerable<int> _lastEntitiesWithKeyframes;
+		private IEnumerable<int> _interpolableEntites;
+		private IEnumerable<int> _lastInterpolableEntities;
 		private bool _videoCacheGenerated;
 
 		private IKeyframeSpline<Component> _currentComponentSpline;
@@ -37,7 +40,7 @@ namespace SimpleMotions {
 		}
 
 		public void GenerateVideoCache() {
-			bool cacheAlreadyGenerated = _lastEntitiesWithKeyframes != null && _activeEntities != _lastEntitiesWithKeyframes;
+			bool cacheAlreadyGenerated = _lastInterpolableEntities != null && _activeEntities != _lastInterpolableEntities;
 			if (cacheAlreadyGenerated) {
 				return;
 			}
@@ -45,8 +48,9 @@ namespace SimpleMotions {
 			_videoCacheGenerated = false;
 
 			_activeEntities = _entityStorage.GetActiveEntities();
-			_lastEntitiesWithKeyframes = _activeEntities;
-			
+			_interpolableEntites = _activeEntities.Where(entityId => _keyframeStorage.EntityHasMoreThanOneKeyframe(entityId));
+			_lastInterpolableEntities = _interpolableEntites;
+
 			_videoCacheGenerated = true;
 		}
 
@@ -55,7 +59,8 @@ namespace SimpleMotions {
 				throw new Exception("Generate video cache before starting entity interpolation.");
 			}
 
-			foreach (int entityId in _activeEntities) {
+			foreach (int entityId in _interpolableEntites) {
+				UnityEngine.Debug.Log(entityId);
 				InterpolateEntityKeyframes(entityId, currentFrame);
 			}
 		}

@@ -16,6 +16,7 @@ namespace SimpleMotions {
 		bool EntityHasKeyframesOfType(Type componentType, int entityId);
 		bool EntityHasAnyKeyframeAtFrame(int entityId, int frame);
 		bool EntityHasKeyframeAtFrameOfType<T>(int entityId, int frame) where T : Component, new();
+		bool EntityHasMoreThanOneKeyframe(int entityId);
 
 		void AddKeyframe(IKeyframe<Component> keyframe);
 		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component, new();
@@ -63,6 +64,23 @@ namespace SimpleMotions {
 			return _keyframes.TryGetValue(entityId, out var _);
 		}
 
+		// This is useful for determining interpolable entities. (Since and interpolation needs at minimun 2 keyframes).
+		public bool EntityHasMoreThanOneKeyframe(int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return false;
+			}
+
+			foreach(var componentType in GetEntityKeyframeTypes(entityId)) {
+				if (componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+					if (keyframeSpline.Count > 1) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public bool EntityHasKeyframesOfType(Type componentType, int entityId) {
 			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
 				return false;
@@ -80,13 +98,11 @@ namespace SimpleMotions {
 				return false;
 			}
 
-			// La entidad tiene componentes con keyframes
 
 			if (!componentToKeyframeSpline.TryGetValue(typeof(T), out var keyframeSpline)) {
 				return false;
 			}
 
-			// El componente tiene una keyframe spline de T. <Transform, Shape, etc..>
 
 			return keyframeSpline.HasKeyframeAtFrame(frame);
  		}

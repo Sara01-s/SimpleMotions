@@ -34,6 +34,7 @@ namespace SimpleMotions.Internal {
 				|| start  is not Shape startShape 
 				|| target is not Shape targetShape)
 			{
+				UnityEngine.Debug.Log("HAHAHAHAHAHHA" + component.GetType());
 				throw new System.ArgumentException("Invalid component types for Shape interpolation.");
 			}
 
