@@ -59,7 +59,6 @@ namespace SimpleMotions {
 				SetShape(type);
                 SetColor(color);
 
-				keyframeStorage.RemoveKeyframeOfType(typeof(Shape), _SelectedEntityId, _CurrentFrame);
 				videoCanvas.DisplayEntity(_SelectedEntityId);
 			});
 

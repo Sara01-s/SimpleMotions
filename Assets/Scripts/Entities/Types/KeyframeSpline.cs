@@ -32,7 +32,7 @@ namespace SimpleMotions.Internal {
 		public IKeyframe<T>[] Keyframes => _keyframes.Values.ToArray();
 		public int[] KeyframeIndices => _keyframes.Keys.ToArray();
 		
-		public IKeyframe<T> this[int frame] => _keyframes[frame];
+ 		public IKeyframe<T> this[int frame] => _keyframes[frame];
 		public int Count => _keyframes.Values.Count;
 
 		// 					 			frame -> IKeyframe<Component>
@@ -53,7 +53,7 @@ namespace SimpleMotions.Internal {
 					keyframeSpline.AddKeyframe(keyframe.Frame, castedKeyframe);
 				}
 				else {
-					throw new Exception("Failed to cast keyframe spline to: " + typeof(TComponent));
+//.					throw new Exception("Failed to cast keyframe spline to: " + typeof(TComponent));
 				}
 			}
 

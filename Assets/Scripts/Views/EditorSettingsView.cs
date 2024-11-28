@@ -8,7 +8,7 @@ public class EditorSettingsView : MonoBehaviour {
     [SerializeField] private Image _currentColor;
     [SerializeField] private IconColor _colorPickerIcon;
 
-    public void Configure() { }
+    public void Configure() {}
 
     public void SubscribeToColorPicker() {
         SetColor();

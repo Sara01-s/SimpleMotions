@@ -1,4 +1,3 @@
-using System.Windows.Forms;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
@@ -71,10 +70,12 @@ namespace SimpleMotions {
 			transformComponentViewModel.OnDeleteTransformKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				var transformEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Transform, keyframe.Ease);
+				
+				keyframeStorage.RemoveKeyframeOfType(typeof(Transform), _entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
 			});
 
-			transformComponentViewModel.OnUpdateTransformKeyframe.Subscribe(_ => { 
+			transformComponentViewModel.OnUpdateTransformKeyframe.Subscribe(_ => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				var transformEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Transform, keyframe.Ease);
 				OnTransfromKeyframeDeleted.Execute(transformEntityKeyframe);
@@ -90,8 +91,11 @@ namespace SimpleMotions {
 			shapeComponentViewModel.OnDeleteShapeKeyframe.Subscribe(() => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				var shapeEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Shape, keyframe.Ease);
+				
+				keyframeStorage.RemoveKeyframeOfType(typeof(Shape), _entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				OnShapeKeyframeDeleted.Execute(shapeEntityKeyframe);
 			});
+
 			shapeComponentViewModel.OnUpdateShapeKeyframe.Subscribe(_ => {
 				var keyframe = keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				var shapeEntityKeyframe = new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Shape, keyframe.Ease);

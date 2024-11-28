@@ -3,8 +3,6 @@ using SimpleMotions.Internal;
 using System.Linq;
 using System;
 using Unity.Collections;
-using UnityEngine.UIElements;
-using UnityEngine.Analytics;
 
 #nullable enable
 
@@ -16,7 +14,7 @@ namespace SimpleMotions {
 
 		bool EntityHasKeyframes(int entityId);
 		bool EntityHasKeyframesOfType(Type componentType, int entityId);
-		bool EntityHasKeyframeAtFrame(int entityId, int frame);
+		bool EntityHasAnyKeyframeAtFrame(int entityId, int frame);
 		bool EntityHasKeyframeAtFrameOfType<T>(int entityId, int frame) where T : Component, new();
 
 		void AddKeyframe(IKeyframe<Component> keyframe);
@@ -73,16 +71,24 @@ namespace SimpleMotions {
 			return componentToKeyframeSpline.ContainsKey(componentType);
 		}
 
-		public bool EntityHasKeyframeAtFrame(int entityId, int frame) {
+		public bool EntityHasAnyKeyframeAtFrame(int entityId, int frame) {
 			return GetEntityKeyframesAtFrame(entityId, frame).Count() != 0;
 		}
 
 		public bool EntityHasKeyframeAtFrameOfType<T>(int entityId, int frame) where T : Component, new() {
-			if (!EntityHasKeyframeAtFrame(entityId, frame)) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
 				return false;
 			}
 
-			return GetEntityKeyframeOfType<T>(entityId, frame) != null;
+			// La entidad tiene componentes con keyframes
+
+			if (!componentToKeyframeSpline.TryGetValue(typeof(T), out var keyframeSpline)) {
+				return false;
+			}
+
+			// El componente tiene una keyframe spline de T. <Transform, Shape, etc..>
+
+			return keyframeSpline.HasKeyframeAtFrame(frame);
  		}
 
 		public void AddKeyframe(IKeyframe<Component> keyframe) {

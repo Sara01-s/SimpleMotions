@@ -68,8 +68,7 @@ namespace SimpleMotions {
 				SetEntityComponentProperty<Transform, Position>(_SelectedEntityId, t => t.Position, position);
 				SetEntityComponentProperty<Transform, Scale>(_SelectedEntityId, t => t.Scale, scale);
 				SetEntityComponentProperty<Transform, Roll>(_SelectedEntityId, t => t.Roll, rollDegrees);
-
-				keyframeStorage.RemoveKeyframeOfType(typeof(Transform), _SelectedEntityId, _CurrentFrame);
+				
 				videoCanvas.DisplayEntity(_SelectedEntityId);
 			});
 
