@@ -10,6 +10,7 @@ public class VideoSettingsView : MonoBehaviour {
     [SerializeField] private Image _currentColor;
 	[SerializeField] private AudioPlayer _audioPlayer;
 	[SerializeField] private int _minFrameRate, _maxFrameRate;
+    [SerializeField] private IconColor _colorPickerIcon;
 
     private IVideoSettingsViewModel _videoSettingsViewModel;
     private IVideoCanvasViewModel _videoCanvasViewModel;
@@ -63,6 +64,8 @@ public class VideoSettingsView : MonoBehaviour {
     private void UpdateBackgroundColor(Color color) {
         _videoCanvasViewModel.BackgroundColor.Value = (color.r, color.g, color.b, color.a); 
         _currentColor.color = color;
+
+        _colorPickerIcon.SetIconColor(color);
     }
 
     private void SetColor() {

@@ -10,6 +10,7 @@ public class ShapeComponentView : ComponentView {
     [SerializeField] private Image _currentColor;
 
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
+    [SerializeField] private IconColor _colorPickerIcon;
 
     private IShapeComponentViewModel _shapeComponentViewModel;
     private IEditorPainterParser _editorPainterParser;
@@ -148,6 +149,8 @@ public class ShapeComponentView : ComponentView {
     private void SetEntityColor(Color color) {
         _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
         _currentColor.color = color;
+
+        _colorPickerIcon.SetIconColor(color);
     }
 
 }

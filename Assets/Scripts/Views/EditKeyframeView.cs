@@ -23,10 +23,6 @@ public class EditKeyframeView : MonoBehaviour {
                 return;
             }
 
-            //if (_originalKeyframeFrame == 0 && targetFrame == 0) {
-            //    return;
-            //}
-            
             editKeyframeViewModel.NewKeyframeFrame.Value = (new KeyframeDTO (
                 _keyframeComponent, 
                 _entityId, 

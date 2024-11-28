@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
