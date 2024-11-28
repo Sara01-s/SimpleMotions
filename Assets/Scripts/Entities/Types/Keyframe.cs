@@ -1,7 +1,7 @@
 
 namespace SimpleMotions.Internal {
 
-    public interface IKeyframe<out T> where T : Component {
+    public interface IKeyframe<out T> where T : Component, new() {
 		Ease Ease { get; set; }
 		int EntityId { get; }
         int Frame { get; set ; }
@@ -18,10 +18,10 @@ namespace SimpleMotions.Internal {
 		public int Frame { get; set; }
 		public T Value { get; }
 
-		public Keyframe(IKeyframe<Component> keyframe) {
+		public Keyframe(IKeyframe<T> keyframe) {
 			EntityId = keyframe.EntityId;
 			Frame = keyframe.Frame;
-			Value = (T)keyframe.Value;
+			Value = keyframe.Value;
 		}
 
 		public Keyframe(int entityId) {

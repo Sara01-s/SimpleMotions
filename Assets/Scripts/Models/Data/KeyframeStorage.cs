@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using SimpleMotions.Internal;
 using System.Linq;
 using System;
+using Unity.Collections;
 
 #nullable enable
 
@@ -17,8 +18,8 @@ namespace SimpleMotions {
 		bool EntityHasKeyframeAtFrameOfType<T>(int entityId, int frame) where T : Component, new();
 
 		void AddKeyframe(IKeyframe<Component> keyframe);
-		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component;
-		IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component;
+		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component, new();
+		IKeyframe<T> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component, new();
 
 		void AddDefaultKeyframes(int entityId);
 		void AddDefaultKeyframe(Type componentType, int entityId);
@@ -29,8 +30,9 @@ namespace SimpleMotions {
 		void SetKeyframeFrame(IKeyframe<Component> keyframe, int targetFrame);
 		public void SetKeyframeEase(IKeyframe<Component> original, Ease newEase);
 
-		IKeyframeSpline GetEntityKeyframeSplineOfType(Type componentType, int entityId);
-		IEnumerable<IKeyframeSpline> GetEntityKeyframeSplines(int entityId);
+		IKeyframeSpline<T> GetEntityKeyframeSplineOfType<T>(int entityId) where T : Component, new();
+		IKeyframeSpline<Component> GetEntityKeyframeSplineOfType(Type componentType, int entityId);
+		IEnumerable<IKeyframeSpline<Component>> GetEntityKeyframeSplines(int entityId);
 
 		IEnumerable<IKeyframe<Component>> GetEntityKeyframesAtFrame(int entityId, int frame);
 		IEnumerable<Type> GetEntityKeyframeTypes(int entityId);
@@ -45,7 +47,7 @@ namespace SimpleMotions {
 		public Type[] AllComponentTypes { get; }
 
 		// entity id -> [component type -> keyframe spline (frame -> keyframe)].
-		private readonly Dictionary<int, Dictionary<Type, IKeyframeSpline>> _keyframes;
+		private readonly Dictionary<int, Dictionary<Type, IKeyframeSpline<Component>>> _keyframes;
 		private readonly VideoData _videoData;
 
 		public KeyframeStorage(KeyframesData keyframesData, VideoData videoData) {
@@ -85,7 +87,7 @@ namespace SimpleMotions {
 			AddKeyframe(keyframe.EntityId, keyframe.Frame, keyframe.Value, keyframe.Ease);
 		}
 
-		public void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component {
+		public void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component, new() {
 			AddKeyframe(keyframe.EntityId, keyframe.Frame, keyframe.Value, keyframe.Ease);
 		}
 
@@ -111,16 +113,16 @@ namespace SimpleMotions {
 			AddKeyframe(entityId, TimelineData.FIRST_FRAME, component);
 		}
 
-		public IKeyframe<Component> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component {
-			var keyframe = new Keyframe<Component>(entityId, frame, value, ease);
+		public IKeyframe<T> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component, new() {
+			var keyframe = new Keyframe<T>(entityId, frame, value, ease);
 			var componentType = typeof(T);
 
 			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
-				_keyframes[entityId] = componentToKeyframeSpline = new Dictionary<Type, IKeyframeSpline>();
+				_keyframes[entityId] = componentToKeyframeSpline = new();
 			}
 
 			if (!componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
-				componentToKeyframeSpline[componentType] = keyframeSpline = new KeyframeSpline();
+				componentToKeyframeSpline[componentType] = keyframeSpline = new KeyframeSpline<Component>();
 			}
 
 			keyframeSpline.AddKeyframe(frame, keyframe);
@@ -153,7 +155,7 @@ namespace SimpleMotions {
 			keyframeSpline.RemoveKeyframe(frame);
 		}
 
-		public IKeyframeSpline GetEntityKeyframeSplineOfType(Type componentType, int entityId) {
+		public IKeyframeSpline<Component> GetEntityKeyframeSplineOfType(Type componentType, int entityId) {
 			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
 				throw new ArgumentException("Entity has no keyframes", entityId.ToString());
 			}
@@ -169,12 +171,30 @@ namespace SimpleMotions {
 			return keyframeSpline;
 		}
 
-		public IEnumerable<IKeyframeSpline> GetEntityKeyframeSplines(int entityId) {
+		public IKeyframeSpline<T> GetEntityKeyframeSplineOfType<T>(int entityId) where T : Component, new() {
 			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
-				return Enumerable.Empty<IKeyframeSpline>();
+				throw new ArgumentException("Entity has no keyframes", entityId.ToString());
 			}
 
-			var entityKeyframeSplines = new List<IKeyframeSpline>();
+			var componentType = typeof(T);
+
+			if (!EntityHasKeyframesOfType(componentType, entityId)) {
+				throw new ArgumentException($"Entity has no keyframes of type {componentType}", componentType.Name);
+			}
+
+			if (!componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
+				throw new ArgumentException($"Component has no keyframe spline {componentType}", componentType.Name);
+			}
+
+			return keyframeSpline.As<T>();
+		}
+
+		public IEnumerable<IKeyframeSpline<Component>> GetEntityKeyframeSplines(int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return Enumerable.Empty<IKeyframeSpline<Component>>();
+			}
+
+			var entityKeyframeSplines = new List<IKeyframeSpline<Component>>();
 
 			foreach (var componentType in componentToKeyframeSpline.Keys) {
 				if (componentToKeyframeSpline.TryGetValue(componentType, out var keyframeSpline)) {
@@ -185,18 +205,21 @@ namespace SimpleMotions {
 			return entityKeyframeSplines;
 		}
 
-		/// <summary> RETURNS A COPY!! </summary>>
-		/// TODO - RETURNS A REFERENCE
         public IKeyframe<T>? GetEntityKeyframeOfType<T>(int entityId, int frame) where T : Component, new() {
-			var keyframesAtFrame = GetEntityKeyframesAtFrame(entityId, frame);
-
-			foreach (var keyframe in keyframesAtFrame) {
-				if (keyframe.Value is T value) {
-					return CopyKeyframeWithNewValue(keyframe, value);
-				}
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				throw new ArgumentException("Entity has no keyframes", entityId.ToString());
 			}
 
-			return null;
+			var componentKeyframes = componentToKeyframeSpline[typeof(T)];
+			foreach (var k in componentKeyframes) {
+				UnityEngine.Debug.Log(k);
+			}
+
+			if (!componentKeyframes.As<T>().TryGetValue(frame, out var keyframe)) {
+				throw new ArgumentException($"No keyframe of type {typeof(T)} was found in frame [{frame}]");
+			}
+
+			return keyframe;
         }
 
 		public IEnumerable<IKeyframe<Component>> GetEntityKeyframesAtFrame(int entityId, int frame) {
@@ -240,16 +263,14 @@ namespace SimpleMotions {
 			};
 		}
 
-		private static IKeyframe<T> CopyKeyframeWithNewValue<T>(IKeyframe<Component> original, T newValue) where T : Component, new() {
-			return new Keyframe<T>(original.EntityId, original.Frame, newValue);
-		}
-
 		public void SetKeyframeFrame(IKeyframe<Component> original, int newFrame) {
 			original.Frame = newFrame;
+			UnityEngine.Debug.Log($"keyframe {original} moved to frame {original.Frame}");
 		}
 
 		public void SetKeyframeEase(IKeyframe<Component> original, Ease newEase) {
 			original.Ease = newEase;
+			UnityEngine.Debug.Log($"keyframe {original} changed ease to {original.Ease}");
 		}
 
     }

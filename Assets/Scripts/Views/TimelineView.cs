@@ -92,8 +92,8 @@ public sealed class TimelineView : MonoBehaviour {
 	}
 
 	private void AddKeyframe(KeyframeDTO entityKeyframe, GameObject keyframeDisplay) {
-        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentsByType)) {
-			DisplayedEntityKeyframes[entityKeyframe.Id] = componentsByType = new();
+        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.EntityId, out var componentsByType)) {
+			DisplayedEntityKeyframes[entityKeyframe.EntityId] = componentsByType = new();
 		}
 
         if (!componentsByType.TryGetValue(entityKeyframe.ComponentDTO, out var frameByType)) {
@@ -103,15 +103,15 @@ public sealed class TimelineView : MonoBehaviour {
         frameByType[entityKeyframe.Frame] = keyframeDisplay;
 
 		var keyframeSelector = keyframeDisplay.GetComponent<KeyframeSelector>();
-		keyframeSelector.Configure(entityKeyframe.Id, entityKeyframe.ComponentDTO, entityKeyframe.Frame, entityKeyframe.Ease, _editKeyframePanel);
+		keyframeSelector.Configure(entityKeyframe.EntityId, entityKeyframe.ComponentDTO, entityKeyframe.Frame, entityKeyframe.Ease, _editKeyframePanel);
 
 		// TODO - ¿Después hay que borrarlo?
 
-        Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
+        Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
     }
 
     private void RemoveKeyframe(KeyframeDTO entityKeyframe) {
-        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.Id, out var componentTypeToKeyframes)) {
+        if (!DisplayedEntityKeyframes.TryGetValue(entityKeyframe.EntityId, out var componentTypeToKeyframes)) {
 			return;
 		}
 
@@ -131,10 +131,10 @@ public sealed class TimelineView : MonoBehaviour {
 		}
 
 		if (componentTypeToKeyframes.Count == 0) {
-			DisplayedEntityKeyframes.Remove(entityKeyframe.Id);
+			DisplayedEntityKeyframes.Remove(entityKeyframe.EntityId);
 		}
 
-		Debug.Log($"La entidad con la ID {entityKeyframe.Id}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
+		Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
     }
 
 	private void SetKeyframesVisibility() {

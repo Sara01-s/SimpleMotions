@@ -23,7 +23,7 @@ namespace SimpleMotions {
 		private IEnumerable<int> _lastEntitiesWithKeyframes;
 		private bool _videoCacheGenerated;
 
-		private IKeyframeSpline _currentComponentSpline;
+		private IKeyframeSpline<Component> _currentComponentSpline;
 		private Component _currentInterpolatedComponent;
 
 		public ReactiveValue<Entity> EntityDisplayInfo { get; } = new();
@@ -68,7 +68,7 @@ namespace SimpleMotions {
 			}
 		}
 
-		private void InterpolateKeyframeSpline(IKeyframeSpline keyframeSpline, Component component, int currentFrame) {
+		private void InterpolateKeyframeSpline(IKeyframeSpline<Component> keyframeSpline, Component component, int currentFrame) {
 			var startKeyframe = keyframeSpline.GetPreviousKeyframe(currentFrame);
 			var targetKeyframe = keyframeSpline.GetNextKeyframe(currentFrame);
 
