@@ -12,7 +12,8 @@ public class InspectorView : MonoBehaviour {
 	private IInspectorViewModel _inspectorViewModel;
 
     public void Configure(IInspectorViewModel inspectorViewModel) {
-		_selectedEntityName.onValueChanged.AddListener(name => inspectorViewModel.SelectedEntityName = name);
+		_selectedEntityName.onSubmit.AddListener(name => inspectorViewModel.SelectedEntityName = name);
+		_selectedEntityName.onDeselect.AddListener(name => inspectorViewModel.SelectedEntityName = name);
 
 		inspectorViewModel.OnEntitySelected.Subscribe(UpdateInspector);
 		inspectorViewModel.OnEntityDeselected.Subscribe(ClearInspector);

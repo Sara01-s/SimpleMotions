@@ -37,8 +37,8 @@ public class TimelinePanelView : MonoBehaviour {
 		}
 
 		if (_hierarchyGrid.transform.childCount > START_ENTITY_PANELS_SUPPORT) {
-			int multiplier = System.Convert.ToInt32(isAddingEntity);
-			_entityHierarchyContent.sizeDelta += new Vector2(0.0f, _hierarchyGrid.cellSize.y + _hierarchyGrid.spacing.y * multiplier);
+			float multiplier = isAddingEntity ? 1.0f : -1.0f;
+			_entityHierarchyContent.sizeDelta += new Vector2(0.0f, (_hierarchyGrid.cellSize.y + _hierarchyGrid.spacing.y) * multiplier);
 		}
 	}
 

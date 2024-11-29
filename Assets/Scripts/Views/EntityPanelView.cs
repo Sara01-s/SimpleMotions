@@ -18,7 +18,9 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 		_entityName.text = timelinePanelViewModel.GetEntityName(ownerEntityId);
 
 		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
-		_entityName.onValueChanged.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
+		_entityName.onSubmit.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
+		_entityName.onDeselect.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
+
         _deleteEntity.onClick.AddListener(() => {
 			timelinePanelViewModel.DeleteEntity.Execute(ownerEntityId);
 			Dispose();
