@@ -49,7 +49,7 @@ public class FFMPEGExporter : MonoBehaviour {
 #elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
         return Path.Combine(path, "Linux/ffmpeg");
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-        return Path.Combine(path, "OSX/ffmpeg_mac");
+        return Path.Combine(path, "OSX/ffmpeg");
 #endif
     }
 

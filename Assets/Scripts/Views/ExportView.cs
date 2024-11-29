@@ -1,7 +1,9 @@
 using System.Collections;
 using SimpleMotions;
 using UnityEngine;
+using UnityEngine.Rendering;
 using System.IO;
+using System;
 
 public class ExportView : MonoBehaviour {
 
@@ -40,7 +42,11 @@ public class ExportView : MonoBehaviour {
 		};
 		
 		processedRT.Create();
-		var outputTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.RGBA32, false);
+		var outputTexture = new Texture2D(_videoResolution.x, _videoResolution.y, TextureFormat.ARGB32, false);
+
+		if (!_cameraToCapture.isActiveAndEnabled) {
+		    Debug.LogError("Camera is not active or enabled.");
+		}
 
 		for (int frame = 0; frame <= totalFrames; frame++) {
 			if (_exportSttoped) {
@@ -82,21 +88,12 @@ public class ExportView : MonoBehaviour {
 		_cameraToCapture.targetTexture = processedRT;
 		_cameraToCapture.Render();
 
-		int kernel = _exportVideo.FindKernel("ExportFrame");
-		_exportVideo.SetTexture(kernel, "_InputTexture", processedRT);
-		_exportVideo.SetTexture(kernel, "_ResultTexture", processedRT);
-
-		int threadGroupsX = Mathf.CeilToInt(processedRT.width / 8.0f);
-		int threadGroupsY = Mathf.CeilToInt(processedRT.height / 8.0f);
-		_exportVideo.Dispatch(kernel, threadGroupsX, threadGroupsY, 1);
-
 		RenderTexture.active = processedRT;
 		outputTexture.ReadPixels(new Rect(0, 0, processedRT.width, processedRT.height), 0, 0);
 		outputTexture.Apply();
 
 		return outputTexture.EncodeToPNG();
 	}
-
 
 	private string GetFramesTempDirectory() {
         var tempDirectoryPath = Path.Combine(Application.persistentDataPath, ".TempFrames");
