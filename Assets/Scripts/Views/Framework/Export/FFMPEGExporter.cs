@@ -45,11 +45,11 @@ public class FFMPEGExporter : MonoBehaviour {
         string path = Application.streamingAssetsPath;
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-        return Path.Combine(path, "FFMPEG/Windows/bin/ffmpeg.exe");
+        return Path.Combine(path, "Windows/bin/ffmpeg.exe");
 #elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-        return Path.Combine(path, "FFMPEG/Linux/ffmpeg");
+        return Path.Combine(path, "Linux/ffmpeg");
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-        return Path.Combine(path, "FFMPEG/Mac/ffmpeg_mac");
+        return Path.Combine(path, "OSX/ffmpeg_mac");
 #endif
     }
 
