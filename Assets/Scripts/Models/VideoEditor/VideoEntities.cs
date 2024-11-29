@@ -82,7 +82,7 @@ namespace SimpleMotions {
 			}
 
 			_videoCanvas.OnEntityRemoved.Execute(entityId);
-			_keyframeStorage.ClearEntityKeyframes(entityId);
+			_keyframeStorage.DeleteEntityKeyframes(entityId);
 			_entityStorage.DeleteEntity(entityId);
 			_entitySelector.DeselectEntity();
 

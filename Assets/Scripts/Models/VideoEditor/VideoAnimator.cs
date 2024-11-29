@@ -45,8 +45,6 @@ namespace SimpleMotions {
 				return;
 			}
 
-			UnityEngine.Debug.Log("pico");
-
 			_videoCacheGenerated = false;
 
 			_activeEntities = _entityStorage.GetActiveEntities();

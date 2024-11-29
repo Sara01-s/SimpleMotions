@@ -31,7 +31,7 @@ namespace SimpleMotions {
             _totalFrames = videoPlayerData.TotalFrames.Value;
             videoPlayerData.TotalFrames.Subscribe(totalFrames => _totalFrames = totalFrames);
 
-            Export.Subscribe(value => {
+            Export.Subscribe(() => {
                 if (IsNameNotUsed()) {
                     OnExport.Execute((_totalFrames, TargetFrameRate.Value, OutputFilePath.Value, FileName.Value));
                 }

@@ -57,8 +57,8 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 	}
 
 	public void Dispose() {
-		_entitySelectorViewModel.OnEntityDeselected.Dispose();
-		_entitySelectorViewModel.OnEntitySelected.Dispose();
+		_entitySelectorViewModel.OnEntitySelected.Unsubscribe(EnableHightlight);
+		_entitySelectorViewModel.OnEntityDeselected.Unsubscribe(DisableHighlight);
 		_deleteEntity.onClick.RemoveAllListeners();
 		_entityName.onValueChanged.RemoveAllListeners();
 		_toggleActive.onValueChanged.RemoveAllListeners();

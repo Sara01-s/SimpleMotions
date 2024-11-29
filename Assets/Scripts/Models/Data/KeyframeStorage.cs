@@ -25,7 +25,8 @@ namespace SimpleMotions {
 		void AddDefaultKeyframes(int entityId);
 		void AddDefaultKeyframe(Type componentType, int entityId);
 
-		void ClearEntityKeyframes(int entityId);
+		void DeleteEntityKeyframes(int entityId);
+		void ResetEntityKeyframes(int entityId);
 		void RemoveKeyframeOfType(Type componentType, int entityId, int frame);
 
 		void SetKeyframeFrame(IKeyframe<Component> keyframe, int targetFrame);
@@ -115,6 +116,10 @@ namespace SimpleMotions {
 		}
 
 		public void AddDefaultKeyframes(int entityId) {
+			if (entityId == Entity.Invalid.Id) {
+				return;
+			}
+
 			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Transform());
 			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Shape());
 			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Text());
@@ -153,7 +158,17 @@ namespace SimpleMotions {
 			return keyframe;
 		}
 
-		public void ClearEntityKeyframes(int entityId) {
+		/// <summary> Deletes all entity keyframes (use only for entity deletion). </summary>
+		public void DeleteEntityKeyframes(int entityId) {
+			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
+				return;
+			}
+
+			componentToKeyframeSpline.Clear();
+		}
+
+		/// <summary> Deletes all entity keyframes and adds default keyframes again. </summary>
+		public void ResetEntityKeyframes(int entityId) {
 			if (!_keyframes.TryGetValue(entityId, out var componentToKeyframeSpline)) {
 				return;
 			}
