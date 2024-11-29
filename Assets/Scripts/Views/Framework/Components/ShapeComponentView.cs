@@ -12,6 +12,8 @@ public class ShapeComponentView : ComponentView {
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private IconColor _colorPickerIcon;
 
+    [SerializeField] private GameObject _asterisk;
+
     private IShapeComponentViewModel _shapeComponentViewModel;
     private IEditorPainterParser _editorPainterParser;
     private ShapeType[] _shapeTypes;
@@ -63,10 +65,13 @@ public class ShapeComponentView : ComponentView {
                 _Updateblocker.SetActive(true);
                 _FrameHasKeyframe = false;
             }
+
+            _asterisk.SetActive(false);
         });
 
         _UpdateKeyframe.onClick.AddListener(() => {
             if (_FrameHasKeyframe) {
+                _asterisk.SetActive(false);
                 shapeComponentViewModel.OnUpdateShapeKeyframe.Execute(GetShapeData());
             }
         });
@@ -89,6 +94,7 @@ public class ShapeComponentView : ComponentView {
 			}
 
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
+            _asterisk.SetActive(true);
 		});
 
 		if (_shapeButtons.Length == 0) {
@@ -104,6 +110,7 @@ public class ShapeComponentView : ComponentView {
         _Update.color = _EditorPainter.Theme.AccentColor;
         _AddOrRemoveBlocker.SetActive(true);
         _Updateblocker.SetActive(false);
+        _asterisk.SetActive(false);
         _FrameHasKeyframe = true;
 
         _shapeComponentViewModel = shapeComponentViewModel;
@@ -120,6 +127,8 @@ public class ShapeComponentView : ComponentView {
 			string shapeName = shapeType.ShapeTypeUI.ToString();
 			_shapeComponentViewModel.SetShape(shapeName);
             UpdateShape(shapeName);
+
+            _asterisk.SetActive(true);
 		});
 	}
 
@@ -151,6 +160,7 @@ public class ShapeComponentView : ComponentView {
         _currentColor.color = color;
 
         _colorPickerIcon.SetIconColor(color);
+        _asterisk.SetActive(true);
     }
 
 }

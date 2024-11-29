@@ -22,6 +22,8 @@ namespace SimpleMotions {
 		ReactiveValue<string> Roll { get; }
 		ReactiveValue<int> EaseDropdown { get; }
 
+		ReactiveCommand OnEntityCreated { get; }
+
 	}
 
     public class TransformComponentViewModel : InspectorComponentViewModel, ITransformComponentViewModel {
@@ -42,10 +44,12 @@ namespace SimpleMotions {
 		public ReactiveValue<string> Roll { get; } = new() { Value = "0" };
 		public ReactiveValue<int> EaseDropdown { get; } = new();
 
+		public ReactiveCommand OnEntityCreated { get; } = new();
+
 		private readonly IKeyframeStorage _keyframeStorage;
 
 		public TransformComponentViewModel(IComponentStorage componentStorage, IEntitySelectorViewModel entitySelectorViewModel, 
-										   IVideoPlayerData videoPlayerData, IKeyframeStorage keyframeStorage, 
+										   IVideoPlayerData videoPlayerData, IKeyframeStorage keyframeStorage, IVideoEntities videoEntities,
 										   IVideoCanvas videoCanvas) : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas)
 		{
 			PositionX.Subscribe(x => SetEntityComponentProperty<Transform, Position> (_SelectedEntityId, t => t.Position, new Position(ParseFloat(x), ParseFloat(PositionY.Value))));
@@ -75,6 +79,8 @@ namespace SimpleMotions {
 			OnUpdateTransformKeyframe.Subscribe(transformView => {
 				SaveKeyframe(ParseTransformView(transformView));
 			});
+
+			videoEntities.OnCreateEntity.Subscribe(OnEntityCreated.Execute);
 
 			_keyframeStorage = keyframeStorage;
 		}

@@ -10,15 +10,29 @@ public class TransformComponentView : ComponentView {
     [SerializeField] private TMP_InputField _scaleH;
     [SerializeField] private TMP_InputField _roll;
 
+    [SerializeField] private GameObject _asterisk;
+
     private ITransformComponentViewModel _transformComponentViewModel;
 	private TMP_InputField[] _allInputFields;
     private IInputValidator _inputValidator;
 
+    private bool _entityJustCreated;
     private string _previousValue;
 	private bool _isSettingData;
 
 	public void Configure(ITransformComponentViewModel transformComponentViewModel, IInputValidator inputValidator) {
-        InitializeInputFields();
+        _positionX.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.PositionX));
+        _positionY.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.PositionY));
+        _scaleW.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.ScaleW));
+        _scaleH.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.ScaleH));
+        _roll.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.Roll));
+
+        _positionX.onDeselect.AddListener(input => CorrectInput(input, transformComponentViewModel.PositionX));
+        _positionY.onDeselect.AddListener(input => CorrectInput(input, transformComponentViewModel.PositionY));
+        _scaleW.onDeselect.AddListener(input => CorrectInput(input, transformComponentViewModel.ScaleW));
+        _scaleH.onDeselect.AddListener(input => CorrectInput(input, transformComponentViewModel.ScaleH));
+        _roll.onDeselect.AddListener(input => CorrectInput(input, transformComponentViewModel.Roll));
+
 		_allInputFields = new [] { _positionX, _positionY, _scaleW, _scaleH, _roll };
 
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
@@ -64,10 +78,13 @@ public class TransformComponentView : ComponentView {
                 _Updateblocker.SetActive(true);
                 _FrameHasKeyframe = false;
             }
+
+            _asterisk.SetActive(false);
         });
 
         _UpdateKeyframe.onClick.AddListener(() => {
             if (_FrameHasKeyframe) {
+                _asterisk.SetActive(false);
                 transformComponentViewModel.OnUpdateTransformKeyframe.Execute(GetTransformData());
 				foreach (var inputField in _allInputFields) {
 					_FlashInputField(inputField);
@@ -75,10 +92,16 @@ public class TransformComponentView : ComponentView {
             }
         });
 
+        transformComponentViewModel.OnEntityCreated.Subscribe(() => {
+            _asterisk.SetActive(false);
+            _entityJustCreated = true;
+        });
+
         _KeyframeImage.color = _EditorPainter.Theme.TextColor;
         _Update.color = _EditorPainter.Theme.AccentColor;
         _AddOrRemoveBlocker.SetActive(true);
         _Updateblocker.SetActive(false);
+        _asterisk.SetActive(false);
         _FrameHasKeyframe = true;
 
         _transformComponentViewModel = transformComponentViewModel;
@@ -86,6 +109,12 @@ public class TransformComponentView : ComponentView {
 	}
 
     private void TrySendNewComponentValue(string newValue, ReactiveValue<string> reactiveValue) {
+        if (!_entityJustCreated) {
+            _asterisk.SetActive(true);
+        }
+
+        _entityJustCreated = false;
+
 		if (_isSettingData) {
 			return;
 		}
@@ -153,20 +182,6 @@ public class TransformComponentView : ComponentView {
         if (hasInvalidCharacters && CanSendInput(newValue)) {
             reactiveValue.Value = _previousValue;
         }
-    }
-
-    private void InitializeInputFields() {
-        _positionX.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.PositionX));
-        _positionY.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.PositionY));
-        _scaleW.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.ScaleW));
-        _scaleH.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.ScaleH));
-        _roll.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _transformComponentViewModel.Roll));
-
-        _positionX.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionX));
-        _positionY.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.PositionY));
-        _scaleW.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleW));
-        _scaleH.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.ScaleH));
-        _roll.onDeselect.AddListener(input => CorrectInput(input, _transformComponentViewModel.Roll));
     }
 
 }
