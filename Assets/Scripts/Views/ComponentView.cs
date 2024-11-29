@@ -8,9 +8,7 @@ public abstract class ComponentView : MonoBehaviour {
     [SerializeField] protected Button _UpdateKeyframe;
 
     [SerializeField] protected Image _KeyframeImage;
-
-    [SerializeField] protected GameObject _AddOrRemoveBlocker;
-    [SerializeField] protected GameObject _Updateblocker;
+	[SerializeField] protected GameObject _Asterisk;
 
     [SerializeField] protected EditorPainter _EditorPainter;
 
@@ -20,6 +18,14 @@ public abstract class ComponentView : MonoBehaviour {
     [SerializeField] protected Image _Update;
 
     protected bool _FrameHasKeyframe;
+
+	protected void _UpdateKeyframeState(bool hasChanges) {
+		bool active = hasChanges && _FrameHasKeyframe;
+
+    	_Asterisk.SetActive(active);
+    	_Update.color = active ? _EditorPainter.CurrentAccentColor : _EditorPainter.Theme.PrimaryColor;
+    	_UpdateKeyframe.interactable = active;
+	}
 
 	protected void _FlashInputField(TMPro.TMP_InputField inputField) {
 		StopCoroutine(CO_FlashInputField(inputField));

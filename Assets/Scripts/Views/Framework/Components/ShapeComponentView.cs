@@ -12,8 +12,6 @@ public class ShapeComponentView : ComponentView {
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private IconColor _colorPickerIcon;
 
-    [SerializeField] private GameObject _asterisk;
-
     private IShapeComponentViewModel _shapeComponentViewModel;
     private IEditorPainterParser _editorPainterParser;
     private ShapeType[] _shapeTypes;
@@ -21,57 +19,41 @@ public class ShapeComponentView : ComponentView {
 
     public void Configure(IShapeComponentViewModel shapeComponentViewModel, IEditorPainterParser editorPainterParser) {
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
+        _FrameHasKeyframe = true;
 
         shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
-            _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-            _Update.color = _EditorPainter.CurrentAccentColor;
-            _AddOrRemoveBlocker.SetActive(true);
-            _Updateblocker.SetActive(false);
             _FrameHasKeyframe = true;
+            _UpdateKeyframeState(hasChanges: false);
         });
 
         shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(frameHasKeyframe => {
-            if (frameHasKeyframe) {
-                _KeyframeImage.sprite = _Remove;
-                _Update.color = _EditorPainter.CurrentAccentColor;
-                _Updateblocker.SetActive(false);
-            }
-            else {
-                _KeyframeImage.sprite = _Add;
-                _Update.color = _EditorPainter.Theme.TextColor;
-                _Updateblocker.SetActive(true);
-            }
-            
-            _AddOrRemoveBlocker.SetActive(false);
-            _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
+			_KeyframeImage.sprite = frameHasKeyframe ? _Remove : _Add;
+			_KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
+			_UpdateKeyframeState(hasChanges: false);
         });
 
         _AddOrRemoveKeyframe.onClick.AddListener(() => {
             if (!_FrameHasKeyframe) {
                 shapeComponentViewModel.OnSaveShapeKeyframe.Execute(GetShapeData());
-                _Update.color = _EditorPainter.CurrentAccentColor;
                 _KeyframeImage.sprite = _Remove;
 
-                _Updateblocker.SetActive(false);
                 _FrameHasKeyframe = true;
             }
             else {
                 shapeComponentViewModel.OnDeleteShapeKeyframe.Execute();
-                _Update.color = _EditorPainter.Theme.TextColor;
                 _KeyframeImage.sprite = _Add;
 
-                _Updateblocker.SetActive(true);
                 _FrameHasKeyframe = false;
             }
 
-            _asterisk.SetActive(false);
+			_UpdateKeyframeState(hasChanges: false);
         });
 
         _UpdateKeyframe.onClick.AddListener(() => {
             if (_FrameHasKeyframe) {
-                _asterisk.SetActive(false);
+				_UpdateKeyframeState(hasChanges: false);
                 shapeComponentViewModel.OnUpdateShapeKeyframe.Execute(GetShapeData());
             }
         });
@@ -94,7 +76,7 @@ public class ShapeComponentView : ComponentView {
 			}
 
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
-            _asterisk.SetActive(true);
+			_UpdateKeyframeState(hasChanges: true);
 		});
 
 		if (_shapeButtons.Length == 0) {
@@ -107,14 +89,9 @@ public class ShapeComponentView : ComponentView {
 		}
 
         _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-        _Update.color = _EditorPainter.Theme.AccentColor;
-        _AddOrRemoveBlocker.SetActive(true);
-        _Updateblocker.SetActive(false);
-        _asterisk.SetActive(false);
-        _FrameHasKeyframe = true;
-
         _shapeComponentViewModel = shapeComponentViewModel;
         _editorPainterParser = editorPainterParser;
+		_UpdateKeyframeState(hasChanges: false);
     }
 
     public (string shapeName, float r, float g, float b, float a) GetShapeData() {
@@ -125,10 +102,10 @@ public class ShapeComponentView : ComponentView {
     private void MapButtons(Button button, ShapeType shapeType) {
 		button.onClick.AddListener(() => {
 			string shapeName = shapeType.ShapeTypeUI.ToString();
+			
 			_shapeComponentViewModel.SetShape(shapeName);
             UpdateShape(shapeName);
-
-            _asterisk.SetActive(true);
+			_UpdateKeyframeState(hasChanges: true);
 		});
 	}
 
@@ -158,9 +135,9 @@ public class ShapeComponentView : ComponentView {
     private void SetEntityColor(Color color) {
         _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
         _currentColor.color = color;
-
         _colorPickerIcon.SetIconColor(color);
-        _asterisk.SetActive(true);
+
+		_UpdateKeyframeState(hasChanges: true);
     }
 
 }

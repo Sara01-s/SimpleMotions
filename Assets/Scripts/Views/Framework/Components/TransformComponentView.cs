@@ -10,9 +10,6 @@ public class TransformComponentView : ComponentView {
     [SerializeField] private TMP_InputField _scaleH;
     [SerializeField] private TMP_InputField _roll;
 
-    [SerializeField] private GameObject _asterisk;
-
-    private ITransformComponentViewModel _transformComponentViewModel;
 	private TMP_InputField[] _allInputFields;
     private IInputValidator _inputValidator;
 
@@ -21,6 +18,7 @@ public class TransformComponentView : ComponentView {
 	private bool _isSettingData;
 
 	public void Configure(ITransformComponentViewModel transformComponentViewModel, IInputValidator inputValidator) {
+		// TODO - Pasar la posicion de Y (del input field) (Juli)
         _positionX.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.PositionX));
         _positionY.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.PositionY));
         _scaleW.onValueChanged.AddListener(input => TrySendNewComponentValue(input, transformComponentViewModel.ScaleW));
@@ -34,29 +32,18 @@ public class TransformComponentView : ComponentView {
         _roll.onDeselect.AddListener(input => CorrectInput(input, transformComponentViewModel.Roll));
 
 		_allInputFields = new [] { _positionX, _positionY, _scaleW, _scaleH, _roll };
+        _FrameHasKeyframe = true;
 
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
             _KeyframeImage.sprite = _Unchangeable;
             _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-            _Update.color = _EditorPainter.CurrentAccentColor;
-            _AddOrRemoveBlocker.SetActive(true);
-            _Updateblocker.SetActive(false);
+            _Update.color = _EditorPainter.Theme.PrimaryColor;
             _FrameHasKeyframe = true;
         });
 
         transformComponentViewModel.OnFrameHasTransformKeyframe.Subscribe(frameHasKeyframe => {
-            if (frameHasKeyframe) {
-                _KeyframeImage.sprite = _Remove;
-                _Update.color = _EditorPainter.CurrentAccentColor;
-                _Updateblocker.SetActive(false);
-            }
-            else {
-                _KeyframeImage.sprite = _Add;
-                _Update.color = _EditorPainter.Theme.TextColor;
-                _Updateblocker.SetActive(true);
-            }
-
-            _AddOrRemoveBlocker.SetActive(false);
+			_KeyframeImage.sprite = frameHasKeyframe ? _Remove : _Add;
+			_Update.color = _EditorPainter.Theme.PrimaryColor;
             _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
         });
@@ -64,28 +51,26 @@ public class TransformComponentView : ComponentView {
 		_AddOrRemoveKeyframe.onClick.AddListener(() => {
             if (!_FrameHasKeyframe) {
                 transformComponentViewModel.OnSaveTransformKeyframe.Execute(GetTransformData());
-                _Update.color = _EditorPainter.CurrentAccentColor;
                 _KeyframeImage.sprite = _Remove;
 
-                _Updateblocker.SetActive(false);
                 _FrameHasKeyframe = true;
             }
             else {
                 transformComponentViewModel.OnDeleteTransformKeyframe.Execute();
-                _Update.color = _EditorPainter.Theme.TextColor;
                 _KeyframeImage.sprite = _Add;
 
-                _Updateblocker.SetActive(true);
                 _FrameHasKeyframe = false;
             }
 
-            _asterisk.SetActive(false);
+			_UpdateKeyframeState(hasChanges: false);
         });
 
         _UpdateKeyframe.onClick.AddListener(() => {
+			_UpdateKeyframeState(hasChanges: false);
+
             if (_FrameHasKeyframe) {
-                _asterisk.SetActive(false);
                 transformComponentViewModel.OnUpdateTransformKeyframe.Execute(GetTransformData());
+				
 				foreach (var inputField in _allInputFields) {
 					_FlashInputField(inputField);
 				}
@@ -93,24 +78,19 @@ public class TransformComponentView : ComponentView {
         });
 
         transformComponentViewModel.OnEntityCreated.Subscribe(() => {
-            _asterisk.SetActive(false);
+			_UpdateKeyframeState(hasChanges: false);
             _entityJustCreated = true;
         });
 
-        _KeyframeImage.color = _EditorPainter.Theme.TextColor;
-        _Update.color = _EditorPainter.Theme.AccentColor;
-        _AddOrRemoveBlocker.SetActive(true);
-        _Updateblocker.SetActive(false);
-        _asterisk.SetActive(false);
-        _FrameHasKeyframe = true;
+		_UpdateKeyframeState(hasChanges: false);
 
-        _transformComponentViewModel = transformComponentViewModel;
+        _KeyframeImage.color = _EditorPainter.Theme.TextColor;
         _inputValidator = inputValidator;
 	}
 
     private void TrySendNewComponentValue(string newValue, ReactiveValue<string> reactiveValue) {
         if (!_entityJustCreated) {
-            _asterisk.SetActive(true);
+			_UpdateKeyframeState(hasChanges: true);
         }
 
         _entityJustCreated = false;
