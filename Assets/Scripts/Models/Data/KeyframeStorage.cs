@@ -103,7 +103,6 @@ namespace SimpleMotions {
 				return false;
 			}
 
-
 			return keyframeSpline.HasKeyframeAtFrame(frame);
  		}
 

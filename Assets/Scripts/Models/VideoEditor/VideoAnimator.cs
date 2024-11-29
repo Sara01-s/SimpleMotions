@@ -40,10 +40,12 @@ namespace SimpleMotions {
 		}
 
 		public void GenerateVideoCache() {
-			bool cacheAlreadyGenerated = _lastInterpolableEntities != null && _activeEntities != _lastInterpolableEntities;
+			bool cacheAlreadyGenerated = _lastInterpolableEntities != null && _interpolableEntites != _lastInterpolableEntities;
 			if (cacheAlreadyGenerated) {
 				return;
 			}
+
+			UnityEngine.Debug.Log("pico");
 
 			_videoCacheGenerated = false;
 
@@ -60,7 +62,7 @@ namespace SimpleMotions {
 			}
 
 			foreach (int entityId in _interpolableEntites) {
-				UnityEngine.Debug.Log(entityId);
+				UnityEngine.Debug.Log($"Interpolable entity ids: {entityId}");
 				InterpolateEntityKeyframes(entityId, currentFrame);
 			}
 		}
