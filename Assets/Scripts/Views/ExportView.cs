@@ -35,7 +35,6 @@ public class ExportView : MonoBehaviour {
 	private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
 		string tempFrameImagesFilePath = GetFramesTempDirectory();
 
-		// Crear y reutilizar recursos
 		var processedRT = new RenderTexture(_videoResolution.x, _videoResolution.y, 0, RenderTextureFormat.ARGB32) {
 			enableRandomWrite = true,
 		};
@@ -59,7 +58,6 @@ public class ExportView : MonoBehaviour {
 
 		_cameraToCapture.targetTexture = null;
 
-		// Liberar recursos
 		RenderTexture.active = null;
 		processedRT.Release();
 		Destroy(processedRT);
