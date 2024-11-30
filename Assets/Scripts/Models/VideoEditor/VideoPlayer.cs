@@ -102,15 +102,12 @@ namespace SimpleMotions {
 		}
 
 		public void Pause() {
-			UnityEngine.Debug.Log("Paused.");
 			IsPlaying.Value = false;
 		}
 
 		public void Reset() {
-			UnityEngine.Debug.Log("Reset");
 			CurrentFrame.Value = TimelineData.FIRST_FRAME;
 			CurrentTime.Value = 0.0f;
-
 		}
 
 		public void SetCurrentFrame(int frame) {
@@ -149,8 +146,6 @@ namespace SimpleMotions {
 			if (IsAtTheEnd()) {
 				Reset();
 			}
-
-			UnityEngine.Debug.Log("Playing.");
 
 			_videoAnimator.GenerateVideoCache();
 

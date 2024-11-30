@@ -158,7 +158,6 @@ namespace SimpleMotions {
 			}
 
 			keyframeSpline.AddKeyframe(frame, keyframe);
-			UnityEngine.Debug.Log("Añadido keyframe: " + keyframe);
 			return keyframe;
 		}
 

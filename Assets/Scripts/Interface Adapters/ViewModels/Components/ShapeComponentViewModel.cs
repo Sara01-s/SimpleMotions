@@ -87,7 +87,6 @@ namespace SimpleMotions {
             var shapeKeyframe = new Keyframe<Shape>(_SelectedEntityId, _CurrentFrame, shape);
 
             _keyframeStorage.AddKeyframe(shapeKeyframe);
-            UnityEngine.Debug.Log($"Keyframe de Shape guardado: {shapeKeyframe}");
         }
 
         public Color ParseShapeDTOColor(ShapeDTO shapeDTO) {

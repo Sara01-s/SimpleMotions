@@ -115,7 +115,6 @@ namespace SimpleMotions {
 
 		public Entity GetEntity(int entityId) {
 			if (entityId <= Entity.Invalid.Id) {
-				UnityEngine.Debug.Log("Retorné una entidad inválida.");
 				return Entity.Invalid;
 			}
 

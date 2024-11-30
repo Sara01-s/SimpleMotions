@@ -32,13 +32,11 @@ namespace SimpleMotions {
 		}
 
 		public void SelectEntity(int entityId) {
-			UnityEngine.Debug.Log($"Entidad {entityId} seleccionada.");
 			SelectedEntity = _entityViewModel.GetEntity(entityId);
 			OnEntitySelected.Execute(SelectedEntity);
 		}
 
 		public void DeselectEntity() {
-			UnityEngine.Debug.Log($"Entidad {SelectedEntity} deseleccionada.");
 			SelectedEntity = Entity.Invalid;
 			OnEntityDeselected.Execute();
 		}

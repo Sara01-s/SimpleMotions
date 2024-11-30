@@ -47,7 +47,6 @@ namespace SimpleMotions {
             }
 
             if (File.Exists(filePath)) {
-                UnityEngine.Debug.Log($"El archivo en la ruta: {filePath} ya existe.");
                 OnFilePathInvalid.Execute(filePath);
                 return false;
             }
