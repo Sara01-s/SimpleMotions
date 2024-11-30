@@ -30,21 +30,14 @@ namespace SimpleMotions {
             NewKeyframeEase.Subscribe(values => {
                 int entityId = values.originalKeyframeDTO.EntityId;
                 int originalFrame = values.originalKeyframeDTO.Frame;
-
-				IKeyframe<Component> originalKeyframe = values.originalKeyframeDTO.ComponentDTO switch {
-					ComponentDTO.Transform => keyframeStorage.GetEntityKeyframeOfType<Transform>(entityId, originalFrame),
-					ComponentDTO.Shape => keyframeStorage.GetEntityKeyframeOfType<Shape>(entityId, originalFrame),
-					_ => throw new NotImplementedException(),
-				};
+				var componentType = ComponentDTOToType(values.originalKeyframeDTO.ComponentDTO);
 
                 if (!Enum.IsDefined(typeof(Ease), values.targetEase)) {
                     throw new ArgumentException($"{values.targetEase} is not defined in enum: {typeof(Ease)}");
                 }
 
-				Ease targetEase = (Ease)values.targetEase;
-
-				keyframeStorage.RemoveKeyframeOfType(originalKeyframe.Value.GetType(), entityId, originalKeyframe.Frame);
-				keyframeStorage.AddKeyframe(entityId, originalFrame, originalKeyframe.Value, targetEase);
+				var newEase = (Ease)values.targetEase;
+				keyframeStorage.SetKeyframeEase(entityId, componentType, originalFrame, newEase);
             });
 		}
 

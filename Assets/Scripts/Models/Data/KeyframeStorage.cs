@@ -30,7 +30,7 @@ namespace SimpleMotions {
 		void RemoveKeyframeOfType(Type componentType, int entityId, int frame);
 
 		void SetKeyframeFrame(int entityId, Type componentType, int originalFrame, int newFrame);
-		public void SetKeyframeEase(IKeyframe<Component> original, Ease newEase);
+		void SetKeyframeEase(int entityId, Type componentType, int originalFrame, Ease newEase);
 
 		IKeyframeSpline<T> GetEntityKeyframeSplineOfType<T>(int entityId) where T : Component, new();
 		IKeyframeSpline<Component> GetEntityKeyframeSplineOfType(Type componentType, int entityId);
@@ -304,8 +304,8 @@ namespace SimpleMotions {
 						?? throw new NullReferenceException("Keyframe not found.");
 					AddKeyframe(entityId, newFrame, transformKeyframe.Value, transformKeyframe.Ease);
 				break;
-				case var component when component == typeof(Transform):
-					var shapeKeyframe = GetEntityKeyframeOfType<Transform>(entityId, originalFrame) 
+				case var component when component == typeof(Shape):
+					var shapeKeyframe = GetEntityKeyframeOfType<Shape>(entityId, originalFrame) 
 						?? throw new NullReferenceException("Keyframe not found.");
 					AddKeyframe(entityId, newFrame, shapeKeyframe.Value, shapeKeyframe.Ease);
 				break;
@@ -316,9 +316,21 @@ namespace SimpleMotions {
 			RemoveKeyframeOfType(componentType, entityId, originalFrame);
 		}
 
-		public void SetKeyframeEase(IKeyframe<Component> original, Ease newEase) {
-			original.Ease = newEase;
-			UnityEngine.Debug.Log($"keyframe {original} changed ease to {original.Ease}");
+		public void SetKeyframeEase(int entityId, Type componentType, int originalFrame, Ease newEase) {
+			switch (componentType) {
+				case var component when component == typeof(Transform):
+					var transformKeyframe = GetEntityKeyframeOfType<Transform>(entityId, originalFrame) 
+						?? throw new NullReferenceException("Keyframe not found.");
+					AddKeyframe(entityId, originalFrame, transformKeyframe.Value, newEase);
+				break;
+				case var component when component == typeof(Shape):
+					var shapeKeyframe = GetEntityKeyframeOfType<Shape>(entityId, originalFrame) 
+						?? throw new NullReferenceException("Keyframe not found.");
+					AddKeyframe(entityId, originalFrame, shapeKeyframe.Value, newEase);
+				break;
+				default:
+					throw new NotImplementedException();
+			}
 		}
 
         public KeyframesData GetKeyframesData() {
