@@ -68,8 +68,8 @@ namespace SimpleMotions {
 			});
 
 			transformComponentViewModel.OnDeleteTransformKeyframe.Subscribe(() => {
-				keyframeStorage.RemoveKeyframeOfType(typeof(Transform), _entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				OnTransfromKeyframeDeleted.Execute(GetTransformKeyframeDTO(CurrentFrame.Value));
+				keyframeStorage.RemoveKeyframeOfType(typeof(Transform), _entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 			});
 
 			transformComponentViewModel.OnUpdateTransformKeyframe.Subscribe(_ => {
@@ -82,8 +82,8 @@ namespace SimpleMotions {
 			});
 
 			shapeComponentViewModel.OnDeleteShapeKeyframe.Subscribe(() => {
-				keyframeStorage.RemoveKeyframeOfType(typeof(Shape), _entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 				OnShapeKeyframeDeleted.Execute(GetShapeKeyframeDTO(CurrentFrame.Value));
+				keyframeStorage.RemoveKeyframeOfType(typeof(Shape), _entitySelector.SelectedEntity.Id, CurrentFrame.Value);
 			});
 
 			shapeComponentViewModel.OnUpdateShapeKeyframe.Subscribe(_ => {
@@ -105,8 +105,8 @@ namespace SimpleMotions {
 						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
 					}
 
-				OnDrawTransformKeyframe.Execute(GetTransformKeyframeDTO(0));
-				OnDrawShapeKeyframe.Execute(GetShapeKeyframeDTO(0));
+				OnDrawTransformKeyframe.Execute(GetTransformKeyframeDTO(frame: 0));
+				OnDrawShapeKeyframe.Execute(GetShapeKeyframeDTO(frame: 0));
 			});
 
 			_keyframeStorage = keyframeStorage;

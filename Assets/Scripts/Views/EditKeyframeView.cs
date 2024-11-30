@@ -4,7 +4,7 @@ using TMPro;
 
 public class EditKeyframeView : MonoBehaviour {
 
-    [SerializeField] private TimelineView _timelineView;
+    [SerializeField] private TimelineView _timelineView; // TODO - remove if not used.
     [SerializeField] private TMP_InputField _frame;
     [SerializeField] private TMP_Dropdown _easeDropdown;
     
@@ -14,6 +14,10 @@ public class EditKeyframeView : MonoBehaviour {
     private ComponentDTO _keyframeComponent;
 
     public void Configure(IEditKeyframeViewModel editKeyframeViewModel, IVideoTimelineViewModel videoTimelineViewModel) {        
+		editKeyframeViewModel.UpdateKeyframeFrame.Subscribe(updatedFrame => {
+			_originalKeyframeFrame = updatedFrame;
+		});
+
         _frame.onSubmit.AddListener(input => {
             if (!int.TryParse(input, out var targetFrame)) {
                 return;

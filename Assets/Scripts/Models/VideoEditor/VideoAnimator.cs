@@ -60,7 +60,6 @@ namespace SimpleMotions {
 			}
 
 			foreach (int entityId in _interpolableEntites) {
-				UnityEngine.Debug.Log($"Interpolable entity ids: {entityId}");
 				InterpolateEntityKeyframes(entityId, currentFrame);
 			}
 		}
