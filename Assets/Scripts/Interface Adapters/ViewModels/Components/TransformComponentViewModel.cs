@@ -15,10 +15,10 @@ namespace SimpleMotions {
 		ReactiveCommand OnDrawTransfromKeyframe { get; }
 		ReactiveCommand<bool> OnFrameHasTransformKeyframe { get; }
 
-		ReactiveValue<string> PositionX { get; }
-		ReactiveValue<string> PositionY { get; }
-		ReactiveValue<string> ScaleW { get; }
-		ReactiveValue<string> ScaleH { get; }
+		ReactiveValue<(string x, string y)> PositionX { get; }
+		ReactiveValue<(string y, string x)> PositionY { get; }
+		ReactiveValue<(string w, string h)> ScaleW { get; }
+		ReactiveValue<(string h, string w)> ScaleH { get; }
 		ReactiveValue<string> Roll { get; }
 		ReactiveValue<int> EaseDropdown { get; }
 
@@ -37,10 +37,10 @@ namespace SimpleMotions {
 		public ReactiveCommand OnDrawTransfromKeyframe { get; } = new();
 		public ReactiveCommand<bool> OnFrameHasTransformKeyframe { get; } = new();
 
-		public ReactiveValue<string> PositionX { get; } = new() { Value = "0" };
-		public ReactiveValue<string> PositionY { get; } = new() { Value = "0" };
-		public ReactiveValue<string> ScaleW { get; } = new() { Value = "1" };
-		public ReactiveValue<string> ScaleH { get; } = new() { Value = "1" };
+		public ReactiveValue<(string x, string y)> PositionX { get; } = new() { Value = ("0", "0") };
+		public ReactiveValue<(string y, string x)> PositionY { get; } = new() { Value = ("0", "0") };
+		public ReactiveValue<(string w, string h)> ScaleW { get; } = new() { Value = ("1", "1") };
+		public ReactiveValue<(string h, string w)> ScaleH { get; } = new() { Value = ("1", "1") };
 		public ReactiveValue<string> Roll { get; } = new() { Value = "0" };
 		public ReactiveValue<int> EaseDropdown { get; } = new();
 
@@ -52,10 +52,10 @@ namespace SimpleMotions {
 										   IVideoPlayerData videoPlayerData, IKeyframeStorage keyframeStorage, IVideoEntities videoEntities,
 										   IVideoCanvas videoCanvas) : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas)
 		{
-			PositionX.Subscribe(x => SetEntityComponentProperty<Transform, Position> (_SelectedEntityId, t => t.Position, new Position(ParseFloat(x), ParseFloat(PositionY.Value))));
-			PositionY.Subscribe(y => SetEntityComponentProperty<Transform, Position> (_SelectedEntityId, t => t.Position, new Position(ParseFloat(PositionX.Value), ParseFloat(y))));
-			ScaleW.Subscribe(w => SetEntityComponentProperty<Transform, Scale> (_SelectedEntityId, t => t.Scale, new Scale(ParseFloat(w), ParseFloat(ScaleH.Value))));
-			ScaleH.Subscribe(h => SetEntityComponentProperty<Transform, Scale> (_SelectedEntityId, t => t.Scale, new Scale(ParseFloat(ScaleW.Value), ParseFloat(h))));
+			PositionX.Subscribe(position => SetEntityComponentProperty<Transform, Position> (_SelectedEntityId, t => t.Position, new Position(ParseFloat(position.x), ParseFloat(position.y))));
+			PositionY.Subscribe(position => SetEntityComponentProperty<Transform, Position> (_SelectedEntityId, t => t.Position, new Position(ParseFloat(position.x), ParseFloat(position.y))));
+			ScaleW.Subscribe(scale=> SetEntityComponentProperty<Transform, Scale> (_SelectedEntityId, t => t.Scale, new Scale(ParseFloat(scale.w), ParseFloat(scale.h))));
+			ScaleH.Subscribe(scale => SetEntityComponentProperty<Transform, Scale> (_SelectedEntityId, t => t.Scale, new Scale(ParseFloat(scale.w), ParseFloat(scale.h))));
 			Roll.Subscribe(degrees => SetEntityComponentProperty<Transform, Roll>(_SelectedEntityId, t => t.Roll, new Roll(ParseFloat(degrees))));
 
 			OnSaveTransformKeyframe.Subscribe(transformDTO => {
