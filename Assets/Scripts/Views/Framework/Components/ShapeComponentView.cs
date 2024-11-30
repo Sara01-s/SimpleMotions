@@ -17,17 +17,25 @@ public class ShapeComponentView : ComponentView {
     private ShapeType[] _shapeTypes;
     private ShapeType _currentShape;
 
+    private void OnDisable() {
+        _EditorPainter.OnAccentColorUpdate -= UpdateShapeAccentColor;
+    }
+
     public void Configure(IShapeComponentViewModel shapeComponentViewModel, IEditorPainterParser editorPainterParser) {
 		_shapeTypes = new ShapeType[_shapeButtons.Length];
+        _AddOrRemoveKeyframe.interactable = false;
         _FrameHasKeyframe = true;
 
         shapeComponentViewModel.OnFirstKeyframe.Subscribe(() => {
+            _AddOrRemoveKeyframe.interactable = false;
             _KeyframeImage.sprite = _Unchangeable;
+            _KeyframeImage.color = _EditorPainter.Theme.TextColor;
             _FrameHasKeyframe = true;
             _UpdateKeyframeState(hasChanges: false);
         });
 
         shapeComponentViewModel.OnFrameHasShapeKeyframe.Subscribe(frameHasKeyframe => {
+            _AddOrRemoveKeyframe.interactable = true;
 			_KeyframeImage.sprite = frameHasKeyframe ? _Remove : _Add;
 			_KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
@@ -81,6 +89,8 @@ public class ShapeComponentView : ComponentView {
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
 			_UpdateKeyframeState(hasChanges: true);
 		});
+
+        _EditorPainter.OnAccentColorUpdate += UpdateShapeAccentColor;
 
 		if (_shapeButtons.Length == 0) {
 			Debug.LogError("Please assign shape buttons in inspector shape component.");
@@ -136,16 +146,26 @@ public class ShapeComponentView : ComponentView {
         }
     }
 
+    private void UpdateShapeAccentColor(Color accentColor) {
+        foreach (var shapeType in _shapeTypes) {
+            if (shapeType ==  _currentShape) {
+                var image = shapeType.GetComponent<Image>();
+                image.color = accentColor;
+            }   
+        }
+    }
+
     public void SubscribeToColorPicker() {
         _flexibleColorPicker.SubscribeToColorChange(SetEntityColor);
     }
 
     private void SetEntityColor(Color color) {
-        _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
-        _currentColor.color = color;
-        _colorPickerIcon.SetIconColor(color);
-
-		_UpdateKeyframeState(hasChanges: true);
+        if (_FrameHasKeyframe) {
+            _shapeComponentViewModel.SetColor(_editorPainterParser.UnityColorToSm(color));
+            _currentColor.color = color;
+            _colorPickerIcon.SetIconColor(color);
+		    _UpdateKeyframeState(hasChanges: true);
+        }
     }
 
 }

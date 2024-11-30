@@ -36,9 +36,11 @@ public class TransformComponentView : ComponentView {
         _roll.onDeselect.AddListener(input => CorrectInput(input, _previousRValue, transformComponentViewModel.Roll));
 
 		_allInputFields = new [] { _positionX, _positionY, _scaleW, _scaleH, _roll };
+        _AddOrRemoveKeyframe.interactable = false;
         _FrameHasKeyframe = true;
 
         transformComponentViewModel.OnFirstKeyframe.Subscribe(() => {
+            _AddOrRemoveKeyframe.interactable = false;
             _KeyframeImage.sprite = _Unchangeable;
             _KeyframeImage.color = _EditorPainter.Theme.TextColor;
             _Update.color = _EditorPainter.Theme.PrimaryColor;
@@ -48,6 +50,7 @@ public class TransformComponentView : ComponentView {
         });
 
         transformComponentViewModel.OnFrameHasTransformKeyframe.Subscribe(frameHasKeyframe => {
+            _AddOrRemoveKeyframe.interactable = true;
 			_KeyframeImage.sprite = frameHasKeyframe ? _Remove : _Add;
 			_Update.color = _EditorPainter.Theme.PrimaryColor;
             _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
