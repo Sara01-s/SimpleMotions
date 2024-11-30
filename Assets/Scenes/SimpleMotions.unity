@@ -3614,6 +3614,7 @@ GameObject:
   - component: {fileID: 301112737}
   - component: {fileID: 301112739}
   - component: {fileID: 301112738}
+  - component: {fileID: 301112740}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -3737,6 +3738,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 301112736}
   m_CullTransparentMesh: 1
+--- !u!114 &301112740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301112736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a626054bda394ce88780562d03c4b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _image: {fileID: 0}
+  _text: {fileID: 301112738}
 --- !u!1 &305790550
 GameObject:
   m_ObjectHideFlags: 0
@@ -4353,10 +4368,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 354841055}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78babd033c601544180df34852e58058, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a626054bda394ce88780562d03c4b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorPickerIcon: {fileID: 354841057}
+  _image: {fileID: 354841057}
+  _text: {fileID: 0}
 --- !u!1 &365266142
 GameObject:
   m_ObjectHideFlags: 0
@@ -7231,6 +7247,8 @@ MonoBehaviour:
   _editorPainter: {fileID: 524110107}
   _currentColor: {fileID: 1807959552}
   _colorPickerIcon: {fileID: 354841059}
+  _createEntity: {fileID: 633751238}
+  _cursorNumber: {fileID: 301112740}
 --- !u!1 &556300383
 GameObject:
   m_ObjectHideFlags: 0
@@ -7813,10 +7831,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 572776190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78babd033c601544180df34852e58058, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a626054bda394ce88780562d03c4b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorPickerIcon: {fileID: 572776192}
+  _image: {fileID: 572776192}
+  _text: {fileID: 0}
 --- !u!1 &586442846
 GameObject:
   m_ObjectHideFlags: 0
@@ -8849,6 +8868,7 @@ GameObject:
   - component: {fileID: 633751237}
   - component: {fileID: 633751236}
   - component: {fileID: 633751235}
+  - component: {fileID: 633751238}
   m_Layer: 5
   m_Name: Button - Create Entity
   m_TagString: AccentColor
@@ -8959,6 +8979,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633751233}
   m_CullTransparentMesh: 1
+--- !u!114 &633751238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633751233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a626054bda394ce88780562d03c4b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _image: {fileID: 32254831}
+  _text: {fileID: 1395115699}
 --- !u!1 &636538741
 GameObject:
   m_ObjectHideFlags: 0
@@ -17827,10 +17861,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1246821440}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78babd033c601544180df34852e58058, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a626054bda394ce88780562d03c4b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorPickerIcon: {fileID: 1246821442}
+  _image: {fileID: 1246821442}
+  _text: {fileID: 0}
 --- !u!1 &1250408120
 GameObject:
   m_ObjectHideFlags: 0
@@ -29818,7 +29853,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
   m_Value: 0.99999875
-  m_Size: 0.9624998
+  m_Size: 0.9624999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
