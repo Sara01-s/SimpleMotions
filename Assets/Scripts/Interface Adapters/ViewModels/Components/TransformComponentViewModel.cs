@@ -1,6 +1,5 @@
 using static StringExtensions;
 using SimpleMotions.Internal;
-using System;
 
 namespace SimpleMotions {
 

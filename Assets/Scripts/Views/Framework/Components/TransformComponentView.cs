@@ -13,8 +13,8 @@ public class TransformComponentView : ComponentView {
 	private TMP_InputField[] _allInputFields;
     private IInputValidator _inputValidator;
 
-    private bool _entityJustCreated;
 	private bool _isSettingData;
+    private bool _keyframeHasChanges;
 
     private string _previousXValue;
     private string _previousYValue;
@@ -23,7 +23,6 @@ public class TransformComponentView : ComponentView {
     private string _previousRValue;
 
 	public void Configure(ITransformComponentViewModel transformComponentViewModel, IInputValidator inputValidator) {
-		// TODO - Pasar la posicion de Y (del input field) (Juli)
         _positionX.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _positionY.text, transformComponentViewModel.PositionX));
         _positionY.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _positionX.text, transformComponentViewModel.PositionY));
         _scaleW.onValueChanged.AddListener(input => TrySendNewComponentValue(input, _scaleH.text, transformComponentViewModel.ScaleW));
@@ -44,6 +43,8 @@ public class TransformComponentView : ComponentView {
             _KeyframeImage.color = _EditorPainter.Theme.TextColor;
             _Update.color = _EditorPainter.Theme.PrimaryColor;
             _FrameHasKeyframe = true;
+
+            _UpdateKeyframeState(hasChanges: false);
         });
 
         transformComponentViewModel.OnFrameHasTransformKeyframe.Subscribe(frameHasKeyframe => {
@@ -51,6 +52,9 @@ public class TransformComponentView : ComponentView {
 			_Update.color = _EditorPainter.Theme.PrimaryColor;
             _KeyframeImage.color = _EditorPainter.CurrentAccentColor;
             _FrameHasKeyframe = frameHasKeyframe;
+            _keyframeHasChanges = false;
+
+            _UpdateKeyframeState(hasChanges: false);
         });
 
 		_AddOrRemoveKeyframe.onClick.AddListener(() => {
@@ -84,7 +88,7 @@ public class TransformComponentView : ComponentView {
 
         transformComponentViewModel.OnEntityCreated.Subscribe(() => {
 			_UpdateKeyframeState(hasChanges: false);
-            _entityJustCreated = true;
+            _keyframeHasChanges = false;
         });
 
 		_UpdateKeyframeState(hasChanges: false);
@@ -94,11 +98,9 @@ public class TransformComponentView : ComponentView {
 	}
 
     private void TrySendNewComponentValue(string valueToChange, string valueToKeep, ReactiveValue<(string, string)> reactiveValue) {
-        if (!_entityJustCreated) {
+        if (_keyframeHasChanges) {
 			_UpdateKeyframeState(hasChanges: true);
         }
-
-        _entityJustCreated = false;
 
 		if (_isSettingData) {
 			return;
@@ -109,15 +111,14 @@ public class TransformComponentView : ComponentView {
 
         if (CanSendInput(valueToChange) && !hasInvalidCharacters) {
 		    reactiveValue.Value = (valueToChange, valueToKeep);
+            _keyframeHasChanges = true;
         }
 	}
 
     private void TrySendNewComponentValue(string valueToChange, ReactiveValue<string> reactiveValue) {
-        if (!_entityJustCreated) {
+        if (_keyframeHasChanges) {
 			_UpdateKeyframeState(hasChanges: true);
         }
-
-        _entityJustCreated = false;
 
 		if (_isSettingData) {
 			return;
@@ -128,6 +129,7 @@ public class TransformComponentView : ComponentView {
 
         if (CanSendInput(valueToChange) && !hasInvalidCharacters) {
 		    reactiveValue.Value = valueToChange;
+            _keyframeHasChanges = true;
         }
 	}
 
@@ -166,6 +168,10 @@ public class TransformComponentView : ComponentView {
         _roll.text = input;
 
 		_isSettingData = false;
+
+        if (_FrameHasKeyframe) {
+            _keyframeHasChanges = true;
+        }
     }
 
     private bool CanSendInput(string newValue) {
