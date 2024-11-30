@@ -15,10 +15,12 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 	private int _ownerEntityId;
 
     public void Configure(ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel, int ownerEntityId) {
-		_entityName.text = timelinePanelViewModel.GetEntityName(ownerEntityId);
+		const string defaultEntityName = "New Entity";
+		_entityName.text = defaultEntityName;
 
 		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
 		_entityName.onSubmit.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
+		_entityName.onSubmit.Invoke(defaultEntityName);
 		_entityName.onDeselect.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
 
         _deleteEntity.onClick.AddListener(() => {

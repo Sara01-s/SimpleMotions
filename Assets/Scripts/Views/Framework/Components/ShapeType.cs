@@ -1,17 +1,8 @@
 using UnityEngine;
-
-public enum ShapeTypeUI {
-    Rect,
-    Circle,
-    Arrow,
-    Triangle,
-    Star,
-    Heart,
-    Image
-}
+using SimpleMotions;
 
 public class ShapeType : MonoBehaviour {
 
-    public ShapeTypeUI ShapeTypeUI;
+    public PrimitiveShapeDTO PrimiviteDTO;
 
 }

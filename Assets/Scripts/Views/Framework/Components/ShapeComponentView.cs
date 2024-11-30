@@ -75,6 +75,9 @@ public class ShapeComponentView : ComponentView {
 				return;
 			}
 
+            var image = _imageButton.GetComponentInChildren<Image>();
+			image.color = _EditorPainter.CurrentAccentColor;
+
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
 			_UpdateKeyframeState(hasChanges: true);
 		});
@@ -98,14 +101,14 @@ public class ShapeComponentView : ComponentView {
         var currentColor = _flexibleColorPicker.Color;
 		
 		return new ShapeDTO (
-			primitiveShape: _currentShape.ShapeTypeUI.ToString(),
+			primitiveShape: _currentShape.PrimiviteDTO.ToString(),
 			color: new ColorDTO(currentColor.r, currentColor.g, currentColor.b, currentColor.a)
 		);
     }
 
     private void MapButtons(Button button, ShapeType shapeType) {
 		button.onClick.AddListener(() => {
-			string shapeName = shapeType.ShapeTypeUI.ToString();
+			string shapeName = shapeType.PrimiviteDTO.ToString();
 			
 			_shapeComponentViewModel.SetShape(shapeName);
             UpdateShape(shapeName);
@@ -119,15 +122,16 @@ public class ShapeComponentView : ComponentView {
 
     private void UpdateShape(string shapeName) {
         foreach (var shapeImage in _shapeTypes) {
-            var shapeType = shapeImage.ShapeTypeUI;
+            var shapeType = shapeImage.PrimiviteDTO;
             var image = shapeImage.GetComponent<Image>();
 
             if (shapeType.ToString().CompareTo(shapeName) == 0) {
-                image.color = _EditorPainter.Theme.AccentColor;
+                image.color = _EditorPainter.CurrentAccentColor;
                 _currentShape = shapeImage;
             }
             else {
                 image.color = _EditorPainter.Theme.TextColor;
+				
             }
         }
     }

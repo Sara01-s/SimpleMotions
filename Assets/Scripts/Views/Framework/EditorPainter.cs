@@ -129,6 +129,7 @@ public class EditorPainter : MonoBehaviour {
 		foreach (var inputField in inputFields) {
 			inputField.textComponent.color = textColor;
 			inputField.selectionColor = accentColor;
+			inputField.fontAsset = _font;
 		}
 	}
 

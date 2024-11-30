@@ -113,6 +113,16 @@ namespace SimpleMotions {
 		}
 	}
 
+	public enum PrimitiveShapeDTO {
+		Rect,
+		Circle,
+		Arrow,
+		Triangle,
+		Star,
+		Heart,
+		Image
+	}
+
 	public enum ComponentDTO {
 		Transform,
 		Shape,

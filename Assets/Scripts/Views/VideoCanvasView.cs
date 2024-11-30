@@ -40,13 +40,13 @@ public sealed class VideoCanvasView : MonoBehaviour {
 
 	private void PopulateSpriteDictionary() {
 		_spriteByPrimitiveShape = new Dictionary<string, Sprite>() {
-			{ ShapeTypeUI.Circle.ToString()	  , _circleSprite 	},
-			{ ShapeTypeUI.Rect.ToString()	  , _rectSprite 	},
-			{ ShapeTypeUI.Triangle.ToString() , _triangleSprite },
-			{ ShapeTypeUI.Arrow.ToString()	  , _arrowSprite 	},
-			{ ShapeTypeUI.Star.ToString()	  , _starSprite 	},
-			{ ShapeTypeUI.Heart.ToString()	  , _heartSprite 	},
-			{ ShapeTypeUI.Image.ToString()	  , _imageSprite 	},
+			{ PrimitiveShapeDTO.Circle.ToString()	  , _circleSprite 	},
+			{ PrimitiveShapeDTO.Rect.ToString()	  , _rectSprite 	},
+			{ PrimitiveShapeDTO.Triangle.ToString() , _triangleSprite },
+			{ PrimitiveShapeDTO.Arrow.ToString()	  , _arrowSprite 	},
+			{ PrimitiveShapeDTO.Star.ToString()	  , _starSprite 	},
+			{ PrimitiveShapeDTO.Heart.ToString()	  , _heartSprite 	},
+			{ PrimitiveShapeDTO.Image.ToString()	  , _imageSprite 	},
 		};
 	}
 
@@ -144,7 +144,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			spriteRenderer.color = new Color(shapeDTO.Color.R, shapeDTO.Color.G, shapeDTO.Color.B, shapeDTO.Color.A);
 			
 			// Primitive shape is NOT an image. (it is a string representing a shape's name).
-			if (shapeDTO.PrimitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
+			if (shapeDTO.PrimitiveShape.CompareTo(PrimitiveShapeDTO.Image.ToString()) != 0) {
 				spriteRenderer.enabled = true;
 				spriteRenderer.sprite = _spriteByPrimitiveShape[shapeDTO.PrimitiveShape];
 				

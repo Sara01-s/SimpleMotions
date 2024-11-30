@@ -10,17 +10,22 @@ public class MouseCoordinatesView : MonoBehaviour {
 	[SerializeField] private TextMeshProUGUI _mouseCoordinates;
 	[SerializeField] private Transform _canvasOrigin;
 
-	private void Awake() {
-		_showMouseCoordiantes.onValueChanged.AddListener(isOn => {
-			if (isOn) {
-				StartCoroutine(CO_ShowMouseCoordinates());
-			}
-			else {
-				StopCoroutine(CO_ShowMouseCoordinates());
-			}
+	[SerializeField] private bool _activeOnAwake;
 
-			_mouseCoordinates.transform.parent.gameObject.SetActive(isOn);
-		});
+	private void Awake() {
+		_showMouseCoordiantes.onValueChanged.AddListener(ToggleActive);
+		_showMouseCoordiantes.isOn = _activeOnAwake;
+	}
+
+	private void ToggleActive(bool isOn) {
+		if (isOn) {
+			StartCoroutine(CO_ShowMouseCoordinates());
+		}
+		else {
+			StopCoroutine(CO_ShowMouseCoordinates());
+		}
+
+		_mouseCoordinates.transform.parent.gameObject.SetActive(isOn);
 	}
 
 	private IEnumerator CO_ShowMouseCoordinates() {
