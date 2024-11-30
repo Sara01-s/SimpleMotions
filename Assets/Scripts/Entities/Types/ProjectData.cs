@@ -24,8 +24,8 @@ namespace SimpleMotions.Internal {
 		public int TargetFrameRate {
 			get => _targetFrameRate;
 			set {
-				if (value <= 0) {
-					throw new ArgumentException($"Target frame rate cannot be less or equal to 0. {value}");
+				if (value <= TimelineData.FIRST_FRAME) {
+					throw new ArgumentException($"Target frame rate cannot be less or equal to {TimelineData.FIRST_FRAME}");
 				}
 
 				_targetFrameRate = value;

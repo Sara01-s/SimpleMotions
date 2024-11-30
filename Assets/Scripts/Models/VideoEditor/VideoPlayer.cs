@@ -54,19 +54,19 @@ namespace SimpleMotions {
 		private Task _playVideo;
 
         public VideoPlayer(IVideoAnimator videoAnimator, VideoData videoData) {
-			_videoAnimator = videoAnimator;
-			_videoData = videoData;
-
 			IsPlaying.Subscribe(isPlaying => _videoData.IsPlaying = isPlaying);
 			IsLooping.Subscribe(IsLooping => _videoData.IsLooping = IsLooping);
 			CurrentTime.Subscribe(currentTime => _videoData.CurrentTime = currentTime);
 			CurrentFrame.Subscribe(currentFrame => _videoData.CurrentFrame = currentFrame);
-			TargetFrameRate.Subscribe(framerate => _videoData.TargetFrameRate = framerate);	// No se puede usar Unity aqui.
+			TargetFrameRate.Subscribe(framerate => _videoData.TargetFrameRate = framerate);
 
 			TotalFrames.Subscribe(totalFrames =>  {
 				_videoData.TotalFrames = totalFrames;
 				SetDurationSeconds(totalFrames);
 			});
+
+			_videoAnimator = videoAnimator;
+			_videoData = videoData;
 		}
 
 		public void InitReactiveData() {

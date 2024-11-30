@@ -62,7 +62,7 @@ public class TransformComponentView : ComponentView {
 
 		_AddOrRemoveKeyframe.onClick.AddListener(() => {
             if (!_FrameHasKeyframe) {
-                transformComponentViewModel.OnSaveTransformKeyframe.Execute(GetTransformData());
+                transformComponentViewModel.OnSaveTransformKeyframe.Execute(SendTransformDTO());
                 _KeyframeImage.sprite = _Remove;
 
                 _FrameHasKeyframe = true;
@@ -81,7 +81,7 @@ public class TransformComponentView : ComponentView {
 			_UpdateKeyframeState(hasChanges: false);
 
             if (_FrameHasKeyframe) {
-                transformComponentViewModel.OnUpdateTransformKeyframe.Execute(GetTransformData());
+                transformComponentViewModel.OnUpdateTransformKeyframe.Execute(SendTransformDTO());
 				
 				foreach (var inputField in _allInputFields) {
 					_FlashInputField(inputField);
@@ -136,7 +136,7 @@ public class TransformComponentView : ComponentView {
         }
 	}
 
-	private TransformDTO GetTransformData() {
+	private TransformDTO SendTransformDTO() {
 		var position = (_positionX.text, _positionY.text);
 		var scale = (_scaleW.text, _scaleH.text);
 		string rollAngleDegrees = _roll.text;

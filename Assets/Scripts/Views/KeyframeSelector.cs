@@ -26,13 +26,7 @@ public class KeyframeSelector : MonoBehaviour, IPointerDownHandler {
 
         var frameInputField = _editKeyframePanel.GetComponentInChildren<TMP_InputField>();
 
-        if (_frame == 0) {
-            frameInputField.interactable = false;
-        }
-        else {
-            frameInputField.interactable = true;
-        }
-        
+		frameInputField.interactable = _frame == 0;
         _editKeyframePanel.SetActive(true);
     }
 

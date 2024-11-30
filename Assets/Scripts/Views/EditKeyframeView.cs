@@ -4,7 +4,6 @@ using TMPro;
 
 public class EditKeyframeView : MonoBehaviour {
 
-    [SerializeField] private TimelineView _timelineView; // TODO - remove if not used.
     [SerializeField] private TMP_InputField _frame;
     [SerializeField] private TMP_Dropdown _easeDropdown;
     
@@ -28,23 +27,13 @@ public class EditKeyframeView : MonoBehaviour {
                 return;
             }
 
-            editKeyframeViewModel.NewKeyframeFrame.Value = (new KeyframeDTO (
-                _keyframeComponent, 
-                _entityId, 
-                _originalKeyframeFrame, 
-                _originalKeyframeEase
-            ), 
-            targetFrame);
+			var keyframeDTO = new KeyframeDTO (_keyframeComponent, _entityId, _originalKeyframeFrame, _originalKeyframeEase);
+            editKeyframeViewModel.NewKeyframeFrame.Value = (keyframeDTO, targetFrame);
         });
 
         _easeDropdown.onValueChanged.AddListener(newEase => {
-            editKeyframeViewModel.NewKeyframeEase.Value = (new KeyframeDTO (
-                _keyframeComponent, 
-                _entityId,
-                _originalKeyframeFrame,
-                _originalKeyframeEase
-            ), 
-            newEase);
+			var keyframeDTO = new KeyframeDTO (_keyframeComponent, _entityId, _originalKeyframeFrame, _originalKeyframeEase);
+            editKeyframeViewModel.NewKeyframeEase.Value = (keyframeDTO, newEase);
         });
 
         gameObject.SetActive(false);

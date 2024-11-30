@@ -1,10 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using SimpleMotions;
 
 public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHandler {
-    
+
 	public ReactiveCommand<EntityDTO> OnEntityChanged { get; } = new();
 
 	protected RectTransform _SelectionGizmoRect => (RectTransform)transform.parent;
