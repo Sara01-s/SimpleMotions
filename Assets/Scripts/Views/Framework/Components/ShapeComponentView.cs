@@ -36,7 +36,7 @@ public class ShapeComponentView : ComponentView {
 
         _AddOrRemoveKeyframe.onClick.AddListener(() => {
             if (!_FrameHasKeyframe) {
-                shapeComponentViewModel.OnSaveShapeKeyframe.Execute(GetShapeData());
+                shapeComponentViewModel.OnSaveShapeKeyframe.Execute(SendShapeDTO());
                 _KeyframeImage.sprite = _Remove;
 
                 _FrameHasKeyframe = true;
@@ -54,7 +54,7 @@ public class ShapeComponentView : ComponentView {
         _UpdateKeyframe.onClick.AddListener(() => {
             if (_FrameHasKeyframe) {
 				_UpdateKeyframeState(hasChanges: false);
-                shapeComponentViewModel.OnUpdateShapeKeyframe.Execute(GetShapeData());
+                shapeComponentViewModel.OnUpdateShapeKeyframe.Execute(SendShapeDTO());
             }
         });
 
@@ -94,9 +94,13 @@ public class ShapeComponentView : ComponentView {
 		_UpdateKeyframeState(hasChanges: false);
     }
 
-    public (string shapeName, float r, float g, float b, float a) GetShapeData() {
+    public ShapeDTO SendShapeDTO() {
         var currentColor = _flexibleColorPicker.Color;
-        return (_currentShape.ShapeTypeUI.ToString(), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+		
+		return new ShapeDTO (
+			primitiveShape: _currentShape.ShapeTypeUI.ToString(),
+			color: new ColorDTO(currentColor.r, currentColor.g, currentColor.b, currentColor.a)
+		);
     }
 
     private void MapButtons(Button button, ShapeType shapeType) {

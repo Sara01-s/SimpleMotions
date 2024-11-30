@@ -1,11 +1,11 @@
 using static StringExtensions;
-using SimpleMotions.Internal;
 
 /// <summary>
 /// DTO stands for "Data Transfer Object" this objects are used instead of the structs declared in SimpleMotions.Internal.Components.cs
 /// to maintain view agnostic from domain types. Also this structs are readonly because they're meant to be presented and not mutated.
 /// 
 /// TL;DR; Use this structs to communicate between View Models and Views.
+/// in C# 9.0 or above this could be replaced by records.
 /// </summary>
 namespace SimpleMotions {
 
@@ -40,9 +40,9 @@ namespace SimpleMotions {
 
 	public readonly struct ShapeDTO {
 		public readonly string PrimitiveShape;
-		public readonly (float r, float g, float b, float a) Color;
+		public readonly ColorDTO Color;
 
-		public ShapeDTO(string primitiveShape, (float r, float g, float b, float a) color) {
+		public ShapeDTO(string primitiveShape, ColorDTO color) {
 			PrimitiveShape = primitiveShape;
 			Color = color;
 		}
@@ -61,11 +61,55 @@ namespace SimpleMotions {
 			Ease = ease;
 		}
 
-		public KeyframeDTO(int id, int frame, ComponentDTO componentType, Ease ease) {
+		public KeyframeDTO(int id, int frame, ComponentDTO componentType, Internal.Ease ease) {
 			EntityId = id;
 			Frame = frame;
 			ComponentDTO = componentType;
 			Ease = (int)ease;
+		}
+	}
+
+	public readonly struct ColorDTO {
+		public readonly float R;
+		public readonly float G;
+		public readonly float B;
+		public readonly float A;
+
+		public ColorDTO(float r, float g, float b, float a) {
+			R = r;
+			G = g;
+			B = b;
+			A = a;
+		}
+	}
+
+	public readonly struct EditorThemeDTO {
+		public readonly ColorDTO PrimaryColor;
+		public readonly ColorDTO SecondaryColor;
+		public readonly ColorDTO BackgroundColor;
+		public readonly ColorDTO AccentColor;
+		public readonly ColorDTO TextColor;
+
+		public EditorThemeDTO(ColorDTO primary, ColorDTO secondary, ColorDTO background, ColorDTO accent, ColorDTO text) {
+			PrimaryColor = primary;
+			SecondaryColor = secondary;
+			BackgroundColor = background;
+			AccentColor = accent;
+			TextColor = text;
+		}
+	}
+
+	public readonly struct VideoExportDTO {
+		public readonly int TotalFrames;
+		public readonly int TargetFrameRate;
+		public readonly string OutputFilepath;
+		public readonly string FileName;
+
+		public VideoExportDTO(int totalFrames, int targetFrameRate, string outputFilepath, string fileName) {
+			TotalFrames = totalFrames;
+			TargetFrameRate = targetFrameRate;
+			OutputFilepath = outputFilepath;
+			FileName = fileName;
 		}
 	}
 

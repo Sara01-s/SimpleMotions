@@ -10,8 +10,7 @@ namespace SimpleMotions {
 		ReactiveCommand OnEntityDeselected { get; }
 		ReactiveCommand<int, string> OnDisplayEntityImage { get; }
 
-		// TODO - Use DTO.
-		ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; }
+		ReactiveValue<ColorDTO> BackgroundColor { get; }
 
 	}
 
@@ -22,7 +21,7 @@ namespace SimpleMotions {
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();
 		public ReactiveCommand OnEntityDeselected { get; } = new();
 		public ReactiveCommand<int, string> OnDisplayEntityImage { get; } = new();
-		public ReactiveValue<(float r, float g, float b, float a)> BackgroundColor { get; } = new();
+		public ReactiveValue<ColorDTO> BackgroundColor { get; } = new();
 
 		private readonly IVideoCanvas _videoCanvas;
 
@@ -45,8 +44,8 @@ namespace SimpleMotions {
 			OnCanvasUpdate.Execute(entityDTO);
 		}
 
-        private void SetBackgroundColor((float r, float g, float b, float a) color) {
-			var newColor = new Color(color.r, color.g, color.b, color.a);
+        private void SetBackgroundColor(ColorDTO color) {
+			var newColor = new Color(color.R, color.G, color.B, color.A);
 			_videoCanvas.SetBackgroundColor(newColor);
         }
 

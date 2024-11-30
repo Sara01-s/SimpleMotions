@@ -5,11 +5,8 @@ namespace SimpleMotions {
 
     public interface IShapeComponentViewModel {
 
-        ReactiveCommand<(string shapeName, 
-                         float r, float g, float b, float a)> OnSaveShapeKeyframe { get; }
-
-        ReactiveCommand<(string shapeName, 
-                         float r, float g, float b, float a)> OnUpdateShapeKeyframe { get; }
+        ReactiveCommand<ShapeDTO> OnSaveShapeKeyframe { get; }
+        ReactiveCommand<ShapeDTO> OnUpdateShapeKeyframe { get; }
 
         ReactiveCommand OnDeleteShapeKeyframe { get; }
 
@@ -25,11 +22,8 @@ namespace SimpleMotions {
 
     public class ShapeComponentViewModel : InspectorComponentViewModel, IShapeComponentViewModel {
 
-        public ReactiveCommand<(string shapeName, 
-                                float r, float g, float b, float a)> OnSaveShapeKeyframe { get; } = new();
-
-        public ReactiveCommand<(string shapeName, 
-                                float r, float g, float b, float a)> OnUpdateShapeKeyframe { get; } = new();
+        public ReactiveCommand<ShapeDTO> OnSaveShapeKeyframe { get; } = new();
+        public ReactiveCommand<ShapeDTO> OnUpdateShapeKeyframe { get; } = new();
 
         public ReactiveCommand OnDeleteShapeKeyframe { get; } = new();
 
@@ -48,8 +42,8 @@ namespace SimpleMotions {
                                        IVideoCanvas videoCanvas, IEntitySelector entitySelector) : 
                                        base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) 
         {
-            OnSaveShapeKeyframe.Subscribe(shapeView => { 
-                SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName);
+            OnSaveShapeKeyframe.Subscribe(shapeDTO => { 
+                SaveKeyframe(ParseShapeDTOColor(shapeDTO), shapeDTO.PrimitiveShape);
                 OnDrawShapeKeyframe.Execute();
             });
 
@@ -63,7 +57,7 @@ namespace SimpleMotions {
 			});
 
             OnUpdateShapeKeyframe.Subscribe(shapeView => {
-				SaveKeyframe(ParseShapeColorView(shapeView), shapeView.shapeName);
+				SaveKeyframe(ParseShapeDTOColor(shapeView), shapeView.PrimitiveShape);
 			});
 
 			OnImageSelected.Subscribe(imageFilePath => {
@@ -87,12 +81,12 @@ namespace SimpleMotions {
             UnityEngine.Debug.Log($"Keyframe de Shape guardado: {shapeKeyframe}");
         }
 
-        public Color ParseShapeColorView((string shapeName, float r, float g, float b, float a) shapeView) {
+        public Color ParseShapeDTOColor(ShapeDTO shapeDTO) {
             return new Color() {
-                R = shapeView.r,
-                G = shapeView.g,
-                B = shapeView.b,
-                A = shapeView.a
+                R = shapeDTO.Color.R,
+                G = shapeDTO.Color.G,
+                B = shapeDTO.Color.B,
+                A = shapeDTO.Color.A
             };
         }
 

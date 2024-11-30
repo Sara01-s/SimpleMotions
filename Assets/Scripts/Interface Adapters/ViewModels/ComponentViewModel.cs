@@ -106,7 +106,7 @@ namespace SimpleMotions {
 
 			shapeDTO = new ShapeDTO (
 				primitiveShape: shape.PrimitiveShape.ToString(),
-				color: (shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A)
+				color: new ColorDTO(shape.Color.R, shape.Color.G, shape.Color.B, shape.Color.A)
 			);
 
 			return true;

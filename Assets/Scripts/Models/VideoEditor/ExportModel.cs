@@ -9,7 +9,7 @@ namespace SimpleMotions {
 
         ReactiveCommand Export { get; }
 
-        ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath, string fileName)> OnExport { get; }
+        ReactiveCommand<VideoExportDTO> OnExport { get; }
         ReactiveCommand<string> OnFilePathInvalid { get; }
     }
 
@@ -21,7 +21,7 @@ namespace SimpleMotions {
 
         public ReactiveCommand Export { get; } = new();
 
-        public ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath, string fileName)> OnExport { get; } = new();
+        public ReactiveCommand<VideoExportDTO> OnExport { get; } = new();
         public ReactiveCommand<string> OnFilePathInvalid { get; } = new();
 
         private int _totalFrames;
@@ -33,7 +33,8 @@ namespace SimpleMotions {
 
             Export.Subscribe(() => {
                 if (IsNameNotUsed()) {
-                    OnExport.Execute((_totalFrames, TargetFrameRate.Value, OutputFilePath.Value, FileName.Value));
+					var videoExportDTO = new VideoExportDTO(_totalFrames, TargetFrameRate.Value, OutputFilePath.Value, FileName.Value);
+                    OnExport.Execute(videoExportDTO);
                 }
             });
         }

@@ -3,8 +3,7 @@ namespace SimpleMotions {
 
     public interface IExportViewModel {
 		
-		// TODO - Use DTO
-        ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath, string fileName)> OnExportStart { get; }
+        ReactiveCommand<VideoExportDTO> OnExportStart { get; }
         ReactiveCommand OnExportEnd { get; }
         ReactiveValue<int> CurrentFrame { get; }
 		
@@ -12,7 +11,7 @@ namespace SimpleMotions {
 
     public class ExportViewModel : IExportViewModel {
 
-        public ReactiveCommand<(int totalFrames, int targetFrameRate, string outputFilePath, string fileName)> OnExportStart { get; } = new();
+        public ReactiveCommand<VideoExportDTO> OnExportStart { get; } = new();
         public ReactiveCommand OnExportEnd { get; } = new();
         public ReactiveValue<int> CurrentFrame { get; } = new();
 

@@ -135,18 +135,18 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			entityTransform.rotation = Quaternion.AngleAxis(transformDTO.RollDegrees, Vector3.forward);
 		}
 
-		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var shape)) {
+		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var shapeDTO)) {
 			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
 				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
 				spriteRenderer.sortingOrder = _sortingOrder;
 			}
 
-			spriteRenderer.color = new Color(shape.Color.r, shape.Color.g, shape.Color.b, shape.Color.a);
+			spriteRenderer.color = new Color(shapeDTO.Color.R, shapeDTO.Color.G, shapeDTO.Color.B, shapeDTO.Color.A);
 			
-			// Primitive shape is NOT an image.
-			if (shape.PrimitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
+			// Primitive shape is NOT an image. (it is a string representing a shape's name).
+			if (shapeDTO.PrimitiveShape.CompareTo(ShapeTypeUI.Image.ToString()) != 0) {
 				spriteRenderer.enabled = true;
-				spriteRenderer.sprite = _spriteByPrimitiveShape[shape.PrimitiveShape];
+				spriteRenderer.sprite = _spriteByPrimitiveShape[shapeDTO.PrimitiveShape];
 				
 				if (displayedEntity.transform.childCount >= 1) { // Entity had image slot.
 					displayedEntity.transform.GetChild(index: 0).gameObject.SetActive(false);
@@ -154,10 +154,9 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			}
 		}
 	}
-
-	// TODO - Use color DTO?
-	private void UpdateCanvasColor((float r, float g, float b, float a) color) {
-		_background.color = new Color(color.r, color.g, color.b, color.a);
+	
+	private void UpdateCanvasColor(ColorDTO color) {
+		_background.color = new Color(color.R, color.G, color.B, color.A);
 	}
 
 	public static Sprite FilePathToSprite(string filePath) {

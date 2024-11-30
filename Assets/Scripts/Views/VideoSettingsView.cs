@@ -62,7 +62,7 @@ public class VideoSettingsView : MonoBehaviour {
     }
 
     private void UpdateBackgroundColor(Color color) {
-        _videoCanvasViewModel.BackgroundColor.Value = (color.r, color.g, color.b, color.a); 
+        _videoCanvasViewModel.BackgroundColor.Value = new ColorDTO(color.r, color.g, color.b, color.a);
         _currentColor.color = color;
 
         _colorPickerIcon.SetIconColor(color);
@@ -70,9 +70,8 @@ public class VideoSettingsView : MonoBehaviour {
 
     private void SetColor() {
         var colorValues = _videoCanvasViewModel.BackgroundColor.Value;
-        colorValues.a = 100.0f;
+        var color = new Color(colorValues.R, colorValues.G, colorValues.B, a: 100.0f); // Max opacity (opaque).
 
-        var color = new Color(colorValues.r, colorValues.g, colorValues.b, colorValues.a);
         _flexibleColorPicker.SetColorWithoutNotification(color);
         _currentColor.color = _flexibleColorPicker.Color;
     }
