@@ -16,7 +16,9 @@ namespace SimpleMotions {
 		[SerializeField] private VideoCanvasView _videoCanvasView;
 		[SerializeField] private InspectorView _inspectorView;
 		[SerializeField] private EntitySelectorView _entitySelectorView;
+		[SerializeField] private ConfirmationPanel _confirmationPanel;
 
+		[Header("Video Editor")]
 		[SerializeField] private TransformComponentView _transformComponentView;
 		[SerializeField] private TextComponentView _textComponentView;
 		[SerializeField] private ShapeComponentView _shapeComponentView;
@@ -202,6 +204,35 @@ namespace SimpleMotions {
 		private void OnDisable() {
 			Save();
         }
+
+		public void ResetApplication() {
+			const string softYellow = "#E3D233";
+			const string softRed = "#FF1000";
+			// This should be const, but const interpolated strings are only available in C# 9.0 or above (we're currently using C# 8.0).
+			string resetMessage = $"<b><color={softYellow}>Warning!</color></b> this will reset the application\n and <b><color={softRed}>DELETE</color></b> all your progress."; 
+
+			_confirmationPanel.OpenConfirmationPanel(resetMessage, Reset);
+
+			static void Reset(bool accepted) {
+				if (accepted) {
+					var currentSceneIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+					UnityEngine.SceneManagement.SceneManager.LoadScene(currentSceneIndex);
+				}
+			}
+		}
+
+		public void CloseApplication() {
+			const string softYellow = "#E3D233";
+			string quitMessage = $"Are you sure you want to quit?\n <color={softYellow}>project saving not supported yet.</color>";
+			_confirmationPanel.OpenConfirmationPanel(quitMessage, Quit);
+
+			static void Quit(bool accepted) {
+				if (accepted) {
+					Debug.Log("Application Closed. Bye Bye.");
+					Application.Quit();
+				}
+			}
+		}
 
     }
 }

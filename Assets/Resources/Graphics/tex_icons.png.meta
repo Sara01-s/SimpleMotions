@@ -1025,6 +1025,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: tex_icons_43
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc59d6ead84925a08b51888fe474801d
+      internalID: -2124543880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tex_icons_44
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95064998e7e2492c98cffa7eff41bc7d
+      internalID: 1744887105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1074,6 +1116,8 @@ TextureImporter:
       tex_icons_40: -1199973739
       tex_icons_41: 500268581
       tex_icons_42: 1771711155
+      tex_icons_43: -2124543880
+      tex_icons_44: 1744887105
       tex_icons_5: 2033549481
       tex_icons_6: 2107229240
       tex_icons_7: 1639795755
