@@ -106,6 +106,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -113,10 +126,10 @@ TextureImporter:
       name: tex_ui_elements_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 218
-        width: 32
-        height: 294
+        x: 2
+        y: 215
+        width: 41
+        height: 297
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,8 +147,8 @@ TextureImporter:
       name: tex_ui_elements_1
       rect:
         serializedVersion: 2
-        x: 44
-        y: 442
+        x: 49
+        y: 439
         width: 70
         height: 70
       alignment: 0
@@ -155,8 +168,8 @@ TextureImporter:
       name: tex_ui_elements_2
       rect:
         serializedVersion: 2
-        x: 164
-        y: 446
+        x: 169
+        y: 443
         width: 16
         height: 16
       alignment: 0
@@ -176,9 +189,9 @@ TextureImporter:
       name: tex_ui_elements_4
       rect:
         serializedVersion: 2
-        x: 50
-        y: 301
-        width: 128
+        x: 55
+        y: 156
+        width: 6
         height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -194,34 +207,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tex_ui_elements_5
-      rect:
-        serializedVersion: 2
-        x: 50
-        y: 159
-        width: 6
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 541f40505a888e47f90c8383fed5c6e6
-      internalID: 405069088
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: tex_ui_elements_3
       rect:
         serializedVersion: 2
-        x: 195
-        y: 274
-        width: 41
-        height: 238
+        x: 55
+        y: 298
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -251,7 +243,6 @@ TextureImporter:
       tex_ui_elements_2: -560286322
       tex_ui_elements_3: -2068176096
       tex_ui_elements_4: 1021430150
-      tex_ui_elements_5: 405069088
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

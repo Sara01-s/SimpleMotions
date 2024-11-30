@@ -25,7 +25,9 @@ namespace SimpleMotions {
             });
 
             NewKeyframeEase.Subscribe(values => {
-                var transformKeyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(values.originalKeyframeDTO.EntityId, values.targetEase);
+                int entityId = values.originalKeyframeDTO.EntityId;
+
+                var transformKeyframe = keyframeStorage.GetEntityKeyframeOfType<Transform>(entityId, values.targetEase);
 
                 if (Enum.IsDefined(typeof(Ease), values.targetEase)) {
                     keyframeStorage.SetKeyframeEase(transformKeyframe, (Ease)values.targetEase);

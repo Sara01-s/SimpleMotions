@@ -139,7 +139,7 @@ public sealed class TimelineView : MonoBehaviour {
 			DisplayedEntityKeyframes.Remove(entityKeyframe.EntityId);
 		}
 
-		Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
+		//Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
     }
 
 	private void SetKeyframesVisibility() {
@@ -188,8 +188,6 @@ public sealed class TimelineView : MonoBehaviour {
 		RemoveKeyframe(previousKeyframe);
 
 		var newKeyframe = new KeyframeDTO(componentDTO, entityId, values.targetFrame, ease);
-
-		print(values.targetFrame);
 
 		if (componentDTO == ComponentDTO.Transform) {
 			AddKeyframe(newKeyframe, CreateKeyframe(values.targetFrame, _transformKeyframeYPosition));
