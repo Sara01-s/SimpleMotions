@@ -21,7 +21,7 @@ namespace SimpleMotions {
 		ReactiveValue<string> Roll { get; }
 		ReactiveValue<int> EaseDropdown { get; }
 
-		ReactiveCommand OnEntityCreated { get; }
+		ReactiveCommand<int> OnEntityCreated { get; }
 
 	}
 
@@ -43,7 +43,7 @@ namespace SimpleMotions {
 		public ReactiveValue<string> Roll { get; } = new() { Value = "0" };
 		public ReactiveValue<int> EaseDropdown { get; } = new();
 
-		public ReactiveCommand OnEntityCreated { get; } = new();
+		public ReactiveCommand<int> OnEntityCreated { get; } = new();
 
 		private readonly IKeyframeStorage _keyframeStorage;
 
@@ -79,7 +79,9 @@ namespace SimpleMotions {
 				SaveKeyframe(ParseTransformView(transformView));
 			});
 
-			videoEntities.OnCreateEntity.Subscribe(OnEntityCreated.Execute);
+			videoEntities.OnCreateEntity.Subscribe(() => {
+				OnEntityCreated.Execute(_CurrentFrame);
+			});
 
 			_keyframeStorage = keyframeStorage;
 		}

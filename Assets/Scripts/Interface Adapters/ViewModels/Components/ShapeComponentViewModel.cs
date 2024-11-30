@@ -16,6 +16,8 @@ namespace SimpleMotions {
 
 		ReactiveCommand<string> OnImageSelected { get; }
 
+        ReactiveCommand<Color> OnSelectedEntity { get; }
+
         void SetColor(Color color);
 		void SetShape(string shapeName);
     }
@@ -32,6 +34,8 @@ namespace SimpleMotions {
         public ReactiveCommand<bool> OnFrameHasShapeKeyframe { get; } = new();
 
 		public ReactiveCommand<string> OnImageSelected { get; } = new();
+
+        public ReactiveCommand<Color> OnSelectedEntity { get; } = new();
 
         private readonly IEntitySelector _entitySelector;
         private readonly IKeyframeStorage _keyframeStorage;
@@ -67,6 +71,11 @@ namespace SimpleMotions {
 
 				videoCanvas.OnSetEntityImage.Execute(_SelectedEntityId, imageFilePath);
 			});
+
+            entitySelectorViewModel.OnEntitySelected.Subscribe(entity => {
+                var shapeComponent = componentStorage.GetComponent<Shape>(_SelectedEntityId);
+                OnSelectedEntity.Execute(shapeComponent.Color);
+            });
 
             _keyframeStorage = keyframeStorage;
             _entitySelector = entitySelector;

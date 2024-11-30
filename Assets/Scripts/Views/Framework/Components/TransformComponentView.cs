@@ -89,7 +89,7 @@ public class TransformComponentView : ComponentView {
             }
         });
 
-        transformComponentViewModel.OnEntityCreated.Subscribe(() => {
+        transformComponentViewModel.OnEntityCreated.Subscribe(currentFrame => {
 			_UpdateKeyframeState(hasChanges: false);
             _keyframeHasChanges = false;
         });

@@ -90,6 +90,12 @@ public class ShapeComponentView : ComponentView {
 			_UpdateKeyframeState(hasChanges: true);
 		});
 
+        shapeComponentViewModel.OnSelectedEntity.Subscribe(color => {
+            var unityColor = _editorPainterParser.SmColorToUnity(color);
+            _flexibleColorPicker.SetColorWithoutNotification(unityColor);
+            _currentColor.color = unityColor;
+        });
+
         _EditorPainter.OnAccentColorUpdate += UpdateShapeAccentColor;
 
 		if (_shapeButtons.Length == 0) {
