@@ -12,7 +12,7 @@ public class SelectionGizmoRotate : SelectionGizmo {
         var direction = pointerWorldPos - gizmoWorldPos;
         float initialPointerAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-		var transformDTO = _GetSelectedEntityTransformData();
+		var transformDTO = _GetSelectedEntityTransformDTO();
 		_startOffsetAngle = transformDTO.RollDegrees - initialPointerAngle;
     }
 

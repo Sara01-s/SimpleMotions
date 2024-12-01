@@ -23,7 +23,7 @@ public class SelectionGizmoCorner : SelectionGizmo {
 	private float _startRollDegrees;
 
     public override void OnBeginDrag(PointerEventData eventData) {
-		var transformDTO = _GetSelectedEntityTransformData();
+		var transformDTO = _GetSelectedEntityTransformDTO();
 
 		_startEntityScale = new Vector2(transformDTO.Scale.w, transformDTO.Scale.h);
 		_startEntityPosition = new Vector2(transformDTO.Position.x, transformDTO.Position.y);
@@ -38,7 +38,7 @@ public class SelectionGizmoCorner : SelectionGizmo {
 
 		var cos = Mathf.Cos(rotationRadians);
 		var sin = Mathf.Sin(rotationRadians);
-		var pointerDeltaLocal = new Vector2(
+		var pointerDeltaLocal = new Vector2 (
 			cos * pointerDeltaWorld.x + sin * pointerDeltaWorld.y,
 			-sin * pointerDeltaWorld.x + cos * pointerDeltaWorld.y
 		);
@@ -52,19 +52,19 @@ public class SelectionGizmoCorner : SelectionGizmo {
 			Mathf.Max(0.1f, newEntityScale.y)
 		);
 
-		var newCornerOffsetLocal = new Vector2(
+		var newCornerOffsetLocal = new Vector2 (
 			newEntityScale.x * scaleDirection.x * 0.5f,
 			newEntityScale.y * scaleDirection.y * 0.5f
 		);
 
-		var originalCornerOffsetLocal = new Vector2(
+		var originalCornerOffsetLocal = new Vector2 (
 			_startEntityScale.x * scaleDirection.x * 0.5f,
 			_startEntityScale.y * scaleDirection.y * 0.5f
 		);
 
 		var cornerOffsetDeltaLocal = newCornerOffsetLocal - originalCornerOffsetLocal;
 
-		var cornerOffsetDeltaWorld = new Vector2(
+		var cornerOffsetDeltaWorld = new Vector2 (
 			cos * cornerOffsetDeltaLocal.x - sin * cornerOffsetDeltaLocal.y,
 			sin * cornerOffsetDeltaLocal.x + cos * cornerOffsetDeltaLocal.y
 		);

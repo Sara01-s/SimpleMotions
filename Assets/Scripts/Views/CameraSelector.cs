@@ -1,4 +1,3 @@
-using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 

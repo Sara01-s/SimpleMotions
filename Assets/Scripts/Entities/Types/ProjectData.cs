@@ -11,6 +11,7 @@ namespace SimpleMotions.Internal {
 
 	[Serializable]
 	public sealed class TimelineData {
+		public const int MAX_ALLOWED_ENTITIES = 50;
 		public const int INVALID_FRAME = -1;
 		public const int FIRST_FRAME = 0;
 

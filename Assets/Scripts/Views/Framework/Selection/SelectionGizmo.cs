@@ -65,7 +65,7 @@ public abstract class SelectionGizmo : MonoBehaviour, IDragHandler, IBeginDragHa
 		OnEntityChanged.Execute(new EntityDTO(SelectedEntityId));
 	}
 
-	protected TransformDTO _GetSelectedEntityTransformData() {
+	protected TransformDTO _GetSelectedEntityTransformDTO() {
 		_entitySelectorViewModel.TryGetEntityTransform(SelectedEntityId, out var transformDTO);
 		return transformDTO;
 	}

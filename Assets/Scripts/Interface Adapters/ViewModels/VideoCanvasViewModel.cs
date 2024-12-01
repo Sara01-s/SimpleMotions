@@ -4,6 +4,8 @@ namespace SimpleMotions {
 
 	public interface IVideoCanvasViewModel : IComponentViewModel {
 
+		ReactiveCommand<int> IncreaseEntityLayer { get; }
+		ReactiveCommand<int> DecreaseEntityLayer { get; }
 		ReactiveCommand<EntityDTO> OnCanvasUpdate { get; }
 		ReactiveCommand<int> OnEntitySelected { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }
@@ -16,6 +18,8 @@ namespace SimpleMotions {
 
     public sealed class VideoCanvasViewModel : ComponentViewModel, IVideoCanvasViewModel {
 
+		public ReactiveCommand<int> IncreaseEntityLayer { get; } = new();
+		public ReactiveCommand<int> DecreaseEntityLayer { get; } = new();
 		public ReactiveCommand<EntityDTO> OnCanvasUpdate { get; } = new();
 		public ReactiveCommand<int> OnEntitySelected { get; } = new();
 		public ReactiveCommand<int> OnEntityRemoved { get; } = new();

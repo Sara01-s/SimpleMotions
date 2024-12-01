@@ -177,6 +177,7 @@ public class TransformComponentView : ComponentView {
         }
     }
 
+	// TODO - Las validaciones deberían hacerse en el ViewModel.
     private bool CanSendInput(string newValue) {
         if (newValue == string.Empty) {
             return false;

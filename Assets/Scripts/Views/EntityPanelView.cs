@@ -10,13 +10,17 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 	[SerializeField] private TMP_InputField _entityName;
     [SerializeField] private Toggle _toggleActive;
     [SerializeField] private Button _deleteEntity;
-
+	[SerializeField] private Button _moveLayerUp;
+	[SerializeField] private Button _moveLayerDown;
+	
 	private IEntitySelectorViewModel _entitySelectorViewModel;
+	private GridLayoutGroup _containerGrid;
 	private int _ownerEntityId;
 
-    public void Configure(ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel, int ownerEntityId) {
+    public void Configure(IVideoCanvasViewModel videoCanvasViewModel, ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel, int ownerEntityId) {
 		const string defaultEntityName = "New Entity";
 		_entityName.text = defaultEntityName;
+		_containerGrid = GetComponentInParent<GridLayoutGroup>();
 
 		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
 		_entityName.onSubmit.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
@@ -33,6 +37,23 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 			if (ownerEntityId == entityDTO.Id) {
 				_entityName.text = entityDTO.Name;
 			}
+		});
+
+		_moveLayerUp.onClick.AddListener(() => {
+			videoCanvasViewModel.IncreaseEntityLayer.Execute(ownerEntityId);
+
+			// Move up
+			//int panelIndex = transform.GetSiblingIndex();
+			//if (panelIndex > 0) {
+			//	transform.SetSiblingIndex(panelIndex - 1);
+			//}
+			//else {
+			//
+			//}
+		});
+
+		_moveLayerDown.onClick.AddListener(() => {
+			videoCanvasViewModel.DecreaseEntityLayer.Execute(ownerEntityId);
 		});
 
 		entitySelectorViewModel.OnEntitySelected.Subscribe(EnableHightlight);

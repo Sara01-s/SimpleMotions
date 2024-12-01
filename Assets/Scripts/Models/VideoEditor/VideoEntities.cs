@@ -25,7 +25,6 @@ namespace SimpleMotions {
         public ReactiveCommand ShowMaxEntitiesWarning { get; } = new();
 		public ReactiveCommand OnCreateEntity { get; } = new();
 
-		private const byte MAX_ENTITIES = 50;
 		private byte _createdEntities;
 
         public VideoEntities(IKeyframeStorage keyframeStorage, IComponentStorage componentStorage, 
@@ -38,7 +37,7 @@ namespace SimpleMotions {
 		}
 
 		public int TryCreateEntity() {
-			if (_createdEntities >= MAX_ENTITIES) {
+			if (_createdEntities >= TimelineData.MAX_ALLOWED_ENTITIES) {
 				ShowMaxEntitiesWarning.Execute();
 				return Entity.Invalid.Id;
 			}

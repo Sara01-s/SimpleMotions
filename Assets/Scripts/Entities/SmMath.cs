@@ -10,17 +10,10 @@ namespace SimpleMotions {
 		
 		public const float PI = (float)System.Math.PI;
 		public const float Deg2Rad = PI / 180.0F;
-
-		[MethodImpl(INLINE)]
-		public static float easeOutBack(float t) {
-			const float smooth = 1.70158f;
-			const float ending = smooth + 1.0f;
-
-			return 1.0f + ending * pow(t - 1.0f, 3.0f) + smooth * pow(t - 1.0f, 2.0f);
-		}
 		
 		[MethodImpl(INLINE)]
 		public static float lerp(float a, float b, float t) {
+			t = clamp01(t);
 			return a * (1.0f - t) + b * t;
 		}
 
@@ -51,6 +44,12 @@ namespace SimpleMotions {
 		}
 
 		[MethodImpl(INLINE)]
+		public static float inverseLerp(float a, float b, float v) {
+			v = clamp(v, a, b);
+			return (v - a) / (b - a);
+		}
+
+		[MethodImpl(INLINE)]
 		public static float cos(float x) {
 			return (float)Cos(x);
 		}
@@ -68,6 +67,11 @@ namespace SimpleMotions {
 		[MethodImpl(INLINE)]
 		public static float clamp(float v, float min, float max) {
 			return Clamp(v, min, max);
+		}
+
+		[MethodImpl(INLINE)]
+		public static float clamp01(float v) {
+			return Clamp(v, 0.0f, 1.0f);
 		}
 
 		[MethodImpl(INLINE)]
@@ -149,11 +153,6 @@ namespace SimpleMotions {
 				X = Max(a.X, b.X),
 				Y = Max(a.X, b.X)
 			};
-		}
-
-		[MethodImpl(INLINE)]
-		public static float inverseLerp(float a, float b, float v) {
-			return (v - a) / (b - v);
 		}
 
 		[MethodImpl(INLINE)]

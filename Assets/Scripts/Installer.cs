@@ -157,30 +157,36 @@ namespace SimpleMotions {
 		}
 
 		private void BuildGUI() {
-			_editorPainterParser = _services.GetService<IEditorPainterParser>();
-			_fullscreenView			.Configure(_services.GetService<IFullscreenViewModel>());
-			_timelinePanelView		.Configure(_services.GetService<ITimelinePanelViewModel>(), _services.GetService<IEntitySelectorViewModel>());
-            _videoTimelineView		.Configure(_services.GetService<IVideoTimelineViewModel>(), _services.GetService<IEntitySelectorViewModel>(), _services.GetService<IEditKeyframeViewModel>());
-			_timelineCursorView		.Configure(_services.GetService<IVideoTimelineViewModel>());
-			_timelineHeaderView		.Configure(_services.GetService<IVideoTimelineViewModel>());
-			_videoPlaybackView		.Configure(_services.GetService<IVideoPlaybackViewModel>(), _inputValidator);
-			_videoCanvasView		.Configure(_services.GetService<IVideoCanvasViewModel>(), _services.GetService<IEntitySelectorViewModel>());
-			_inspectorView			.Configure(_services.GetService<IInspectorViewModel>());
-			_entitySelectorView		.Configure(_services.GetService<IEntitySelectorViewModel>(), _services.GetService<IVideoCanvasViewModel>(), _services.GetService<IFullscreenViewModel>(), _services.GetService<IVideoPlaybackViewModel>(), _services.GetService<IExportViewModel>());
-			_transformComponentView	.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
-			_shapeComponentView		.Configure(_services.GetService<IShapeComponentViewModel>(), _editorPainterParser);
-			_textComponentView		.Configure(_services.GetService<ITextComponentViewModel>());
-			_videoSettingsView		.Configure(_services.GetService<IVideoSettingsViewModel>(), _services.GetService<IVideoCanvasViewModel>());
-			_editorSettingsView		.Configure();
-			_exportSettingsView		.Configure(_services.GetService<IExportSettingsViewModel>(), _inputValidator);
-			_fullscreenPlaybackView	.Configure();
-			_exportView				.Configure(_services.GetService<IExportViewModel>());
-			_entityDeselector		.Configure(_services.GetService<IEntitySelectorViewModel>());
-			_colorPickerView		.Configure();
-			_cameraSelector			.Configure(_services.GetService<ICameraSelectorViewModel>());
-			_editKeyframeView		.Configure(_services.GetService<IEditKeyframeViewModel>(), _services.GetService<IVideoTimelineViewModel>());
+			var videoTimelineViewModel = _services.GetService<IVideoTimelineViewModel>();
+			var videoCanvasViewModel = _services.GetService<IVideoCanvasViewModel>();
+			var entitySelectorViewModel = _services.GetService<IEntitySelectorViewModel>();
+			var videoPlaybackViewModel = _services.GetService<IVideoPlaybackViewModel>();
+			var editorPainterParser = _services.GetService<IEditorPainterParser>();
+			
+			_editorPainterParser = editorPainterParser;
+			_fullscreenView.Configure(_services.GetService<IFullscreenViewModel>());
+			_timelinePanelView.Configure(videoCanvasViewModel, _services.GetService<ITimelinePanelViewModel>(), entitySelectorViewModel);
+			_videoTimelineView.Configure(videoTimelineViewModel, entitySelectorViewModel, _services.GetService<IEditKeyframeViewModel>());
+			_timelineCursorView.Configure(videoTimelineViewModel);
+			_timelineHeaderView.Configure(videoTimelineViewModel);
+			_videoPlaybackView.Configure(videoPlaybackViewModel, _inputValidator);
+			_videoCanvasView.Configure(videoCanvasViewModel, entitySelectorViewModel);
+			_inspectorView.Configure(_services.GetService<IInspectorViewModel>());
+			_entitySelectorView.Configure(entitySelectorViewModel, videoCanvasViewModel, _services.GetService<IFullscreenViewModel>(), videoPlaybackViewModel, _services.GetService<IExportViewModel>());
+			_transformComponentView.Configure(_services.GetService<ITransformComponentViewModel>(), _inputValidator);
+			_shapeComponentView.Configure(_services.GetService<IShapeComponentViewModel>(), editorPainterParser);
+			_textComponentView.Configure(_services.GetService<ITextComponentViewModel>());
+			_videoSettingsView.Configure(_services.GetService<IVideoSettingsViewModel>(), videoCanvasViewModel);
+			_editorSettingsView.Configure();
+			_exportSettingsView.Configure(_services.GetService<IExportSettingsViewModel>(), _inputValidator);
+			_fullscreenPlaybackView.Configure();
+			_exportView.Configure(_services.GetService<IExportViewModel>());
+			_entityDeselector.Configure(entitySelectorViewModel);
+			_colorPickerView.Configure();
+			_cameraSelector.Configure(_services.GetService<ICameraSelectorViewModel>());
+			_editKeyframeView.Configure(_services.GetService<IEditKeyframeViewModel>(), videoTimelineViewModel);
 
-			var editorThemeUnity = _editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
+			var editorThemeUnity = editorPainterParser.SmEditorThemeToUnity(_editorData.Theme);
 			_editorPainter.Configure();
 			_editorPainter.ApplyThemeIfNotEmpty(editorThemeUnity, checkForNewUI: true);
 		}

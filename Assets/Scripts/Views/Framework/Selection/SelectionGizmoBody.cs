@@ -6,7 +6,7 @@ public class SelectionGizmoBody : SelectionGizmo {
 	private Vector2 _startDragOffset;
 
 	public override void OnBeginDrag(PointerEventData eventData) {
-		var transformDTO = _GetSelectedEntityTransformData();
+		var transformDTO = _GetSelectedEntityTransformDTO();
 		var entityWorldPos = new Vector2(transformDTO.Position.x, transformDTO.Position.y);
 		var pointerWorldPos = _GetPointerWorldPos(eventData.position);
 

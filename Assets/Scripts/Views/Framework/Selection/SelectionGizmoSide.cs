@@ -23,7 +23,7 @@ public class SelectionGizmoSide : SelectionGizmo {
     private float _startRollDegrees;
 
     public override void OnBeginDrag(PointerEventData eventData) {
-        var transformDTO = _GetSelectedEntityTransformData();
+        var transformDTO = _GetSelectedEntityTransformDTO();
 
         _startEntityScale = new Vector2(transformDTO.Scale.w, transformDTO.Scale.h);
         _startEntityPosition = new Vector2(transformDTO.Position.x, transformDTO.Position.y);

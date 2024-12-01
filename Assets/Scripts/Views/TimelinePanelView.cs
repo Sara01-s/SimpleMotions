@@ -12,7 +12,7 @@ public class TimelinePanelView : MonoBehaviour {
 	private const float START_ENTITY_PANELS_SUPPORT = 3.0f;
 	private GridLayoutGroup _hierarchyGrid;
 
-	public void Configure(ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
+	public void Configure(IVideoCanvasViewModel videoCanvasViewModel, ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel) {
 		timelinePanelViewModel.ShowMaxEntitiesWarning.Subscribe(ShowMaxEntitiesWarning);
 		timelinePanelViewModel.DeleteEntity.Subscribe(_ => AdjustHierarchyHeight(isAddingEntity: false));
 		_hierarchyGrid = _entityHierarchyContent.GetComponent<GridLayoutGroup>();
@@ -20,7 +20,7 @@ public class TimelinePanelView : MonoBehaviour {
 		_createEntity.onClick.AddListener(() => {
 			if (timelinePanelViewModel.TryCreateEntity(out int createdEntityId)) {
 				var entityPanel = Instantiate(_entityPanelPrefab, parent: _entityHierarchyContent).GetComponent<EntityPanelView>();
-				entityPanel.Configure(timelinePanelViewModel, entitySelectorViewModel, createdEntityId);
+				entityPanel.Configure(videoCanvasViewModel, timelinePanelViewModel, entitySelectorViewModel, createdEntityId);
 
 				AdjustHierarchyHeight(isAddingEntity: true);
 			}

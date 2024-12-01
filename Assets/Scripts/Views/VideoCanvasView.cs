@@ -32,6 +32,8 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
 		videoCanvasViewModel.BackgroundColor.Subscribe(UpdateCanvasColor);
 		videoCanvasViewModel.OnDisplayEntityImage.Subscribe(DisplayEntityImage);
+		videoCanvasViewModel.IncreaseEntityLayer.Subscribe(OnIncreaseEntityLayer);
+		videoCanvasViewModel.DecreaseEntityLayer.Subscribe(OnDecreaseEntityLayer);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
 		_entitySelectorViewModel = entitySelectorViewModel;
@@ -151,6 +153,20 @@ public sealed class VideoCanvasView : MonoBehaviour {
 					displayedEntity.transform.GetChild(index: 0).gameObject.SetActive(false);
 				}
 			}
+		}
+	}
+
+	private void OnIncreaseEntityLayer(int entityId) {
+		if (_displayedEntites.TryGetValue(entityId, out var displayedEntity)) {
+			var renderer = displayedEntity.GetComponent<SpriteRenderer>();
+			renderer.sortingOrder = Mathf.Max(0, renderer.sortingOrder + 1); // TODO - esta validación debería estar en el ViewModel.
+		}
+	}
+
+	private void OnDecreaseEntityLayer(int entityId) {
+		if (_displayedEntites.TryGetValue(entityId, out var displayedEntity)) {
+			var renderer = displayedEntity.GetComponent<SpriteRenderer>();
+			renderer.sortingOrder = Mathf.Min(50, renderer.sortingOrder - 1); // TODO - esta validación debería estar en el ViewModel.
 		}
 	}
 	
