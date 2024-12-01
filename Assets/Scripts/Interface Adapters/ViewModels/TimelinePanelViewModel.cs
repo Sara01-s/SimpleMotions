@@ -5,6 +5,7 @@ namespace SimpleMotions {
 		public ReactiveCommand ShowMaxEntitiesWarning { get; }
 		public ReactiveCommand<EntityDTO> OnEntityNameChanged { get ; }
 		public ReactiveCommand<int> DeleteEntity { get; }
+		public ReactiveCommand OnEntityCreated { get; }
 
 		void ChangeEntityName(int entityId, string newName);
 		void ToggleEntityActive(int entityId, bool active);
@@ -19,6 +20,7 @@ namespace SimpleMotions {
 		public ReactiveCommand<int> DeleteEntity { get; } = new();
 		public ReactiveValue<string> EntityName { get; } = new();
 		public ReactiveCommand<EntityDTO> OnEntityNameChanged { get; } = new();
+		public ReactiveCommand OnEntityCreated { get; set; } = new();
 
 		private readonly IVideoEntities _videoEntities;
 		private readonly IEntityViewModel _entityViewModel;
@@ -43,7 +45,13 @@ namespace SimpleMotions {
 
         public bool TryCreateEntity(out int createdEntityId) {
 			createdEntityId = _videoEntities.TryCreateEntity();
-			return createdEntityId != Internal.Entity.Invalid.Id;
+			
+			if (createdEntityId != Internal.Entity.Invalid.Id) {
+				OnEntityCreated.Execute();
+				return true;
+			}
+
+			return false;
         }
 
 		public void ToggleEntityActive(int entityId, bool active) {

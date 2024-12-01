@@ -64,25 +64,23 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 			UpdateSortingIndex();
 		});
 
-		videoCanvasViewModel.SetEntitySortingIndex.Subscribe((_,_) => {
-			
+		timelinePanelViewModel.OnEntityCreated.Subscribe(() => {
+			UpdateSortingIndex();
 		});
 		
-
 		entitySelectorViewModel.OnEntitySelected.Subscribe(EnableHightlight);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(DisableHighlight);
 		transform.SetAsFirstSibling();
+
+		_entitySelectorViewModel = entitySelectorViewModel;
+		_ownerEntityId = ownerEntityId;
+
+		SelectOwnerEntity();
 
 		void UpdateSortingIndex() {
 			videoCanvasViewModel.SetEntitySortingIndex.Execute(ownerEntityId, transform.GetSiblingIndex());
 			transform.name = $"Entity Panel #{transform.GetSiblingIndex()}";
 		}
-
-		_entitySelectorViewModel = entitySelectorViewModel;
-		_ownerEntityId = ownerEntityId;
-
-		UpdateSortingIndex();
-		SelectOwnerEntity();
 	}
 
 	private void DisableHighlight() {
