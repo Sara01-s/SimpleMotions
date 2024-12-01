@@ -1,8 +1,9 @@
 using static SimpleMotions.SmMath;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-using System.Collections.Generic;
+using TMPro;
 
 public sealed class TimelineView : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public sealed class TimelineView : MonoBehaviour {
 	[SerializeField] private EditorPainter _editorPainter;
 	[SerializeField] private GameObject _editKeyframePanel;
 	[SerializeField] private GameObject _keyframesHolder;
+	[SerializeField] private TMP_Dropdown _easeDropDown;
 
 	[Header("Draw")]
 	[SerializeField] private RectTransform _content;

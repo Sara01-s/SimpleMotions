@@ -12,6 +12,8 @@ public class EditKeyframeView : MonoBehaviour {
     private int _originalKeyframeFrame;
     private ComponentDTO _keyframeComponent;
 
+    private KeyframeSelector _keyframeSelector;
+
     public void Configure(IEditKeyframeViewModel editKeyframeViewModel, IVideoTimelineViewModel videoTimelineViewModel) {        
 		editKeyframeViewModel.UpdateKeyframeFrame.Subscribe(updatedFrame => {
 			_originalKeyframeFrame = updatedFrame;
@@ -32,8 +34,10 @@ public class EditKeyframeView : MonoBehaviour {
         });
 
         _easeDropdown.onValueChanged.AddListener(newEase => {
-			var keyframeDTO = new KeyframeDTO (_keyframeComponent, _entityId, _originalKeyframeFrame, _originalKeyframeEase);
+			var keyframeDTO = new KeyframeDTO (_keyframeComponent, _entityId, _originalKeyframeEase, _originalKeyframeEase);
             editKeyframeViewModel.NewKeyframeEase.Value = (keyframeDTO, newEase);
+            
+            _keyframeSelector.Ease = newEase;
         });
 
         gameObject.SetActive(false);
