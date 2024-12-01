@@ -49,7 +49,7 @@ namespace SimpleMotions.Internal {
 
 			foreach (var keyframe in this) {
 				if (keyframe.Value is TComponent castedValue) {
-					var castedKeyframe = new Keyframe<TComponent>(keyframe.EntityId, keyframe.Frame, castedValue);
+					var castedKeyframe = new Keyframe<TComponent>(keyframe.EntityId, keyframe.Frame, castedValue, keyframe.Ease);
 					keyframeSpline.AddKeyframe(keyframe.Frame, castedKeyframe);
 				}
 			}

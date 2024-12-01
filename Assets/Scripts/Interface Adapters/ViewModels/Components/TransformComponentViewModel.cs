@@ -58,7 +58,7 @@ namespace SimpleMotions {
 			Roll.Subscribe(degrees => SetEntityComponentProperty<Transform, Roll>(_SelectedEntityId, t => t.Roll, new Roll(ParseFloat(degrees))));
 
 			OnSaveTransformKeyframe.Subscribe(transformDTO => {
-				SaveKeyframe(ParseTransformView(transformDTO));
+				SaveKeyframe(ParseTransformDTO(transformDTO));
 				OnDrawTransfromKeyframe.Execute();
 			});
 			
@@ -75,8 +75,8 @@ namespace SimpleMotions {
 				videoCanvas.DisplayEntity(_SelectedEntityId);
 			});
 
-			OnUpdateTransformKeyframe.Subscribe(transformView => {
-				SaveKeyframe(ParseTransformView(transformView));
+			OnUpdateTransformKeyframe.Subscribe(transformDTO => {
+				SaveKeyframe(ParseTransformDTO(transformDTO));
 			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
@@ -91,7 +91,13 @@ namespace SimpleMotions {
 			_keyframeStorage.AddKeyframe(transformKeyframe);
 		}
 
-		private Transform ParseTransformView(TransformDTO transformDTO) {
+		private void UpdateKeyframe(Transform transform) {
+			var keyframe = _keyframeStorage.GetEntityKeyframeOfType<Transform>(_SelectedEntityId, _CurrentFrame);
+			_keyframeStorage.SetKeyframeValue(keyframe.EntityId, keyframe.Frame, transform);
+			// TODO - continuar acá.
+		}
+
+		private Transform ParseTransformDTO(TransformDTO transformDTO) {
 			return new Transform (
 				new Position(transformDTO.Position.x, transformDTO.Position.y),
 				new Scale(transformDTO.Scale.w, transformDTO.Scale.h),

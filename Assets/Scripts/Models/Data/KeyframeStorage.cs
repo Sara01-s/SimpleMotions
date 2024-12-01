@@ -20,7 +20,7 @@ namespace SimpleMotions {
 
 		void AddKeyframe(IKeyframe<Component> keyframe);
 		void AddKeyframe<T>(IKeyframe<T> keyframe) where T : Component, new();
-		IKeyframe<T> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component, new();
+		IKeyframe<T> AddKeyframe<T>(int entityId, int frame, T value, Ease ease) where T : Component, new();
 
 		void AddDefaultKeyframes(int entityId);
 		void AddDefaultKeyframe(Type componentType, int entityId);
@@ -31,6 +31,7 @@ namespace SimpleMotions {
 
 		void SetKeyframeFrame(int entityId, Type componentType, int originalFrame, int newFrame);
 		void SetKeyframeEase(int entityId, Type componentType, int originalFrame, Ease newEase);
+		void SetKeyframeValue<T>(int entityId, int frame, T newValue) where T : Component, new();
 
 		IKeyframeSpline<T> GetEntityKeyframeSplineOfType<T>(int entityId) where T : Component, new();
 		IKeyframeSpline<Component> GetEntityKeyframeSplineOfType(Type componentType, int entityId);
@@ -120,9 +121,9 @@ namespace SimpleMotions {
 				return;
 			}
 
-			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Transform());
-			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Shape());
-			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Text());
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Transform(), Ease.Linear);
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Shape(), Ease.Linear);
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, new Text(), Ease.Linear);
 
 			//foreach (var componentType in AllComponentTypes) {
 			//	AddDefaultKeyframe(componentType, entityId);
@@ -138,10 +139,10 @@ namespace SimpleMotions {
 
 			var component = (Component)Activator.CreateInstance(componentType);
 
-			AddKeyframe(entityId, TimelineData.FIRST_FRAME, component);
+			AddKeyframe(entityId, TimelineData.FIRST_FRAME, component, Ease.Linear);
 		}
 
-		public IKeyframe<T> AddKeyframe<T>(int entityId, int frame, T value, Ease ease = Ease.Linear) where T : Component, new() {
+		public IKeyframe<T> AddKeyframe<T>(int entityId, int frame, T value, Ease ease) where T : Component, new() {
 			var keyframe = new Keyframe<T>(entityId, frame, value, ease);
 			var componentType = typeof(T);
 
@@ -252,12 +253,13 @@ namespace SimpleMotions {
 				throw new ArgumentException("Entity has no keyframes", entityId.ToString());
 			}
 
-			var componentKeyframes = componentToKeyframeSpline[typeof(T)];
+			var componentKeyframeSpline = componentToKeyframeSpline[typeof(T)];
 
-			if (!componentKeyframes.As<T>().TryGetValue(frame, out var keyframe)) {
+			if (!componentKeyframeSpline.As<T>().TryGetValue(frame, out var keyframe)) {
 				throw new InvalidCastException($"Keyframe found at frame {frame} is not of the expected type {typeof(IKeyframe<T>)}.");
 			}
 
+			UnityEngine.Debug.Log("KEYFRAME STORAGE: " + keyframe.Ease);
 			return keyframe;
         }
 
@@ -330,6 +332,10 @@ namespace SimpleMotions {
 				default:
 					throw new NotImplementedException();
 			}
+		}
+
+		public void SetKeyframeValue<T>(int entityId, int frame, T newValue) where T : Component, new() {
+
 		}
 
         public KeyframesData GetKeyframesData() {

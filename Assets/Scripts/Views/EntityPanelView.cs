@@ -40,20 +40,23 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 		});
 
 		_moveLayerUp.onClick.AddListener(() => {
-			videoCanvasViewModel.IncreaseEntityLayer.Execute(ownerEntityId);
+			// Move entity panel up
+			int panelIndex = transform.GetSiblingIndex();
+			if (panelIndex > 0) {
+				transform.SetSiblingIndex(panelIndex - 1);
+			}
 
-			// Move up
-			//int panelIndex = transform.GetSiblingIndex();
-			//if (panelIndex > 0) {
-			//	transform.SetSiblingIndex(panelIndex - 1);
-			//}
-			//else {
-			//
-			//}
+			videoCanvasViewModel.SetEntitySortingIndex.Execute(ownerEntityId, transform.GetSiblingIndex());
 		});
 
 		_moveLayerDown.onClick.AddListener(() => {
-			videoCanvasViewModel.DecreaseEntityLayer.Execute(ownerEntityId);
+			// Move entity panel down
+			int panelIndex = transform.GetSiblingIndex();
+			if (panelIndex < _containerGrid.transform.childCount - 1) {
+				transform.SetSiblingIndex(panelIndex + 1);
+			}
+			
+			videoCanvasViewModel.SetEntitySortingIndex.Execute(ownerEntityId, transform.GetSiblingIndex());
 		});
 
 		entitySelectorViewModel.OnEntitySelected.Subscribe(EnableHightlight);

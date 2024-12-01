@@ -32,8 +32,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		videoCanvasViewModel.OnEntityRemoved.Subscribe(RemoveEntity);
 		videoCanvasViewModel.BackgroundColor.Subscribe(UpdateCanvasColor);
 		videoCanvasViewModel.OnDisplayEntityImage.Subscribe(DisplayEntityImage);
-		videoCanvasViewModel.IncreaseEntityLayer.Subscribe(OnIncreaseEntityLayer);
-		videoCanvasViewModel.DecreaseEntityLayer.Subscribe(OnDecreaseEntityLayer);
+		videoCanvasViewModel.SetEntitySortingIndex.Subscribe(OnSetEntitySortingIndex);
 
 		_videoCanvasViewModel = videoCanvasViewModel;
 		_entitySelectorViewModel = entitySelectorViewModel;
@@ -156,20 +155,15 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		}
 	}
 
-	private void OnIncreaseEntityLayer(int entityId) {
+	private void OnSetEntitySortingIndex(int entityId, int newSortingIndex) {
 		if (_displayedEntites.TryGetValue(entityId, out var displayedEntity)) {
 			var renderer = displayedEntity.GetComponent<SpriteRenderer>();
-			renderer.sortingOrder = Mathf.Max(0, renderer.sortingOrder + 1); // TODO - esta validación debería estar en el ViewModel.
+			// TODO - esta validación debería estar en el ViewModel.
+			// 50 es MAX ENTITIES el cual está disponible en la capa interface adapters ("TimelineData.MAX_ALLOWED_ENTITIES").
+			renderer.sortingOrder = Mathf.Clamp(newSortingIndex, 0, 50);
 		}
 	}
 
-	private void OnDecreaseEntityLayer(int entityId) {
-		if (_displayedEntites.TryGetValue(entityId, out var displayedEntity)) {
-			var renderer = displayedEntity.GetComponent<SpriteRenderer>();
-			renderer.sortingOrder = Mathf.Min(50, renderer.sortingOrder - 1); // TODO - esta validación debería estar en el ViewModel.
-		}
-	}
-	
 	private void UpdateCanvasColor(ColorDTO color) {
 		_background.color = new Color(color.R, color.G, color.B, color.A);
 	}
