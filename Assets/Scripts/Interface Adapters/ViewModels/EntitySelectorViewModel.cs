@@ -8,6 +8,7 @@ namespace SimpleMotions {
 		ReactiveCommand<EntityDTO> OnEntitySelected { get; }
 		ReactiveCommand OnEntityDeselected { get; }
 		bool HasSelectedEntity { get; }
+		bool IsSelectionBlocked { get; set; }
 
 	}
 
@@ -19,6 +20,7 @@ namespace SimpleMotions {
 		public ReactiveCommand OnEntityDeselected { get; } = new();
 		public ReactiveCommand<int> SelectEntity { get; } = new();
 		public ReactiveCommand DeselectEntity { get; } = new();
+		public bool IsSelectionBlocked { get; set; } = false;
 
         public int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 		public bool HasSelectedEntity => _entitySelector.HasSelectedEntity;
