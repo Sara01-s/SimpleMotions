@@ -76,7 +76,7 @@ namespace SimpleMotions {
 			});
 
 			OnUpdateTransformKeyframe.Subscribe(transformDTO => {
-				SaveKeyframe(ParseTransformDTO(transformDTO));
+				UpdateKeyframe(ParseTransformDTO(transformDTO));
 			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
@@ -93,8 +93,7 @@ namespace SimpleMotions {
 
 		private void UpdateKeyframe(Transform transform) {
 			var keyframe = _keyframeStorage.GetEntityKeyframeOfType<Transform>(_SelectedEntityId, _CurrentFrame);
-			_keyframeStorage.SetKeyframeValue(keyframe.EntityId, keyframe.Frame, transform);
-			// TODO - continuar acá.
+			_keyframeStorage.SetKeyframeValue(keyframe.EntityId, keyframe.Frame, transform, keyframe.Ease);
 		}
 
 		private Transform ParseTransformDTO(TransformDTO transformDTO) {

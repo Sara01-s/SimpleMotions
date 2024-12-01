@@ -61,7 +61,7 @@ namespace SimpleMotions {
 			});
 
             OnUpdateShapeKeyframe.Subscribe(shapeView => {
-				SaveKeyframe(ParseShapeDTOColor(shapeView), shapeView.PrimitiveShape);
+				UpdateKeyframe(ParseShapeDTOColor(shapeView), shapeView.PrimitiveShape);
 			});
 
 			OnImageSelected.Subscribe(imageFilePath => {
@@ -87,6 +87,13 @@ namespace SimpleMotions {
             var shapeKeyframe = new Keyframe<Shape>(_SelectedEntityId, _CurrentFrame, shape);
 
             _keyframeStorage.AddKeyframe(shapeKeyframe);
+        }
+
+         public void UpdateKeyframe(Color color, string shapeName) {
+            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
+            var keyframe = _keyframeStorage.GetEntityKeyframeOfType<Shape>(_SelectedEntityId, _CurrentFrame);
+
+			_keyframeStorage.SetKeyframeValue(keyframe.EntityId, keyframe.Frame, shape, keyframe.Ease);
         }
 
         public Color ParseShapeDTOColor(ShapeDTO shapeDTO) {

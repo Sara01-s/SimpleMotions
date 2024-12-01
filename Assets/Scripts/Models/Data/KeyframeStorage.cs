@@ -31,7 +31,7 @@ namespace SimpleMotions {
 
 		void SetKeyframeFrame(int entityId, Type componentType, int originalFrame, int newFrame);
 		void SetKeyframeEase(int entityId, Type componentType, int originalFrame, Ease newEase);
-		void SetKeyframeValue<T>(int entityId, int frame, T newValue) where T : Component, new();
+		void SetKeyframeValue<T>(int entityId, int frame, T newValue, Ease ease) where T : Component, new();
 
 		IKeyframeSpline<T> GetEntityKeyframeSplineOfType<T>(int entityId) where T : Component, new();
 		IKeyframeSpline<Component> GetEntityKeyframeSplineOfType(Type componentType, int entityId);
@@ -259,7 +259,6 @@ namespace SimpleMotions {
 				throw new InvalidCastException($"Keyframe found at frame {frame} is not of the expected type {typeof(IKeyframe<T>)}.");
 			}
 
-			UnityEngine.Debug.Log("KEYFRAME STORAGE: " + keyframe.Ease);
 			return keyframe;
         }
 
@@ -334,8 +333,19 @@ namespace SimpleMotions {
 			}
 		}
 
-		public void SetKeyframeValue<T>(int entityId, int frame, T newValue) where T : Component, new() {
-
+		public void SetKeyframeValue<T>(int entityId, int frame, T newValue, Ease ease) where T : Component, new() {
+			switch (newValue) {
+				case Transform:
+					var transformKeyframe = GetEntityKeyframeOfType<Transform>(entityId, frame)
+						?? throw new NullReferenceException("Keyframe not found.");
+					AddKeyframe(entityId, frame, newValue, ease);
+				break;
+				case Shape:
+					var shapeKeyframe = GetEntityKeyframeOfType<Shape>(entityId, frame)
+						?? throw new NullReferenceException("Keyframe not found.");
+					AddKeyframe(entityId, frame, newValue, ease);
+				break;
+			}
 		}
 
         public KeyframesData GetKeyframesData() {
