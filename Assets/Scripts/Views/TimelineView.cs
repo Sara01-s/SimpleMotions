@@ -55,6 +55,8 @@ public sealed class TimelineView : MonoBehaviour {
             SetKeyframesVisibilityByEntity(entityDTO.Id);
         });
 
+		videoTimelineViewModel.OnEntityDeleted.Subscribe(RemoveAllEntityKeyframes);
+
 		editKeyframeViewModel.NewKeyframeFrame.Subscribe(EditEntityKeyframe);
 	}
 
@@ -103,8 +105,6 @@ public sealed class TimelineView : MonoBehaviour {
 		var keyframeSelector = keyframeDisplay.GetComponent<KeyframeSelector>();
 		keyframeSelector.Configure(entityKeyframe.EntityId, entityKeyframe.ComponentDTO, entityKeyframe.Frame, entityKeyframe.Ease, _editKeyframePanel);
 
-		// TODO - ¿Después hay que borrarlo?
-
         //Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
     }
 
@@ -134,6 +134,24 @@ public sealed class TimelineView : MonoBehaviour {
 
 		//Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido eliminada del frame {entityKeyframe.Frame}");
     }
+
+	private void RemoveAllEntityKeyframes(int entityId) {
+		if (!DisplayedEntityKeyframes.TryGetValue(entityId, out var keyframeComponents)) {
+			return;
+		}
+
+		foreach (var componentEntry in keyframeComponents){
+            foreach (var gameObjectEntry in componentEntry.Value) {
+                Destroy(gameObjectEntry.Value); 
+            }
+
+			componentEntry.Value.Clear();
+        }
+
+		keyframeComponents.Clear();
+
+		DisplayedEntityKeyframes.Remove(entityId);
+	}
 
 	private void SetKeyframesVisibility() {
 		 foreach (var entityId in DisplayedEntityKeyframes.Keys) {

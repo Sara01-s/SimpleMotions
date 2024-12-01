@@ -13,6 +13,8 @@ namespace SimpleMotions {
 
 		ReactiveCommand<KeyframeDTO> OnDrawShapeKeyframe { get; }
 		ReactiveCommand<KeyframeDTO> OnShapeKeyframeDeleted { get; }
+
+		ReactiveCommand<int> OnEntityDeleted { get; }
 	}
 
     public sealed class VideoTimelineViewModel : IVideoTimelineViewModel {
@@ -28,6 +30,8 @@ namespace SimpleMotions {
 		public ReactiveCommand<KeyframeDTO> OnDrawShapeKeyframe { get; } = new();
 		public ReactiveCommand<KeyframeDTO> OnShapeKeyframeDeleted { get; } = new();
 
+		public ReactiveCommand<int> OnEntityDeleted { get; } = new();
+
 		private readonly IVideoPlayerData _videoPlayerData;
 		private readonly IEntitySelector _entitySelector;
 		private int SelectedEntityId => _entitySelector.SelectedEntity.Id;
@@ -36,7 +40,8 @@ namespace SimpleMotions {
 
         public VideoTimelineViewModel(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData, IVideoEntities videoEntities,
 									  ITransformComponentViewModel transformComponentViewModel, IKeyframeStorage keyframeStorage,
-									  IShapeComponentViewModel shapeComponentViewModel, IEntitySelector entitySelector) 
+									  IShapeComponentViewModel shapeComponentViewModel, IEntitySelector entitySelector, 
+									  ITimelinePanelViewModel timelinePanelViewModel) 
 		{
 			videoPlayerData.CurrentFrame.Subscribe(currentFrame => {
 				CurrentFrame.Value = currentFrame;
@@ -92,22 +97,11 @@ namespace SimpleMotions {
 			});
 
 			videoEntities.OnCreateEntity.Subscribe(() => {
-				if (keyframeStorage.EntityHasKeyframeAtFrameOfType<Transform>(SelectedEntityId, CurrentFrame.Value)) {
-						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
-					}
-					else {
-						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
-					}
-					if  (keyframeStorage.EntityHasKeyframeAtFrameOfType<Shape>(SelectedEntityId, CurrentFrame.Value)) {
-						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
-					}
-					else {
-						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
-					}
-
 				OnDrawTransformKeyframe.Execute(GetTransformKeyframeDTO(frame: 0));
 				OnDrawShapeKeyframe.Execute(GetShapeKeyframeDTO(frame: 0));
 			});
+
+			timelinePanelViewModel.DeleteEntity.Subscribe(OnEntityDeleted.Execute);
 
 			_keyframeStorage = keyframeStorage;
 			_videoPlayerData = videoPlayerData;
