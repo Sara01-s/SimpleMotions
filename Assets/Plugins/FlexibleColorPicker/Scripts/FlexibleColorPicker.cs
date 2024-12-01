@@ -666,7 +666,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
-        print("entre III");
         OnColorChange.Invoke(bufferedColor.color);
     }
     
@@ -684,7 +683,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
 
         typeUpdate = true;
         UpdateHex();
-        print("entre IV");
         OnColorChange.Invoke(bufferedColor.color);
     }
 
@@ -1094,7 +1092,6 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
                 bufferedColor.Set(newColor);
                 UpdateMarkers();
                 UpdateTextures();
-                print("entre V");
                 OnColorChange.Invoke(newColor);
             }
             else {

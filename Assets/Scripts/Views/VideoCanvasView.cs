@@ -59,7 +59,6 @@ public sealed class VideoCanvasView : MonoBehaviour {
 			_displayedEntites.Remove(entityId);
 
 			Destroy(entityDisplay);
-			print($"Entidad {entityId} removida del canvas.");
 		}
 	}
 

@@ -60,7 +60,7 @@ public class ExportSettingsView : MonoBehaviour {
             return;
         }
 
-        print("Output directory updated: " + outputDirectory[0]);
+        Debug.Log("Output directory updated: " + outputDirectory[0]);
 
 		if (_inputValidator.ValidateDirectory(outputDirectory[0])) {
 			SetOutputFilePath(outputDirectory[0]);

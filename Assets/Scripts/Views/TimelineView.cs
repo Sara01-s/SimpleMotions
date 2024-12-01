@@ -1,9 +1,8 @@
+using static SimpleMotions.SmMath;
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-using System.Xml.Schema;
 
 public sealed class TimelineView : MonoBehaviour {
 
@@ -81,19 +80,13 @@ public sealed class TimelineView : MonoBehaviour {
 	}
 
 	private float GetKeyframeXPosition(float targetFrame) {
-		return Remap (
+		return remap (
 			targetFrame, 
 			iMin: 0.0f, 
 			_videoTimelineViewModel.TotalFrameCount, 
 			_content.rect.xMin, 
 			_content.rect.xMax - (FRAME_WIDTH * 2)
 		);
-	}
-
-	// TODO - Mover
-	private static float Remap(float value, float iMin, float iMax, float oMin, float oMax) {
-		float t = Mathf.InverseLerp(iMin, iMax, value);
-		return Mathf.Lerp(oMin, oMax, t);
 	}
 
 	private void AddKeyframe(KeyframeDTO entityKeyframe, GameObject keyframeDisplay) {

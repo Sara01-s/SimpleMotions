@@ -151,5 +151,16 @@ namespace SimpleMotions {
 			};
 		}
 
+		[MethodImpl(INLINE)]
+		public static float inverseLerp(float a, float b, float v) {
+			return (v - a) / (b - v);
+		}
+
+		[MethodImpl(INLINE)]
+		public static float remap(float value, float iMin, float iMax, float oMin, float oMax) {
+			float t = inverseLerp(iMin, iMax, value);
+			return lerp(oMin, oMax, t);
+		}
+
 	}
 }

@@ -22,7 +22,6 @@ public class EntitySelector : MonoBehaviour {
 			Debug.LogError("Assign a valid owner id to selectable");
 		}
 
-		print("Entidad clickeada, seleccionando: " + OwnerId);
 		_entitySelectorViewModel.SelectEntity.Execute(OwnerId);
 	}
 	
