@@ -34,7 +34,7 @@ public class MouseCoordinatesView : MonoBehaviour {
 			string x = coords.x.ToString("#0.00");
 			string y = coords.y.ToString("#0.00");
 
-			_mouseCoordinates.text = $"({x}, {y})";
+			_mouseCoordinates.text = $"<b>x:</b> {x} <b>y:</b> {y}";
 			yield return null;
 		}
 	}
