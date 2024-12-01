@@ -334,18 +334,7 @@ namespace SimpleMotions {
 		}
 
 		public void SetKeyframeValue<T>(int entityId, int frame, T newValue, Ease ease) where T : Component, new() {
-			switch (newValue) {
-				case Transform:
-					var transformKeyframe = GetEntityKeyframeOfType<Transform>(entityId, frame)
-						?? throw new NullReferenceException("Keyframe not found.");
-					AddKeyframe(entityId, frame, newValue, ease);
-				break;
-				case Shape:
-					var shapeKeyframe = GetEntityKeyframeOfType<Shape>(entityId, frame)
-						?? throw new NullReferenceException("Keyframe not found.");
-					AddKeyframe(entityId, frame, newValue, ease);
-				break;
-			}
+			AddKeyframe(entityId, frame, newValue, ease);
 		}
 
         public KeyframesData GetKeyframesData() {

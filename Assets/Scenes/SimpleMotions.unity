@@ -14447,9 +14447,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _horizontalScrollbar: {fileID: 572687639}
   _editorPainter: {fileID: 524110107}
-  _editKeyframePanel: {fileID: 823790325}
+  _editKeyframeView: {fileID: 823790332}
   _keyframesHolder: {fileID: 1528097741}
-  _easeDropDown: {fileID: 0}
   _content: {fileID: 956124294}
   _framesHolder: {fileID: 774283771}
   _keyframePrefab: {fileID: 4010176895635531034, guid: a8fe67b5e1b675248afcace9d916e474, type: 3}
@@ -31258,7 +31257,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
   m_Value: 0.99999875
-  m_Size: 0.9624999
+  m_Size: 0.9625001
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

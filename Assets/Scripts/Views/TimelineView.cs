@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using SimpleMotions;
 using UnityEngine;
-using TMPro;
 
 public sealed class TimelineView : MonoBehaviour {
 
 	[Header("References")]
 	[SerializeField] private Scrollbar _horizontalScrollbar;
 	[SerializeField] private EditorPainter _editorPainter;
-	[SerializeField] private GameObject _editKeyframePanel;
+	[SerializeField] private EditKeyframeView _editKeyframeView;
 	[SerializeField] private GameObject _keyframesHolder;
-	[SerializeField] private TMP_Dropdown _easeDropDown;
 
 	[Header("Draw")]
 	[SerializeField] private RectTransform _content;
@@ -105,7 +103,7 @@ public sealed class TimelineView : MonoBehaviour {
         frameByType[entityKeyframe.Frame] = keyframeDisplay;
 
 		var keyframeSelector = keyframeDisplay.GetComponent<KeyframeSelector>();
-		keyframeSelector.Configure(entityKeyframe.EntityId, entityKeyframe.ComponentDTO, entityKeyframe.Frame, entityKeyframe.Ease, _editKeyframePanel);
+		keyframeSelector.Configure(entityKeyframe.EntityId, entityKeyframe.ComponentDTO, entityKeyframe.Frame, entityKeyframe.Ease, _editKeyframeView);
 
         //Debug.Log($"La entidad con la ID {entityKeyframe.EntityId}, del tipo {entityKeyframe.ComponentDTO} ha sido añadida en el frame {entityKeyframe.Frame}");
     }
@@ -197,10 +195,10 @@ public sealed class TimelineView : MonoBehaviour {
 		var frame = values.originalKeyframe.Frame;
 		var ease = values.originalKeyframe.Ease;
 
-		var previousKeyframe = new KeyframeDTO(componentDTO, entityId, frame, ease);
+		var previousKeyframe = new KeyframeDTO(entityId, componentDTO, frame, ease);
 		RemoveKeyframe(previousKeyframe);
 
-		var newKeyframe = new KeyframeDTO(componentDTO, entityId, values.targetFrame, ease);
+		var newKeyframe = new KeyframeDTO(entityId, componentDTO, values.targetFrame, ease);
 
 		if (componentDTO == ComponentDTO.Transform) {
 			AddKeyframe(newKeyframe, CreateKeyframe(values.targetFrame, _transformKeyframeYPosition));

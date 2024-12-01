@@ -12,7 +12,7 @@ public class EditKeyframeView : MonoBehaviour {
     private int _originalKeyframeFrame;
     private ComponentDTO _keyframeComponent;
 
-    private KeyframeSelector _keyframeSelector;
+	private IEditKeyframeViewModel _editKeyframeViewModel;
 
     public void Configure(IEditKeyframeViewModel editKeyframeViewModel, IVideoTimelineViewModel videoTimelineViewModel) {        
 		editKeyframeViewModel.UpdateKeyframeFrame.Subscribe(updatedFrame => {
@@ -29,28 +29,42 @@ public class EditKeyframeView : MonoBehaviour {
                 return;
             }
 
-			var keyframeDTO = new KeyframeDTO (_keyframeComponent, _entityId, _originalKeyframeFrame, _originalKeyframeEase);
+			var keyframeDTO = new KeyframeDTO (_entityId, _keyframeComponent, _originalKeyframeFrame, _originalKeyframeEase);
             editKeyframeViewModel.NewKeyframeFrame.Value = (keyframeDTO, targetFrame);
         });
 
-        _easeDropdown.onValueChanged.AddListener(newEase => {
-			var keyframeDTO = new KeyframeDTO (_keyframeComponent, _entityId, _originalKeyframeEase, _originalKeyframeEase);
-            editKeyframeViewModel.NewKeyframeEase.Value = (keyframeDTO, newEase);
-            
-            _keyframeSelector.Ease = newEase;
-        });
-
+		_editKeyframeViewModel = editKeyframeViewModel;
         gameObject.SetActive(false);
     }
 
-    public void SetData(int id, ComponentDTO componentDTO, int frame, int ease) {
-        _originalKeyframeEase = ease;
-        _originalKeyframeFrame = frame;
+	public void OpenEditKeyframePanel(KeyframeDTO keyframeDTO, System.Action<int> resultCallback) {
+		SetDisplayData(keyframeDTO);
 
-        _entityId = id;
-        _frame.text = frame.ToString();
-        _easeDropdown.value = ease;
-        _keyframeComponent = componentDTO;
+		_frame.interactable = keyframeDTO.Frame != 0;
+		
+		_easeDropdown.onValueChanged.AddListener(newEase => {
+			var keyframeDTO = new KeyframeDTO (_entityId, _keyframeComponent, _originalKeyframeEase, _originalKeyframeEase);
+            _editKeyframeViewModel.NewKeyframeEase.Value = (keyframeDTO, newEase);
+
+			resultCallback(newEase);
+        });
+
+        gameObject.SetActive(true);
+	}
+
+    public void SetDisplayData(KeyframeDTO keyframeDTO) {
+        _originalKeyframeEase = keyframeDTO.Ease;
+        _originalKeyframeFrame = keyframeDTO.Frame;
+
+        _entityId = keyframeDTO.EntityId;
+        _frame.text = keyframeDTO.Frame.ToString();
+        _easeDropdown.value = keyframeDTO.Ease;
+        _keyframeComponent = keyframeDTO.ComponentDTO;
     }
+
+	private void OnDisable() {
+		_easeDropdown.onValueChanged.RemoveAllListeners();
+		_frame.onValueChanged.RemoveAllListeners();
+	}
 
 }

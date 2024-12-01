@@ -54,8 +54,8 @@ namespace SimpleMotions {
 		public readonly int Frame;
 		public readonly int Ease;
 
-		public KeyframeDTO(ComponentDTO componentType, int id, int frame, int ease) {
-			EntityId = id;
+		public KeyframeDTO(int entityId, ComponentDTO componentType, int frame, int ease) {
+			EntityId = entityId;
 			Frame = frame;
 			ComponentDTO = componentType;
 			Ease = ease;
