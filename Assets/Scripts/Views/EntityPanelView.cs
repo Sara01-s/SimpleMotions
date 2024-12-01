@@ -14,14 +14,12 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 	[SerializeField] private Button _moveLayerDown;
 	
 	private IEntitySelectorViewModel _entitySelectorViewModel;
-	private GridLayoutGroup _containerGrid;
 	private int _ownerEntityId;
 
     public void Configure(IVideoCanvasViewModel videoCanvasViewModel, ITimelinePanelViewModel timelinePanelViewModel, IEntitySelectorViewModel entitySelectorViewModel, int ownerEntityId) {
 		const string defaultEntityName = "New Entity";
-		_entityName.text = defaultEntityName;
-		_containerGrid = GetComponentInParent<GridLayoutGroup>();
 
+		_entityName.text = defaultEntityName;
 		_toggleActive.onValueChanged.AddListener(active => timelinePanelViewModel.ToggleEntityActive(ownerEntityId, active));
 		_entityName.onSubmit.AddListener(newName => timelinePanelViewModel.ChangeEntityName(ownerEntityId, newName));
 		_entityName.onSubmit.Invoke(defaultEntityName);
@@ -42,29 +40,48 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 		_moveLayerUp.onClick.AddListener(() => {
 			// Move entity panel up
 			int panelIndex = transform.GetSiblingIndex();
-			if (panelIndex > 0) {
-				transform.SetSiblingIndex(panelIndex - 1);
-			}
+			int upperPanelIndex = panelIndex - 1;
 
-			videoCanvasViewModel.SetEntitySortingIndex.Execute(ownerEntityId, transform.GetSiblingIndex());
+			var upperPanel = transform.parent.GetChild(upperPanelIndex);
+
+			transform.SetSiblingIndex(upperPanelIndex);
+			upperPanel.SetSiblingIndex(panelIndex);
+
+			UpdateSortingIndex();
 		});
 
 		_moveLayerDown.onClick.AddListener(() => {
 			// Move entity panel down
 			int panelIndex = transform.GetSiblingIndex();
-			if (panelIndex < _containerGrid.transform.childCount - 1) {
-				transform.SetSiblingIndex(panelIndex + 1);
-			}
+			int belowPanelIndex = panelIndex + 1;
+
+			var belowPanel = transform.parent.GetChild(belowPanelIndex);
+			print(belowPanel.name);
+
+			transform.SetSiblingIndex(belowPanelIndex);
+			belowPanel.SetSiblingIndex(panelIndex);
 			
-			videoCanvasViewModel.SetEntitySortingIndex.Execute(ownerEntityId, transform.GetSiblingIndex());
+			UpdateSortingIndex();
 		});
+
+		videoCanvasViewModel.SetEntitySortingIndex.Subscribe((_,_) => {
+			
+		});
+		
 
 		entitySelectorViewModel.OnEntitySelected.Subscribe(EnableHightlight);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(DisableHighlight);
-		
+		transform.SetAsFirstSibling();
+
+		void UpdateSortingIndex() {
+			videoCanvasViewModel.SetEntitySortingIndex.Execute(ownerEntityId, transform.GetSiblingIndex());
+			transform.name = $"Entity Panel #{transform.GetSiblingIndex()}";
+		}
+
 		_entitySelectorViewModel = entitySelectorViewModel;
 		_ownerEntityId = ownerEntityId;
 
+		UpdateSortingIndex();
 		SelectOwnerEntity();
 	}
 

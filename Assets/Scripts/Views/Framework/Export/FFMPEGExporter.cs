@@ -21,6 +21,10 @@ public class FFMPEGExporter : MonoBehaviour {
             return;
         }
 
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+		AllowWritePermissonsOSX();
+#endif
+
         var ffmpegCommand = new Process();
         ffmpegCommand.StartInfo.FileName = ffmpegBinPath;
         ffmpegCommand.StartInfo.Arguments = arguments;
@@ -40,6 +44,28 @@ public class FFMPEGExporter : MonoBehaviour {
             UnityEngine.Debug.Log($"Video generated successfully: {outputFilePath}");
         }
     }
+
+	private void AllowWritePermissonsOSX() {
+		string ffmpegBinPath = GetFFmpegBinPath();
+		string program = "xattr";
+		string arguments = $"-r com.apple.quarantine {ffmpegBinPath}";
+
+		var cmd = new Process();
+		cmd.StartInfo.FileName = program;
+		cmd.StartInfo.Arguments = arguments;
+        cmd.StartInfo.UseShellExecute = false;
+        cmd.StartInfo.RedirectStandardError = true;
+        cmd.StartInfo.RedirectStandardOutput = true;
+		cmd.Start();
+
+		string errorOutput = cmd.StandardError.ReadToEnd();
+
+        cmd.WaitForExit();
+
+        if (cmd.ExitCode != 0) {
+            UnityEngine.Debug.LogError($"xattr error: {errorOutput}");
+        }
+	}
 
     private string GetFFmpegBinPath() {
         string path = Application.streamingAssetsPath;
