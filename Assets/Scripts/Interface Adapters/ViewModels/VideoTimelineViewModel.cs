@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
@@ -95,6 +96,10 @@ namespace SimpleMotions {
 			timelinePanelViewModel.DeleteEntity.Subscribe(OnEntityDeleted.Execute);
 
 			entitySelector.OnEntitySelected.Subscribe(_ => {
+				if (CurrentFrame.Value == 0) {
+					return;
+				}
+				
 				CheckForKeyframesInFrame();
 			});
 
