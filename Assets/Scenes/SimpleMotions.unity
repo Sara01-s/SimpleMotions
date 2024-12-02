@@ -4018,7 +4018,7 @@ GameObject:
   - component: {fileID: 301112738}
   - component: {fileID: 301112740}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text - Cursor Number
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7649,8 +7649,8 @@ MonoBehaviour:
   _editorPainter: {fileID: 524110107}
   _currentColor: {fileID: 1807959552}
   _colorPickerIcon: {fileID: 354841059}
-  _createEntity: {fileID: 0}
-  _cursorNumber: {fileID: 0}
+  _createEntity: {fileID: 633751238}
+  _cursorNumber: {fileID: 301112740}
 --- !u!1 &556300383
 GameObject:
   m_ObjectHideFlags: 0
@@ -21552,7 +21552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1381988276
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21571,7 +21571,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1295, y: 252}
+  m_AnchoredPosition: {x: -3473, y: 252}
   m_SizeDelta: {x: 300, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1381988277
@@ -31153,8 +31153,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 828205307}
   m_HandleRect: {fileID: 828205306}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9625001
+  m_Value: 1.0000025
+  m_Size: 0.9624999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

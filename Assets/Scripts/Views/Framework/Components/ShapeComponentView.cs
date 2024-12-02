@@ -16,6 +16,7 @@ public class ShapeComponentView : ComponentView {
     private IEditorPainterParser _editorPainterParser;
     private ShapeType[] _shapeTypes;
     private ShapeType _currentShape;
+	private bool _imageSelected;
 
     private void OnDisable() {
         _EditorPainter.OnAccentColorUpdate -= UpdateShapeAccentColor;
@@ -87,6 +88,7 @@ public class ShapeComponentView : ComponentView {
 			image.color = _EditorPainter.CurrentAccentColor;
 
 			shapeComponentViewModel.OnImageSelected.Execute(imageFilePath[0]);
+			_imageSelected = true;
 			_UpdateKeyframeState(hasChanges: true);
 		});
 
@@ -142,19 +144,25 @@ public class ShapeComponentView : ComponentView {
             var image = shapeImage.GetComponent<Image>();
 
             if (shapeType.ToString().CompareTo(shapeName) == 0) {
+				_imageButton.GetComponentInChildren<Image>().color = _EditorPainter.Theme.TextColor;
+				_imageSelected = false;
                 image.color = _EditorPainter.CurrentAccentColor;
                 _currentShape = shapeImage;
             }
-            else {
-                image.color = _EditorPainter.Theme.TextColor;
-				
-            }
+			else {
+				image.color = _EditorPainter.Theme.TextColor;
+			}
         }
     }
 
     private void UpdateShapeAccentColor(Color accentColor) {
+		if (_imageSelected) {
+			_imageButton.GetComponentInChildren<Image>().color = accentColor;
+			return;
+		}
+
         foreach (var shapeType in _shapeTypes) {
-            if (shapeType ==  _currentShape) {
+            if (shapeType == _currentShape) {
                 var image = shapeType.GetComponent<Image>();
                 image.color = accentColor;
             }   
