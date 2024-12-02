@@ -32,10 +32,12 @@ namespace SimpleMotions {
 
 		public ReactiveCommand<int> OnEntityDeleted { get; } = new();
 
-		private readonly IVideoPlayerData _videoPlayerData;
-		private readonly IEntitySelector _entitySelector;
 		private int SelectedEntityId => _entitySelector.SelectedEntity.Id;
 
+		private ITransformComponentViewModel _transformComponentViewModel;
+		private IShapeComponentViewModel _shapeComponentViewModel;
+		private readonly IVideoPlayerData _videoPlayerData;
+		private readonly IEntitySelector _entitySelector;
 		private IKeyframeStorage _keyframeStorage;
 
         public VideoTimelineViewModel(IVideoPlayer videoPlayer, IVideoPlayerData videoPlayerData, IVideoEntities videoEntities,
@@ -51,18 +53,7 @@ namespace SimpleMotions {
 					shapeComponentViewModel.OnFirstKeyframe.Execute();
 				}
 				else {
-					if (keyframeStorage.EntityHasKeyframeAtFrameOfType<Transform>(SelectedEntityId, currentFrame)) {
-						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
-					}
-					else {
-						transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
-					}
-					if  (keyframeStorage.EntityHasKeyframeAtFrameOfType<Shape>(SelectedEntityId, currentFrame)) {
-						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
-					}
-					else {
-						shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
-					}
+					CheckForKeyframesInFrame();
 				}
 			});
 
@@ -103,6 +94,12 @@ namespace SimpleMotions {
 
 			timelinePanelViewModel.DeleteEntity.Subscribe(OnEntityDeleted.Execute);
 
+			entitySelector.OnEntitySelected.Subscribe(_ => {
+				CheckForKeyframesInFrame();
+			});
+
+			_transformComponentViewModel = transformComponentViewModel;
+			_shapeComponentViewModel = shapeComponentViewModel;
 			_keyframeStorage = keyframeStorage;
 			_videoPlayerData = videoPlayerData;
 			_entitySelector = entitySelector;
@@ -116,6 +113,21 @@ namespace SimpleMotions {
 		private KeyframeDTO SendShapeKeyframeDTO(int frame) {
 			var keyframe = _keyframeStorage.GetEntityKeyframeOfType<Shape>(_entitySelector.SelectedEntity.Id, frame);
 			return new KeyframeDTO(keyframe.EntityId, keyframe.Frame, ComponentDTO.Shape, keyframe.Ease);
+		}
+
+		private void CheckForKeyframesInFrame() {
+			if (_keyframeStorage.EntityHasKeyframeAtFrameOfType<Transform>(SelectedEntityId, CurrentFrame.Value)) {
+				_transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(true);
+			}
+			else {
+				_transformComponentViewModel.OnFrameHasTransformKeyframe.Execute(false);
+			}
+			if  (_keyframeStorage.EntityHasKeyframeAtFrameOfType<Shape>(SelectedEntityId, CurrentFrame.Value)) {
+				_shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(true);
+			}
+			else {
+				_shapeComponentViewModel.OnFrameHasShapeKeyframe.Execute(false);
+			}
 		}
 
     }

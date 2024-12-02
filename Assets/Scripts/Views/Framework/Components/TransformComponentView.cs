@@ -94,6 +94,11 @@ public class TransformComponentView : ComponentView {
             _keyframeHasChanges = false;
         });
 
+        transformComponentViewModel.OnEntitySelected.Subscribe(() => {
+            _UpdateKeyframeState(hasChanges: false);
+            _keyframeHasChanges = false;
+        });
+
 		_UpdateKeyframeState(hasChanges: false);
 
         _KeyframeImage.color = _EditorPainter.Theme.TextColor;

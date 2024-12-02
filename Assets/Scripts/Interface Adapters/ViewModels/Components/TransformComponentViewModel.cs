@@ -22,6 +22,7 @@ namespace SimpleMotions {
 		ReactiveValue<int> EaseDropdown { get; }
 
 		ReactiveCommand<int> OnEntityCreated { get; }
+		ReactiveCommand OnEntitySelected { get; }
 
 	}
 
@@ -44,6 +45,7 @@ namespace SimpleMotions {
 		public ReactiveValue<int> EaseDropdown { get; } = new();
 
 		public ReactiveCommand<int> OnEntityCreated { get; } = new();
+		public ReactiveCommand OnEntitySelected { get; } = new();
 
 		private readonly IKeyframeStorage _keyframeStorage;
 
@@ -82,6 +84,8 @@ namespace SimpleMotions {
 			videoEntities.OnCreateEntity.Subscribe(() => {
 				OnEntityCreated.Execute(_CurrentFrame);
 			});
+
+			entitySelectorViewModel.OnEntitySelected.Subscribe(_ => OnEntitySelected.Execute());
 
 			_keyframeStorage = keyframeStorage;
 		}

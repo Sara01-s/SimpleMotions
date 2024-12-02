@@ -96,6 +96,7 @@ public class ShapeComponentView : ComponentView {
             var unityColor = _editorPainterParser.SmColorToUnity(color);
             _flexibleColorPicker.SetColorWithoutNotification(unityColor);
             _currentColor.color = unityColor;
+            _UpdateKeyframeState(hasChanges: false);
         });
 
         _EditorPainter.OnAccentColorUpdate += UpdateShapeAccentColor;
