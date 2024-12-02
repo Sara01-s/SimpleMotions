@@ -17,11 +17,16 @@ public class EntitySelectorView : MonoBehaviour {
 	private bool _isExporting;
 
 	public void Configure(IEntitySelectorViewModel entitySelectorViewModel, IVideoCanvasViewModel videoCanvasViewModel, 
-						  IFullscreenViewModel fullscreenViewModel, IVideoPlaybackViewModel videoPlaybackViewModel, IExportViewModel exportViewModel) {
+						  IFullscreenViewModel fullscreenViewModel, IVideoPlaybackViewModel videoPlaybackViewModel, IExportViewModel exportViewModel) 
+	{
 		entitySelectorViewModel.OnEntitySelected.Subscribe(DrawSelectionGizmoOverEntity);
 		entitySelectorViewModel.OnEntityDeselected.Subscribe(HideSelectionGizmo);
 
-		videoCanvasViewModel.OnCanvasUpdate.Subscribe(DrawSelectionGizmoOverEntity);
+		videoCanvasViewModel.OnCanvasUpdate.Subscribe(entityDTO => {
+			if (_entitySelectorViewModel.HasSelectedEntity) {
+				DrawSelectionGizmoOverEntity(entityDTO);
+			}
+		});
 
 		foreach (var selectionGizmoPart in _selectionGizmoParts) {
 			selectionGizmoPart.Configure(entitySelectorViewModel, _editorCanvas.worldCamera, (RectTransform)_editorCanvas.transform);
@@ -78,7 +83,7 @@ public class EntitySelectorView : MonoBehaviour {
 		var entityRectSize = entityRectBoundsMax - entityRectBoundsMin;
 		var entityRectCenter = entityRectBoundsMin + (entityRectSize * 0.5f);
 
-		_selectionGizmo.localRotation = Quaternion.identity; // No aplicar rotación inmediatamente, testeando pq se buguea xd.
+		_selectionGizmo.localRotation = Quaternion.identity;
 		_selectionGizmo.sizeDelta = entityRectSize + _selectionGizmoMargin;
 		_selectionGizmo.anchoredPosition = entityRectCenter;
 
