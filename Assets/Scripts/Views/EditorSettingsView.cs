@@ -6,9 +6,7 @@ public class EditorSettingsView : MonoBehaviour {
     [SerializeField] private FlexibleColorPicker _flexibleColorPicker;
     [SerializeField] private EditorPainter _editorPainter;
     [SerializeField] private Image _currentColor;
-    [SerializeField] private AlwaysVisibleColor _colorPickerIcon;
-    [SerializeField] private AlwaysVisibleColor _createEntity;
-    [SerializeField] private AlwaysVisibleColor _cursorNumber;
+    [SerializeField] private AlwaysVisibleColor[] _alwaysVisibleColors;
 
     public void Configure() {}
 
@@ -21,9 +19,9 @@ public class EditorSettingsView : MonoBehaviour {
         _editorPainter.ChangeEditorAccentColor(color);
         _currentColor.color = color;
         
-        _colorPickerIcon.SetColor(color);
-        _createEntity.SetColor(color);
-        _cursorNumber.SetColor(color);
+        foreach (var alwaysVisibleColor in _alwaysVisibleColors) {
+            alwaysVisibleColor.SetColor(color);
+        }
     }
 
     private void SetColor() {
