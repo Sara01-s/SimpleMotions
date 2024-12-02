@@ -320,6 +320,8 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
         float s = ParseInputField(_sInputField, 100.0f); 
         float v = ParseInputField(_vInputField, 100.0f); 
 
+        print(hValue);
+
         this.Color = Color.HSVToRGB(hValue / 100.0f, s, v);
         this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
 
@@ -348,10 +350,11 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
         float s = ParseInputField(_sInputField, 100.0f);
         s = Mathf.Clamp01(s);
 
+
         float h = ParseInputField(_hInputField, 100.0f); 
         float v = ParseInputField(_vInputField, 100.0f); 
 
-        this.Color = Color.HSVToRGB(h / 100.0f, s, v);
+        this.Color = Color.HSVToRGB(h, s, v);
         this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
 
         var newString = sValue.ToString("0");
@@ -382,7 +385,7 @@ public class FlexibleColorPicker : MonoBehaviour, IFlexibleColorPicker {
         float h = ParseInputField(_hInputField, 100.0f); 
         float s = ParseInputField(_sInputField, 100.0f);
 
-        this.Color = Color.HSVToRGB(h / 100.0f, s, v);
+        this.Color = Color.HSVToRGB(h, s, v);
         this.Color = new Color(this.Color.r, this.Color.g, this.Color.b, ParseInputField(_aInputField, 100.0f));
 
         var newString = vValue.ToString("0");

@@ -16,7 +16,6 @@ public class VideoSettingsView : MonoBehaviour {
     private IVideoCanvasViewModel _videoCanvasViewModel;
 
     private bool _isSubmited;
-    private bool _justOpened;
 
     public void Configure(IVideoSettingsViewModel videoSettingsViewModel, IVideoCanvasViewModel videoCanvasViewModel) { 
         _videoSettingsViewModel = videoSettingsViewModel;
