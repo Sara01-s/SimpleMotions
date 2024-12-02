@@ -61,7 +61,7 @@ public class EntityPanelView : MonoBehaviour, IPointerClickHandler, System.IDisp
 			int panelIndex = transform.GetSiblingIndex();
 			int belowPanelIndex = panelIndex + 1;
 
-			if (belowPanelIndex > 50) {
+			if (belowPanelIndex >= transform.parent.childCount) {
 				return;
 			}
 
