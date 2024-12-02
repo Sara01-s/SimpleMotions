@@ -92,8 +92,6 @@ namespace SimpleMotions {
 				throw new NotSupportedException($"Interpolation not supported for type {component.GetType().Name}.");
 			}
 
-			UnityEngine.Debug.Log(start.Ease);
-
 			interpolation.Interpolate(component, start.Value, target.Value, t, start.Ease);
 		}
 
