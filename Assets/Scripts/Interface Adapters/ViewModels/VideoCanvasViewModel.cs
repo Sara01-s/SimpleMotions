@@ -4,7 +4,7 @@ namespace SimpleMotions {
 
 	public interface IVideoCanvasViewModel : IComponentViewModel {
 
-		ReactiveCommand<int, int> SetEntitySortingIndex { get; } // int entityId, int sortingIndex.
+		ReactiveCommand<int, int> SetEntitySortingIndex { get; } // int entityId, int sortingIndex
 		ReactiveCommand<EntityDTO> OnCanvasUpdate { get; }
 		ReactiveCommand<int> OnEntitySelected { get; }
 		ReactiveCommand<int> OnEntityRemoved { get; }

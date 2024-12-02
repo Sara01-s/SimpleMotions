@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace SimpleMotions {
 
 	public interface ITimelinePanelViewModel {
@@ -45,6 +47,7 @@ namespace SimpleMotions {
 
         public bool TryCreateEntity(out int createdEntityId) {
 			createdEntityId = _videoEntities.TryCreateEntity();
+
 			
 			if (createdEntityId != Internal.Entity.Invalid.Id) {
 				OnEntityCreated.Execute();
