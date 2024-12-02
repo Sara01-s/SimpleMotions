@@ -10,21 +10,25 @@ namespace SimpleMotions {
                 return _value;
             } 
             set {
-                _value = value;
-                OnValueChanged?.Invoke(_value);
+				_value = value;
+				OnValueChanged?.Invoke(_value);
             } 
         }
 
-        private Action<T> OnValueChanged;
+        private event Action<T> OnValueChanged;
         private T _value;
         private readonly List<Action<T>> _callbacks = new();
 
-        public void Subscribe(Action<T> value) {
-            if (value != null) {
-                OnValueChanged += value;
-                _callbacks.Add(value);
-            }
-        }
+		public void Subscribe(Action<T> value, bool invokeImmediately = false) {
+			if (value != null) {
+				OnValueChanged += value;
+				_callbacks.Add(value);
+
+				if (invokeImmediately) {
+					value(_value);
+				}
+			}
+		}
 
         public void Dispose() {
             foreach (var action in _callbacks) {
