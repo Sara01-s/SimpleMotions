@@ -1,5 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.IO;
 using SimpleMotions.Internal;
 using TMPro;
@@ -245,6 +247,7 @@ namespace SimpleMotions {
 			}
 		}
 
+#if UNITY_EDITOR
 		[ContextMenu("Incremente Version Patch")]
 		public void IncrementeVersionPatch() {
 			foreach (var textVersion in _textVersions) {
@@ -263,6 +266,7 @@ namespace SimpleMotions {
 				}
 			}
 		}
+#endif
 
     }
 }
