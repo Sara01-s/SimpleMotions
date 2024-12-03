@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEditor;
 using System.IO;
 using SimpleMotions.Internal;
+using TMPro;
 
 namespace SimpleMotions {
 
@@ -40,6 +42,9 @@ namespace SimpleMotions {
 
 		[Header("Video Settings")]
 		[SerializeField, Range(12, 1024)] private int _targetFrameRate = 60;
+
+		[Header("Versions")]
+		[SerializeField] private TextMeshProUGUI[] _textVersions;
 
 		private IEditorPainterParser _editorPainterParser;
 
@@ -236,6 +241,25 @@ namespace SimpleMotions {
 				if (accepted) {
 					Debug.Log("Application Closed. Bye Bye.");
 					Application.Quit();
+				}
+			}
+		}
+
+		[ContextMenu("Incremente Version Patch")]
+		public void IncrementeVersionPatch() {
+			foreach (var textVersion in _textVersions) {
+				string currentVersion = textVersion.text;
+        
+				string[] versionParts = currentVersion.Split('.');
+
+				if (versionParts.Length == 3) {
+					int patchVersion = int.Parse(versionParts[2]);
+					patchVersion++;
+
+					currentVersion = $"{versionParts[0]}.{versionParts[1]}.{patchVersion}";
+
+					textVersion.text = currentVersion;
+					PlayerSettings.bundleVersion = currentVersion;
 				}
 			}
 		}

@@ -512,7 +512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'version: alpha-1.0.2'
+  m_text: 'version: alpha-1.0.1'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4225,6 +4225,9 @@ MonoBehaviour:
   _projectDataFileName: project.json
   _editorDataFileName: editor.json
   _targetFrameRate: 60
+  _textVersions:
+  - {fileID: 313250906}
+  - {fileID: 18149854}
 --- !u!4 &305790552
 Transform:
   m_ObjectHideFlags: 0
@@ -4297,7 +4300,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: alpha-1.0.2
+  m_text: alpha-1.0.1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8155,7 +8158,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1691507591}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.00000015956904
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
