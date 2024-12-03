@@ -512,7 +512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'version: alpha-1.0.0'
+  m_text: 'version: alpha-1.0.1'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4297,7 +4297,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: alpha-1.0.0
+  m_text: alpha-1.0.1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -22249,9 +22249,6 @@ MonoBehaviour:
   _starSprite: {fileID: 1592580241, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
   _heartSprite: {fileID: 118111016, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
   _imageSprite: {fileID: 926952154, guid: 24bd142180be6e12481dcdf5813f40dc, type: 3}
-  _entityLayer:
-    serializedVersion: 2
-    m_Bits: 64
   _canvasOrigin: {fileID: 1961741125}
   _background: {fileID: 1310168495}
   _sortingOrder: 1

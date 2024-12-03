@@ -49,7 +49,7 @@ TagManager:
   - name: UI - BG
     uniqueID: 3022150915
     locked: 0
-  - name: WORLD - Entities
+  - name: World
     uniqueID: 2300766917
     locked: 0
   - name: UI - Back
