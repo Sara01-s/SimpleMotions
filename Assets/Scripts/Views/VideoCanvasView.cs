@@ -15,12 +15,11 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	[SerializeField] private Sprite _imageSprite;
 
 	[Header("Render")]
-	[SerializeField] private LayerMask _entityLayer;
 	[SerializeField] private Transform _canvasOrigin;
 	[SerializeField] private Image _background;
 
 	[Header("Fullscreen")]
-	[SerializeField] private int _sortingOrder = 1;
+	[SerializeField] private int _sortingOrder = 1; // FIXME - ????????????????????????????????????????????????????
 
 	private readonly Dictionary<int, GameObject> _displayedEntites = new();
 	private IReadOnlyDictionary<string, Sprite> _spriteByPrimitiveShape;
@@ -78,7 +77,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		var displayedEntity = new GameObject(entityName) {
 			layer = LayerMask.NameToLayer("Entities")
 		};
-
+		
 		displayedEntity.transform.SetParent(_canvasOrigin);
 		displayedEntity.transform.localPosition = Vector2.zero;
 		displayedEntity.transform.name = entity;
@@ -92,7 +91,8 @@ public sealed class VideoCanvasView : MonoBehaviour {
 	private void DisplayEntityImage(int entityId, string imageFilepath) {
 		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var _)) {
 			var displayedEntity = _displayedEntites[entityId];
-			displayedEntity.GetComponent<SpriteRenderer>().enabled = false;
+			var renderer = displayedEntity.GetComponent<SpriteRenderer>();
+			renderer.enabled = false;
 
 			if (displayedEntity.transform.childCount >= 2) {
 				Debug.LogError("2 or more children inside entity, this is unwanted behaviour.");
@@ -138,6 +138,7 @@ public sealed class VideoCanvasView : MonoBehaviour {
 		if (_videoCanvasViewModel.TryGetEntityShape(entityId, out var shapeDTO)) {
 			if (!displayedEntity.TryGetComponent<SpriteRenderer>(out var spriteRenderer)) {
 				spriteRenderer = displayedEntity.AddComponent<SpriteRenderer>();
+				spriteRenderer.sortingLayerID = SortingLayer.NameToID("World");
 				spriteRenderer.sortingOrder = _sortingOrder;
 			}
 

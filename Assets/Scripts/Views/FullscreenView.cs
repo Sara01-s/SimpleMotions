@@ -5,6 +5,7 @@ using SimpleMotions;
 public class FullscreenView : MonoBehaviour {
 
     [SerializeField] private Toggle _fullscreenToggle;
+	[SerializeField] private GameObject _worldMouseBlocker;
 
     [SerializeField] private RectTransform _videoCanvas;
     [SerializeField] private RectTransform _videoPlayback;
@@ -88,7 +89,9 @@ public class FullscreenView : MonoBehaviour {
         _background.anchoredPosition = Vector2.zero;
         _background.sizeDelta = new Vector2(_fullscreenWidth, _fullscreenHeight);
 
+		_editorCanvas.sortingLayerID = SortingLayer.NameToID("Default");
         _editorCanvas.sortingOrder = _fullscreenSortingOrder;
+		_worldMouseBlocker.SetActive(false);
 
         _fullscreenViewModel.OnFullscreen.Execute();
     }
@@ -117,7 +120,9 @@ public class FullscreenView : MonoBehaviour {
         _background.sizeDelta = _defaultBackgroundSize;
         _background.anchoredPosition = _defaultBackgroundPosition;
 
+		_editorCanvas.sortingLayerID = SortingLayer.NameToID("UI - Back");
         _editorCanvas.sortingOrder = _defaultScreenSortingOrder;
+		_worldMouseBlocker.SetActive(true);
 
         _fullscreenViewModel.OnFullscreen.Execute();
     }
