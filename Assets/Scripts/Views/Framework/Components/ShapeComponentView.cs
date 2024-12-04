@@ -147,8 +147,8 @@ public class ShapeComponentView : ComponentView {
             if (shapeType.ToString().CompareTo(shapeName) == 0) {
 				_imageButton.GetComponentInChildren<Image>().color = _EditorPainter.Theme.TextColor;
 				_imageSelected = false;
-                image.color = _EditorPainter.CurrentAccentColor;
                 _currentShape = shapeImage;
+                image.color = _EditorPainter.CurrentAccentColor;
             }
 			else {
 				image.color = _EditorPainter.Theme.TextColor;

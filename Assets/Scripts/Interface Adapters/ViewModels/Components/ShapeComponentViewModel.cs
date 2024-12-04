@@ -43,19 +43,20 @@ namespace SimpleMotions {
 
         public ShapeComponentViewModel(IEntitySelectorViewModel entitySelectorViewModel, IComponentStorage componentStorage, 
                                        IVideoPlayerData videoPlayerData, IKeyframeStorage keyframeStorage, 
-                                       IVideoCanvas videoCanvas, IEntitySelector entitySelector) : 
-                                       base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) 
+                                       IVideoCanvas videoCanvas, IEntitySelector entitySelector) 
+									   : base(entitySelectorViewModel, componentStorage, videoPlayerData, videoCanvas) 
         {
-            OnSaveShapeKeyframe.Subscribe(shapeDTO => { 
+            OnSaveShapeKeyframe.Subscribe(shapeDTO => {
+				UnityEngine.Debug.Log("SOY LA VIEW ESTOY GUARDANDO ESTE SHAPE: " + shapeDTO.PrimitiveShape);
                 SaveKeyframe(ParseShapeDTOColor(shapeDTO), shapeDTO.PrimitiveShape);
                 OnDrawShapeKeyframe.Execute();
             });
 
 			OnDeleteShapeKeyframe.Subscribe(() => {
-				var (type, color) = GetPreviousShapeKeyframeName(keyframeStorage);
+				var previousShapeDTO = GetPreviousShapeKeyframeDTO();
 
-				SetShape(type);
-                SetColor(color);
+				SetShape(previousShapeDTO.PrimitiveShape);
+                SetColor(ParseShapeDTOColor(previousShapeDTO));
 
 				videoCanvas.DisplayEntity(_SelectedEntityId);
 			});
@@ -83,15 +84,19 @@ namespace SimpleMotions {
         }
 
         public void SaveKeyframe(Color color, string shapeName) {
-            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
+			var primitiveShape = (Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName);
+			UnityEngine.Debug.Log("SOY EL VIEWMODEL, RESULTADO DEL PARSE: " + primitiveShape);
+
+            var shape = new Shape(primitiveShape, color);
             var shapeKeyframe = new Keyframe<Shape>(_SelectedEntityId, _CurrentFrame, shape);
 
             _keyframeStorage.AddKeyframe(shapeKeyframe);
         }
 
          public void UpdateKeyframe(Color color, string shapeName) {
-            var shape = new Shape((Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName), color);
+			var primitiveShape = (Shape.Primitive)Enum.Parse(typeof(Shape.Primitive), shapeName);
             var keyframe = _keyframeStorage.GetEntityKeyframeOfType<Shape>(_SelectedEntityId, _CurrentFrame);
+            var shape = new Shape(primitiveShape, color);
 
 			_keyframeStorage.SetKeyframeValue(keyframe.EntityId, keyframe.Frame, shape, keyframe.Ease);
         }
@@ -109,18 +114,12 @@ namespace SimpleMotions {
 			_videoCanvas.DisplayEntity(_SelectedEntityId);
 		}
 
-		private (string type, Color color) GetPreviousShapeKeyframeName(IKeyframeStorage keyframeStorage) {
-			for (int frame = _CurrentFrame - 1; frame >= TimelineData.FIRST_FRAME; frame--) {
-				if (keyframeStorage.EntityHasKeyframeAtFrameOfType<Shape>(_SelectedEntityId, frame)) {
-					var previousShape = keyframeStorage.GetEntityKeyframeOfType<Shape>(_SelectedEntityId, frame);
-
-					if (previousShape is not null) {
-						return (previousShape.Value.PrimitiveShape.ToString(), previousShape.Value.Color);
-					}
-				}
-			}
-
-			return (string.Empty, Color.White);
+		private ShapeDTO GetPreviousShapeKeyframeDTO() {
+			var entityShapeSpline = _keyframeStorage.GetEntityKeyframeSplineOfType<Shape>(_SelectedEntityId);
+			var previousShapeKeyframe = entityShapeSpline.GetPreviousKeyframe(_CurrentFrame);
+			var shapeColor = previousShapeKeyframe.Value.Color;
+			var colorDTO = new ColorDTO(shapeColor.R, shapeColor.G, shapeColor.B, shapeColor.A);
+			return new ShapeDTO(previousShapeKeyframe.Value.PrimitiveShape.ToString(), colorDTO);
 		}
 
 		public void SetShape(string shapeName) {

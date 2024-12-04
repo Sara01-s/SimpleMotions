@@ -38,6 +38,7 @@ namespace SimpleMotions.Internal {
 			}
 
 			shape.Color = lerp(startShape.Color, targetShape.Color, t);
+			UnityEngine.Debug.Log("CREO QUE ES ESTA: " + startShape.PrimitiveShape);
 			shape.PrimitiveShape = startShape.PrimitiveShape; // Immediate switch.
 		}
 
