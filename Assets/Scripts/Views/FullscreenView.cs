@@ -68,7 +68,11 @@ public class FullscreenView : MonoBehaviour {
     public void SetFullscreen(bool withPlayback) {
         if (!withPlayback) {
             _videoPlayback.gameObject.SetActive(false);
+			_editorCanvas.sortingLayerID = SortingLayer.NameToID("UI - Back");
         }
+		else {
+			_editorCanvas.sortingLayerID = SortingLayer.NameToID("Default");
+		}
 
         _fullscreenPlaybackParent.SetActive(true);
         _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = true;
@@ -89,7 +93,6 @@ public class FullscreenView : MonoBehaviour {
         _background.anchoredPosition = Vector2.zero;
         _background.sizeDelta = new Vector2(_fullscreenWidth, _fullscreenHeight);
 
-		_editorCanvas.sortingLayerID = SortingLayer.NameToID("Default");
         _editorCanvas.sortingOrder = _fullscreenSortingOrder;
 		_worldMouseBlocker.SetActive(false);
 
@@ -102,6 +105,7 @@ public class FullscreenView : MonoBehaviour {
         _fullscreenPlaybackParent.GetComponent<FullscreenPlaybackView>().IsFullscreen = false;
 
         _videoCanvas.SetParent(_defaultCanvasParent.transform);
+		_videoCanvas.SetAsFirstSibling();
         _videoPlayback.SetParent(_defaultPlaybackParent.transform);
 
         _videoCanvas.anchorMin = new Vector2(0.5f, 0.5f);

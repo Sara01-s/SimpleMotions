@@ -1,9 +1,7 @@
 using System.Collections;
 using SimpleMotions;
 using UnityEngine;
-using UnityEngine.Rendering;
 using System.IO;
-using System;
 
 public class ExportView : MonoBehaviour {
 
@@ -33,6 +31,8 @@ public class ExportView : MonoBehaviour {
     }
 
 	private IEnumerator CO_ExportFrames(int totalFrames, int targetFrameRate, string outputFilePath, string fileName) {
+		yield return new WaitForEndOfFrame();
+
 		string tempFrameImagesFilePath = GetFramesTempDirectory();
 
 		var frameRenderTexture = new RenderTexture(_videoResolution.x, _videoResolution.y, depth: 0, RenderTextureFormat.ARGB32) {
