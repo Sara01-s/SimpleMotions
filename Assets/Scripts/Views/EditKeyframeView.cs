@@ -43,7 +43,7 @@ public class EditKeyframeView : MonoBehaviour {
 		_frame.interactable = keyframeDTO.Frame != 0;
 		
 		_easeDropdown.onValueChanged.AddListener(newEase => {
-			var keyframeDTO = new KeyframeDTO (_entityId, _keyframeComponent, _originalKeyframeEase, _originalKeyframeEase);
+			var keyframeDTO = new KeyframeDTO (_entityId, _keyframeComponent, _originalKeyframeFrame, _originalKeyframeEase);
             _editKeyframeViewModel.NewKeyframeEase.Value = (keyframeDTO, newEase);
 
 			resultCallback(newEase);

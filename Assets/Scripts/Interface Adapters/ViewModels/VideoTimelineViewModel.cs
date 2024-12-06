@@ -1,4 +1,7 @@
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 using System.Windows.Forms;
+#endif
+
 using SimpleMotions.Internal;
 
 namespace SimpleMotions {
