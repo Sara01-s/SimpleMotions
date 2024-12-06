@@ -29,6 +29,7 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 	private IVideoPlaybackViewModel _videoPlaybackViewModel;
 	private IInputValidator _inputValidator;
+	private int _lastTotalFrames;
 
 	private bool _isLoopOn;
 
@@ -63,26 +64,46 @@ public sealed class VideoPlaybackView : MonoBehaviour {
 
 		_currentFrame.onValueChanged.AddListener(currentFrame => {
 			currentFrame = _inputValidator.ValidateComponentInput(currentFrame);
-			int.TryParse(currentFrame, out var newFrame);
+			int.TryParse(currentFrame, out int newFrame);
 
-			if (newFrame > _videoPlaybackViewModel.TotalFrames.Value) {
-				newFrame = _videoPlaybackViewModel.TotalFrames.Value;
+			newFrame = Mathf.Min(newFrame, _videoPlaybackViewModel.TotalFrames.Value);
+
+			if (!string.IsNullOrEmpty(_currentFrame.text)) {
+				_videoPlaybackViewModel.OnSetCurrentFrame.Execute(newFrame);
 			}
+		});
 
-			_videoPlaybackViewModel.OnSetCurrentFrame.Execute(newFrame);
+		_currentFrame.onDeselect.AddListener(text => {
+			if (string.IsNullOrEmpty(text)) {
+				_currentFrame.text = _videoPlaybackViewModel.CurrentFrame.Value.ToString();
+			}
 		});
 
 		_totalFrames.onValueChanged.AddListener(totalFrames => {
 			const int minFrames = 10;
-			const int maxFrames = 10_000;
+			const int maxFrames = 3_600;
 			
 			totalFrames = _inputValidator.ValidateComponentInput(totalFrames);
 			int.TryParse(totalFrames, out int newTotalFrames);
 
-			// TODO - Ver porque deja poner 10_000
-			if (newTotalFrames >= minFrames || newTotalFrames < maxFrames) {
+			if (newTotalFrames < minFrames) {
+				return;
+			}
+
+			newTotalFrames = Mathf.Clamp(newTotalFrames, minFrames, maxFrames);
+			_totalFrames.text = newTotalFrames.ToString();
+
+			if (!string.IsNullOrEmpty(totalFrames) && _lastTotalFrames != newTotalFrames) {
 				_videoPlaybackViewModel.OnSetTotalFrames.Execute(newTotalFrames);
 				_timelineView.RefreshUI();
+				_lastTotalFrames = newTotalFrames;
+			}
+		});
+
+		_totalFrames.onDeselect.AddListener(text => {
+			if (!string.IsNullOrEmpty(text)) {
+				_totalFrames.text = _videoPlaybackViewModel.TotalFrames.Value.ToString();
+				print(_videoPlaybackViewModel.TotalFrames.Value);
 			}
 		});
 	}
