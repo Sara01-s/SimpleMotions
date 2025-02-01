@@ -3,7 +3,7 @@
 ### An animation software for making motion graphics.
 
 ### Video demo.
-[🎬 All User cases showcase video](https://youtu.be/f3jC1QOkAjc)
+[🎬 All Use cases showcase video](https://youtu.be/f3jC1QOkAjc)
 
 ### Export demo.
 [🎬 Export video demo](https://youtu.be/CAPv6OkJZYc)
