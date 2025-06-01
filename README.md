@@ -8,4 +8,6 @@
 ### Export demo.
 [🎬 Export video demo](https://youtu.be/CAPv6OkJZYc)
 
+![SimpleMotionsGif](gif_simple_motions_demo_optimized_150speed.gif)
+
 ![SimpleMotionsFinal](Assets/Resources/Graphics/tex_simple_motions_final.png)
